@@ -9,7 +9,7 @@ export const PASSWORDS = {
   customer: 'Customer@123',
 };
 
-export const admin = { name: 'MarketLink Admin', email: 'admin@marketlink.com', phone: '+92 300 0000000', address: 'MarketLink HQ, Shahrah-e-Faisal, Karachi', city: 'Karachi' };
+export const admin = { name: 'MarketLink Admin', email: 'admin@marketlink.com', phone: '+92 300 0000000', address: 'MarketLink HQ, F.B. Area, Karachi', city: 'Karachi' };
 
 export const categories = [
   { key: 'veg', name: 'Vegetables', description: 'Seasonal vegetables harvested for market day.', icon: img('carrot'), color: '#E4F3D8', sortOrder: 1 },

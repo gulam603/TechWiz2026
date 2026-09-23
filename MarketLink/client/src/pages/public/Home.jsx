@@ -8,6 +8,7 @@ import MapView from '../../components/map/MapView';
 import RatingStars from '../../components/common/RatingStars';
 import { CardSkeletons } from '../../components/common/Loader';
 import DayDots from '../../components/common/DayDots';
+import CountUp from '../../components/common/CountUp';
 import { DAY_NAMES, initials, nextOccurrence, time12 } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 
@@ -103,19 +104,27 @@ export default function Home() {
               </div>
               <div className="hero-stats mt-4">
                 <div>
-                  <div className="stat-num">{s.markets ?? '–'}</div>
+                  <div className="stat-num">
+                    <CountUp value={s.markets} />
+                  </div>
                   <div className="stat-label">Markets</div>
                 </div>
                 <div>
-                  <div className="stat-num">{s.farmers ?? '–'}</div>
+                  <div className="stat-num">
+                    <CountUp value={s.farmers} />
+                  </div>
                   <div className="stat-label">Local farmers</div>
                 </div>
                 <div>
-                  <div className="stat-num">{s.products ?? '–'}</div>
+                  <div className="stat-num">
+                    <CountUp value={s.products} />
+                  </div>
                   <div className="stat-label">Products this week</div>
                 </div>
                 <div>
-                  <div className="stat-num">{s.ordersCompleted ?? '–'}</div>
+                  <div className="stat-num">
+                    <CountUp value={s.ordersCompleted} />
+                  </div>
                   <div className="stat-label">Pickups done</div>
                 </div>
               </div>

@@ -60,7 +60,9 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 - Contact-us inbox and all orders
 
 **Other:** role-based access control (API + UI), responsive / mobile-friendly UI, About Us and Contact Us
-(static team contact + Google Maps location + contact form).
+(static team contact — Aptech Learning Centre, F.B. Area, Karachi — + Google Maps location + contact form).
+Subtle motion: floating produce on the login / sign-up banner (with mouse parallax), scroll-reveal cards,
+counting-up statistics; all animations switch off when the device asks for reduced motion.
 
 ---
 

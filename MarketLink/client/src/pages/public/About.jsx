@@ -4,6 +4,7 @@ import useFetch from '../../hooks/useFetch';
 import { PageHero } from '../../components/common/PageHeader';
 import { TEAM } from '../../config';
 import { initials } from '../../utils/format';
+import CountUp from '../../components/common/CountUp';
 
 const VALUES = [
   { img: '/illustrations/leafy-greens.webp', color: '#e4f3d8', title: 'Fewer wasted trips', text: 'Customers see live stock and prices before leaving home, so nobody arrives to an empty stall.' },
@@ -47,7 +48,7 @@ export default function About() {
                 ].map(([n, label]) => (
                   <div key={label} className="col-6">
                     <div className="display-font text-lime" style={{ fontSize: '2.6rem' }}>
-                      {n ?? '–'}
+                      <CountUp value={n} />
                     </div>
                     <div className="small text-uppercase ls-wide" style={{ color: 'rgba(255,255,255,.7)' }}>
                       {label}

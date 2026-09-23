@@ -22,10 +22,12 @@ export const DEFAULT_CENTER = [24.8607, 67.0011]; // Karachi
 export const CONTACT = {
   email: 'hello@marketlink.pk',
   phone: '+92 21 3456 7890',
-  address: 'Aptech Learning Centre, Shahrah-e-Faisal, Karachi',
+  address: 'Aptech Learning Centre, F.B. Area, Karachi',
   hours: 'Mon – Sat, 9:00 am – 6:00 pm',
-  latitude: 24.8615,
-  longitude: 67.0729,
+  // Google Maps looks this place up by name, so the pin lands on the centre itself
+  mapQuery: 'Aptech Learning Centre, Federal B Area, Karachi',
+  latitude: 24.928,
+  longitude: 67.0682,
 };
 
 // TODO: replace with your own team members before submitting (shown on the About page)

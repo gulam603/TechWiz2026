@@ -62,7 +62,7 @@ export default function Contact() {
             <div className="map-frame" style={{ height: 300 }}>
               <iframe
                 title="MarketLink office on Google Maps"
-                src={`https://www.google.com/maps?q=${CONTACT.latitude},${CONTACT.longitude}&z=15&output=embed`}
+                src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.mapQuery)}&z=15&output=embed`}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -70,7 +70,7 @@ export default function Contact() {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-            <a className="small d-inline-block mt-2" href={`https://www.google.com/maps/search/?api=1&query=${CONTACT.latitude},${CONTACT.longitude}`} target="_blank" rel="noreferrer">
+            <a className="small d-inline-block mt-2" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.mapQuery)}`} target="_blank" rel="noreferrer">
               <i className="bi bi-box-arrow-up-right" /> Open in Google Maps
             </a>
           </div>

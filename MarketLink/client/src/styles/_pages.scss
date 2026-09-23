@@ -16,6 +16,12 @@
   overflow: hidden;
   padding: clamp(1.25rem, 2.5vw, 2rem);
   isolation: isolate;
+  animation: riseIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  @for $i from 2 through 4 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 0.1}s;
+    }
+  }
 }
 
 .hero-main {
@@ -87,6 +93,7 @@
   gap: 2rem;
   flex-wrap: wrap;
   .stat-num {
+    font-variant-numeric: tabular-nums;
     font-family: $headings-font-family;
     font-size: 2rem;
     color: $ml-lime;
@@ -728,47 +735,129 @@
   }
   &.admin {
     background: radial-gradient(circle at 85% 10%, rgba($ml-lime, 0.1), transparent 45%), #0f2a1e;
-    .wall-tile {
-      background: rgba(#fff, 0.07);
-    }
-    .wall-tile.feature {
-      background: rgba($ml-lime, 0.9);
-    }
   }
 }
 
-// A crate of produce tiles that fills the free space of the banner
-.produce-wall {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  grid-auto-rows: clamp(56px, 10vh, 100px); // rows grow with the screen height
-  gap: 0.6rem;
+// Floating produce around the basket (login / sign-up banner)
+.float-scene {
+  --mx: 0;
+  --my: 0;
+  position: relative;
+  flex: 1 0 auto;
+  height: clamp(260px, 46vh, 540px);
+  container-type: size;
 }
 
-.wall-tile {
-  background: var(--tile-bg);
-  border-radius: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 0;
-  overflow: hidden;
+.scene-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 70cqmin;
+  height: 70cqmin;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba($ml-lime, 0.38) 0%, rgba($ml-lime, 0.12) 45%, transparent 70%);
+  animation: glowPulse 6s ease-in-out infinite;
+}
+
+.scene-orbit {
+  position: absolute;
+  left: 8%;
+  top: 11%;
+  width: 84%;
+  height: 78%;
+  border: 1.5px dashed rgba(#fff, 0.13);
+  border-radius: 50%;
+  &.inner {
+    left: 24%;
+    top: 20%;
+    width: 52%;
+    height: 60%;
+    border-style: solid;
+    border-color: rgba(#fff, 0.07);
+  }
+}
+
+.sparkle {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $ml-lime;
+  box-shadow: 0 0 12px 3px rgba($ml-lime, 0.55);
+  animation: twinkle 3.2s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.float-item {
+  position: absolute;
+  width: calc(var(--size) * 1cqmin);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  translate: calc(var(--mx) * var(--depth) * 1px) calc(var(--my) * var(--depth) * 1px);
+  transition: translate 0.4s ease-out;
+  animation: popIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--i) * 45ms + 0.1s);
   img {
-    height: 74%;
-    max-width: 78%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 8px 10px rgba(23, 59, 44, 0.22));
-    animation: floaty 5s ease-in-out infinite;
-    animation-delay: var(--delay, 0s);
+    filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.28));
+    animation: floaty var(--dur, 5s) ease-in-out infinite;
   }
-  &.feature {
-    grid-column: span 2;
-    grid-row: span 2;
-    border-radius: 1.5rem;
+  &.basket {
+    z-index: 1;
     img {
-      height: 80%;
-      max-width: 80%;
+      filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.35));
     }
+  }
+  &.inner {
+    opacity: 0.8;
+    img {
+      filter: blur(0.6px) drop-shadow(0 6px 8px rgba(0, 0, 0, 0.25));
+    }
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    scale: 0.3;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    scale: 1;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.08;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    scale: 0.6;
+  }
+  50% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+// Short laptop screens: keep the produce big and drop the paragraph
+@media (max-height: 700px) {
+  .auth-art p {
+    display: none;
   }
 }
 

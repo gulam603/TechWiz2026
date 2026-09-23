@@ -20,6 +20,11 @@
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid rgba($ml-line, 0.8);
+  transition: box-shadow 0.25s ease, background-color 0.25s ease;
+  &.scrolled {
+    background: rgba($ml-cream, 0.94);
+    box-shadow: 0 8px 24px -14px rgba(23, 59, 44, 0.35);
+  }
   .nav-link {
     color: $ml-forest;
     font-weight: 600;
@@ -97,6 +102,7 @@
     background: $ml-sand;
   }
   .count {
+    animation: countPop 0.45s ease;
     position: absolute;
     top: -4px;
     right: -4px;

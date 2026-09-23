@@ -3,10 +3,12 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import AnnouncementBar from './AnnouncementBar';
 import ChatWidget from '../chat/ChatWidget';
+import useScrollReveal from '../../hooks/useScrollReveal';
 
 export default function PublicLayout({ footer = true }) {
   const { pathname } = useLocation();
   const isAdmin = pathname.startsWith('/admin');
+  useScrollReveal('main', pathname);
   return (
     <>
       <a href="#main" className="skip-link">

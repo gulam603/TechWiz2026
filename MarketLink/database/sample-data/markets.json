@@ -1,6 +1,6 @@
 [
   {
-    "_id": "6ab3e980f5f23483fb5c58af",
+    "_id": "6ab3f1cfe7db619be379e722",
     "name": "Clifton Seaview Farmers Market",
     "slug": "clifton-seaview-farmers-market",
     "description": "A breezy weekend market near the sea front with the widest choice of vegetables, bakery and flowers in the city.",
@@ -18,12 +18,12 @@
     "closeTime": "13:00",
     "image": "/uploads/seed/basket.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.258Z",
-    "updatedAt": "2026-09-23T15:00:16.258Z",
+    "createdAt": "2026-09-23T15:35:43.780Z",
+    "updatedAt": "2026-09-23T15:35:43.780Z",
     "__v": 0
   },
   {
-    "_id": "6ab3e980f5f23483fb5c58b0",
+    "_id": "6ab3f1cfe7db619be379e723",
     "name": "DHA Phase 6 Weekend Market",
     "slug": "dha-phase-6-weekend-market",
     "description": "Friday and Sunday market in Bukhari Commercial, loved for dairy, honey and ready-to-eat bakes.",
@@ -41,12 +41,12 @@
     "closeTime": "14:00",
     "image": "/uploads/seed/tent.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.260Z",
-    "updatedAt": "2026-09-23T15:00:16.260Z",
+    "createdAt": "2026-09-23T15:35:43.783Z",
+    "updatedAt": "2026-09-23T15:35:43.783Z",
     "__v": 0
   },
   {
-    "_id": "6ab3e980f5f23483fb5c58b1",
+    "_id": "6ab3f1cfe7db619be379e724",
     "name": "Gulshan Sunday Kisan Bazaar",
     "slug": "gulshan-sunday-kisan-bazaar",
     "description": "A big, lively bazaar where farmers from Gadap and Malir bring fruit and vegetables straight from the field.",
@@ -64,12 +64,12 @@
     "closeTime": "15:00",
     "image": "/uploads/seed/cart.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.263Z",
-    "updatedAt": "2026-09-23T15:00:16.263Z",
+    "createdAt": "2026-09-23T15:35:43.785Z",
+    "updatedAt": "2026-09-23T15:35:43.785Z",
     "__v": 0
   },
   {
-    "_id": "6ab3e980f5f23483fb5c58b2",
+    "_id": "6ab3f1cfe7db619be379e725",
     "name": "North Nazimabad Evening Green Market",
     "slug": "north-nazimabad-evening-green-market",
     "description": "An evening market for after-work shopping: herbs, greens, grains and pulses.",
@@ -87,12 +87,12 @@
     "closeTime": "21:00",
     "image": "/uploads/seed/hut.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.266Z",
-    "updatedAt": "2026-09-23T15:00:16.266Z",
+    "createdAt": "2026-09-23T15:35:43.787Z",
+    "updatedAt": "2026-09-23T15:35:43.787Z",
     "__v": 0
   },
   {
-    "_id": "6ab3e980f5f23483fb5c58b3",
+    "_id": "6ab3f1cfe7db619be379e726",
     "name": "Bahadurabad Fresh Friday Market",
     "slug": "bahadurabad-fresh-friday-market",
     "description": "Compact neighbourhood market around the Bahadurabad roundabout with fruit, flowers and bakery.",
@@ -110,12 +110,12 @@
     "closeTime": "21:00",
     "image": "/uploads/seed/store.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.268Z",
-    "updatedAt": "2026-09-23T15:00:16.268Z",
+    "createdAt": "2026-09-23T15:35:43.789Z",
+    "updatedAt": "2026-09-23T15:35:43.789Z",
     "__v": 0
   },
   {
-    "_id": "6ab3e980f5f23483fb5c58b4",
+    "_id": "6ab3f1cfe7db619be379e727",
     "name": "Saddar Heritage Farmers Market",
     "slug": "saddar-heritage-farmers-market",
     "description": "Early-morning market near the historic Empress Market for grains, pulses and herbs.",
@@ -134,12 +134,12 @@
     "closeTime": "12:00",
     "image": "/uploads/seed/sunrise.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.270Z",
-    "updatedAt": "2026-09-23T15:00:16.270Z",
+    "createdAt": "2026-09-23T15:35:43.793Z",
+    "updatedAt": "2026-09-23T15:35:43.793Z",
     "__v": 0
   },
   {
-    "_id": "6ab3e980f5f23483fb5c58b5",
+    "_id": "6ab3f1cfe7db619be379e728",
     "name": "Model Town Kisan Market",
     "slug": "model-town-kisan-market",
     "description": "Lahore's favourite Sunday and Thursday market for winter vegetables, strawberries and citrus.",
@@ -157,12 +157,12 @@
     "closeTime": "13:00",
     "image": "/uploads/seed/camping.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.273Z",
-    "updatedAt": "2026-09-23T15:00:16.273Z",
+    "createdAt": "2026-09-23T15:35:43.795Z",
+    "updatedAt": "2026-09-23T15:35:43.795Z",
     "__v": 0
   },
   {
-    "_id": "6ab3e980f5f23483fb5c58b6",
+    "_id": "6ab3f1cfe7db619be379e729",
     "name": "F-9 Park Weekend Market",
     "slug": "f-9-park-weekend-market",
     "description": "Weekend market at the edge of F-9 Park with fruit from the Margalla and Murree hills.",
@@ -180,8 +180,8 @@
     "closeTime": "14:00",
     "image": "/uploads/seed/tent.webp",
     "isActive": true,
-    "createdAt": "2026-09-23T15:00:16.275Z",
-    "updatedAt": "2026-09-23T15:00:16.275Z",
+    "createdAt": "2026-09-23T15:35:43.797Z",
+    "updatedAt": "2026-09-23T15:35:43.797Z",
     "__v": 0
   }
 ]

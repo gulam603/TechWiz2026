@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../common/Logo';
 import NotificationBell from './NotificationBell';
@@ -88,9 +88,17 @@ export default function Navbar() {
   const location = useLocation();
   const isAdminArea = location.pathname.startsWith('/admin');
   const showCart = !user || user.role === 'customer';
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <header className="ml-navbar">
+    <header className={`ml-navbar ${scrolled ? 'scrolled' : ''}`}>
       <nav className="container d-flex align-items-center gap-3" style={{ minHeight: 'var(--ml-nav-h)' }} aria-label="Main">
         <Logo />
         {isAdminArea && user?.role === 'admin' && <span className="chip chip-dark d-none d-sm-inline-flex">Admin console</span>}
@@ -112,7 +120,11 @@ export default function Navbar() {
           {showCart && (
             <Link to="/cart" className="nav-icon-btn" aria-label={`Basket (${count} items)`}>
               <i className="bi bi-basket2" />
-              {count > 0 && <span className="count">{count > 99 ? '99+' : count}</span>}
+              {count > 0 && (
+                <span key={count} className="count">
+                  {count > 99 ? '99+' : count}
+                </span>
+              )}
             </Link>
           )}
           {user && <NotificationBell allLink={`${homeFor(user)}/notifications`} />}

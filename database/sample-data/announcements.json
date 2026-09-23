@@ -1,0 +1,24 @@
+[
+  {
+    "_id": "6ab3afe6cd9cab7004fceec0",
+    "title": "Mango season is here! 🥭",
+    "message": "Sindhri and Chaunsa mangoes are now available from Gadap Orchard Co. Pre-order early — they sell out by Sunday noon!",
+    "audience": "all",
+    "isActive": true,
+    "createdBy": "6ab3afe0cd9cab7004fceb36",
+    "createdAt": "2026-09-23T10:54:30.987Z",
+    "updatedAt": "2026-09-23T10:54:30.987Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceec1",
+    "title": "Tip for farmers: use your weekly template",
+    "message": "Set a weekly quantity for each product and MarketLink will refresh your stock automatically every Monday.",
+    "audience": "farmer",
+    "isActive": true,
+    "createdBy": "6ab3afe0cd9cab7004fceb36",
+    "createdAt": "2026-09-23T10:54:30.989Z",
+    "updatedAt": "2026-09-23T10:54:30.989Z",
+    "__v": 0
+  }
+]

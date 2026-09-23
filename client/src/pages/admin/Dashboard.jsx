@@ -6,7 +6,7 @@ import KpiCard from '../../components/common/KpiCard';
 import StatusBadge from '../../components/common/StatusBadge';
 import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, ColumnChart, TrendChart } from '../../components/charts/Charts';
-import { formatDate, formatDateKey, money, ORDER_STATUS_META, timeAgo } from '../../utils/format';
+import { formatDate, formatDateKey, money, moneyCompact, ORDER_STATUS_META, timeAgo } from '../../utils/format';
 
 export default function AdminDashboard() {
   useDocumentTitle('Admin dashboard');
@@ -56,7 +56,7 @@ export default function AdminDashboard() {
           <KpiCard icon="bi-receipt" label="Total orders" value={totals.orders} sub={`${totals.openOrders} open now`} />
         </div>
         <div className="col-6 col-lg-4 col-xxl-2">
-          <KpiCard variant="warn" icon="bi-cash-stack" label="Revenue (completed)" value={money(totals.revenue)} sub="settled at pickup" />
+          <KpiCard variant="warn" icon="bi-cash-stack" label="Revenue (completed)" value={moneyCompact(totals.revenue)} sub="settled at pickup" />
         </div>
         <div className="col-6 col-lg-4 col-xxl-2">
           <KpiCard variant="danger" icon="bi-envelope" label="New messages" value={totals.newMessages} sub={<Link to="/admin/messages">Open inbox</Link>} />
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
                       <td className="text-end">{f.orders}</td>
                       <td className="text-end">{f.completed}</td>
                       <td className="text-end fw-semi">{money(f.revenue)}</td>
-                      <td className="text-end">{f.reviews ? `${f.rating} ★` : '–'}</td>
+                      <td className="text-end text-nowrap">{f.reviews ? `${f.rating} ★` : '–'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -149,7 +149,7 @@ export default function AdminDashboard() {
               {recentOrders.map((o) => (
                 <tr key={o._id}>
                   <td>
-                    <Link to={`/admin/orders/${o._id}`} className="fw-semi">
+                    <Link to={`/admin/orders/${o._id}`} className="fw-semi text-nowrap">
                       {o.orderNumber}
                     </Link>
                   </td>

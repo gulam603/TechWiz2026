@@ -8,7 +8,7 @@ import KpiCard from '../../components/common/KpiCard';
 import StatusBadge from '../../components/common/StatusBadge';
 import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, TrendChart } from '../../components/charts/Charts';
-import { formatDateKey, money, ORDER_STATUS_META, time12 } from '../../utils/format';
+import { formatDateKey, money, moneyCompact, ORDER_STATUS_META, time12 } from '../../utils/format';
 
 export function ApprovalBanner({ status }) {
   if (status === 'active') return null;
@@ -57,7 +57,7 @@ export default function FarmerDashboard() {
 
       <div className="row g-3 mb-4">
         <div className="col-6 col-xl">
-          <KpiCard variant="accent" icon="bi-cash-stack" label="Revenue (last 30 days)" value={money(kpis.revenueMonth)} sub={`${money(kpis.revenueWeek)} this week`} />
+          <KpiCard variant="accent" icon="bi-cash-stack" label="Revenue (last 30 days)" value={moneyCompact(kpis.revenueMonth)} sub={`${money(kpis.revenueWeek)} this week`} />
         </div>
         <div className="col-6 col-xl">
           <KpiCard icon="bi-receipt" label="Total orders" value={kpis.totalOrders} sub={`${kpis.completedOrders} completed`} />
@@ -66,7 +66,7 @@ export default function FarmerDashboard() {
           <KpiCard variant="warn" icon="bi-hourglass-split" label="Pending orders" value={kpis.pendingOrders} sub={`${kpis.activeOrders} open in total`} />
         </div>
         <div className="col-6 col-xl">
-          <KpiCard variant="info" icon="bi-graph-up" label="Average order" value={money(kpis.averageOrder)} sub={`${money(kpis.revenueTotal)} all-time revenue`} />
+          <KpiCard variant="info" icon="bi-graph-up" label="Average order" value={money(Math.round(kpis.averageOrder))} sub={`${money(kpis.revenueTotal)} all-time revenue`} />
         </div>
         <div className="col-12 col-xl">
           <KpiCard icon="bi-star" label="Rating" value={kpis.ratingCount ? `${kpis.rating} ★` : '–'} sub={`${kpis.ratingCount} reviews`} />
@@ -160,7 +160,7 @@ export default function FarmerDashboard() {
                 {upcoming.map((o) => (
                   <tr key={o._id}>
                     <td>
-                      <Link to={`/farmer/orders?focus=${o._id}`} className="fw-semi">
+                      <Link to={`/farmer/orders?focus=${o._id}`} className="fw-semi text-nowrap">
                         {o.orderNumber}
                       </Link>
                     </td>

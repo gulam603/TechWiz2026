@@ -5,9 +5,16 @@ export const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export const DAY_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+// A non-breaking space keeps "Rs 1,200" on one line inside tables and cards
 export function money(value) {
   const n = Number(value) || 0;
-  return `${CURRENCY} ${n.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  return `${CURRENCY}\u00a0${n.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+}
+
+/** Short money for big KPI tiles: Rs 836.7k */
+export function moneyCompact(value) {
+  const n = Number(value) || 0;
+  return n >= 100000 ? `${CURRENCY}\u00a0${compactNumber(n)}` : money(Math.round(n));
 }
 
 export function compactNumber(value) {

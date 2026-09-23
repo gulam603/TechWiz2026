@@ -17,6 +17,15 @@ export default function MapExplore() {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(null);
   const [me, setMe] = useState(null);
+  const [city, setCity] = useState(null);
+
+  // Cities that have markets, busiest first (the map opens on the busiest city)
+  const cities = useMemo(() => {
+    const counts = {};
+    for (const m of data?.markets || []) if (m.city) counts[m.city] = (counts[m.city] || 0) + 1;
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+  }, [data]);
+  const activeCity = city ?? cities[0] ?? '';
 
   const items = useMemo(() => {
     if (!data) return [];
@@ -30,6 +39,7 @@ export default function MapExplore() {
         title: m.name,
         subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)}–${time12(m.closeTime)}`,
         address: m.address,
+        city: m.city,
         days: m.operatingDays,
         link: `/markets/${m.slug}`,
         linkLabel: 'View market',
@@ -43,18 +53,20 @@ export default function MapExplore() {
         title: f.stallName,
         subtitle: `Stall · ${f.markets.map((m) => m.name).join(', ')}`,
         address: f.address,
+        city: f.city,
         days: f.operatingDays,
         link: `/farmers/${f.slug}`,
         linkLabel: 'View stall',
       })),
     ];
     return list
+      .filter((i) => !activeCity || me || i.city === activeCity)
       .filter((i) => layer === 'all' || i.type === layer)
       .filter((i) => day === '' || i.days.includes(Number(day)))
       .filter((i) => !search || `${i.title} ${i.address}`.toLowerCase().includes(search.toLowerCase()))
       .map((i) => (me ? { ...i, distance: distanceKm(me.lat, me.lng, i.lat, i.lng) } : i))
       .sort((a, b) => (me ? a.distance - b.distance : a.title.localeCompare(b.title)));
-  }, [data, layer, day, search, me]);
+  }, [data, layer, day, search, me, activeCity]);
 
   async function locate() {
     try {
@@ -70,6 +82,12 @@ export default function MapExplore() {
         <div className="explore-panel">
           <div className="p-3 border-bottom">
             <h1 className="h4 mb-3">Explore the map</h1>
+            <select className="form-select form-select-sm mb-2" value={activeCity} onChange={(e) => setCity(e.target.value)} aria-label="City" disabled={Boolean(me)}>
+              <option value="">All cities</option>
+              {cities.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
             <div className="search-pill mb-2">
               <i className="bi bi-search" />
               <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search markets or stalls" aria-label="Search map" />

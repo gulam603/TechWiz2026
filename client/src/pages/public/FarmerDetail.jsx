@@ -16,6 +16,7 @@ export default function FarmerDetail() {
   const { slug } = useParams();
   const { data, loading, error } = useFetch(`/farmers/${slug}`);
   const [cat, setCat] = useState('');
+  const [allReviews, setAllReviews] = useState(false);
   useDocumentTitle(data?.farmer?.stallName);
 
   const categories = useMemo(() => {
@@ -116,9 +117,21 @@ export default function FarmerDetail() {
             </div>
           )}
 
-          <h2 className="h3 mt-5 mb-3">Reviews</h2>
+          <div className="d-flex align-items-end justify-content-between mt-5 mb-3">
+            <h2 className="h3 mb-0">Reviews</h2>
+            {farmer.ratingCount > 0 && <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />}
+          </div>
           <div className="soft-panel">
-            {reviews.length === 0 ? <p className="text-muted-2 mb-0">No reviews yet.</p> : reviews.map((r) => <ReviewItem key={r._id} review={r} showProduct farmerName={farmer.stallName} />)}
+            {reviews.length === 0 ? (
+              <p className="text-muted-2 mb-0">No reviews yet.</p>
+            ) : (
+              (allReviews ? reviews : reviews.slice(0, 5)).map((r) => <ReviewItem key={r._id} review={r} showProduct farmerName={farmer.stallName} />)
+            )}
+            {reviews.length > 5 && (
+              <button type="button" className="btn btn-soft btn-sm mt-3" onClick={() => setAllReviews(!allReviews)}>
+                {allReviews ? 'Show fewer reviews' : `Show ${reviews.length - 5} more reviews`}
+              </button>
+            )}
           </div>
         </div>
 

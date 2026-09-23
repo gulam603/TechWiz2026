@@ -214,7 +214,9 @@ export async function farmerOrders(req, res) {
   if (req.query.date && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date)) filter.pickupDate = req.query.date;
   if (req.query.search) filter.orderNumber = containsRegex(req.query.search);
 
-  const sort = status === 'history' ? { pickupAt: -1 } : { pickupAt: 1 };
+  // Open orders: soonest pickup first. History / all: most recent first.
+  const openTabs = ['active', ORDER_STATUS.PLACED, ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY];
+  const sort = openTabs.includes(status) ? { pickupAt: 1 } : { pickupAt: -1 };
   const [orders, total, counts] = await Promise.all([
     Order.find(filter)
       .populate('customer', 'name phone email')

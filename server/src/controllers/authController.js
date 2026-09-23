@@ -3,6 +3,7 @@ import AppError from '../utils/AppError.js';
 import { ROLES, USER_STATUS } from '../utils/constants.js';
 import { pick, requireFields, toNumber } from '../utils/helpers.js';
 import { uniqueSlug } from '../utils/slug.js';
+import { isoWeekKey } from '../utils/dates.js';
 import { clearAuthCookie, setAuthCookie, signToken } from '../middleware/auth.js';
 import { notifyMany } from '../services/notify.js';
 
@@ -69,6 +70,7 @@ export async function registerFarmer(req, res) {
       city,
       latitude: toNumber(req.body.latitude),
       longitude: toNumber(req.body.longitude),
+      templateLastAppliedWeek: isoWeekKey(), // automatic weekly refresh starts next week
     });
   } catch (err) {
     await User.deleteOne({ _id: user._id }); // keep data consistent if the profile fails validation

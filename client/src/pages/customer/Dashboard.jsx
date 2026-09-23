@@ -8,7 +8,7 @@ import OrderCard from '../../components/order/OrderCard';
 import ProductCard from '../../components/cards/ProductCard';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
-import { money, timeAgo } from '../../utils/format';
+import { moneyCompact, timeAgo } from '../../utils/format';
 
 function greeting() {
   const h = new Date().getHours();
@@ -60,7 +60,7 @@ export default function CustomerDashboard() {
           <KpiCard icon="bi-check2-circle" label="Completed pickups" value={stats.completedOrders} />
         </div>
         <div className="col-6 col-xl-3">
-          <KpiCard variant="info" icon="bi-wallet2" label="Spent at markets" value={money(stats.totalSpent)} sub="paid at pickup" />
+          <KpiCard variant="info" icon="bi-wallet2" label="Spent at markets" value={moneyCompact(stats.totalSpent)} sub="paid at pickup" />
         </div>
         <div className="col-6 col-xl-3">
           <KpiCard variant="warn" icon="bi-heart" label="Favourites" value={stats.favorites} sub={`${stats.savedMarkets} saved markets`} />

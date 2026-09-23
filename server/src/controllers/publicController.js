@@ -66,7 +66,7 @@ export async function mapData(req, res) {
       .select('name slug address city latitude longitude operatingDays openTime closeTime image')
       .lean(),
     Farmer.find(farmerFilter)
-      .select('stallName slug logo address latitude longitude operatingDays ratingAvg ratingCount markets tags')
+      .select('stallName slug logo address city latitude longitude operatingDays ratingAvg ratingCount markets tags')
       .populate('markets', 'name slug')
       .lean(),
   ]);

@@ -104,9 +104,9 @@ function FamilyPanel() {
       {data?.members?.length > 0 && (
         <div className="d-grid gap-2 mb-3">
           {data.members.map((m) => (
-            <div key={m._id} className="d-flex align-items-center gap-2 border rounded-4 p-2">
+            <div key={m._id} className="d-flex align-items-center gap-2 border rounded-4 p-2 flex-wrap">
               <span className="avatar avatar-sm">{initials(m.name)}</span>
-              <span className="flex-grow-1 small">
+              <span className="flex-grow-1 small min-w-0 text-break">
                 <strong className="d-block">
                   {m.name} {m.isMe && '(you)'}
                 </strong>

@@ -1,0 +1,20 @@
+{
+  "name": "marketlink",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MarketLink – farmers market pre-order platform (MERN: MongoDB, Express, React, Node.js)",
+  "scripts": {
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently -n api,web -c green,cyan \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "seed": "npm run seed --prefix server",
+    "export-data": "npm run export-data --prefix server",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

@@ -39,7 +39,7 @@ function matchEntity(text, list, getName) {
   const lower = text.toLowerCase();
   for (const item of list) {
     const name = getName(item).toLowerCase();
-    if (lower.includes(name)) return item; // full name typed
+    if (lower.includes(name)) return { ...item, matchScore: 99 }; // full name typed
     const words = tokens(name).filter((w) => w.length >= 4 && !NAME_NOISE.has(w));
     const score = words.filter((w) => new RegExp(`\\b${escapeRegex(w)}`).test(lower)).length;
     if (score > bestScore) {
@@ -47,7 +47,7 @@ function matchEntity(text, list, getName) {
       bestScore = score;
     }
   }
-  return best;
+  return best ? { ...best, matchScore: bestScore } : null;
 }
 
 function detectDay(text) {
@@ -118,7 +118,10 @@ export async function answer(rawMessage, user) {
     Category.find({ isActive: true }).select('name slug').lean(),
   ]);
   const market = matchEntity(text, markets, (m) => m.name);
-  const farmer = matchEntity(text, farmers, (f) => f.stallName);
+  let farmer = matchEntity(text, farmers, (f) => f.stallName);
+  // "where can I buy honey" is a product question even though a farmer is called "... Honey ..."
+  const shopping = /\b(buy|where|find|price|cost|get)\b/.test(text) && !/\b(farmer|farm|stall|vendor)\b/.test(text);
+  if (farmer && farmer.matchScore === 1 && shopping) farmer = null;
   // Remove the recognised names so "Thatta Dairy" is not also read as the "Dairy" category
   let rest = text;
   for (const name of [farmer?.stallName, market?.name].filter(Boolean)) {

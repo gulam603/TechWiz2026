@@ -65,7 +65,7 @@ export default function AdminOrders() {
                 {data.orders.map((o) => (
                   <tr key={o._id}>
                     <td>
-                      <Link to={`/admin/orders/${o._id}`} className="fw-semi">
+                      <Link to={`/admin/orders/${o._id}`} className="fw-semi text-nowrap">
                         {o.orderNumber}
                       </Link>
                       <div className="fs-7 text-muted-2">{formatDate(o.createdAt)}</div>

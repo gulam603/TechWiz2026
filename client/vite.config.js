@@ -16,7 +16,7 @@ export default defineConfig({
       scss: {
         // Bootstrap 5.3 still uses the older Sass syntax; hide those library warnings
         quietDeps: true,
-        silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'mixed-decls', 'if-function'],
+        silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
       },
     },
   },

@@ -42,6 +42,8 @@ export function createApp() {
           fontSrc: ["'self'", 'data:'],
           scriptSrc: ["'self'"],
           frameSrc: ["'self'", 'https://www.openstreetmap.org', 'https://www.google.com', 'https://maps.google.com'],
+          // Don't force https for local / LAN demos over plain http
+          upgradeInsecureRequests: null,
         },
       },
     })

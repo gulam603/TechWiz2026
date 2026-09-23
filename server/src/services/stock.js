@@ -1,6 +1,6 @@
-import { Product, Farmer, User } from '../models/index.js';
+import { Product, Farmer, Order, User } from '../models/index.js';
 import AppError from '../utils/AppError.js';
-import { PRODUCT_STATUS } from '../utils/constants.js';
+import { OPEN_ORDER_STATUSES, PRODUCT_STATUS } from '../utils/constants.js';
 import { isoWeekKey } from '../utils/dates.js';
 import { round2 } from '../utils/helpers.js';
 import { notifyMany } from './notify.js';
@@ -113,20 +113,29 @@ export async function notifyRestock(product) {
 
 /**
  * Recurring weekly stock: resets quantityAvailable of every product to its
- * templateQuantity (products the farmer marked "unavailable" are skipped).
+ * templateQuantity minus what open pre-orders already reserved
+ * (products the farmer marked "unavailable" are skipped).
  */
 export async function applyWeeklyTemplate(farmer, { notifyFans = true } = {}) {
   const products = await Product.find({ farmer: farmer._id, isRemoved: false, templateQuantity: { $gt: 0 } });
+
+  // Stock already promised to open pre-orders is subtracted, so the reset can never oversell.
+  const openOrders = await Order.find({ farmer: farmer._id, status: { $in: OPEN_ORDER_STATUSES } }).select('items').lean();
+  const reserved = new Map();
+  for (const order of openOrders) {
+    for (const item of order.items) reserved.set(String(item.product), (reserved.get(String(item.product)) || 0) + item.quantity);
+  }
+
   let updated = 0;
   const restocked = [];
   for (const product of products) {
     if (product.status === PRODUCT_STATUS.UNAVAILABLE) continue;
     const wasEmpty = product.quantityAvailable <= 0;
-    product.quantityAvailable = product.templateQuantity;
-    if (product.status === PRODUCT_STATUS.SOLD_OUT) product.status = PRODUCT_STATUS.AVAILABLE;
+    product.quantityAvailable = Math.max(0, product.templateQuantity - (reserved.get(String(product._id)) || 0));
+    if (product.status === PRODUCT_STATUS.SOLD_OUT && product.quantityAvailable > 0) product.status = PRODUCT_STATUS.AVAILABLE;
     await product.save();
     updated += 1;
-    if (wasEmpty) restocked.push(product);
+    if (wasEmpty && product.quantityAvailable > 0) restocked.push(product);
   }
   await Farmer.updateOne({ _id: farmer._id }, { templateLastAppliedWeek: isoWeekKey() });
 

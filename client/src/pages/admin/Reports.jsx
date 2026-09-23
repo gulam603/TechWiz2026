@@ -7,7 +7,7 @@ import { DashHeader } from '../../components/common/PageHeader';
 import KpiCard from '../../components/common/KpiCard';
 import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, ColumnChart, TrendChart } from '../../components/charts/Charts';
-import { formatDate, formatDateKey, money, ORDER_STATUS_META, toDateKey } from '../../utils/format';
+import { formatDate, formatDateKey, money, moneyCompact, ORDER_STATUS_META, toDateKey } from '../../utils/format';
 
 /** Turns the report into rows for the table view and CSV export. */
 function reportTable(report) {
@@ -62,7 +62,7 @@ function ReportView({ report }) {
     return (
       <>
         <div className="row g-3 mb-4">
-          <div className="col-md-4"><KpiCard variant="accent" icon="bi-cash-stack" label="Revenue (completed)" value={money(t.revenue)} /></div>
+          <div className="col-md-4"><KpiCard variant="accent" icon="bi-cash-stack" label="Revenue (completed)" value={moneyCompact(t.revenue)} /></div>
           <div className="col-md-4"><KpiCard icon="bi-receipt" label="Orders" value={t.orders} /></div>
           <div className="col-md-4"><KpiCard variant="info" icon="bi-geo-alt" label="Markets" value={t.markets} /></div>
         </div>
@@ -135,8 +135,8 @@ function ReportView({ report }) {
         )}
         <div className="col-6 col-lg-3"><KpiCard icon="bi-receipt" label="Orders" value={t.orders} /></div>
         <div className="col-6 col-lg-3"><KpiCard icon="bi-check2-circle" label="Completed" value={t.completed} /></div>
-        <div className="col-6 col-lg-3"><KpiCard variant="warn" icon="bi-cash-stack" label="Revenue" value={money(t.revenue)} /></div>
-        <div className="col-6 col-lg-3"><KpiCard variant="info" icon="bi-graph-up" label="Average order" value={money(t.averageOrder)} /></div>
+        <div className="col-6 col-lg-3"><KpiCard variant="warn" icon="bi-cash-stack" label="Revenue" value={moneyCompact(t.revenue)} /></div>
+        <div className="col-6 col-lg-3"><KpiCard variant="info" icon="bi-graph-up" label="Average order" value={money(Math.round(t.averageOrder))} /></div>
       </div>
       <div className="row g-4">
         <div className="col-xl-8 d-grid gap-4">

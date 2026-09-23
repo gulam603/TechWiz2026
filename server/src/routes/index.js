@@ -19,8 +19,17 @@ import * as assistant from '../controllers/assistantController.js';
 
 const router = Router();
 
-// Brute-force protection for login / sign-up
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: true, legacyHeaders: false, message: { message: 'Too many attempts. Please try again in a few minutes.' } });
+// Brute-force protection: only failed logins count, so normal use is never blocked
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  skipSuccessfulRequests: true,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many failed attempts. Please try again in a few minutes.' },
+});
+// Spam protection for sign-up and contact forms
+const formLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 40, standardHeaders: true, legacyHeaders: false, message: { message: 'Too many requests. Please try again later.' } });
 const chatLimiter = rateLimit({ windowMs: 60 * 1000, limit: 30, message: { message: 'You are sending messages too quickly.' } });
 
 const productImage = imageUpload('products');
@@ -29,8 +38,8 @@ const marketImage = imageUpload('markets');
 const categoryIcon = imageUpload('categories');
 
 // ---------- Auth ----------
-router.post('/auth/register', authLimiter, auth.registerCustomer);
-router.post('/auth/register-farmer', authLimiter, auth.registerFarmer);
+router.post('/auth/register', formLimiter, auth.registerCustomer);
+router.post('/auth/register-farmer', formLimiter, auth.registerFarmer);
 router.post('/auth/login', authLimiter, auth.login);
 router.post('/auth/admin/login', authLimiter, auth.adminLogin);
 router.post('/auth/logout', auth.logout);
@@ -45,7 +54,7 @@ router.get('/search', pub.globalSearch);
 router.get('/map', pub.mapData);
 router.get('/testimonials', pub.testimonials);
 router.get('/announcements/active', optionalAuth, pub.activeAnnouncements);
-router.post('/contact', authLimiter, pub.submitContact);
+router.post('/contact', formLimiter, pub.submitContact);
 
 router.get('/markets', markets.listMarkets);
 router.get('/markets/:idOrSlug', optionalAuth, markets.getMarket);

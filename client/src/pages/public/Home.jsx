@@ -271,11 +271,13 @@ export default function Home() {
                     </span>
                     <span className="flex-grow-1 min-w-0">
                       <strong className="d-block text-truncate">{m.name}</strong>
-                      <span className="fs-7 text-muted-2">
+                      <span className="fs-7 text-muted-2 d-block text-truncate">
                         {time12(m.openTime)} – {time12(m.closeTime)} · {m.farmerCount} farmers
                       </span>
                     </span>
-                    <DayDots days={m.operatingDays} />
+                    <span className="d-none d-sm-inline-flex">
+                      <DayDots days={m.operatingDays} />
+                    </span>
                   </Link>
                 ))}
               </div>

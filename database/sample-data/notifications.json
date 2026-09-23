@@ -1,0 +1,110 @@
+[
+  {
+    "_id": "6ab3afe6cd9cab7004fceec4",
+    "user": "6ab3afe2cd9cab7004fcebb9",
+    "type": "system",
+    "title": "Welcome to MarketLink!",
+    "message": "Browse this week's harvest and pre-order for pickup at your favourite market.",
+    "link": "/products",
+    "read": true,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceec5",
+    "user": "6ab3afe2cd9cab7004fcebb9",
+    "type": "announcement",
+    "title": "Mango season is here! 🥭",
+    "message": "Sindhri and Chaunsa mangoes are now available from Gadap Orchard Co. Pre-order early — they sell out by Sunday noon!",
+    "link": "/products?category=fruits",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceec6",
+    "user": "6ab3afe2cd9cab7004fcebb9",
+    "type": "order",
+    "title": "Pre-order ML-260922-0432 placed",
+    "message": "Malir Green Fields received your pre-order.",
+    "link": "/account/orders/6ab3afe3cd9cab7004fced70",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceec7",
+    "user": "6ab3afe2cd9cab7004fcebb9",
+    "type": "order",
+    "title": "Pre-order ML-260922-0433 accepted",
+    "message": "Karachi Artisan Bakehouse accepted your pre-order.",
+    "link": "/account/orders/6ab3afe3cd9cab7004fced71",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceec8",
+    "user": "6ab3afe2cd9cab7004fcebb9",
+    "type": "order",
+    "title": "Pre-order ML-260923-0434 is ready for pickup",
+    "message": "Your order from Thatta Dairy Collective is packed and ready. Please pay at pickup.",
+    "link": "/account/orders/6ab3afe4cd9cab7004fced72",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceec9",
+    "user": "6ab3afe0cd9cab7004fceb47",
+    "type": "order",
+    "title": "New pre-order ML-260922-0432",
+    "message": "Ayesha Khan placed a pre-order.",
+    "link": "/farmer/orders",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceeca",
+    "user": "6ab3afe0cd9cab7004fceb47",
+    "type": "review",
+    "title": "New 5-star review",
+    "message": "A customer loved your Vine Tomatoes!",
+    "link": "/farmer/reviews",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceecb",
+    "user": "6ab3afe0cd9cab7004fceb36",
+    "type": "account",
+    "title": "New farmer registration",
+    "message": "Sunny Acres Poultry (Rashid Mehmood) is waiting for approval.",
+    "link": "/admin/farmers?status=pending",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  },
+  {
+    "_id": "6ab3afe6cd9cab7004fceecc",
+    "user": "6ab3afe0cd9cab7004fceb36",
+    "type": "system",
+    "title": "New contact message",
+    "message": "Tariq Jamil: Joining as a farmer",
+    "link": "/admin/messages",
+    "read": false,
+    "__v": 0,
+    "createdAt": "2026-09-23T10:54:30.993Z",
+    "updatedAt": "2026-09-23T10:54:30.993Z"
+  }
+]

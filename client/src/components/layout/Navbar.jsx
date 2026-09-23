@@ -106,7 +106,7 @@ export default function Navbar() {
         </ul>
 
         <div className="d-flex align-items-center gap-2 ms-auto ms-lg-0">
-          <button type="button" className="nav-icon-btn" onClick={() => setSearchOpen(!searchOpen)} aria-label="Search" aria-expanded={searchOpen}>
+          <button type="button" className="nav-icon-btn d-none d-sm-inline-flex" onClick={() => setSearchOpen(!searchOpen)} aria-label="Search" aria-expanded={searchOpen}>
             <i className={`bi ${searchOpen ? 'bi-x-lg' : 'bi-search'}`} />
           </button>
           {showCart && (
@@ -142,6 +142,7 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="container pb-3 d-lg-none">
+          <GlobalSearch className="mb-2 d-sm-none" />
           <ul className="navbar-nav gap-1">
             {LINKS.map((l) => (
               <li key={l.to}>

@@ -1,0 +1,132 @@
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useFetch from '../../hooks/useFetch';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
+import MapView from '../../components/map/MapView';
+import { getCurrentPosition } from '../../components/map/DirectionsMap';
+import { DAY_LETTER, DAY_NAMES, DAY_SHORT, distanceKm, time12 } from '../../utils/format';
+import { useToast } from '../../context/ToastContext';
+
+/** Full-screen map of every market and farmer stall with search, day filter and "near me". */
+export default function MapExplore() {
+  useDocumentTitle('Market map');
+  const { data } = useFetch('/map');
+  const { toast } = useToast();
+  const [layer, setLayer] = useState('all');
+  const [day, setDay] = useState('');
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState(null);
+  const [me, setMe] = useState(null);
+
+  const items = useMemo(() => {
+    if (!data) return [];
+    const list = [
+      ...data.markets.map((m) => ({
+        id: m._id,
+        type: 'market',
+        lat: m.latitude,
+        lng: m.longitude,
+        image: m.image,
+        title: m.name,
+        subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)}–${time12(m.closeTime)}`,
+        address: m.address,
+        days: m.operatingDays,
+        link: `/markets/${m.slug}`,
+        linkLabel: 'View market',
+      })),
+      ...data.farmers.map((f) => ({
+        id: f._id,
+        type: 'farmer',
+        lat: f.latitude,
+        lng: f.longitude,
+        image: f.logo,
+        title: f.stallName,
+        subtitle: `Stall · ${f.markets.map((m) => m.name).join(', ')}`,
+        address: f.address,
+        days: f.operatingDays,
+        link: `/farmers/${f.slug}`,
+        linkLabel: 'View stall',
+      })),
+    ];
+    return list
+      .filter((i) => layer === 'all' || i.type === layer)
+      .filter((i) => day === '' || i.days.includes(Number(day)))
+      .filter((i) => !search || `${i.title} ${i.address}`.toLowerCase().includes(search.toLowerCase()))
+      .map((i) => (me ? { ...i, distance: distanceKm(me.lat, me.lng, i.lat, i.lng) } : i))
+      .sort((a, b) => (me ? a.distance - b.distance : a.title.localeCompare(b.title)));
+  }, [data, layer, day, search, me]);
+
+  async function locate() {
+    try {
+      setMe(await getCurrentPosition());
+    } catch (err) {
+      toast(err.message, 'error');
+    }
+  }
+
+  return (
+    <div className="container-fluid px-3 px-lg-4">
+      <div className="explore-layout">
+        <div className="explore-panel">
+          <div className="p-3 border-bottom">
+            <h1 className="h4 mb-3">Explore the map</h1>
+            <div className="search-pill mb-2">
+              <i className="bi bi-search" />
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search markets or stalls" aria-label="Search map" />
+            </div>
+            <div className="d-flex gap-1 mb-2 flex-wrap">
+              {[
+                ['all', 'All'],
+                ['market', 'Markets'],
+                ['farmer', 'Farmer stalls'],
+              ].map(([v, l]) => (
+                <button key={v} type="button" className={`filter-chip ${layer === v ? 'active' : ''}`} onClick={() => setLayer(v)}>
+                  {l}
+                </button>
+              ))}
+              <button type="button" className={`filter-chip ms-auto ${me ? 'active' : ''}`} onClick={me ? () => setMe(null) : locate}>
+                <i className="bi bi-crosshair" /> Near me
+              </button>
+            </div>
+            <div className="day-picker">
+              {DAY_LETTER.map((letter, i) => (
+                <button key={i} type="button" className={String(i) === day ? 'active' : ''} onClick={() => setDay(String(i) === day ? '' : String(i))} title={DAY_NAMES[i]} aria-label={DAY_NAMES[i]}>
+                  {letter}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="explore-list">
+            <div className="small text-muted-2 px-2 py-1">{items.length} places</div>
+            {items.map((i) => (
+              <div
+                key={i.id}
+                role="button"
+                tabIndex={0}
+                className={`explore-item ${selected === i.id ? 'active' : ''}`}
+                onClick={() => setSelected(i.id)}
+                onKeyDown={(e) => e.key === 'Enter' && setSelected(i.id)}
+              >
+                <span className="thumb" style={{ background: i.type === 'market' ? '#173b2c' : '#fde7d6' }}>
+                  <img src={i.image} alt="" />
+                </span>
+                <span className="flex-grow-1 min-w-0">
+                  <strong className="d-block small">{i.title}</strong>
+                  <span className="d-block fs-7 text-muted-2 text-truncate">{i.subtitle}</span>
+                  <span className="fs-7">
+                    <span className={`chip ${i.type === 'market' ? 'chip-dark' : 'chip-warn'} py-0`}>{i.type === 'market' ? 'Market' : 'Stall'}</span>
+                    {i.distance !== undefined && <span className="ms-2 fw-semi">{i.distance} km</span>}
+                  </span>
+                </span>
+                <Link to={i.link} className="btn btn-sm btn-soft btn-icon align-self-center" onClick={(e) => e.stopPropagation()} aria-label={`Open ${i.title}`}>
+                  <i className="bi bi-arrow-right" />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+        <MapView markers={items} selectedId={selected} onSelect={setSelected} userLocation={me} height="100%" scrollWheelZoom />
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,16 @@
+import mongoose from 'mongoose';
+
+const categorySchema = new mongoose.Schema(
+  {
+    name: { type: String, required: [true, 'Category name is required'], trim: true, unique: true, maxlength: 60 },
+    slug: { type: String, required: true, unique: true, lowercase: true },
+    description: { type: String, trim: true, maxlength: 300 },
+    icon: { type: String }, // image path
+    color: { type: String, default: '#E6F4DA' }, // pastel background used on cards
+    sortOrder: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model('Category', categorySchema);

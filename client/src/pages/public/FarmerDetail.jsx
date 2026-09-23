@@ -1,0 +1,160 @@
+import { useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import useFetch from '../../hooks/useFetch';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
+import ProductCard from '../../components/cards/ProductCard';
+import ReviewItem from '../../components/cards/ReviewItem';
+import DirectionsMap from '../../components/map/DirectionsMap';
+import RatingStars from '../../components/common/RatingStars';
+import DayDots from '../../components/common/DayDots';
+import FavButton from '../../components/common/FavButton';
+import EmptyState from '../../components/common/EmptyState';
+import { PageLoader } from '../../components/common/Loader';
+import { coverFor, DAY_SHORT, time12 } from '../../utils/format';
+
+export default function FarmerDetail() {
+  const { slug } = useParams();
+  const { data, loading, error } = useFetch(`/farmers/${slug}`);
+  const [cat, setCat] = useState('');
+  useDocumentTitle(data?.farmer?.stallName);
+
+  const categories = useMemo(() => {
+    const map = new Map();
+    for (const p of data?.products || []) if (p.category) map.set(p.category.slug, p.category);
+    return [...map.values()];
+  }, [data]);
+
+  if (loading && !data) return <PageLoader />;
+  if (error)
+    return (
+      <div className="container py-5">
+        <EmptyState image="/illustrations/farmer.webp" title="Farmer not found" action={<Link to="/farmers" className="btn btn-primary">All farmers</Link>} />
+      </div>
+    );
+
+  const { farmer, products, reviews } = data;
+  const visible = cat ? products.filter((p) => p.category?.slug === cat) : products;
+  const inStock = products.filter((p) => p.status === 'available' && p.quantityAvailable > 0).length;
+  const windowsByMarket = {};
+  for (const w of farmer.pickupWindows) {
+    const key = w.market?._id || 'x';
+    (windowsByMarket[key] ||= { market: w.market, windows: [] }).windows.push(w);
+  }
+
+  return (
+    <div className="container py-4">
+      <div className="profile-hero" style={{ '--cover': coverFor(farmer.stallName) }}>
+        {farmer.coverImage ? (
+          <img className="cover-photo" src={farmer.coverImage} alt="" />
+        ) : (
+          <>
+            <img className="cover-art" src={products[0]?.image || farmer.logo} alt="" style={{ width: 150, right: '8%', top: 24, transform: 'rotate(10deg)' }} />
+            <img className="cover-art" src={products[1]?.image || '/illustrations/leafy-greens.webp'} alt="" style={{ width: 96, right: '24%', top: 60, transform: 'rotate(-12deg)' }} />
+            <img className="cover-art" src={products[2]?.image || '/illustrations/carrot.webp'} alt="" style={{ width: 80, right: '38%', top: 20 }} />
+          </>
+        )}
+      </div>
+      <div className="profile-head mb-4">
+        <div className="profile-logo">
+          <img src={farmer.logo} alt="" />
+        </div>
+        <div className="flex-grow-1 pb-1">
+          <h1>{farmer.stallName}</h1>
+          <div className="d-flex align-items-center gap-3 flex-wrap mt-1">
+            <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
+            <span className="small text-muted-2">
+              <i className="bi bi-geo-alt" /> {farmer.city || farmer.address}
+            </span>
+            <span className="small text-muted-2">
+              <i className="bi bi-basket" /> {inStock} in stock
+            </span>
+          </div>
+        </div>
+        <div className="pb-1">
+          <FavButton type="farmers" id={farmer._id} withLabel />
+        </div>
+      </div>
+
+      <div className="row g-4">
+        <div className="col-lg-8">
+          <div className="soft-panel mb-4">
+            <p className="mb-3">{farmer.bio}</p>
+            <div className="d-flex flex-wrap gap-2">
+              {farmer.tags?.map((t) => (
+                <span key={t} className="chip chip-soft">
+                  <i className="bi bi-patch-check" /> {t}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="d-flex align-items-end justify-content-between flex-wrap gap-2 mb-3">
+            <div>
+              <span className="eyebrow">Current weekly stock</span>
+              <h2 className="h3 mb-0">This week at the stall</h2>
+            </div>
+            <div className="d-flex gap-1 flex-wrap">
+              <button type="button" className={`filter-chip ${!cat ? 'active' : ''}`} onClick={() => setCat('')}>
+                All ({products.length})
+              </button>
+              {categories.map((c) => (
+                <button type="button" key={c.slug} className={`filter-chip ${cat === c.slug ? 'active' : ''}`} onClick={() => setCat(c.slug)}>
+                  {c.name}
+                </button>
+              ))}
+            </div>
+          </div>
+          {visible.length === 0 ? (
+            <EmptyState title="No products listed yet" message="Check back closer to market day." />
+          ) : (
+            <div className="row g-3">
+              {visible.map((p) => (
+                <div key={p._id} className="col-6 col-md-4">
+                  <ProductCard product={{ ...p, farmer: { _id: farmer._id, stallName: farmer.stallName, slug: farmer.slug, logo: farmer.logo } }} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          <h2 className="h3 mt-5 mb-3">Reviews</h2>
+          <div className="soft-panel">
+            {reviews.length === 0 ? <p className="text-muted-2 mb-0">No reviews yet.</p> : reviews.map((r) => <ReviewItem key={r._id} review={r} showProduct farmerName={farmer.stallName} />)}
+          </div>
+        </div>
+
+        <aside className="col-lg-4">
+          <div className="soft-panel mb-4">
+            <h5 className="mb-3">Market days</h5>
+            <DayDots days={farmer.operatingDays} />
+            <h6 className="mt-4 mb-2">Pickup windows</h6>
+            {Object.values(windowsByMarket).map(({ market, windows }) => (
+              <div key={market?._id} className="mb-3">
+                <Link to={`/markets/${market?.slug}`} className="small fw-bold">
+                  <i className="bi bi-geo-alt" /> {market?.name}
+                </Link>
+                <ul className="window-list">
+                  {windows.map((w) => (
+                    <li key={w._id}>
+                      <span className="day">{DAY_SHORT[w.day]}</span> {time12(w.start)} – {time12(w.end)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <div className="pay-note">
+              <i className="bi bi-hourglass-split" />
+              <span>Pre-orders close {farmer.orderCutoffHours} h before each pickup slot.</span>
+            </div>
+          </div>
+          {farmer.latitude && (
+            <div className="soft-panel">
+              <h5 className="mb-1">Stall location</h5>
+              <p className="small text-muted-2">{farmer.address}</p>
+              <DirectionsMap destination={{ lat: farmer.latitude, lng: farmer.longitude, title: farmer.stallName, image: farmer.logo }} height={240} />
+            </div>
+          )}
+        </aside>
+      </div>
+    </div>
+  );
+}

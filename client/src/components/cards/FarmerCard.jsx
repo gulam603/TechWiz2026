@@ -1,0 +1,52 @@
+import { Link } from 'react-router-dom';
+import { coverFor } from '../../utils/format';
+import RatingStars from '../common/RatingStars';
+import DayDots from '../common/DayDots';
+import FavButton from '../common/FavButton';
+
+export default function FarmerCard({ farmer }) {
+  return (
+    <article className="farmer-card">
+      <div className="cover" style={{ '--cover': coverFor(farmer.stallName) }}>
+        {farmer.coverImage ? (
+          <img className="cover-photo" src={farmer.coverImage} alt="" loading="lazy" />
+        ) : (
+          <>
+            <img className="cover-art" src={farmer.logo} alt="" style={{ right: 18, top: 14, transform: 'rotate(12deg)', width: 64, opacity: 0.35 }} />
+            <img className="cover-art" src="/illustrations/leafy-greens.webp" alt="" style={{ right: 90, top: 40, width: 46, opacity: 0.35 }} />
+          </>
+        )}
+        <div className="position-absolute" style={{ top: 12, right: 12, zIndex: 3 }}>
+          <FavButton type="farmers" id={farmer._id} />
+        </div>
+      </div>
+      <div className="farmer-logo">{farmer.logo ? <img src={farmer.logo} alt="" /> : <i className="bi bi-shop fs-3 text-success" />}</div>
+      <div className="card-body">
+        <h3 className="card-title">
+          <Link to={`/farmers/${farmer.slug}`} className="stretched">
+            {farmer.stallName}
+          </Link>
+        </h3>
+        <div className="mb-2">
+          <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
+        </div>
+        {farmer.bio && (
+          <p className="small text-muted-2 mb-3" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {farmer.bio}
+          </p>
+        )}
+        <div className="d-flex flex-wrap gap-1 mb-3">
+          {(farmer.tags || []).slice(0, 3).map((t) => (
+            <span key={t} className="chip chip-soft">
+              {t}
+            </span>
+          ))}
+        </div>
+        <div className="mt-auto d-flex align-items-center justify-content-between gap-2">
+          <DayDots days={farmer.operatingDays} />
+          {farmer.productCount !== undefined && <span className="small fw-semi text-muted-2">{farmer.productCount} items</span>}
+        </div>
+      </div>
+    </article>
+  );
+}

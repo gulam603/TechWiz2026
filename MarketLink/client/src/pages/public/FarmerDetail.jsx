@@ -80,6 +80,16 @@ export default function FarmerDetail() {
         <div className="col-lg-8">
           <div className="soft-panel mb-4">
             <p className="mb-3">{farmer.bio}</p>
+            {farmer.categories?.length > 0 && (
+              <div className="d-flex flex-wrap gap-2 mb-2 align-items-center">
+                <span className="small fw-semi text-muted-2">Grows / sells:</span>
+                {farmer.categories.map((c) => (
+                  <span key={c._id} className="chip" style={{ background: c.color }}>
+                    <img src={c.icon} alt="" width={16} height={16} /> {c.name}
+                  </span>
+                ))}
+              </div>
+            )}
             <div className="d-flex flex-wrap gap-2">
               {farmer.tags?.map((t) => (
                 <span key={t} className="chip chip-soft">

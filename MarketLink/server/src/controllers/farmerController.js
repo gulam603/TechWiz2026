@@ -55,6 +55,7 @@ export async function getFarmer(req, res) {
   await farmer.populate([
     { path: 'markets', select: 'name slug address latitude longitude openTime closeTime operatingDays' },
     { path: 'pickupWindows.market', select: 'name slug' },
+    { path: 'categories', select: 'name slug icon color' },
   ]);
   const [products, reviews] = await Promise.all([
     Product.find({ ...Product.publicFilter(), farmer: farmer._id })

@@ -10,7 +10,7 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 | Layer | Technology |
 | --- | --- |
 | Frontend | React 19 (Vite), React Router, Bootstrap 5 (custom SCSS theme), Bootstrap Icons, Recharts |
-| Maps | OpenStreetMap tiles with Leaflet / React-Leaflet, OSRM driving routes, Google Maps links & embed |
+| Maps | OpenStreetMap tiles (automatic CARTO fallback) with Leaflet / React-Leaflet, OSRM driving routes, Google Maps links & embed |
 | Backend | Node.js 20+, Express 5 REST API, JWT auth in an httpOnly cookie, Multer uploads, Nodemailer |
 | Database | MongoDB (Mongoose ODM) — local MongoDB or MongoDB Atlas |
 
@@ -20,6 +20,7 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 
 **Customer**
 - Register (name, contact number, e-mail, address) and log in to a personal dashboard
+- **Forgot password**: a one-time reset link (valid 30 minutes) is e-mailed to customers and farmers
 - Browse markets by location (“near me”), city and day; see the farmers at each market
 - Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
 - Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
@@ -36,8 +37,11 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 - **AI assistant** “Basket” (chat widget) answering market timings, farmer availability, pickup windows and product questions from live data
 
 **Farmer**
-- Register (stall/business name, contact person, contact number, e-mail, address) — needs admin approval before listing
-- Stall profile: bio, tags, logo and cover photo, markets, operating days, pickup windows, **map pin (lat/lng)**
+- Register with a 3-step wizard — ① stall name, contact person, contact number, e-mail, password;
+  ② farm address, city, “about your farm”, what they grow/sell (categories) and farming practices;
+  ③ markets they sell at, optional map pin, summary and acceptance of the market guidelines —
+  needs admin approval before listing
+- Stall profile: bio, categories grown/sold, farming practices, logo and cover photo, markets, operating days, pickup windows, **map pin (lat/lng)**
 - Products: add / edit / delete with name, category, price, unit, quantity, description, image
 - **Recurring weekly stock template** (manual “apply now” or automatic every week) — reserved pre-orders are respected
 - Mark items sold out or temporarily unavailable
@@ -146,7 +150,7 @@ npm start          # then open http://localhost:5000
 | `CLIENT_URL` | React dev URL allowed by CORS (default `http://localhost:5173`) |
 | `CURRENCY` | currency symbol used in e-mails / assistant (default `Rs`) |
 | `TZ` | time zone of the markets, used for pickup slots and cut-off times (default `Asia/Karachi`) |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | optional e-mail settings. If `SMTP_HOST` is empty, e-mails are printed to the server console instead of being sent |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | optional e-mail settings. Empty `SMTP_HOST` → e-mails are printed to the server console; `SMTP_HOST=ethereal` → free Ethereal test inbox (a link to view each e-mail is printed); a real host (e.g. `smtp.gmail.com` + app password) → real e-mails |
 
 The front-end currency symbol can be changed with `VITE_CURRENCY` in `client/.env` (default `Rs`).
 
@@ -191,15 +195,21 @@ MongoDB collections: `users`, `farmers`, `markets`, `categories`, `products`, `o
 
 ## 6. Maps, AI assistant and e-mail
 
-- **Maps:** OpenStreetMap tiles through Leaflet — no API key needed. “Route from my location”
+- **Maps:** OpenStreetMap tiles through Leaflet — no API key needed. The server sends a
+  `strict-origin-when-cross-origin` Referrer-Policy because the OpenStreetMap tile server
+  rejects tile requests without a Referer (“403 Access blocked”). If OpenStreetMap tiles still
+  fail (network / firewall), the map switches automatically to CARTO tiles, and if no tiles load
+  at all the markers and directions links keep working. “Route from my location”
   uses the browser’s geolocation and the free OSRM routing service; every map also links to
   Google Maps / OpenStreetMap directions. The Contact page embeds Google Maps.
 - **AI assistant:** a rule-based assistant built into the API (`server/src/services/assistant.js`).
   It detects the intent of a question (market timings, farmer availability, pickup windows,
   product search, payment / delivery / cancellation FAQs, order status) and answers from live
   database data. No external AI service or key is required.
-- **E-mail:** Nodemailer. Configure SMTP (e.g. Gmail app password or Mailtrap) in `server/.env`;
-  otherwise e-mails are logged to the console for demos.
+- **E-mail:** Nodemailer — order confirmation, status updates (“ready for pickup” with directions),
+  farmer approval and password-reset e-mails. By default they are printed in the server terminal
+  (the reset link can be copied from there). Set `SMTP_HOST=ethereal` in `server/.env` for a free
+  test inbox, or real SMTP settings (e.g. Gmail app password) to deliver real e-mails.
 
 ---
 

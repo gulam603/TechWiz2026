@@ -17,6 +17,14 @@ $ml-muted: #66756d;
 $ml-line: #e7e1d3;
 
 // Bootstrap overrides
+// Laptop screens (992–1399px) use the full width instead of Bootstrap's narrow 960/1140px boxes.
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 1140px,
+  xl: 1240px,
+  xxl: 1320px,
+);
 $primary: $ml-green;
 $secondary: $ml-muted;
 $success: #3a9a5b;

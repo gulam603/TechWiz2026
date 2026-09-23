@@ -31,7 +31,8 @@ const farmerSchema = new Schema(
     address: { type: String, required: [true, 'Address is required'], trim: true },
     city: { type: String, trim: true, default: '' },
     bio: { type: String, trim: true, maxlength: 1200 },
-    tags: [{ type: String, trim: true }],
+    tags: [{ type: String, trim: true }], // farming practices, e.g. "Pesticide-free"
+    categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }], // what the farmer grows / sells
     logo: String,
     coverImage: String,
 

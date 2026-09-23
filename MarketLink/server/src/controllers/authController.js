@@ -1,7 +1,10 @@
+import crypto from 'node:crypto';
 import { User, Farmer } from '../models/index.js';
+import { mailMode, sendMail } from '../services/mailer.js';
 import AppError from '../utils/AppError.js';
 import { ROLES, USER_STATUS } from '../utils/constants.js';
-import { pick, requireFields, toNumber } from '../utils/helpers.js';
+import { pick, requireFields, toBool } from '../utils/helpers.js';
+import { readFarmDetails } from './helpers/farmDetails.js';
 import { uniqueSlug } from '../utils/slug.js';
 import { isoWeekKey } from '../utils/dates.js';
 import { clearAuthCookie, setAuthCookie, signToken } from '../middleware/auth.js';
@@ -46,7 +49,12 @@ export async function registerCustomer(req, res) {
 export async function registerFarmer(req, res) {
   requireFields(req.body, ['stallName', 'contactPerson', 'phone', 'email', 'address', 'password']);
   checkPassword(req.body.password);
+  if (req.body.acceptTerms !== undefined && !toBool(req.body.acceptTerms)) {
+    throw new AppError('Please confirm that your details are correct and accept the market guidelines', 400);
+  }
   const { stallName, contactPerson, phone, email, address, city, password } = req.body;
+  // Optional details: bio, practices, what they grow, markets and map pin (validated before creating anything)
+  const details = await readFarmDetails(req.body);
 
   const user = await User.create({
     name: contactPerson,
@@ -68,8 +76,7 @@ export async function registerFarmer(req, res) {
       email: user.email,
       address,
       city,
-      latitude: toNumber(req.body.latitude),
-      longitude: toNumber(req.body.longitude),
+      ...details,
       templateLastAppliedWeek: isoWeekKey(), // automatic weekly refresh starts next week
     });
   } catch (err) {
@@ -137,6 +144,44 @@ export async function updateMe(req, res) {
   Object.assign(req.user, allowed);
   await req.user.save();
   res.json(await buildSession(req.user));
+}
+
+const hashToken = (token) => crypto.createHash('sha256').update(String(token)).digest('hex');
+
+// POST /api/auth/forgot-password  { email }
+// Always answers the same way so nobody can find out which e-mails are registered.
+export async function forgotPassword(req, res) {
+  const email = String(req.body.email || '').toLowerCase().trim();
+  if (!email) throw new AppError('Please enter your e-mail address', 400);
+  const user = await User.findOne({ email });
+  if (user && ![USER_STATUS.SUSPENDED, USER_STATUS.INACTIVE].includes(user.status)) {
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetPasswordHash = hashToken(token);
+    user.resetPasswordExpires = new Date(Date.now() + 30 * 60 * 1000); // valid for 30 minutes
+    await user.save();
+    const origin = req.get('origin') || `${req.protocol}://${req.get('host')}`;
+    await sendMail({
+      to: user.email,
+      subject: 'Reset your password',
+      message: `Hi ${user.name},\nWe received a request to reset your MarketLink password. Open this link within 30 minutes to choose a new one:\n${origin}/reset-password/${token}\nIf you did not ask for this, you can ignore this e-mail.`,
+    });
+  }
+  res.json({ message: 'If an account exists for this e-mail, a password reset link has been sent.', emailMode: mailMode() });
+}
+
+// POST /api/auth/reset-password  { token, password }
+export async function resetPassword(req, res) {
+  requireFields(req.body, ['token', 'password']);
+  checkPassword(req.body.password);
+  const user = await User.findOne({ resetPasswordHash: hashToken(req.body.token), resetPasswordExpires: { $gt: new Date() } }).select(
+    '+resetPasswordHash +resetPasswordExpires'
+  );
+  if (!user) throw new AppError('This reset link is invalid or has expired. Please request a new one', 400);
+  user.password = req.body.password;
+  user.resetPasswordHash = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+  res.json({ message: 'Your password has been changed. You can now log in.' });
 }
 
 // PUT /api/auth/password

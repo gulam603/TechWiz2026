@@ -86,7 +86,7 @@ export default function AdminFarmers() {
               <tbody>
                 {data.farmers.map((f) => (
                   <tr key={f._id}>
-                    <td>
+                    <td className="td-min">
                       <div className="d-flex align-items-center gap-2">
                         <span className="thumb-sm">
                           <img src={f.logo} alt="" />
@@ -101,7 +101,7 @@ export default function AdminFarmers() {
                       {f.contactPerson}
                       <div className="fs-7 text-muted-2">{f.email}</div>
                     </td>
-                    <td className="small">{f.markets.map((m) => m.name).join(', ') || '–'}</td>
+                    <td className="small td-min">{f.markets.map((m) => m.name).join(', ') || '–'}</td>
                     <td className="text-end">{f.productCount}</td>
                     <td className="text-end">{f.orderCount}</td>
                     <td>
@@ -138,12 +138,18 @@ export default function AdminFarmers() {
               <div className="info-row"><span>Contact person</span><span>{viewing.contactPerson}</span></div>
               <div className="info-row"><span>Phone</span><span>{viewing.phone}</span></div>
               <div className="info-row"><span>E-mail</span><span>{viewing.email}</span></div>
-              <div className="info-row"><span>Address</span><span>{viewing.address}</span></div>
+              <div className="info-row"><span>Address</span><span>{viewing.address}{viewing.city ? `, ${viewing.city}` : ''}</span></div>
               <div className="info-row"><span>Status</span><span><StatusBadge status={viewing.user?.status} /></span></div>
               <div className="info-row"><span>Last login</span><span>{viewing.user?.lastLoginAt ? formatDate(viewing.user.lastLoginAt, { time: true }) : '–'}</span></div>
             </div>
             <div className="col-md-6">
               <p className="small">{viewing.bio || 'No description yet.'}</p>
+              <div className="small mb-2">
+                <strong>Grows / sells:</strong> {viewing.categories?.map((c) => c.name).join(', ') || '–'}
+              </div>
+              <div className="small mb-2">
+                <strong>Practices:</strong> {viewing.tags?.join(', ') || '–'}
+              </div>
               <div className="mb-2"><DayDots days={viewing.operatingDays} /></div>
               <div className="small text-muted-2">Markets: {viewing.markets.map((m) => m.name).join(', ') || '–'}</div>
               <div className="small text-muted-2">Map pin: {viewing.latitude ? `${viewing.latitude}, ${viewing.longitude}` : 'not set'}</div>

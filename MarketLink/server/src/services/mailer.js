@@ -1,16 +1,44 @@
 import nodemailer from 'nodemailer';
 import env from '../config/env.js';
 
-// If SMTP details are configured, real e-mails are sent. Otherwise nodemailer's
-// JSON transport is used and the e-mail is printed to the console (handy for demos).
-const transporter = env.smtp.host
-  ? nodemailer.createTransport({
-      host: env.smtp.host,
-      port: env.smtp.port,
-      secure: env.smtp.port === 465,
-      auth: env.smtp.user ? { user: env.smtp.user, pass: env.smtp.pass } : undefined,
-    })
-  : nodemailer.createTransport({ jsonTransport: true });
+/**
+ * Three ways to deliver e-mail (set SMTP_HOST in server/.env):
+ *  - a real SMTP server (e.g. smtp.gmail.com)        -> e-mails are really sent
+ *  - SMTP_HOST=ethereal                               -> free test inbox; a link to view each e-mail is printed
+ *  - SMTP_HOST empty (default)                        -> the e-mail is printed in the server console
+ */
+export function mailMode() {
+  if (!env.smtp.host) return 'console';
+  return env.smtp.host.toLowerCase() === 'ethereal' ? 'ethereal' : 'smtp';
+}
+
+let transporterPromise;
+function getTransporter() {
+  if (!transporterPromise) {
+    const mode = mailMode();
+    if (mode === 'smtp') {
+      transporterPromise = Promise.resolve(
+        nodemailer.createTransport({
+          host: env.smtp.host,
+          port: env.smtp.port,
+          secure: env.smtp.port === 465,
+          auth: env.smtp.user ? { user: env.smtp.user, pass: env.smtp.pass } : undefined,
+        })
+      );
+    } else if (mode === 'ethereal') {
+      transporterPromise = nodemailer.createTestAccount().then((account) => {
+        console.log(`[mail] Ethereal test inbox ready: ${account.user} (password ${account.pass}) - log in at https://ethereal.email`);
+        return nodemailer.createTransport({ host: account.smtp.host, port: account.smtp.port, secure: account.smtp.secure, auth: { user: account.user, pass: account.pass } });
+      });
+      transporterPromise.catch(() => {
+        transporterPromise = undefined; // try again next time (e.g. no internet right now)
+      });
+    } else {
+      transporterPromise = Promise.resolve(nodemailer.createTransport({ jsonTransport: true }));
+    }
+  }
+  return transporterPromise;
+}
 
 function layout(title, bodyHtml) {
   return `
@@ -38,8 +66,10 @@ export async function sendMail({ to, subject, message }) {
       .replace(/(https:\/\/[^\s<]+)/g, '<a href="$1" style="color:#2e7d4f">$1</a>')
       .replace(/\n/g, '<br>');
     const html = layout(escapeHtml(subject), `<p>${body}</p>`);
+    const transporter = await getTransporter();
     const info = await transporter.sendMail({ from: env.smtp.from, to, subject: `MarketLink: ${subject}`, text: message, html });
-    if (!env.smtp.host && env.nodeEnv !== 'test') {
+    if (mailMode() === 'ethereal') console.log(`[mail] To: ${to} | ${subject} | view: ${nodemailer.getTestMessageUrl(info)}`);
+    if (mailMode() === 'console' && env.nodeEnv !== 'test') {
       console.log(`[mail] (console mode) To: ${to} | Subject: ${subject}\n       ${message.replace(/\n/g, '\n       ')}`);
     }
     return info;

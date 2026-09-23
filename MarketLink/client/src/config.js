@@ -3,9 +3,19 @@ export const APP_NAME = 'MarketLink';
 export const CURRENCY = import.meta.env.VITE_CURRENCY || 'Rs';
 export const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
-// OpenStreetMap tiles (free, no API key required)
-export const MAP_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-export const MAP_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+// Map tiles (free, no API key). OpenStreetMap is used first; if its tiles fail to load,
+// the map switches automatically to CARTO's free basemap, which is also built on OpenStreetMap data.
+const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+export const TILE_PROVIDERS = [
+  { name: 'OpenStreetMap', url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: OSM_ATTRIBUTION, maxZoom: 19 },
+  {
+    name: 'CARTO',
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    subdomains: 'abcd',
+    attribution: `${OSM_ATTRIBUTION} &copy; <a href="https://carto.com/attributions">CARTO</a>`,
+    maxZoom: 19,
+  },
+];
 export const DEFAULT_CENTER = [24.8607, 67.0011]; // Karachi
 
 // Static team / office details for the About and Contact pages

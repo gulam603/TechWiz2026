@@ -8,6 +8,7 @@ import { fileUrl } from '../middleware/upload.js';
 import { applyWeeklyTemplate, notifyRestock, releaseItems, syncFarmerProducts } from '../services/stock.js';
 import { notify } from '../services/notify.js';
 import { pickupDetails, pushStatus } from '../services/orders.js';
+import { readFarmDetails } from './helpers/farmDetails.js';
 
 // ---------------------------------------------------------------- profile
 
@@ -16,6 +17,7 @@ export async function getMyFarm(req, res) {
   await req.farmer.populate([
     { path: 'markets', select: 'name slug address latitude longitude operatingDays openTime closeTime' },
     { path: 'pickupWindows.market', select: 'name slug' },
+    { path: 'categories', select: 'name slug icon color' },
   ]);
   res.json({ farmer: req.farmer, status: req.user.status });
 }
@@ -23,24 +25,17 @@ export async function getMyFarm(req, res) {
 // PUT /api/farmer/profile  (multipart: logo, coverImage)
 export async function updateFarmProfile(req, res) {
   const farmer = req.farmer;
-  const body = pick(req.body, ['stallName', 'contactPerson', 'phone', 'address', 'city', 'bio']);
+  const body = pick(req.body, ['stallName', 'contactPerson', 'phone', 'address', 'city']);
   for (const key of ['stallName', 'contactPerson', 'phone', 'address']) {
     if (key in body && !String(body[key]).trim()) throw new AppError(`${key} cannot be empty`, 400);
   }
   if (body.stallName && body.stallName !== farmer.stallName) farmer.slug = await uniqueSlug(Farmer, body.stallName, farmer._id);
   Object.assign(farmer, body);
 
-  if (req.body.tags !== undefined) {
-    const tags = Array.isArray(req.body.tags) ? req.body.tags : String(req.body.tags).split(',');
-    farmer.tags = tags.map((t) => String(t).trim()).filter(Boolean).slice(0, 8);
-  }
-  const lat = toNumber(req.body.latitude);
-  const lng = toNumber(req.body.longitude);
-  if (lat !== undefined || lng !== undefined) {
-    if (lat === undefined || lng === undefined || Math.abs(lat) > 90 || Math.abs(lng) > 180) throw new AppError('Please provide a valid latitude and longitude', 400);
-    farmer.latitude = lat;
-    farmer.longitude = lng;
-  }
+  // bio, practices, categories grown, markets and map pin
+  const details = await readFarmDetails(req.body);
+  if (details.markets) delete details.markets; // markets are managed on the pickup page
+  Object.assign(farmer, details);
   if (req.files?.logo?.[0]) farmer.logo = fileUrl('farmers', req.files.logo[0]);
   if (req.files?.coverImage?.[0]) farmer.coverImage = fileUrl('farmers', req.files.coverImage[0]);
   await farmer.save();

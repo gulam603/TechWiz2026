@@ -50,7 +50,12 @@ export default function Login() {
           <input id="email" type="email" className="form-control form-control-lg" autoComplete="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
         </div>
         <div className="mb-3">
-          <label className="form-label" htmlFor="password">Password</label>
+          <div className="d-flex justify-content-between align-items-baseline">
+            <label className="form-label" htmlFor="password">Password</label>
+            <Link to="/forgot-password" className="small">
+              Forgot password?
+            </Link>
+          </div>
           <div className="input-group">
             <input
               id="password"

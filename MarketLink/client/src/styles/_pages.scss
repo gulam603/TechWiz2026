@@ -144,17 +144,26 @@
   flex-direction: column;
   .mini-map {
     flex: 1;
-    background: radial-gradient(circle at 30% 40%, rgba($ml-leaf, 0.35) 0 8px, transparent 9px),
-      radial-gradient(circle at 70% 30%, rgba($ml-carrot, 0.5) 0 7px, transparent 8px),
-      radial-gradient(circle at 55% 70%, rgba($ml-forest, 0.6) 0 9px, transparent 10px),
-      linear-gradient(135deg, #eef3e2, #f6f1e4);
+    min-height: 140px;
     position: relative;
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: linear-gradient(rgba($ml-forest, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba($ml-forest, 0.06) 1px, transparent 1px);
-      background-size: 22px 22px;
+    pointer-events: none; // preview only - the link below opens the full map
+    .map-frame {
+      border: 0;
+      border-radius: 0;
+    }
+    .leaflet-control-attribution {
+      font-size: 8px;
+    }
+    .map-offline-note {
+      display: none;
+    }
+    .ml-marker {
+      width: 30px;
+      height: 30px;
+      img {
+        width: 16px;
+        height: 16px;
+      }
     }
   }
   a {
@@ -676,37 +685,81 @@
   grid-template-columns: 1.05fr 1fr;
   gap: 0;
   padding: 1rem;
+  align-items: start;
 }
 
 .auth-art {
+  position: sticky;
+  top: calc(var(--ml-nav-h) + 1rem);
   border-radius: var(--ml-radius-lg);
-  background: $ml-forest;
+  background: radial-gradient(circle at 85% 10%, rgba($ml-lime, 0.16), transparent 45%), $ml-forest;
   color: #fff;
-  padding: 3rem;
+  padding: clamp(1.25rem, 2.5vw, 2.25rem);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  position: relative;
+  gap: 1.25rem;
   overflow: hidden;
-  isolation: isolate;
   h2 {
     color: #fff;
-    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-size: clamp(1.8rem, 3vw, 2.7rem);
     line-height: 1.05;
+    margin: 0;
     em {
       color: $ml-lime;
     }
   }
   p {
     color: rgba(#fff, 0.75);
+    max-width: 480px;
   }
-  .art-cluster img {
-    position: absolute;
-    filter: drop-shadow(0 18px 20px rgba(0, 0, 0, 0.3));
-    animation: floaty 6s ease-in-out infinite;
+  .hero-chip {
+    background: rgba(#fff, 0.1);
+    color: #fff;
+    border: 1px solid rgba(#fff, 0.16);
   }
   &.admin {
-    background: linear-gradient(160deg, #0f2a1e, $ml-forest);
+    background: radial-gradient(circle at 85% 10%, rgba($ml-lime, 0.1), transparent 45%), #0f2a1e;
+    .wall-tile {
+      background: rgba(#fff, 0.07);
+    }
+    .wall-tile.feature {
+      background: rgba($ml-lime, 0.9);
+    }
+  }
+}
+
+// A crate of produce tiles that fills the free space of the banner
+.produce-wall {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: clamp(56px, 10vh, 100px); // rows grow with the screen height
+  gap: 0.6rem;
+}
+
+.wall-tile {
+  background: var(--tile-bg);
+  border-radius: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+  img {
+    height: 74%;
+    max-width: 78%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 10px rgba(23, 59, 44, 0.22));
+    animation: floaty 5s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  &.feature {
+    grid-column: span 2;
+    grid-row: span 2;
+    border-radius: 1.5rem;
+    img {
+      height: 80%;
+      max-width: 80%;
+    }
   }
 }
 
@@ -718,6 +771,9 @@
   .auth-card {
     width: 100%;
     max-width: 460px;
+    &.wide {
+      max-width: 640px;
+    }
   }
   h1 {
     font-size: 2.2rem;
@@ -1011,5 +1067,111 @@
   img {
     width: 56px;
     margin-bottom: 0.75rem;
+  }
+}
+
+// ------------------------------------------------------------------ sign-up wizard
+.wizard-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  .wstep {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 1rem;
+    background: #fff;
+    border: 1px solid $ml-line;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: $ml-muted;
+    .n {
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $ml-sand;
+      color: $ml-forest;
+      flex-shrink: 0;
+    }
+    &.current {
+      border-color: $ml-forest;
+      color: $ml-forest;
+      .n {
+        background: $ml-forest;
+        color: $ml-lime;
+      }
+    }
+    &.done {
+      color: $ml-green;
+      .n {
+        background: $ml-lime;
+      }
+    }
+  }
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.choice-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid $ml-line;
+  border-radius: 0.9rem;
+  background: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $ml-ink;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+  }
+  .check {
+    margin-left: auto;
+    color: $ml-green;
+    opacity: 0;
+  }
+  &:hover {
+    border-color: $ml-green;
+  }
+  &.active {
+    border-color: $ml-forest;
+    background: rgba($ml-lime, 0.25);
+    .check {
+      opacity: 1;
+    }
+  }
+}
+
+.market-choice {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid $ml-line;
+  border-radius: 1rem;
+  background: #fff;
+  cursor: pointer;
+  &.active {
+    border-color: $ml-forest;
+    background: rgba($ml-lime, 0.2);
+  }
+  img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
   }
 }

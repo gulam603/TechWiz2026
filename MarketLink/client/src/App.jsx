@@ -26,6 +26,8 @@ const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
 const RegisterFarmer = lazy(() => import('./pages/auth/RegisterFarmer'));
 const AdminLogin = lazy(() => import('./pages/auth/AdminLogin'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
 
 const Notifications = lazy(() => import('./pages/customer/Notifications'));
 const CustomerDashboard = lazy(() => import('./pages/customer/Dashboard'));
@@ -74,6 +76,8 @@ export default function App() {
             <Route path="register" element={<Register />} />
             <Route path="register/farmer" element={<RegisterFarmer />} />
             <Route path="admin/login" element={<AdminLogin />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password/:token" element={<ResetPassword />} />
 
             {/* Customer area */}
             <Route element={<ProtectedRoute roles={['customer']} />}>

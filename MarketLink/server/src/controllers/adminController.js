@@ -81,6 +81,7 @@ export async function adminFarmers(req, res) {
     Farmer.find(filter)
       .populate('user', 'name email phone status createdAt lastLoginAt')
       .populate('markets', 'name')
+      .populate('categories', 'name')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)

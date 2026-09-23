@@ -158,7 +158,14 @@ export default function Home() {
             </div>
 
             <div className="bento-cell hero-map">
-              <div className="mini-map" aria-hidden="true" />
+              <div className="mini-map" aria-hidden="true">
+                <MapView
+                  height="100%"
+                  interactive={false}
+                  className="border-0 rounded-0"
+                  markers={karachiMarkets.map((m) => ({ id: m._id, lat: m.latitude, lng: m.longitude, type: 'market', image: m.image, title: m.name }))}
+                />
+              </div>
               <Link to="/map">
                 <span>
                   <i className="bi bi-map" /> Markets near you

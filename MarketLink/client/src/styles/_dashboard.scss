@@ -95,6 +95,13 @@
   display: none;
 }
 
+@include media-breakpoint-only(lg) {
+  .dash {
+    grid-template-columns: 236px 1fr;
+    gap: 1.25rem;
+  }
+}
+
 @include media-breakpoint-down(lg) {
   .dash {
     grid-template-columns: 1fr;
@@ -226,6 +233,17 @@
     border-bottom: 1px solid $ml-line;
     flex-wrap: wrap;
   }
+}
+
+// Minimum widths keep name columns readable; the table scrolls sideways instead of squeezing words.
+.td-min-sm {
+  min-width: 130px;
+}
+.td-min {
+  min-width: 170px;
+}
+.td-min-lg {
+  min-width: 250px;
 }
 
 .thumb-sm {

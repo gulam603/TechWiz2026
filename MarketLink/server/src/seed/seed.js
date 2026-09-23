@@ -140,6 +140,10 @@ async function main() {
       });
       productsByFarmer[f.key].push(product);
     }
+    // "What they grow" = the categories of the farmer's products
+    farmer.categories = [...new Set(productsByFarmer[f.key].map((p) => String(p.category)))];
+    if (!farmer.categories.length && f.key === 'poultry') farmer.categories = [categoryByKey.dairy._id];
+    await farmer.save();
   }
   console.log(`[seed] ${data.farmers.length} farmers, ${Object.values(productsByFarmer).flat().length} products`);
 

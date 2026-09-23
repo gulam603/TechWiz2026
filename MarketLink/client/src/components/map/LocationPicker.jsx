@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { DEFAULT_CENTER, MAP_ATTRIBUTION, MAP_TILE_URL } from '../../config';
+import { DEFAULT_CENTER } from '../../config';
+import BaseTiles from './BaseTiles';
 import { pinIcon } from './leafletIcons';
 import { getCurrentPosition } from './DirectionsMap';
 
@@ -41,7 +42,7 @@ export default function LocationPicker({ lat, lng, onChange, height = 300 }) {
     <div>
       <div className="map-frame" style={{ height }}>
         <MapContainer center={position || DEFAULT_CENTER} zoom={position ? 14 : 11} style={{ height: '100%' }} scrollWheelZoom>
-          <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} />
+          <BaseTiles />
           <ClickHandler onPick={onChange} />
           {recenter && <Recenter position={recenter} />}
           {position && (

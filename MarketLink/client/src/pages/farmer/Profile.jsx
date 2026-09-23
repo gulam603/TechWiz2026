@@ -20,10 +20,20 @@ export default function FarmerProfile() {
 
 function ProfileEditor({ data, setData }) {
   const { user, refresh } = useAuth();
+  const { data: catData } = useFetch('/categories');
   const { toast } = useToast();
   const [form, setForm] = useState(() => {
     const f = data.farmer;
-    return { stallName: f.stallName, contactPerson: f.contactPerson, phone: f.phone, address: f.address, city: f.city || '', bio: f.bio || '', tags: (f.tags || []).join(', ') };
+    return {
+      stallName: f.stallName,
+      contactPerson: f.contactPerson,
+      phone: f.phone,
+      address: f.address,
+      city: f.city || '',
+      bio: f.bio || '',
+      tags: (f.tags || []).join(', '),
+      categories: (f.categories || []).map((c) => c._id || c),
+    };
   });
   const [logo, setLogo] = useState(null);
   const [cover, setCover] = useState(null);
@@ -95,7 +105,27 @@ function ProfileEditor({ data, setData }) {
                 <textarea id="s-bio" name="bio" rows={4} className="form-control" value={form.bio} onChange={change} maxLength={1200} />
               </div>
               <div className="col-12">
-                <label className="form-label" htmlFor="s-tags">Tags (comma separated)</label>
+                <span className="form-label d-block">What you grow / sell</span>
+                <div className="choice-grid" role="group" aria-label="Categories">
+                  {(catData?.categories || []).map((c) => {
+                    const on = form.categories.includes(c._id);
+                    return (
+                      <button
+                        type="button"
+                        key={c._id}
+                        className={`choice-tile ${on ? 'active' : ''}`}
+                        aria-pressed={on}
+                        onClick={() => setForm({ ...form, categories: on ? form.categories.filter((x) => x !== c._id) : [...form.categories, c._id] })}
+                      >
+                        <img src={c.icon} alt="" /> {c.name}
+                        <i className="bi bi-check-circle-fill check" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="col-12">
+                <label className="form-label" htmlFor="s-tags">Farming practices (comma separated)</label>
                 <input id="s-tags" name="tags" className="form-control" value={form.tags} onChange={change} placeholder="Pesticide-free, Family farm" />
               </div>
               <div className="col-md-6">

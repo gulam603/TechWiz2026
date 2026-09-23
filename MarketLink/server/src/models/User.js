@@ -32,6 +32,10 @@ const userSchema = new Schema(
     household: { type: Schema.Types.ObjectId, ref: 'User' },
 
     lastLoginAt: Date,
+
+    // "Forgot password": only a SHA-256 hash of the one-time token is stored
+    resetPasswordHash: { type: String, select: false },
+    resetPasswordExpires: { type: Date, select: false },
   },
   { timestamps: true }
 );
@@ -51,6 +55,8 @@ userSchema.methods.comparePassword = function comparePassword(plain) {
 userSchema.methods.toSafeJSON = function toSafeJSON() {
   const obj = this.toObject({ virtuals: false });
   delete obj.password;
+  delete obj.resetPasswordHash;
+  delete obj.resetPasswordExpires;
   delete obj.__v;
   return obj;
 };

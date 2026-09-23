@@ -31,6 +31,9 @@ export function createApp() {
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: 'cross-origin' },
+      // OpenStreetMap blocks map tiles (HTTP 403) when the browser sends no Referer,
+      // so use the browser's normal policy instead of helmet's "no-referrer".
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],

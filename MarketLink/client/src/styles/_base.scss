@@ -284,3 +284,11 @@ img {
 .min-w-0 {
   min-width: 0 !important;
 }
+
+// Breathing room at the page edges on laptop and desktop screens.
+@include media-breakpoint-up(lg) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}

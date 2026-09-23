@@ -74,8 +74,8 @@ export default function AdminOrders() {
                       {o.customer?.name}
                       <div className="fs-7 text-muted-2">{o.customer?.email}</div>
                     </td>
-                    <td className="small">{o.farmer?.stallName}</td>
-                    <td className="small">
+                    <td className="small td-min-sm">{o.farmer?.stallName}</td>
+                    <td className="small td-min">
                       {formatDateKey(o.pickupDate)} {o.pickupSlot.start}
                       <div className="fs-7 text-muted-2">{o.market?.name}</div>
                     </td>

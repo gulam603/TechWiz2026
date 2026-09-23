@@ -43,6 +43,8 @@ router.post('/auth/register-farmer', formLimiter, auth.registerFarmer);
 router.post('/auth/login', authLimiter, auth.login);
 router.post('/auth/admin/login', authLimiter, auth.adminLogin);
 router.post('/auth/logout', auth.logout);
+router.post('/auth/forgot-password', formLimiter, auth.forgotPassword);
+router.post('/auth/reset-password', authLimiter, auth.resetPassword);
 router.get('/auth/me', optionalAuth, auth.me);
 router.put('/auth/me', protect, auth.updateMe);
 router.put('/auth/password', protect, auth.changePassword);

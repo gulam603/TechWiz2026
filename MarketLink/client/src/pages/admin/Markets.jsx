@@ -185,7 +185,7 @@ export default function AdminMarkets() {
             <tbody>
               {data.markets.map((m) => (
                 <tr key={m._id}>
-                  <td>
+                  <td className="td-min-lg">
                     <div className="d-flex align-items-center gap-2">
                       <span className="thumb-sm" style={{ background: '#173b2c' }}>
                         <img src={m.image} alt="" className={m.image?.includes('/seed/') ? '' : 'photo'} />
@@ -204,7 +204,7 @@ export default function AdminMarkets() {
                   <td className="small text-nowrap">
                     {time12(m.openTime)} – {time12(m.closeTime)}
                   </td>
-                  <td className="fs-7 text-muted-2">
+                  <td className="fs-7 text-muted-2 text-nowrap">
                     {m.latitude.toFixed(4)}, {m.longitude.toFixed(4)}
                   </td>
                   <td className="text-end">{m.farmerCount}</td>

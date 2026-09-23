@@ -1,6 +1,6 @@
 [
   {
-    "_id": "6ab3b860d2dd2afa64210247",
+    "_id": "6ab3e980f5f23483fb5c58a7",
     "name": "Vegetables",
     "slug": "vegetables",
     "description": "Seasonal vegetables harvested for market day.",
@@ -8,12 +8,12 @@
     "color": "#E4F3D8",
     "sortOrder": 1,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.502Z",
-    "updatedAt": "2026-09-23T11:30:40.502Z",
+    "createdAt": "2026-09-23T15:00:16.238Z",
+    "updatedAt": "2026-09-23T15:00:16.238Z",
     "__v": 0
   },
   {
-    "_id": "6ab3b860d2dd2afa64210248",
+    "_id": "6ab3e980f5f23483fb5c58a8",
     "name": "Fruits",
     "slug": "fruits",
     "description": "Orchard-fresh and tree-ripened fruit.",
@@ -21,12 +21,12 @@
     "color": "#FFE4DA",
     "sortOrder": 2,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.505Z",
-    "updatedAt": "2026-09-23T11:30:40.505Z",
+    "createdAt": "2026-09-23T15:00:16.242Z",
+    "updatedAt": "2026-09-23T15:00:16.242Z",
     "__v": 0
   },
   {
-    "_id": "6ab3b860d2dd2afa64210249",
+    "_id": "6ab3e980f5f23483fb5c58a9",
     "name": "Dairy & Eggs",
     "slug": "dairy-eggs",
     "description": "Fresh milk, cheese, butter and free-range eggs.",
@@ -34,12 +34,12 @@
     "color": "#E3EEFB",
     "sortOrder": 3,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.507Z",
-    "updatedAt": "2026-09-23T11:30:40.507Z",
+    "createdAt": "2026-09-23T15:00:16.244Z",
+    "updatedAt": "2026-09-23T15:00:16.244Z",
     "__v": 0
   },
   {
-    "_id": "6ab3b860d2dd2afa6421024a",
+    "_id": "6ab3e980f5f23483fb5c58aa",
     "name": "Baked Goods",
     "slug": "baked-goods",
     "description": "Breads and treats baked the morning of the market.",
@@ -47,12 +47,12 @@
     "color": "#F8E8CF",
     "sortOrder": 4,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.508Z",
-    "updatedAt": "2026-09-23T11:30:40.508Z",
+    "createdAt": "2026-09-23T15:00:16.246Z",
+    "updatedAt": "2026-09-23T15:00:16.246Z",
     "__v": 0
   },
   {
-    "_id": "6ab3b860d2dd2afa6421024b",
+    "_id": "6ab3e980f5f23483fb5c58ab",
     "name": "Herbs & Greens",
     "slug": "herbs-greens",
     "description": "Leafy greens and fragrant herbs.",
@@ -60,12 +60,12 @@
     "color": "#DAF1E3",
     "sortOrder": 5,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.510Z",
-    "updatedAt": "2026-09-23T11:30:40.510Z",
+    "createdAt": "2026-09-23T15:00:16.248Z",
+    "updatedAt": "2026-09-23T15:00:16.248Z",
     "__v": 0
   },
   {
-    "_id": "6ab3b860d2dd2afa6421024c",
+    "_id": "6ab3e980f5f23483fb5c58ac",
     "name": "Honey & Preserves",
     "slug": "honey-preserves",
     "description": "Raw honey, jams, chutneys and pickles.",
@@ -73,12 +73,12 @@
     "color": "#FFF0C2",
     "sortOrder": 6,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.512Z",
-    "updatedAt": "2026-09-23T11:30:40.512Z",
+    "createdAt": "2026-09-23T15:00:16.250Z",
+    "updatedAt": "2026-09-23T15:00:16.250Z",
     "__v": 0
   },
   {
-    "_id": "6ab3b860d2dd2afa6421024d",
+    "_id": "6ab3e980f5f23483fb5c58ad",
     "name": "Grains & Pulses",
     "slug": "grains-pulses",
     "description": "Stone-ground flour, rice, lentils and nuts.",
@@ -86,12 +86,12 @@
     "color": "#F1EAD6",
     "sortOrder": 7,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.514Z",
-    "updatedAt": "2026-09-23T11:30:40.514Z",
+    "createdAt": "2026-09-23T15:00:16.252Z",
+    "updatedAt": "2026-09-23T15:00:16.252Z",
     "__v": 0
   },
   {
-    "_id": "6ab3b860d2dd2afa6421024e",
+    "_id": "6ab3e980f5f23483fb5c58ae",
     "name": "Flowers & Plants",
     "slug": "flowers-plants",
     "description": "Cut flowers and potted plants.",
@@ -99,8 +99,8 @@
     "color": "#FBE1EE",
     "sortOrder": 8,
     "isActive": true,
-    "createdAt": "2026-09-23T11:30:40.516Z",
-    "updatedAt": "2026-09-23T11:30:40.516Z",
+    "createdAt": "2026-09-23T15:00:16.255Z",
+    "updatedAt": "2026-09-23T15:00:16.255Z",
     "__v": 0
   }
 ]

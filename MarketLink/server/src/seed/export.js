@@ -16,7 +16,13 @@ async function main() {
   fs.mkdirSync(outDir, { recursive: true });
   for (const Model of Object.values(models)) {
     const docs = await Model.find().lean();
-    if (Model.modelName === 'User') docs.forEach((d) => { d.password = '<bcrypt hash>'; });
+    if (Model.modelName === 'User') {
+      docs.forEach((d) => {
+        d.password = '<bcrypt hash>';
+        delete d.resetPasswordHash;
+        delete d.resetPasswordExpires;
+      });
+    }
     const file = path.join(outDir, `${Model.collection.collectionName}.json`);
     fs.writeFileSync(file, JSON.stringify(docs, null, 2));
     console.log(`[export] ${Model.collection.collectionName}: ${docs.length} documents`);

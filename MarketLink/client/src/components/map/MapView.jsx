@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Polyline, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { DEFAULT_CENTER, MAP_ATTRIBUTION, MAP_TILE_URL } from '../../config';
+import { DEFAULT_CENTER } from '../../config';
+import BaseTiles from './BaseTiles';
 import { pinIcon, userIcon } from './leafletIcons';
 
 function FitBounds({ points, disabled }) {
@@ -44,6 +45,7 @@ export default function MapView({
   center,
   className = '',
   scrollWheelZoom = false,
+  interactive = true, // false = a static preview (no zoom / drag)
   children,
 }) {
   const markerRefs = useRef({});
@@ -59,10 +61,16 @@ export default function MapView({
       <MapContainer
         center={center || points[0] || DEFAULT_CENTER}
         zoom={zoom}
-        scrollWheelZoom={scrollWheelZoom}
+        scrollWheelZoom={interactive && scrollWheelZoom}
+        zoomControl={interactive}
+        dragging={interactive}
+        doubleClickZoom={interactive}
+        touchZoom={interactive}
+        boxZoom={interactive}
+        keyboard={interactive}
         style={{ height: '100%', width: '100%' }}
       >
-        <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />
+        <BaseTiles onUnavailable={() => setTilesFailed(true)} />
         {fit && <FitBounds points={points} disabled={Boolean(selected)} />}
         <FlyToSelected marker={selected} markerRefs={markerRefs} />
         {valid.map((m) => (

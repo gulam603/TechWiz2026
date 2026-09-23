@@ -6,15 +6,32 @@ import { DEFAULT_CENTER } from '../../config';
 import BaseTiles from './BaseTiles';
 import { pinIcon, userIcon } from './leafletIcons';
 
-function FitBounds({ points, disabled }) {
+function FitBounds({ points, disabled, refitOnResize }) {
   const map = useMap();
   const key = points.map((p) => p.join(',')).join('|');
   useEffect(() => {
-    if (disabled || !points.length) return;
-    if (points.length === 1) map.setView(points[0], 15);
-    else map.fitBounds(points, { padding: [40, 40], maxZoom: 15 });
+    if (disabled || !points.length) return undefined;
+    const fitAll = () => {
+      if (points.length === 1) map.setView(points[0], 15);
+      else map.fitBounds(points, { padding: [40, 40], maxZoom: 15 });
+    };
+    map.invalidateSize(); // the box may have changed since Leaflet measured it
+    fitAll();
+    // Flex / grid layouts can change the map box after the first paint: redraw the tiles and,
+    // for static previews, centre the markers again.
+    const el = map.getContainer();
+    let size = `${el.clientWidth}x${el.clientHeight}`;
+    const observer = new ResizeObserver(() => {
+      const next = `${el.clientWidth}x${el.clientHeight}`;
+      if (next === size) return;
+      size = next;
+      map.invalidateSize();
+      if (refitOnResize) fitAll();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, disabled, map]);
+  }, [key, disabled, map, refitOnResize]);
   return null;
 }
 
@@ -71,7 +88,7 @@ export default function MapView({
         style={{ height: '100%', width: '100%' }}
       >
         <BaseTiles onUnavailable={() => setTilesFailed(true)} />
-        {fit && <FitBounds points={points} disabled={Boolean(selected)} />}
+        {fit && <FitBounds points={points} disabled={Boolean(selected)} refitOnResize={!interactive} />}
         <FlyToSelected marker={selected} markerRefs={markerRefs} />
         {valid.map((m) => (
           <Marker

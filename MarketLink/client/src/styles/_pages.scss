@@ -153,6 +153,15 @@
     }
     .leaflet-control-attribution {
       font-size: 8px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      // keep only the OpenStreetMap credit in the small preview
+      a[href='https://leafletjs.com'],
+      a[href='https://leafletjs.com'] + span {
+        display: none;
+      }
     }
     .map-offline-note {
       display: none;
@@ -166,7 +175,7 @@
       }
     }
   }
-  a {
+  > a {
     padding: 0.9rem 1rem;
     font-weight: 700;
     color: $ml-forest;

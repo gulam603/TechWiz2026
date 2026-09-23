@@ -85,6 +85,8 @@ async function main() {
   const farmerByKey = {};
   const productsByFarmer = {};
   const week = isoWeekKey();
+  // Demo "closed date": the nursery skips its next Friday market
+  const nextFriday = toDateKey(addDays(startOfDay(new Date()), ((5 - new Date().getDay() + 7) % 7) || 7));
   for (const f of data.farmers) {
     const user = await User.create({
       name: f.contactPerson,
@@ -115,6 +117,7 @@ async function main() {
       slotMinutes: 30,
       slotCapacity: 6,
       isActive: f.status === USER_STATUS.ACTIVE,
+      blockedDates: f.key === 'bloom' ? [nextFriday] : [],
       autoApplyTemplate: true,
       templateLastAppliedWeek: week,
     });

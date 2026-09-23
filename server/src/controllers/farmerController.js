@@ -2,10 +2,10 @@ import { Farmer, Product, Review } from '../models/index.js';
 import AppError from '../utils/AppError.js';
 import { containsRegex, getPagination, isValidId, toNumber } from '../utils/helpers.js';
 import { getAvailability } from '../services/slots.js';
-import { resolveCategory } from './helpers/category.js';
+import { marketIdsInCity, resolveCategory } from './helpers/category.js';
 
 const PUBLIC_FIELDS =
-  'stallName slug logo coverImage bio tags address city latitude longitude markets operatingDays ratingAvg ratingCount createdAt';
+  'stallName slug logo coverImage bio tags address city latitude longitude markets operatingDays blockedDates ratingAvg ratingCount createdAt';
 
 export async function findActiveFarmer(idOrSlug) {
   const filter = isValidId(idOrSlug) ? { _id: idOrSlug } : { slug: String(idOrSlug).toLowerCase() };
@@ -22,6 +22,7 @@ export async function listFarmers(req, res) {
     filter.$or = [{ stallName: containsRegex(req.query.search) }, { bio: containsRegex(req.query.search) }, { tags: containsRegex(req.query.search) }];
   }
   if (req.query.market && isValidId(req.query.market)) filter.markets = req.query.market;
+  else if (req.query.city) filter.markets = { $in: await marketIdsInCity(req.query.city) }; // location filter
   const day = toNumber(req.query.day);
   if (day !== undefined && day >= 0 && day <= 6) filter.operatingDays = day;
 

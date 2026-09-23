@@ -170,6 +170,9 @@ function readMarketBody(body, partial) {
   }
   if (body.operatingDays !== undefined) data.operatingDays = [...new Set(toNumberList(body.operatingDays).filter((d) => d >= 0 && d <= 6))].sort();
   for (const key of ['openTime', 'closeTime']) if (data[key] && !isTime(data[key])) throw new AppError(`${key} must be HH:MM`, 400);
+  if (data.openTime && data.closeTime && data.closeTime <= data.openTime) throw new AppError('Closing time must be after opening time', 400);
+  if (data.latitude !== undefined && Math.abs(data.latitude) > 90) throw new AppError('Latitude must be between -90 and 90', 400);
+  if (data.longitude !== undefined && Math.abs(data.longitude) > 180) throw new AppError('Longitude must be between -180 and 180', 400);
   if (body.isActive !== undefined) data.isActive = toBool(body.isActive);
   return data;
 }
@@ -236,7 +239,7 @@ export async function deleteMarket(req, res) {
 // GET /api/admin/products?search=&state=removed|active
 export async function adminProducts(req, res) {
   const { page, limit, skip } = getPagination(req.query, 20, 100);
-  const filter = {};
+  const filter = { deletedByFarmer: { $ne: true } }; // products the farmer deleted are not moderated
   if (req.query.state === 'removed') filter.isRemoved = true;
   if (req.query.state === 'active') filter.isRemoved = false;
   if (req.query.search) filter.name = containsRegex(req.query.search);
@@ -249,7 +252,7 @@ export async function adminProducts(req, res) {
 
 // PATCH /api/admin/products/:id/moderate  { action: remove | restore, reason }
 export async function moderateProduct(req, res) {
-  const product = await Product.findById(assertId(req.params.id, 'product')).populate('farmer', 'user stallName');
+  const product = await Product.findOne({ _id: assertId(req.params.id, 'product'), deletedByFarmer: { $ne: true } }).populate('farmer', 'user stallName');
   if (!product) throw new AppError('Product not found', 404);
   const remove = req.body.action === 'remove';
   product.isRemoved = remove;
@@ -369,7 +372,7 @@ export async function createAnnouncement(req, res) {
     const users = await User.find({ role: { $in: roles }, status: USER_STATUS.ACTIVE }).select('_id').lean();
     delivered = await notifyMany(
       users.map((u) => u._id),
-      { type: 'announcement', title: announcement.title, message: announcement.message, link: '/account/notifications' }
+      { type: 'announcement', title: announcement.title, message: announcement.message }
     );
   }
   res.status(201).json({ announcement, delivered });

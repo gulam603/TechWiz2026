@@ -1,42 +1,37 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api/client';
 
 /**
  * Loads data from the API and re-loads when `path` changes.
  * const { data, loading, error, reload, setData } = useFetch('/products?page=1');
- * Pass `null` as the path to skip loading.
+ * Pass `null` as the path to skip loading. While a new path loads, the previous
+ * data stays on screen (no flicker) and `loading` is true.
  */
-export default function useFetch(path, { keepPrevious = true } = {}) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(Boolean(path));
-  const [error, setError] = useState(null);
+export default function useFetch(path) {
   const [tick, setTick] = useState(0);
-  const first = useRef(true);
+  const [state, setState] = useState({ key: null, data: null, error: null });
+  const key = path ? `${path}#${tick}` : null;
 
   useEffect(() => {
-    if (!path) {
-      setLoading(false);
-      return undefined;
-    }
+    if (!path) return undefined;
     const controller = new AbortController();
-    setLoading(true);
-    setError(null);
-    if (!keepPrevious && !first.current) setData(null);
     api
       .get(path, { signal: controller.signal })
-      .then((result) => {
-        setData(result);
-        setLoading(false);
-        first.current = false;
-      })
+      .then((data) => setState({ key, data, error: null }))
       .catch((err) => {
-        if (err.name === 'AbortError') return;
-        setError(err);
-        setLoading(false);
+        if (err.name !== 'AbortError') setState((s) => ({ key, data: s.data, error: err }));
       });
     return () => controller.abort();
-  }, [path, tick, keepPrevious]);
+  }, [path, key]);
 
   const reload = useCallback(() => setTick((t) => t + 1), []);
-  return { data, loading, error, reload, setData };
+  const setData = useCallback((updater) => setState((s) => ({ ...s, data: typeof updater === 'function' ? updater(s.data) : updater })), []);
+
+  return {
+    data: state.data,
+    loading: Boolean(path) && state.key !== key,
+    error: state.key === key ? state.error : null,
+    reload,
+    setData,
+  };
 }

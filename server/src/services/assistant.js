@@ -22,6 +22,8 @@ const NAME_NOISE = new Set(['market', 'farmers', 'farmer', 'farm', 'farms', 'the
 
 const has = (text, words) => words.some((w) => new RegExp(`\\b${w}`, 'i').test(text));
 const fmtDays = (days = []) => (days.length ? days.map((d) => DAY_NAMES[d]).join(', ') : 'no fixed days yet');
+const closedNote = (farmer) =>
+  farmer.blockedDates?.length ? `\n⚠️ Not at the market on: ${farmer.blockedDates.slice(0, 5).join(', ')}.` : '';
 const money = (n) => `${env.currency} ${Number(n).toLocaleString('en-US')}`;
 
 function tokens(text) {
@@ -114,7 +116,7 @@ export async function answer(rawMessage, user) {
 
   const [markets, farmers, categories] = await Promise.all([
     Market.find({ isActive: true }).select('name slug city address operatingDays openTime closeTime image').lean(),
-    Farmer.find({ isActive: true }).select('stallName slug logo operatingDays pickupWindows markets ratingAvg ratingCount orderCutoffHours').populate('pickupWindows.market', 'name').lean(),
+    Farmer.find({ isActive: true }).select('stallName slug logo operatingDays pickupWindows markets blockedDates ratingAvg ratingCount orderCutoffHours').populate('pickupWindows.market', 'name').lean(),
     Category.find({ isActive: true }).select('name slug').lean(),
   ]);
   const market = matchEntity(text, markets, (m) => m.name);
@@ -182,7 +184,7 @@ export async function answer(rawMessage, user) {
     if (farmer) {
       const lines = farmer.pickupWindows.map((w) => `• ${DAY_NAMES[w.day]} ${w.start}-${w.end} at ${w.market?.name || 'market'}`);
       return reply(
-        `Pickup windows for **${farmer.stallName}**:\n${lines.join('\n') || 'No pickup windows published yet.'}\nOrders close ${farmer.orderCutoffHours} hour(s) before the slot starts.`,
+        `Pickup windows for **${farmer.stallName}**:\n${lines.join('\n') || 'No pickup windows published yet.'}\nOrders close ${farmer.orderCutoffHours} hour(s) before the slot starts.${closedNote(farmer)}`,
         { cards: [farmerCard(farmer)] }
       );
     }
@@ -205,7 +207,7 @@ export async function answer(rawMessage, user) {
     const inStock = await Product.countDocuments({ ...Product.publicFilter(), farmer: farmer._id, status: PRODUCT_STATUS.AVAILABLE });
     const marketNames = [...new Set(farmer.pickupWindows.map((w) => w.market?.name).filter(Boolean))];
     return reply(
-      `**${farmer.stallName}** sells on ${fmtDays(farmer.operatingDays)}${marketNames.length ? ` at ${marketNames.join(', ')}` : ''}. They currently have ${inStock} product(s) in stock.`,
+      `**${farmer.stallName}** sells on ${fmtDays(farmer.operatingDays)}${marketNames.length ? ` at ${marketNames.join(', ')}` : ''}. They currently have ${inStock} product(s) in stock.${closedNote(farmer)}`,
       { cards: [farmerCard(farmer)], suggestions: [`Pickup windows for ${farmer.stallName}`, 'Market timings'] }
     );
   }
@@ -221,6 +223,23 @@ export async function answer(rawMessage, user) {
   // --- product search ------------------------------------------------------
   const words = tokens(text).filter((w) => w.length > 2 && !STOP_WORDS.has(w));
   const products = (await searchProducts(words, category?._id)).sort((a, b) => nameScore(b, words) - nameScore(a, words));
+
+  // Product details: "tell me about Sindhri mangoes" or a single clear match
+  const wantsDetails = /\b(about|detail|details|describe|info|information|what is|tell me)\b/.test(text);
+  const top = products[0];
+  if (top && (products.length === 1 || (wantsDetails && nameScore(top, words) >= 2))) {
+    const product = await Product.findById(top._id)
+      .populate({ path: 'farmer', select: 'stallName slug pickupWindows orderCutoffHours', populate: { path: 'pickupWindows.market', select: 'name' } })
+      .populate('category', 'name')
+      .lean();
+    const days = [...new Set(product.farmer.pickupWindows.map((w) => `${DAY_NAMES[w.day]} at ${w.market?.name}`))];
+    const stock = product.status === PRODUCT_STATUS.AVAILABLE ? `${product.quantityAvailable} ${product.unit} available this week` : 'sold out right now (add it to favourites for a restock alert)';
+    return reply(
+      `**${product.name}** (${product.category?.name}) – ${money(product.price)} per ${product.unit} from **${product.farmer.stallName}**.\n${product.description || ''}\nStock: ${stock}.${product.ratingCount ? `\nRating: ★ ${product.ratingAvg} from ${product.ratingCount} review(s).` : ''}\nPickup: ${days.join('; ') || 'no pickup windows yet'} (order ${product.farmer.orderCutoffHours} h before your slot).`,
+      { cards: [productCard({ ...top })], suggestions: [`Pickup windows for ${product.farmer.stallName}`, 'How do I pay?'] }
+    );
+  }
+
   if (products.length) {
     const lines = products.map((p) => `• **${p.name}** – ${money(p.price)}/${p.unit} from ${p.farmer?.stallName}${p.status === PRODUCT_STATUS.AVAILABLE ? ` (${p.quantityAvailable} left)` : ' (sold out)'}`);
     return reply(`Here is what I found${category ? ` in ${category.name}` : ''}:\n${lines.join('\n')}`, { cards: products.map(productCard) });

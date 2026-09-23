@@ -1,4 +1,4 @@
-import { Farmer, Order, Product, User } from '../models/index.js';
+import { Farmer, Market, Order, Product, User } from '../models/index.js';
 import env from '../config/env.js';
 import AppError from '../utils/AppError.js';
 import { ORDER_STATUS, OPEN_ORDER_STATUSES, PRODUCT_STATUS, ROLES } from '../utils/constants.js';
@@ -6,7 +6,7 @@ import { assertId, getPagination, round2 } from '../utils/helpers.js';
 import { validatePickup } from '../services/slots.js';
 import { releaseItems, reserveItems, retakeItems } from '../services/stock.js';
 import { notify } from '../services/notify.js';
-import { canCustomerModify, canViewOrder, generateOrderNumber, pushStatus, reviewState } from '../services/orders.js';
+import { canCustomerModify, canViewOrder, generateOrderNumber, pickupDetails, pushStatus, reviewState } from '../services/orders.js';
 
 const ORDER_POPULATE = [
   { path: 'farmer', select: 'stallName slug logo phone email address latitude longitude orderCutoffHours user' },
@@ -75,14 +75,15 @@ export async function placeOrders(req, res) {
     throw err;
   }
 
-  // 3) Notifications (in-app + e-mail order confirmation)
+  // 3) Notifications (in-app + e-mail order confirmation with route-friendly pickup details)
   for (const { order, farmer } of created) {
+    const market = await Market.findById(order.market).select('name address latitude longitude').lean();
     await notify(
       req.user,
       {
         type: 'order',
         title: `Pre-order ${order.orderNumber} placed`,
-        message: `Your pre-order with ${farmer.stallName} for pickup on ${order.pickupDate} at ${order.pickupSlot.start} has been placed. Total: ${env.currency} ${order.totalAmount} (pay at pickup).`,
+        message: `Your pre-order with ${farmer.stallName} has been placed. Total: ${env.currency} ${order.totalAmount} (pay at pickup).\n${pickupDetails(order, market)}`,
         link: `/account/orders/${order._id}`,
       },
       { email: true }

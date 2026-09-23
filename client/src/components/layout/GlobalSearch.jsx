@@ -14,10 +14,7 @@ export default function GlobalSearch({ className = '', placeholder = 'Search pro
   useClickOutside(ref, () => setOpen(false), open);
 
   useEffect(() => {
-    if (q.trim().length < 2) {
-      setResults(null);
-      return undefined;
-    }
+    if (q.trim().length < 2) return undefined;
     const timer = setTimeout(() => {
       api.get(`/search?q=${encodeURIComponent(q.trim())}`).then((d) => {
         setResults(d);
@@ -46,7 +43,10 @@ export default function GlobalSearch({ className = '', placeholder = 'Search pro
         <i className="bi bi-search" />
         <input
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => {
+            setQ(e.target.value);
+            if (e.target.value.trim().length < 2) setResults(null);
+          }}
           onFocus={() => results && setOpen(true)}
           placeholder={placeholder}
           aria-label="Search"

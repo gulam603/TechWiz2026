@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import useFetch from '../../hooks/useFetch';
 import { DAY_SHORT, MONTHS, parseDateKey, time12 } from '../../utils/format';
 
@@ -9,12 +8,9 @@ import { DAY_SHORT, MONTHS, parseDateKey, time12 } from '../../utils/format';
 export default function PickupPicker({ farmerId, value, onChange, excludeOrder }) {
   const { data, loading, error } = useFetch(`/farmers/${farmerId}/availability${excludeOrder ? `?excludeOrder=${excludeOrder}` : ''}`);
   const dates = data?.dates || [];
-  const day = dates.find((d) => d.date === value.pickupDate);
-
-  // Pre-select the first available date
-  useEffect(() => {
-    if (!value.pickupDate && dates.length) onChange({ pickupDate: dates[0].date, marketId: '', slotStart: '' });
-  }, [dates, value.pickupDate, onChange]);
+  // The first available date is selected until the customer picks another one
+  const selectedDate = dates.some((d) => d.date === value.pickupDate) ? value.pickupDate : dates[0]?.date;
+  const day = dates.find((d) => d.date === selectedDate);
 
   if (loading && !data) return <div className="skeleton" style={{ height: 150 }} />;
   if (error) return <div className="text-danger small">{error.message}</div>;
@@ -35,10 +31,10 @@ export default function PickupPicker({ farmerId, value, onChange, excludeOrder }
             <button
               type="button"
               key={d.date}
-              className={value.pickupDate === d.date ? 'active' : ''}
+              className={selectedDate === d.date ? 'active' : ''}
               onClick={() => onChange({ pickupDate: d.date, marketId: '', slotStart: '' })}
               role="radio"
-              aria-checked={value.pickupDate === d.date}
+              aria-checked={selectedDate === d.date}
             >
               <div className="dow">{DAY_SHORT[date.getDay()]}</div>
               <div className="dnum">{date.getDate()}</div>
@@ -57,14 +53,14 @@ export default function PickupPicker({ farmerId, value, onChange, excludeOrder }
               </div>
               <div className="slot-grid">
                 {w.slots.map((s) => {
-                  const active = value.slotStart === s.start && value.marketId === w.market._id;
+                  const active = value.pickupDate === selectedDate && value.slotStart === s.start && value.marketId === w.market._id;
                   return (
                     <button
                       type="button"
                       key={s.start}
                       disabled={!s.available}
                       className={active ? 'active' : ''}
-                      onClick={() => onChange({ ...value, marketId: w.market._id, slotStart: s.start })}
+                      onClick={() => onChange({ pickupDate: selectedDate, marketId: w.market._id, slotStart: s.start })}
                       aria-pressed={active}
                     >
                       {time12(s.start)}

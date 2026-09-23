@@ -9,9 +9,20 @@ export async function generateOrderNumber() {
   for (;;) {
     const code = crypto.randomBytes(3).toString('base64url').toUpperCase().replace(/[^A-Z0-9]/g, 'X').slice(0, 4);
     const orderNumber = `ML-${datePart}-${code}`;
-    // eslint-disable-next-line no-await-in-loop
+     
     if (!(await Order.exists({ orderNumber }))) return orderNumber;
   }
+}
+
+/**
+ * Route-friendly pickup details for e-mails / notifications:
+ * market, address, time slot and a Google Maps directions link.
+ */
+export function pickupDetails(order, market) {
+  const when = `${order.pickupDate}, ${order.pickupSlot.start}-${order.pickupSlot.end}`;
+  if (!market) return `Pickup: ${when}.`;
+  const directions = `https://www.google.com/maps/dir/?api=1&destination=${market.latitude},${market.longitude}`;
+  return `Pickup: ${when} at ${market.name}, ${market.address}.\nDirections: ${directions}`;
 }
 
 /** Customers may change or cancel an order only while it is open and before the farmer's cut-off. */

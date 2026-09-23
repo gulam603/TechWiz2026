@@ -8,8 +8,9 @@ export function toDateKey(date = new Date()) {
   return `${y}-${m}-${d}`;
 }
 
+/** true for a real calendar date such as "2026-09-26" (rejects "2026-13-45" or "2026-02-30") */
 export function isDateKey(value) {
-  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(parseDateKey(value).getTime());
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && toDateKey(parseDateKey(value)) === value;
 }
 
 /** "2026-09-26" -> Date at local midnight */

@@ -74,6 +74,11 @@ export default function MarketDetail() {
             <h2 className="h4 mb-1">Location & directions</h2>
             <p className="small text-muted-2 mb-3">
               <i className="bi bi-geo-alt" /> {market.address}
+              {market.mapLink && (
+                <a href={market.mapLink} target="_blank" rel="noreferrer" className="ms-2 fw-semi">
+                  <i className="bi bi-box-arrow-up-right" /> Open on {market.mapProvider === 'google' ? 'Google Maps' : 'OpenStreetMap'}
+                </a>
+              )}
             </p>
             <DirectionsMap
               destination={{ lat: market.latitude, lng: market.longitude, title: market.name, subtitle: market.address, image: market.image }}

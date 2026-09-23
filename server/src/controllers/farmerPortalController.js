@@ -2,12 +2,12 @@ import { Category, Farmer, Market, Order, Product, Review } from '../models/inde
 import AppError from '../utils/AppError.js';
 import { ORDER_STATUS, OPEN_ORDER_STATUSES, PRODUCT_STATUS, UNITS } from '../utils/constants.js';
 import { assertId, containsRegex, getPagination, isValidId, pick, round2, toBool, toNumber } from '../utils/helpers.js';
-import { addDays, isTime, startOfDay, timeToMinutes, toDateKey } from '../utils/dates.js';
+import { addDays, isDateKey, isTime, startOfDay, timeToMinutes, toDateKey } from '../utils/dates.js';
 import { uniqueSlug } from '../utils/slug.js';
 import { fileUrl } from '../middleware/upload.js';
 import { applyWeeklyTemplate, notifyRestock, releaseItems, syncFarmerProducts } from '../services/stock.js';
 import { notify } from '../services/notify.js';
-import { pushStatus } from '../services/orders.js';
+import { pickupDetails, pushStatus } from '../services/orders.js';
 
 // ---------------------------------------------------------------- profile
 
@@ -54,7 +54,7 @@ export async function updateFarmProfile(req, res) {
   return getMyFarm(req, res);
 }
 
-// PUT /api/farmer/pickup  { markets, pickupWindows, slotMinutes, slotCapacity, orderCutoffHours }
+// PUT /api/farmer/pickup  { markets, pickupWindows, slotMinutes, slotCapacity, orderCutoffHours, blockedDates }
 export async function updatePickupSettings(req, res) {
   const farmer = req.farmer;
   const marketIds = (Array.isArray(req.body.markets) ? req.body.markets : []).map(String).filter(isValidId);
@@ -81,9 +81,26 @@ export async function updatePickupSettings(req, res) {
   if (slotMinutes !== undefined) farmer.slotMinutes = slotMinutes;
   if (slotCapacity !== undefined) farmer.slotCapacity = slotCapacity;
   if (cutoff !== undefined) farmer.orderCutoffHours = cutoff;
+
+  // Dates the farmer will not be at any market ("closed this week")
+  if (Array.isArray(req.body.blockedDates)) {
+    const dates = req.body.blockedDates.map(String);
+    if (dates.some((d) => !isDateKey(d))) throw new AppError('Closed dates must be valid dates', 400);
+    if (dates.length > 60) throw new AppError('You can block at most 60 dates', 400);
+    farmer.blockedDates = dates;
+  }
   await farmer.save();
   await syncFarmerProducts(farmer);
-  return getMyFarm(req, res);
+
+  // Open pre-orders that fall on a closed date must be handled by the farmer
+  const clashes = farmer.blockedDates.length
+    ? await Order.countDocuments({ farmer: farmer._id, status: { $in: OPEN_ORDER_STATUSES }, pickupDate: { $in: farmer.blockedDates } })
+    : 0;
+  await farmer.populate([
+    { path: 'markets', select: 'name slug address latitude longitude operatingDays openTime closeTime' },
+    { path: 'pickupWindows.market', select: 'name slug' },
+  ]);
+  res.json({ farmer, status: req.user.status, clashes });
 }
 
 // ---------------------------------------------------------------- products
@@ -96,6 +113,7 @@ function readProductBody(body, { partial = false } = {}) {
     if (body[key] !== undefined && body[key] !== '') {
       const n = toNumber(body[key]);
       if (n === undefined || n < 0) throw new AppError(`${key} must be a positive number`, 400);
+      if (key === 'price' && n <= 0) throw new AppError('Price must be greater than 0', 400);
       data[key] = key === 'price' ? round2(n) : Math.floor(n);
     }
   }
@@ -107,10 +125,10 @@ function readProductBody(body, { partial = false } = {}) {
 
 // GET /api/farmer/products?search=&status=
 export async function myProducts(req, res) {
-  const filter = { farmer: req.farmer._id };
+  // Products removed by an admin stay visible here (with the reason); ones the farmer deleted do not.
+  const filter = { farmer: req.farmer._id, deletedByFarmer: { $ne: true } };
   if (req.query.search) filter.name = containsRegex(req.query.search);
   if (Object.values(PRODUCT_STATUS).includes(req.query.status)) filter.status = req.query.status;
-  if (req.query.status === 'removed') filter.isRemoved = true;
   const products = await Product.find(filter).populate('category', 'name slug color').sort({ createdAt: -1 }).lean();
   res.json({ products, units: UNITS, autoApplyTemplate: req.farmer.autoApplyTemplate, templateLastAppliedWeek: req.farmer.templateLastAppliedWeek });
 }
@@ -132,7 +150,7 @@ export async function createProduct(req, res) {
 }
 
 async function loadOwnProduct(req) {
-  const product = await Product.findOne({ _id: assertId(req.params.id, 'product'), farmer: req.farmer._id });
+  const product = await Product.findOne({ _id: assertId(req.params.id, 'product'), farmer: req.farmer._id, deletedByFarmer: { $ne: true } });
   if (!product) throw new AppError('Product not found', 404);
   return product;
 }
@@ -173,6 +191,7 @@ export async function deleteProduct(req, res) {
   if (hasOrders) {
     // Keep the record for order history, but hide it everywhere
     product.isRemoved = true;
+    product.deletedByFarmer = true;
     product.removedReason = 'Deleted by farmer';
     product.status = PRODUCT_STATUS.UNAVAILABLE;
     await product.save();
@@ -240,9 +259,9 @@ const TRANSITIONS = {
 };
 
 const CUSTOMER_MESSAGES = {
-  accepted: (o, f) => [`Pre-order ${o.orderNumber} accepted`, `${f.stallName} accepted your pre-order. Pickup: ${o.pickupDate}, ${o.pickupSlot.start}-${o.pickupSlot.end}.`],
+  accepted: (o, f, note, m) => [`Pre-order ${o.orderNumber} accepted`, `${f.stallName} accepted your pre-order.\n${pickupDetails(o, m)}`],
   declined: (o, f, note) => [`Pre-order ${o.orderNumber} declined`, `${f.stallName} could not fulfil your pre-order.${note ? ` Reason: ${note}` : ''}`],
-  ready: (o, f) => [`Pre-order ${o.orderNumber} is ready for pickup`, `Your order from ${f.stallName} is packed and ready. Pickup: ${o.pickupDate}, ${o.pickupSlot.start}-${o.pickupSlot.end}. Please pay at pickup.`],
+  ready: (o, f, note, m) => [`Pre-order ${o.orderNumber} is ready for pickup`, `Your order from ${f.stallName} is packed and ready. Please pay at pickup.\n${pickupDetails(o, m)}`],
   completed: (o, f) => [`Pre-order ${o.orderNumber} completed`, `Thanks for shopping with ${f.stallName}! Share your experience by leaving a review.`],
 };
 
@@ -264,7 +283,8 @@ export async function updateOrderStatus(req, res) {
   pushStatus(order, rule.to, 'farmer', note);
   await order.save();
 
-  const [title, message] = CUSTOMER_MESSAGES[rule.to](order, req.farmer, note);
+  const market = await Market.findById(order.market).select('name address latitude longitude').lean();
+  const [title, message] = CUSTOMER_MESSAGES[rule.to](order, req.farmer, note, market);
   // E-mail for the important moments: accepted, ready for pickup and declined
   const email = [ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY, ORDER_STATUS.DECLINED].includes(rule.to);
   await notify(order.customer, { type: 'order', title, message, link: `/account/orders/${order._id}` }, { email });

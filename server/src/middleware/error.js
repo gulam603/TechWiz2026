@@ -7,7 +7,7 @@ export function notFound(req, res) {
 }
 
 // Converts every thrown error into a consistent JSON response: { message, details? }
-// eslint-disable-next-line no-unused-vars
+ 
 export function errorHandler(err, req, res, next) {
   let status = err.statusCode || 500;
   let message = err.message || 'Something went wrong';

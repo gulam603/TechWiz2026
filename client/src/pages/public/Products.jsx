@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
@@ -21,17 +21,13 @@ const SORTS = [
   { value: 'name', label: 'Name A–Z' },
 ];
 
-const FILTER_KEYS = ['search', 'category', 'market', 'day', 'minPrice', 'maxPrice', 'inStock', 'sort', 'page'];
+const FILTER_KEYS = ['search', 'category', 'city', 'market', 'day', 'minPrice', 'maxPrice', 'inStock', 'sort', 'page'];
 
-function Filters({ params, set, categories, markets, onDone }) {
+// Rendered with key={params.toString()} so the text boxes reset when the URL filters change.
+function Filters({ params, set, categories, markets, cities, onDone }) {
   const [minPrice, setMinPrice] = useState(params.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(params.get('maxPrice') || '');
   const [search, setSearch] = useState(params.get('search') || '');
-  useEffect(() => {
-    setSearch(params.get('search') || '');
-    setMinPrice(params.get('minPrice') || '');
-    setMaxPrice(params.get('maxPrice') || '');
-  }, [params]);
 
   const category = params.get('category') || '';
   const day = params.get('day') ?? '';
@@ -65,10 +61,16 @@ function Filters({ params, set, categories, markets, onDone }) {
         ))}
       </div>
 
-      <div className="filter-title">Market</div>
+      <div className="filter-title">Location</div>
+      <select className="form-select mb-2" value={params.get('city') || ''} onChange={(e) => set({ city: e.target.value, market: '' })} aria-label="City">
+        <option value="">All cities</option>
+        {cities.map((c) => (
+          <option key={c}>{c}</option>
+        ))}
+      </select>
       <select className="form-select" value={params.get('market') || ''} onChange={(e) => set({ market: e.target.value })} aria-label="Market">
         <option value="">All markets</option>
-        {markets.map((m) => (
+        {markets.filter((m) => !params.get('city') || m.city === params.get('city')).map((m) => (
           <option key={m._id} value={m._id}>
             {m.name}
           </option>
@@ -163,7 +165,7 @@ export default function Products() {
       <div className="container pb-5">
         <div className="row g-4">
           <div className="col-lg-3 d-none d-lg-block">
-            <Filters params={params} set={set} categories={categories} markets={markets} />
+            <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} />
           </div>
           <div className="col-lg-9">
             <div className="results-bar">
@@ -232,7 +234,7 @@ export default function Products() {
               <button type="button" className="btn-close" onClick={() => setShowFilters(false)} aria-label="Close" />
             </div>
             <div className="offcanvas-body">
-              <Filters params={params} set={set} categories={categories} markets={markets} onDone={() => setShowFilters(false)} />
+              <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} onDone={() => setShowFilters(false)} />
             </div>
           </div>
           <div className="offcanvas-backdrop fade show" onClick={() => setShowFilters(false)} />

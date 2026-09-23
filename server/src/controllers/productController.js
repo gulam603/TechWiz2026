@@ -1,5 +1,5 @@
 import { Product, Review } from '../models/index.js';
-import { resolveCategory } from './helpers/category.js';
+import { marketIdsInCity, resolveCategory } from './helpers/category.js';
 import AppError from '../utils/AppError.js';
 import { PRODUCT_STATUS } from '../utils/constants.js';
 import { containsRegex, getPagination, isValidId, toBool, toNumber } from '../utils/helpers.js';
@@ -29,6 +29,7 @@ export async function buildProductFilter(query) {
   if (categoryId) filter.category = categoryId;
 
   if (query.market && isValidId(query.market)) filter.markets = query.market;
+  else if (query.city) filter.markets = { $in: await marketIdsInCity(query.city) }; // location filter
   if (query.farmer && isValidId(query.farmer)) filter.farmer = query.farmer;
   const day = toNumber(query.day);
   if (day !== undefined && day >= 0 && day <= 6) filter.days = day;

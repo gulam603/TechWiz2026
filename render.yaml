@@ -1,0 +1,19 @@
+# Render.com blueprint: one web service that serves the API and the built React app.
+# Create a free MongoDB Atlas cluster first and paste its connection string as MONGO_URI.
+services:
+  - type: web
+    name: marketlink
+    runtime: node
+    plan: free
+    buildCommand: npm run install:all && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TZ
+        value: Asia/Karachi
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_URI
+        sync: false

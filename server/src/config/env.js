@@ -5,6 +5,10 @@ import dotenv from 'dotenv';
 // Always load server/.env, no matter from which folder the server is started.
 dotenv.config({ path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '.env'), quiet: true });
 
+// Pickup slots, cut-off times and "today" are calculated in the markets' local time zone.
+// Hosting servers usually run in UTC, so the zone is set explicitly (TZ in .env).
+process.env.TZ = process.env.TZ || 'Asia/Karachi';
+
 // Central place for configuration so the rest of the code never reads process.env directly.
 const env = {
   port: Number(process.env.PORT) || 5000,

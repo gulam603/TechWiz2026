@@ -10,18 +10,21 @@ export function signToken(user) {
   return jwt.sign({ id: user._id, role: user.role }, env.jwtSecret, { expiresIn: env.jwtExpiresIn });
 }
 
-/** The JWT is stored in an httpOnly cookie so JavaScript in the browser cannot read it (XSS protection). */
-export function setAuthCookie(res, token) {
+/**
+ * The JWT is stored in an httpOnly cookie so JavaScript in the browser cannot read it (XSS protection).
+ * The cookie is marked "secure" whenever the site is opened over https (e.g. on the hosting provider).
+ */
+export function setAuthCookie(req, res, token) {
   res.cookie(COOKIE_NAME, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: env.isProd,
+    secure: req.secure,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }
 
-export function clearAuthCookie(res) {
-  res.clearCookie(COOKIE_NAME, { httpOnly: true, sameSite: 'lax', secure: env.isProd });
+export function clearAuthCookie(req, res) {
+  res.clearCookie(COOKIE_NAME, { httpOnly: true, sameSite: 'lax', secure: req.secure });
 }
 
 function readToken(req) {

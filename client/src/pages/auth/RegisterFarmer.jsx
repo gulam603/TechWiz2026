@@ -1,20 +1,22 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
-import { useAuth } from '../../context/AuthContext';
+import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { PASSWORD_HINT, passwordOk } from './Register';
 
 export default function RegisterFarmer() {
   useDocumentTitle('Register your stall');
-  const { registerFarmer } = useAuth();
+  const { registerFarmer, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [form, setForm] = useState({ stallName: '', contactPerson: '', phone: '', email: '', address: '', city: '', password: '', confirm: '' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  if (user && !busy) return <Navigate to={homeFor(user)} replace />;
 
   async function submit(e) {
     e.preventDefault();
@@ -51,7 +53,7 @@ export default function RegisterFarmer() {
           </div>
           <div className="col-md-6">
             <label className="form-label" htmlFor="f-phone">Contact number</label>
-            <input id="f-phone" name="phone" type="tel" className="form-control" required value={form.phone} onChange={change} autoComplete="tel" />
+            <input id="f-phone" name="phone" type="tel" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title="7-20 digits, spaces, +, - or brackets" value={form.phone} onChange={change} autoComplete="tel" />
           </div>
           <div className="col-12">
             <label className="form-label" htmlFor="f-email">E-mail</label>

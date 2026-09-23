@@ -186,7 +186,7 @@ export default function Profile() {
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="p-phone">Contact number</label>
-                <input id="p-phone" name="phone" className="form-control" required value={form.phone} onChange={change} />
+                <input id="p-phone" name="phone" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title="7-20 digits, spaces, +, - or brackets" value={form.phone} onChange={change} />
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="p-city">City</label>

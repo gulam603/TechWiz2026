@@ -28,9 +28,14 @@ export function AuthProvider({ children }) {
     }
   }, [applySession]);
 
+  // Restore the session once on start-up (the cookie is sent automatically)
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    api
+      .get('/auth/me')
+      .then(applySession)
+      .catch(() => applySession(null))
+      .finally(() => setLoading(false));
+  }, [applySession]);
 
   const value = useMemo(
     () => ({

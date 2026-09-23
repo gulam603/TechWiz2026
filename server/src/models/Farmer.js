@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { timeToMinutes } from '../utils/dates.js';
+import { timeToMinutes, toDateKey } from '../utils/dates.js';
 
 const { Schema } = mongoose;
 
@@ -21,7 +21,12 @@ const farmerSchema = new Schema(
     stallName: { type: String, required: [true, 'Stall / business name is required'], trim: true, maxlength: 100 },
     slug: { type: String, required: true, unique: true, lowercase: true },
     contactPerson: { type: String, required: [true, 'Contact person is required'], trim: true },
-    phone: { type: String, required: [true, 'Contact number is required'], trim: true },
+    phone: {
+      type: String,
+      required: [true, 'Contact number is required'],
+      trim: true,
+      match: [/^\+?[\d\s()-]{7,20}$/, 'Please enter a valid contact number'],
+    },
     email: { type: String, required: true, lowercase: true, trim: true },
     address: { type: String, required: [true, 'Address is required'], trim: true },
     city: { type: String, trim: true, default: '' },
@@ -40,6 +45,8 @@ const farmerSchema = new Schema(
     slotMinutes: { type: Number, default: 30, min: 10, max: 240 },
     slotCapacity: { type: Number, default: 6, min: 1, max: 100 }, // max orders per slot
     orderCutoffHours: { type: Number, default: 12, min: 0, max: 168 },
+    // Dates the farmer is NOT at the market ("closed this week"), e.g. ["2026-10-02"]
+    blockedDates: [{ type: String, match: /^\d{4}-\d{2}-\d{2}$/ }],
 
     // Recurring weekly stock template
     autoApplyTemplate: { type: Boolean, default: true },
@@ -66,6 +73,9 @@ farmerSchema.pre('save', function syncDerivedFields() {
   const windowMarkets = windows.map((w) => String(w.market));
   const all = new Set([...(this.markets || []).map(String), ...windowMarkets]);
   this.markets = [...all];
+  // Keep only upcoming closed dates, without duplicates
+  const today = toDateKey();
+  this.blockedDates = [...new Set(this.blockedDates || [])].filter((d) => d >= today).sort();
 });
 
 export default mongoose.model('Farmer', farmerSchema);

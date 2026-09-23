@@ -7,7 +7,7 @@ export async function uniqueSlug(Model, text, excludeId) {
   for (let i = 2; ; i += 1) {
     const filter = { slug };
     if (excludeId) filter._id = { $ne: excludeId };
-    // eslint-disable-next-line no-await-in-loop
+     
     if (!(await Model.exists(filter))) return slug;
     slug = `${base}-${i}`;
   }

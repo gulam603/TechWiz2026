@@ -10,7 +10,7 @@ import DayDots from '../../components/common/DayDots';
 import FavButton from '../../components/common/FavButton';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
-import { coverFor, DAY_SHORT, time12 } from '../../utils/format';
+import { coverFor, DAY_SHORT, formatDateKey, time12 } from '../../utils/format';
 
 export default function FarmerDetail() {
   const { slug } = useParams();
@@ -154,6 +154,11 @@ export default function FarmerDetail() {
                 </ul>
               </div>
             ))}
+            {farmer.blockedDates?.length > 0 && (
+              <div className="alert alert-warning small py-2 rounded-4">
+                <i className="bi bi-calendar-x" /> Not at the market on: <strong>{farmer.blockedDates.slice(0, 4).map((d) => formatDateKey(d)).join(', ')}</strong>
+              </div>
+            )}
             <div className="pay-note">
               <i className="bi bi-hourglass-split" />
               <span>Pre-orders close {farmer.orderCutoffHours} h before each pickup slot.</span>

@@ -1,18 +1,20 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
-import { useAuth } from '../../context/AuthContext';
+import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 
 export default function AdminLogin() {
   useDocumentTitle('Admin login');
-  const { adminLogin } = useAuth();
+  const { adminLogin, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+
+  if (user && !busy) return <Navigate to={homeFor(user)} replace />;
 
   async function submit(e) {
     e.preventDefault();

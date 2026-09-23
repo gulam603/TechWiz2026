@@ -68,7 +68,15 @@ export function createApp() {
 
   // In production the Express server also serves the built React app.
   if (fs.existsSync(CLIENT_DIST)) {
-    app.use(express.static(CLIENT_DIST, { maxAge: '1h', index: false }));
+    app.use(
+      express.static(CLIENT_DIST, {
+        index: false,
+        setHeaders: (res, filePath) => {
+          // Files in /assets have a content hash in their name, so they can be cached "forever"
+          res.setHeader('Cache-Control', filePath.includes(`${path.sep}assets${path.sep}`) ? 'public, max-age=31536000, immutable' : 'no-cache');
+        },
+      })
+    );
     app.get(/^\/(?!api|uploads).*/, (req, res) => res.sendFile(path.join(CLIENT_DIST, 'index.html')));
   }
 

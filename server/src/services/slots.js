@@ -46,8 +46,10 @@ async function countBookings(farmerId, dateKeys, excludeOrderId) {
 export async function getAvailability(farmer, { days = 14, excludeOrderId, now = new Date() } = {}) {
   const today = startOfDay(now);
   const candidates = [];
+  const blocked = new Set(farmer.blockedDates || []);
   for (let i = 0; i < days; i += 1) {
     const date = addDays(today, i);
+    if (blocked.has(toDateKey(date))) continue; // farmer is not at the market that day
     const windows = (farmer.pickupWindows || []).filter((w) => w.day === date.getDay() && w.market);
     if (windows.length) candidates.push({ date, windows });
   }
@@ -88,6 +90,7 @@ export async function getAvailability(farmer, { days = 14, excludeOrderId, now =
  */
 export async function validatePickup(farmer, { date, slotStart, marketId, excludeOrderId, now = new Date() }) {
   if (!isDateKey(date)) throw new AppError('Please choose a valid pickup date', 400);
+  if ((farmer.blockedDates || []).includes(date)) throw new AppError('The farmer is not at the market on this date. Please choose another day', 400);
   const day = parseDateKey(date).getDay();
   const windows = (farmer.pickupWindows || []).filter(
     (w) => w.day === day && (!marketId || String(w.market._id || w.market) === String(marketId))

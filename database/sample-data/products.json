@@ -1,9 +1,9 @@
 [
   {
-    "_id": "6ab3afe1cd9cab7004fceb4c",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa6421025c",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Vine Tomatoes",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 180,
     "unit": "kg",
     "quantityAvailable": 57,
@@ -12,9 +12,10 @@
     "image": "/uploads/seed/tomato.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -25,15 +26,15 @@
     "ratingAvg": 4.5,
     "ratingCount": 2,
     "totalSold": 26,
-    "createdAt": "2026-09-23T10:54:25.090Z",
-    "updatedAt": "2026-09-23T10:54:28.863Z",
+    "createdAt": "2026-09-23T11:30:40.639Z",
+    "updatedAt": "2026-09-23T11:30:44.387Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb4d",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa6421025d",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Sweet Carrots",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 120,
     "unit": "kg",
     "quantityAvailable": 42,
@@ -42,9 +43,10 @@
     "image": "/uploads/seed/carrot.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -55,15 +57,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 33,
-    "createdAt": "2026-09-23T10:54:25.093Z",
-    "updatedAt": "2026-09-23T10:54:28.896Z",
+    "createdAt": "2026-09-23T11:30:40.642Z",
+    "updatedAt": "2026-09-23T11:30:44.423Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb4e",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa6421025e",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Farm Potatoes",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 90,
     "unit": "kg",
     "quantityAvailable": 77,
@@ -72,9 +74,10 @@
     "image": "/uploads/seed/potato.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -85,15 +88,15 @@
     "ratingAvg": 5,
     "ratingCount": 6,
     "totalSold": 33,
-    "createdAt": "2026-09-23T10:54:25.096Z",
-    "updatedAt": "2026-09-23T10:54:28.927Z",
+    "createdAt": "2026-09-23T11:30:40.645Z",
+    "updatedAt": "2026-09-23T11:30:44.452Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb4f",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa6421025f",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Red Onions",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 140,
     "unit": "kg",
     "quantityAvailable": 68,
@@ -102,9 +105,10 @@
     "image": "/uploads/seed/onion.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -115,15 +119,15 @@
     "ratingAvg": 4.5,
     "ratingCount": 2,
     "totalSold": 14,
-    "createdAt": "2026-09-23T10:54:25.098Z",
-    "updatedAt": "2026-09-23T10:54:28.959Z",
+    "createdAt": "2026-09-23T11:30:40.647Z",
+    "updatedAt": "2026-09-23T11:30:44.480Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb50",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa64210260",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Desi Cucumbers",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 100,
     "unit": "kg",
     "quantityAvailable": 28,
@@ -132,9 +136,10 @@
     "image": "/uploads/seed/cucumber.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -145,15 +150,15 @@
     "ratingAvg": 3.75,
     "ratingCount": 4,
     "totalSold": 29,
-    "createdAt": "2026-09-23T10:54:25.100Z",
-    "updatedAt": "2026-09-23T10:54:28.990Z",
+    "createdAt": "2026-09-23T11:30:40.649Z",
+    "updatedAt": "2026-09-23T11:30:44.505Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb51",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa64210261",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Purple Brinjal",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 110,
     "unit": "kg",
     "quantityAvailable": 24,
@@ -162,9 +167,10 @@
     "image": "/uploads/seed/eggplant.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -175,15 +181,15 @@
     "ratingAvg": 5,
     "ratingCount": 2,
     "totalSold": 21,
-    "createdAt": "2026-09-23T10:54:25.102Z",
-    "updatedAt": "2026-09-23T10:54:29.018Z",
+    "createdAt": "2026-09-23T11:30:40.651Z",
+    "updatedAt": "2026-09-23T11:30:44.528Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb52",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa64210262",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Capsicum Mix",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 320,
     "unit": "kg",
     "quantityAvailable": 0,
@@ -192,9 +198,10 @@
     "image": "/uploads/seed/bell-pepper.webp",
     "status": "sold_out",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -205,15 +212,15 @@
     "ratingAvg": 4.83,
     "ratingCount": 6,
     "totalSold": 31,
-    "createdAt": "2026-09-23T10:54:25.105Z",
-    "updatedAt": "2026-09-23T10:54:29.049Z",
+    "createdAt": "2026-09-23T11:30:40.654Z",
+    "updatedAt": "2026-09-23T11:30:44.551Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb53",
-    "farmer": "6ab3afe1cd9cab7004fceb48",
+    "_id": "6ab3b860d2dd2afa64210263",
+    "farmer": "6ab3b860d2dd2afa64210258",
     "name": "Green Chillies",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 240,
     "unit": "kg",
     "quantityAvailable": 11,
@@ -222,9 +229,10 @@
     "image": "/uploads/seed/chilli.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb40"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210250"
     ],
     "days": [
       0,
@@ -235,15 +243,15 @@
     "ratingAvg": 4.33,
     "ratingCount": 3,
     "totalSold": 28,
-    "createdAt": "2026-09-23T10:54:25.107Z",
-    "updatedAt": "2026-09-23T10:54:29.080Z",
+    "createdAt": "2026-09-23T11:30:40.655Z",
+    "updatedAt": "2026-09-23T11:30:44.577Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb59",
-    "farmer": "6ab3afe1cd9cab7004fceb55",
+    "_id": "6ab3b860d2dd2afa64210269",
+    "farmer": "6ab3b860d2dd2afa64210265",
     "name": "Sindhri Mangoes",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 350,
     "unit": "kg",
     "quantityAvailable": 87,
@@ -252,9 +260,10 @@
     "image": "/uploads/seed/mango.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb41",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa64210251",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -265,15 +274,15 @@
     "ratingAvg": 5,
     "ratingCount": 2,
     "totalSold": 21,
-    "createdAt": "2026-09-23T10:54:25.205Z",
-    "updatedAt": "2026-09-23T10:54:29.115Z",
+    "createdAt": "2026-09-23T11:30:40.753Z",
+    "updatedAt": "2026-09-23T11:30:44.601Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb5a",
-    "farmer": "6ab3afe1cd9cab7004fceb55",
+    "_id": "6ab3b860d2dd2afa6421026a",
+    "farmer": "6ab3b860d2dd2afa64210265",
     "name": "Chaunsa Mangoes",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 400,
     "unit": "kg",
     "quantityAvailable": 40,
@@ -282,9 +291,10 @@
     "image": "/uploads/seed/mango.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb41",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa64210251",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -295,15 +305,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 22,
-    "createdAt": "2026-09-23T10:54:25.208Z",
-    "updatedAt": "2026-09-23T10:54:29.145Z",
+    "createdAt": "2026-09-23T11:30:40.756Z",
+    "updatedAt": "2026-09-23T11:30:44.626Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb5b",
-    "farmer": "6ab3afe1cd9cab7004fceb55",
+    "_id": "6ab3b860d2dd2afa6421026b",
+    "farmer": "6ab3b860d2dd2afa64210265",
     "name": "Bananas",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 180,
     "unit": "dozen",
     "quantityAvailable": 49,
@@ -312,9 +322,10 @@
     "image": "/uploads/seed/banana.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb41",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa64210251",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -325,15 +336,15 @@
     "ratingAvg": 4.8,
     "ratingCount": 5,
     "totalSold": 33,
-    "createdAt": "2026-09-23T10:54:25.211Z",
-    "updatedAt": "2026-09-23T10:54:29.173Z",
+    "createdAt": "2026-09-23T11:30:40.758Z",
+    "updatedAt": "2026-09-23T11:30:44.650Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb5c",
-    "farmer": "6ab3afe1cd9cab7004fceb55",
+    "_id": "6ab3b860d2dd2afa6421026c",
+    "farmer": "6ab3b860d2dd2afa64210265",
     "name": "Watermelon",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 70,
     "unit": "kg",
     "quantityAvailable": 35,
@@ -342,9 +353,10 @@
     "image": "/uploads/seed/watermelon.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb41",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa64210251",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -355,15 +367,15 @@
     "ratingAvg": 4,
     "ratingCount": 2,
     "totalSold": 17,
-    "createdAt": "2026-09-23T10:54:25.213Z",
-    "updatedAt": "2026-09-23T10:54:29.201Z",
+    "createdAt": "2026-09-23T11:30:40.760Z",
+    "updatedAt": "2026-09-23T11:30:44.675Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb5d",
-    "farmer": "6ab3afe1cd9cab7004fceb55",
+    "_id": "6ab3b860d2dd2afa6421026d",
+    "farmer": "6ab3b860d2dd2afa64210265",
     "name": "Cantaloupe Melon",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 150,
     "unit": "piece",
     "quantityAvailable": 20,
@@ -372,9 +384,10 @@
     "image": "/uploads/seed/melon.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb41",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa64210251",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -385,15 +398,15 @@
     "ratingAvg": 2.5,
     "ratingCount": 2,
     "totalSold": 11,
-    "createdAt": "2026-09-23T10:54:25.215Z",
-    "updatedAt": "2026-09-23T10:54:29.228Z",
+    "createdAt": "2026-09-23T11:30:40.763Z",
+    "updatedAt": "2026-09-23T11:30:44.703Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb5e",
-    "farmer": "6ab3afe1cd9cab7004fceb55",
+    "_id": "6ab3b860d2dd2afa6421026e",
+    "farmer": "6ab3b860d2dd2afa64210265",
     "name": "Tender Coconuts",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 200,
     "unit": "piece",
     "quantityAvailable": 15,
@@ -402,9 +415,10 @@
     "image": "/uploads/seed/coconut.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb41",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa64210251",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -415,15 +429,15 @@
     "ratingAvg": 3.5,
     "ratingCount": 2,
     "totalSold": 11,
-    "createdAt": "2026-09-23T10:54:25.218Z",
-    "updatedAt": "2026-09-23T10:54:29.254Z",
+    "createdAt": "2026-09-23T11:30:40.765Z",
+    "updatedAt": "2026-09-23T11:30:44.728Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb5f",
-    "farmer": "6ab3afe1cd9cab7004fceb55",
+    "_id": "6ab3b860d2dd2afa6421026f",
+    "farmer": "6ab3b860d2dd2afa64210265",
     "name": "Lemons",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 260,
     "unit": "kg",
     "quantityAvailable": 18,
@@ -432,9 +446,10 @@
     "image": "/uploads/seed/lemon.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb41",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa64210251",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -445,15 +460,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 24,
-    "createdAt": "2026-09-23T10:54:25.220Z",
-    "updatedAt": "2026-09-23T10:54:29.287Z",
+    "createdAt": "2026-09-23T11:30:40.767Z",
+    "updatedAt": "2026-09-23T11:30:44.754Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb65",
-    "farmer": "6ab3afe1cd9cab7004fceb61",
+    "_id": "6ab3b860d2dd2afa64210275",
+    "farmer": "6ab3b860d2dd2afa64210271",
     "name": "Fresh Buffalo Milk",
-    "category": "6ab3afe0cd9cab7004fceb39",
+    "category": "6ab3b860d2dd2afa64210249",
     "price": 240,
     "unit": "litre",
     "quantityAvailable": 58,
@@ -462,9 +477,10 @@
     "image": "/uploads/seed/milk.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb3f"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa6421024f"
     ],
     "days": [
       0,
@@ -475,15 +491,15 @@
     "ratingAvg": 4.25,
     "ratingCount": 4,
     "totalSold": 30,
-    "createdAt": "2026-09-23T10:54:25.318Z",
-    "updatedAt": "2026-09-23T10:54:29.316Z",
+    "createdAt": "2026-09-23T11:30:40.869Z",
+    "updatedAt": "2026-09-23T11:30:44.779Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb66",
-    "farmer": "6ab3afe1cd9cab7004fceb61",
+    "_id": "6ab3b860d2dd2afa64210276",
+    "farmer": "6ab3b860d2dd2afa64210271",
     "name": "Farm Paneer",
-    "category": "6ab3afe0cd9cab7004fceb39",
+    "category": "6ab3b860d2dd2afa64210249",
     "price": 1400,
     "unit": "kg",
     "quantityAvailable": 10,
@@ -492,9 +508,10 @@
     "image": "/uploads/seed/cheese.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb3f"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa6421024f"
     ],
     "days": [
       0,
@@ -505,15 +522,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 17,
-    "createdAt": "2026-09-23T10:54:25.321Z",
-    "updatedAt": "2026-09-23T10:54:29.348Z",
+    "createdAt": "2026-09-23T11:30:40.871Z",
+    "updatedAt": "2026-09-23T11:30:44.804Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb67",
-    "farmer": "6ab3afe1cd9cab7004fceb61",
+    "_id": "6ab3b860d2dd2afa64210277",
+    "farmer": "6ab3b860d2dd2afa64210271",
     "name": "Desi Eggs",
-    "category": "6ab3afe0cd9cab7004fceb39",
+    "category": "6ab3b860d2dd2afa64210249",
     "price": 450,
     "unit": "dozen",
     "quantityAvailable": 39,
@@ -522,9 +539,10 @@
     "image": "/uploads/seed/egg.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb3f"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa6421024f"
     ],
     "days": [
       0,
@@ -535,15 +553,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 36,
-    "createdAt": "2026-09-23T10:54:25.324Z",
-    "updatedAt": "2026-09-23T10:54:29.374Z",
+    "createdAt": "2026-09-23T11:30:40.874Z",
+    "updatedAt": "2026-09-23T11:30:44.829Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb68",
-    "farmer": "6ab3afe1cd9cab7004fceb61",
+    "_id": "6ab3b860d2dd2afa64210278",
+    "farmer": "6ab3b860d2dd2afa64210271",
     "name": "Hand-churned Butter",
-    "category": "6ab3afe0cd9cab7004fceb39",
+    "category": "6ab3b860d2dd2afa64210249",
     "price": 900,
     "unit": "pack",
     "quantityAvailable": 15,
@@ -552,9 +570,10 @@
     "image": "/uploads/seed/butter.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb3f"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa6421024f"
     ],
     "days": [
       0,
@@ -565,15 +584,15 @@
     "ratingAvg": 4.4,
     "ratingCount": 5,
     "totalSold": 32,
-    "createdAt": "2026-09-23T10:54:25.326Z",
-    "updatedAt": "2026-09-23T10:54:29.403Z",
+    "createdAt": "2026-09-23T11:30:40.876Z",
+    "updatedAt": "2026-09-23T11:30:44.855Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb69",
-    "farmer": "6ab3afe1cd9cab7004fceb61",
+    "_id": "6ab3b860d2dd2afa64210279",
+    "farmer": "6ab3b860d2dd2afa64210271",
     "name": "Natural Yogurt",
-    "category": "6ab3afe0cd9cab7004fceb39",
+    "category": "6ab3b860d2dd2afa64210249",
     "price": 280,
     "unit": "kg",
     "quantityAvailable": 25,
@@ -582,9 +601,10 @@
     "image": "/uploads/seed/jar.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb3f"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa6421024f"
     ],
     "days": [
       0,
@@ -595,15 +615,15 @@
     "ratingAvg": 4.4,
     "ratingCount": 5,
     "totalSold": 33,
-    "createdAt": "2026-09-23T10:54:25.328Z",
-    "updatedAt": "2026-09-23T10:54:29.432Z",
+    "createdAt": "2026-09-23T11:30:40.879Z",
+    "updatedAt": "2026-09-23T11:30:44.880Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb6f",
-    "farmer": "6ab3afe1cd9cab7004fceb6b",
+    "_id": "6ab3b860d2dd2afa6421027f",
+    "farmer": "6ab3b860d2dd2afa6421027b",
     "name": "Country Sourdough Loaf",
-    "category": "6ab3afe0cd9cab7004fceb3a",
+    "category": "6ab3b860d2dd2afa6421024a",
     "price": 950,
     "unit": "loaf",
     "quantityAvailable": 19,
@@ -612,9 +632,10 @@
     "image": "/uploads/seed/bread.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -625,15 +646,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 19,
-    "createdAt": "2026-09-23T10:54:25.437Z",
-    "updatedAt": "2026-09-23T10:54:29.463Z",
+    "createdAt": "2026-09-23T11:30:40.981Z",
+    "updatedAt": "2026-09-23T11:30:44.905Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb70",
-    "farmer": "6ab3afe1cd9cab7004fceb6b",
+    "_id": "6ab3b860d2dd2afa64210280",
+    "farmer": "6ab3b860d2dd2afa6421027b",
     "name": "Classic Baguette",
-    "category": "6ab3afe0cd9cab7004fceb3a",
+    "category": "6ab3b860d2dd2afa6421024a",
     "price": 450,
     "unit": "piece",
     "quantityAvailable": 25,
@@ -642,9 +663,10 @@
     "image": "/uploads/seed/baguette.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -655,15 +677,15 @@
     "ratingAvg": 4.33,
     "ratingCount": 3,
     "totalSold": 34,
-    "createdAt": "2026-09-23T10:54:25.440Z",
-    "updatedAt": "2026-09-23T10:54:29.492Z",
+    "createdAt": "2026-09-23T11:30:40.983Z",
+    "updatedAt": "2026-09-23T11:30:44.933Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb71",
-    "farmer": "6ab3afe1cd9cab7004fceb6b",
+    "_id": "6ab3b860d2dd2afa64210281",
+    "farmer": "6ab3b860d2dd2afa6421027b",
     "name": "Butter Croissants",
-    "category": "6ab3afe0cd9cab7004fceb3a",
+    "category": "6ab3b860d2dd2afa6421024a",
     "price": 1200,
     "unit": "box",
     "quantityAvailable": 11,
@@ -672,9 +694,10 @@
     "image": "/uploads/seed/croissant.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -685,15 +708,15 @@
     "ratingAvg": 5,
     "ratingCount": 2,
     "totalSold": 24,
-    "createdAt": "2026-09-23T10:54:25.442Z",
-    "updatedAt": "2026-09-23T10:54:29.518Z",
+    "createdAt": "2026-09-23T11:30:40.986Z",
+    "updatedAt": "2026-09-23T11:30:44.960Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb72",
-    "farmer": "6ab3afe1cd9cab7004fceb6b",
+    "_id": "6ab3b860d2dd2afa64210282",
+    "farmer": "6ab3b860d2dd2afa6421027b",
     "name": "Whole Wheat Naan",
-    "category": "6ab3afe0cd9cab7004fceb3a",
+    "category": "6ab3b860d2dd2afa6421024a",
     "price": 300,
     "unit": "pack",
     "quantityAvailable": 30,
@@ -702,9 +725,10 @@
     "image": "/uploads/seed/flatbread.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -715,15 +739,15 @@
     "ratingAvg": 4.67,
     "ratingCount": 3,
     "totalSold": 24,
-    "createdAt": "2026-09-23T10:54:25.445Z",
-    "updatedAt": "2026-09-23T10:54:29.547Z",
+    "createdAt": "2026-09-23T11:30:40.988Z",
+    "updatedAt": "2026-09-23T11:30:44.989Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb73",
-    "farmer": "6ab3afe1cd9cab7004fceb6b",
+    "_id": "6ab3b860d2dd2afa64210283",
+    "farmer": "6ab3b860d2dd2afa6421027b",
     "name": "Sesame Bagels",
-    "category": "6ab3afe0cd9cab7004fceb3a",
+    "category": "6ab3b860d2dd2afa6421024a",
     "price": 800,
     "unit": "pack",
     "quantityAvailable": 10,
@@ -732,9 +756,10 @@
     "image": "/uploads/seed/bagel.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -745,15 +770,15 @@
     "ratingAvg": 4,
     "ratingCount": 1,
     "totalSold": 22,
-    "createdAt": "2026-09-23T10:54:25.447Z",
-    "updatedAt": "2026-09-23T10:54:29.576Z",
+    "createdAt": "2026-09-23T11:30:40.990Z",
+    "updatedAt": "2026-09-23T11:30:45.020Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb74",
-    "farmer": "6ab3afe1cd9cab7004fceb6b",
+    "_id": "6ab3b860d2dd2afa64210284",
+    "farmer": "6ab3b860d2dd2afa6421027b",
     "name": "Seasonal Fruit Pie",
-    "category": "6ab3afe0cd9cab7004fceb3a",
+    "category": "6ab3b860d2dd2afa6421024a",
     "price": 1800,
     "unit": "piece",
     "quantityAvailable": 6,
@@ -762,9 +787,10 @@
     "image": "/uploads/seed/pie.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -775,15 +801,15 @@
     "ratingAvg": 3,
     "ratingCount": 1,
     "totalSold": 13,
-    "createdAt": "2026-09-23T10:54:25.449Z",
-    "updatedAt": "2026-09-23T10:54:29.602Z",
+    "createdAt": "2026-09-23T11:30:40.992Z",
+    "updatedAt": "2026-09-23T11:30:45.046Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb75",
-    "farmer": "6ab3afe1cd9cab7004fceb6b",
+    "_id": "6ab3b860d2dd2afa64210285",
+    "farmer": "6ab3b860d2dd2afa6421027b",
     "name": "Oat Chocolate Cookies",
-    "category": "6ab3afe0cd9cab7004fceb3a",
+    "category": "6ab3b860d2dd2afa6421024a",
     "price": 650,
     "unit": "box",
     "quantityAvailable": 15,
@@ -792,9 +818,10 @@
     "image": "/uploads/seed/cookie.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -805,15 +832,15 @@
     "ratingAvg": 5,
     "ratingCount": 3,
     "totalSold": 22,
-    "createdAt": "2026-09-23T10:54:25.451Z",
-    "updatedAt": "2026-09-23T10:54:29.636Z",
+    "createdAt": "2026-09-23T11:30:40.995Z",
+    "updatedAt": "2026-09-23T11:30:45.071Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb7b",
-    "farmer": "6ab3afe1cd9cab7004fceb77",
+    "_id": "6ab3b861d2dd2afa6421028b",
+    "farmer": "6ab3b861d2dd2afa64210287",
     "name": "Fresh Mint (Podina)",
-    "category": "6ab3afe0cd9cab7004fceb3b",
+    "category": "6ab3b860d2dd2afa6421024b",
     "price": 60,
     "unit": "bunch",
     "quantityAvailable": 80,
@@ -822,9 +849,10 @@
     "image": "/uploads/seed/herb.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb42",
-      "6ab3afe0cd9cab7004fceb44"
+      "6ab3b860d2dd2afa64210252",
+      "6ab3b860d2dd2afa64210254"
     ],
     "days": [
       3,
@@ -835,15 +863,15 @@
     "ratingAvg": 4.75,
     "ratingCount": 4,
     "totalSold": 36,
-    "createdAt": "2026-09-23T10:54:25.552Z",
-    "updatedAt": "2026-09-23T10:54:29.662Z",
+    "createdAt": "2026-09-23T11:30:41.095Z",
+    "updatedAt": "2026-09-23T11:30:45.099Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb7c",
-    "farmer": "6ab3afe1cd9cab7004fceb77",
+    "_id": "6ab3b861d2dd2afa6421028c",
+    "farmer": "6ab3b861d2dd2afa64210287",
     "name": "Coriander (Dhania)",
-    "category": "6ab3afe0cd9cab7004fceb3b",
+    "category": "6ab3b860d2dd2afa6421024b",
     "price": 50,
     "unit": "bunch",
     "quantityAvailable": 90,
@@ -852,9 +880,10 @@
     "image": "/uploads/seed/herb.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb42",
-      "6ab3afe0cd9cab7004fceb44"
+      "6ab3b860d2dd2afa64210252",
+      "6ab3b860d2dd2afa64210254"
     ],
     "days": [
       3,
@@ -865,15 +894,15 @@
     "ratingAvg": 4.67,
     "ratingCount": 3,
     "totalSold": 28,
-    "createdAt": "2026-09-23T10:54:25.555Z",
-    "updatedAt": "2026-09-23T10:54:29.689Z",
+    "createdAt": "2026-09-23T11:30:41.098Z",
+    "updatedAt": "2026-09-23T11:30:45.124Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb7d",
-    "farmer": "6ab3afe1cd9cab7004fceb77",
+    "_id": "6ab3b861d2dd2afa6421028d",
+    "farmer": "6ab3b861d2dd2afa64210287",
     "name": "Baby Spinach",
-    "category": "6ab3afe0cd9cab7004fceb3b",
+    "category": "6ab3b860d2dd2afa6421024b",
     "price": 160,
     "unit": "bunch",
     "quantityAvailable": 40,
@@ -882,9 +911,10 @@
     "image": "/uploads/seed/leafy-greens.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb42",
-      "6ab3afe0cd9cab7004fceb44"
+      "6ab3b860d2dd2afa64210252",
+      "6ab3b860d2dd2afa64210254"
     ],
     "days": [
       3,
@@ -895,15 +925,15 @@
     "ratingAvg": 4.5,
     "ratingCount": 6,
     "totalSold": 22,
-    "createdAt": "2026-09-23T10:54:25.557Z",
-    "updatedAt": "2026-09-23T10:54:29.718Z",
+    "createdAt": "2026-09-23T11:30:41.103Z",
+    "updatedAt": "2026-09-23T11:30:45.151Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb7e",
-    "farmer": "6ab3afe1cd9cab7004fceb77",
+    "_id": "6ab3b861d2dd2afa6421028e",
+    "farmer": "6ab3b861d2dd2afa64210287",
     "name": "Iceberg Lettuce",
-    "category": "6ab3afe0cd9cab7004fceb3b",
+    "category": "6ab3b860d2dd2afa6421024b",
     "price": 220,
     "unit": "piece",
     "quantityAvailable": 20,
@@ -912,9 +942,10 @@
     "image": "/uploads/seed/leafy-greens.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb42",
-      "6ab3afe0cd9cab7004fceb44"
+      "6ab3b860d2dd2afa64210252",
+      "6ab3b860d2dd2afa64210254"
     ],
     "days": [
       3,
@@ -925,15 +956,15 @@
     "ratingAvg": 5,
     "ratingCount": 3,
     "totalSold": 32,
-    "createdAt": "2026-09-23T10:54:25.559Z",
-    "updatedAt": "2026-09-23T10:54:29.746Z",
+    "createdAt": "2026-09-23T11:30:41.107Z",
+    "updatedAt": "2026-09-23T11:30:45.175Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb7f",
-    "farmer": "6ab3afe1cd9cab7004fceb77",
+    "_id": "6ab3b861d2dd2afa6421028f",
+    "farmer": "6ab3b861d2dd2afa64210287",
     "name": "Broccoli",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 450,
     "unit": "kg",
     "quantityAvailable": 15,
@@ -942,9 +973,10 @@
     "image": "/uploads/seed/broccoli.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb42",
-      "6ab3afe0cd9cab7004fceb44"
+      "6ab3b860d2dd2afa64210252",
+      "6ab3b860d2dd2afa64210254"
     ],
     "days": [
       3,
@@ -955,15 +987,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 24,
-    "createdAt": "2026-09-23T10:54:25.561Z",
-    "updatedAt": "2026-09-23T10:54:29.773Z",
+    "createdAt": "2026-09-23T11:30:41.110Z",
+    "updatedAt": "2026-09-23T11:30:45.203Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb80",
-    "farmer": "6ab3afe1cd9cab7004fceb77",
+    "_id": "6ab3b861d2dd2afa64210290",
+    "farmer": "6ab3b861d2dd2afa64210287",
     "name": "Button Mushrooms",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 700,
     "unit": "pack",
     "quantityAvailable": 0,
@@ -972,9 +1004,10 @@
     "image": "/uploads/seed/mushroom.webp",
     "status": "sold_out",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb42",
-      "6ab3afe0cd9cab7004fceb44"
+      "6ab3b860d2dd2afa64210252",
+      "6ab3b860d2dd2afa64210254"
     ],
     "days": [
       3,
@@ -985,15 +1018,15 @@
     "ratingAvg": 4.5,
     "ratingCount": 2,
     "totalSold": 21,
-    "createdAt": "2026-09-23T10:54:25.563Z",
-    "updatedAt": "2026-09-23T10:54:29.802Z",
+    "createdAt": "2026-09-23T11:30:41.113Z",
+    "updatedAt": "2026-09-23T11:30:45.227Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb85",
-    "farmer": "6ab3afe1cd9cab7004fceb82",
+    "_id": "6ab3b861d2dd2afa64210295",
+    "farmer": "6ab3b861d2dd2afa64210292",
     "name": "Wild Sidr Honey",
-    "category": "6ab3afe0cd9cab7004fceb3c",
+    "category": "6ab3b860d2dd2afa6421024c",
     "price": 3200,
     "unit": "jar",
     "quantityAvailable": 19,
@@ -1002,9 +1035,10 @@
     "image": "/uploads/seed/honey.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb41"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa64210251"
     ],
     "days": [
       0,
@@ -1014,15 +1048,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 34,
-    "createdAt": "2026-09-23T10:54:25.665Z",
-    "updatedAt": "2026-09-23T10:54:29.829Z",
+    "createdAt": "2026-09-23T11:30:41.214Z",
+    "updatedAt": "2026-09-23T11:30:45.254Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb86",
-    "farmer": "6ab3afe1cd9cab7004fceb82",
+    "_id": "6ab3b861d2dd2afa64210296",
+    "farmer": "6ab3b861d2dd2afa64210292",
     "name": "Acacia Honey",
-    "category": "6ab3afe0cd9cab7004fceb3c",
+    "category": "6ab3b860d2dd2afa6421024c",
     "price": 2200,
     "unit": "jar",
     "quantityAvailable": 25,
@@ -1031,9 +1065,10 @@
     "image": "/uploads/seed/honey.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb41"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa64210251"
     ],
     "days": [
       0,
@@ -1043,15 +1078,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 27,
-    "createdAt": "2026-09-23T10:54:25.668Z",
-    "updatedAt": "2026-09-23T10:54:29.857Z",
+    "createdAt": "2026-09-23T11:30:41.217Z",
+    "updatedAt": "2026-09-23T11:30:45.281Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb87",
-    "farmer": "6ab3afe1cd9cab7004fceb82",
+    "_id": "6ab3b861d2dd2afa64210297",
+    "farmer": "6ab3b861d2dd2afa64210292",
     "name": "Strawberry Jam",
-    "category": "6ab3afe0cd9cab7004fceb3c",
+    "category": "6ab3b860d2dd2afa6421024c",
     "price": 750,
     "unit": "jar",
     "quantityAvailable": 18,
@@ -1060,9 +1095,10 @@
     "image": "/uploads/seed/strawberry.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb41"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa64210251"
     ],
     "days": [
       0,
@@ -1072,15 +1108,15 @@
     "ratingAvg": 4,
     "ratingCount": 1,
     "totalSold": 28,
-    "createdAt": "2026-09-23T10:54:25.670Z",
-    "updatedAt": "2026-09-23T10:54:29.883Z",
+    "createdAt": "2026-09-23T11:30:41.219Z",
+    "updatedAt": "2026-09-23T11:30:45.309Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb88",
-    "farmer": "6ab3afe1cd9cab7004fceb82",
+    "_id": "6ab3b861d2dd2afa64210298",
+    "farmer": "6ab3b861d2dd2afa64210292",
     "name": "Mango Chutney",
-    "category": "6ab3afe0cd9cab7004fceb3c",
+    "category": "6ab3b860d2dd2afa6421024c",
     "price": 650,
     "unit": "jar",
     "quantityAvailable": 14,
@@ -1089,9 +1125,10 @@
     "image": "/uploads/seed/jar.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb41"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa64210251"
     ],
     "days": [
       0,
@@ -1101,15 +1138,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 23,
-    "createdAt": "2026-09-23T10:54:25.672Z",
-    "updatedAt": "2026-09-23T10:54:29.912Z",
+    "createdAt": "2026-09-23T11:30:41.221Z",
+    "updatedAt": "2026-09-23T11:30:45.342Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb89",
-    "farmer": "6ab3afe1cd9cab7004fceb82",
+    "_id": "6ab3b861d2dd2afa64210299",
+    "farmer": "6ab3b861d2dd2afa64210292",
     "name": "Green Olives in Brine",
-    "category": "6ab3afe0cd9cab7004fceb3c",
+    "category": "6ab3b860d2dd2afa6421024c",
     "price": 950,
     "unit": "jar",
     "quantityAvailable": 10,
@@ -1118,9 +1155,10 @@
     "image": "/uploads/seed/olive.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb40",
-      "6ab3afe0cd9cab7004fceb41"
+      "6ab3b860d2dd2afa64210250",
+      "6ab3b860d2dd2afa64210251"
     ],
     "days": [
       0,
@@ -1130,15 +1168,15 @@
     "ratingAvg": 4.2,
     "ratingCount": 5,
     "totalSold": 28,
-    "createdAt": "2026-09-23T10:54:25.675Z",
-    "updatedAt": "2026-09-23T10:54:29.945Z",
+    "createdAt": "2026-09-23T11:30:41.223Z",
+    "updatedAt": "2026-09-23T11:30:45.372Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb8f",
-    "farmer": "6ab3afe1cd9cab7004fceb8b",
+    "_id": "6ab3b861d2dd2afa6421029f",
+    "farmer": "6ab3b861d2dd2afa6421029b",
     "name": "Chakki Atta (5 kg)",
-    "category": "6ab3afe0cd9cab7004fceb3d",
+    "category": "6ab3b860d2dd2afa6421024d",
     "price": 1100,
     "unit": "pack",
     "quantityAvailable": 40,
@@ -1147,9 +1185,10 @@
     "image": "/uploads/seed/wheat.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb44",
-      "6ab3afe0cd9cab7004fceb42"
+      "6ab3b860d2dd2afa64210254",
+      "6ab3b860d2dd2afa64210252"
     ],
     "days": [
       1,
@@ -1160,15 +1199,15 @@
     "ratingAvg": 5,
     "ratingCount": 2,
     "totalSold": 32,
-    "createdAt": "2026-09-23T10:54:25.774Z",
-    "updatedAt": "2026-09-23T10:54:29.974Z",
+    "createdAt": "2026-09-23T11:30:41.322Z",
+    "updatedAt": "2026-09-23T11:30:45.403Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb90",
-    "farmer": "6ab3afe1cd9cab7004fceb8b",
+    "_id": "6ab3b861d2dd2afa642102a0",
+    "farmer": "6ab3b861d2dd2afa6421029b",
     "name": "Aged Basmati Rice",
-    "category": "6ab3afe0cd9cab7004fceb3d",
+    "category": "6ab3b860d2dd2afa6421024d",
     "price": 420,
     "unit": "kg",
     "quantityAvailable": 100,
@@ -1177,9 +1216,10 @@
     "image": "/uploads/seed/rice.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb44",
-      "6ab3afe0cd9cab7004fceb42"
+      "6ab3b860d2dd2afa64210254",
+      "6ab3b860d2dd2afa64210252"
     ],
     "days": [
       1,
@@ -1190,15 +1230,15 @@
     "ratingAvg": 5,
     "ratingCount": 2,
     "totalSold": 34,
-    "createdAt": "2026-09-23T10:54:25.776Z",
-    "updatedAt": "2026-09-23T10:54:30.002Z",
+    "createdAt": "2026-09-23T11:30:41.324Z",
+    "updatedAt": "2026-09-23T11:30:45.432Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb91",
-    "farmer": "6ab3afe1cd9cab7004fceb8b",
+    "_id": "6ab3b861d2dd2afa642102a1",
+    "farmer": "6ab3b861d2dd2afa6421029b",
     "name": "Red Kidney Beans",
-    "category": "6ab3afe0cd9cab7004fceb3d",
+    "category": "6ab3b860d2dd2afa6421024d",
     "price": 480,
     "unit": "kg",
     "quantityAvailable": 30,
@@ -1207,9 +1247,10 @@
     "image": "/uploads/seed/beans.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb44",
-      "6ab3afe0cd9cab7004fceb42"
+      "6ab3b860d2dd2afa64210254",
+      "6ab3b860d2dd2afa64210252"
     ],
     "days": [
       1,
@@ -1220,15 +1261,15 @@
     "ratingAvg": 4.4,
     "ratingCount": 5,
     "totalSold": 49,
-    "createdAt": "2026-09-23T10:54:25.778Z",
-    "updatedAt": "2026-09-23T10:54:30.030Z",
+    "createdAt": "2026-09-23T11:30:41.327Z",
+    "updatedAt": "2026-09-23T11:30:45.462Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb92",
-    "farmer": "6ab3afe1cd9cab7004fceb8b",
+    "_id": "6ab3b861d2dd2afa642102a2",
+    "farmer": "6ab3b861d2dd2afa6421029b",
     "name": "Roasted Peanuts",
-    "category": "6ab3afe0cd9cab7004fceb3d",
+    "category": "6ab3b860d2dd2afa6421024d",
     "price": 600,
     "unit": "kg",
     "quantityAvailable": 25,
@@ -1237,9 +1278,10 @@
     "image": "/uploads/seed/peanuts.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb44",
-      "6ab3afe0cd9cab7004fceb42"
+      "6ab3b860d2dd2afa64210254",
+      "6ab3b860d2dd2afa64210252"
     ],
     "days": [
       1,
@@ -1250,15 +1292,15 @@
     "ratingAvg": 3.33,
     "ratingCount": 3,
     "totalSold": 34,
-    "createdAt": "2026-09-23T10:54:25.780Z",
-    "updatedAt": "2026-09-23T10:54:30.060Z",
+    "createdAt": "2026-09-23T11:30:41.329Z",
+    "updatedAt": "2026-09-23T11:30:45.492Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb93",
-    "farmer": "6ab3afe1cd9cab7004fceb8b",
+    "_id": "6ab3b861d2dd2afa642102a3",
+    "farmer": "6ab3b861d2dd2afa6421029b",
     "name": "Green Peas (Matar)",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 220,
     "unit": "kg",
     "quantityAvailable": 35,
@@ -1267,9 +1309,10 @@
     "image": "/uploads/seed/peas.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb44",
-      "6ab3afe0cd9cab7004fceb42"
+      "6ab3b860d2dd2afa64210254",
+      "6ab3b860d2dd2afa64210252"
     ],
     "days": [
       1,
@@ -1280,15 +1323,15 @@
     "ratingAvg": 4.8,
     "ratingCount": 5,
     "totalSold": 22,
-    "createdAt": "2026-09-23T10:54:25.782Z",
-    "updatedAt": "2026-09-23T10:54:30.089Z",
+    "createdAt": "2026-09-23T11:30:41.331Z",
+    "updatedAt": "2026-09-23T11:30:45.520Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb98",
-    "farmer": "6ab3afe1cd9cab7004fceb95",
+    "_id": "6ab3b861d2dd2afa642102a8",
+    "farmer": "6ab3b861d2dd2afa642102a5",
     "name": "Sunflower Bunch",
-    "category": "6ab3afe0cd9cab7004fceb3e",
+    "category": "6ab3b860d2dd2afa6421024e",
     "price": 900,
     "unit": "bunch",
     "quantityAvailable": 15,
@@ -1297,9 +1340,10 @@
     "image": "/uploads/seed/sunflower.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -1309,15 +1353,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 17,
-    "createdAt": "2026-09-23T10:54:25.879Z",
-    "updatedAt": "2026-09-23T10:54:30.115Z",
+    "createdAt": "2026-09-23T11:30:41.429Z",
+    "updatedAt": "2026-09-23T11:30:45.546Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb99",
-    "farmer": "6ab3afe1cd9cab7004fceb95",
+    "_id": "6ab3b861d2dd2afa642102a9",
+    "farmer": "6ab3b861d2dd2afa642102a5",
     "name": "Desi Rose Bouquet",
-    "category": "6ab3afe0cd9cab7004fceb3e",
+    "category": "6ab3b860d2dd2afa6421024e",
     "price": 700,
     "unit": "bunch",
     "quantityAvailable": 20,
@@ -1326,9 +1370,10 @@
     "image": "/uploads/seed/rose.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -1338,15 +1383,15 @@
     "ratingAvg": 4,
     "ratingCount": 4,
     "totalSold": 13,
-    "createdAt": "2026-09-23T10:54:25.882Z",
-    "updatedAt": "2026-09-23T10:54:30.146Z",
+    "createdAt": "2026-09-23T11:30:41.432Z",
+    "updatedAt": "2026-09-23T11:30:45.574Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb9a",
-    "farmer": "6ab3afe1cd9cab7004fceb95",
+    "_id": "6ab3b861d2dd2afa642102aa",
+    "farmer": "6ab3b861d2dd2afa642102a5",
     "name": "Tulip Bunch",
-    "category": "6ab3afe0cd9cab7004fceb3e",
+    "category": "6ab3b860d2dd2afa6421024e",
     "price": 1500,
     "unit": "bunch",
     "quantityAvailable": 8,
@@ -1355,9 +1400,10 @@
     "image": "/uploads/seed/tulip.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -1367,15 +1413,15 @@
     "ratingAvg": 2,
     "ratingCount": 1,
     "totalSold": 13,
-    "createdAt": "2026-09-23T10:54:25.883Z",
-    "updatedAt": "2026-09-23T10:54:30.177Z",
+    "createdAt": "2026-09-23T11:30:41.434Z",
+    "updatedAt": "2026-09-23T11:30:45.601Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb9b",
-    "farmer": "6ab3afe1cd9cab7004fceb95",
+    "_id": "6ab3b861d2dd2afa642102ab",
+    "farmer": "6ab3b861d2dd2afa642102a5",
     "name": "Money Plant (Potted)",
-    "category": "6ab3afe0cd9cab7004fceb3e",
+    "category": "6ab3b860d2dd2afa6421024e",
     "price": 850,
     "unit": "piece",
     "quantityAvailable": 12,
@@ -1384,9 +1430,10 @@
     "image": "/uploads/seed/potted-plant.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -1396,15 +1443,15 @@
     "ratingAvg": 4,
     "ratingCount": 2,
     "totalSold": 13,
-    "createdAt": "2026-09-23T10:54:25.886Z",
-    "updatedAt": "2026-09-23T10:54:30.208Z",
+    "createdAt": "2026-09-23T11:30:41.437Z",
+    "updatedAt": "2026-09-23T11:30:45.628Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb9c",
-    "farmer": "6ab3afe1cd9cab7004fceb95",
+    "_id": "6ab3b861d2dd2afa642102ac",
+    "farmer": "6ab3b861d2dd2afa642102a5",
     "name": "Mini Cactus",
-    "category": "6ab3afe0cd9cab7004fceb3e",
+    "category": "6ab3b860d2dd2afa6421024e",
     "price": 450,
     "unit": "piece",
     "quantityAvailable": 18,
@@ -1413,9 +1460,10 @@
     "image": "/uploads/seed/cactus.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -1425,15 +1473,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 10,
-    "createdAt": "2026-09-23T10:54:25.888Z",
-    "updatedAt": "2026-09-23T10:54:30.239Z",
+    "createdAt": "2026-09-23T11:30:41.439Z",
+    "updatedAt": "2026-09-23T11:30:45.653Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceb9d",
-    "farmer": "6ab3afe1cd9cab7004fceb95",
+    "_id": "6ab3b861d2dd2afa642102ad",
+    "farmer": "6ab3b861d2dd2afa642102a5",
     "name": "Hibiscus Plant",
-    "category": "6ab3afe0cd9cab7004fceb3e",
+    "category": "6ab3b860d2dd2afa6421024e",
     "price": 1100,
     "unit": "piece",
     "quantityAvailable": 6,
@@ -1442,9 +1490,10 @@
     "image": "/uploads/seed/hibiscus.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb3f",
-      "6ab3afe0cd9cab7004fceb43"
+      "6ab3b860d2dd2afa6421024f",
+      "6ab3b860d2dd2afa64210253"
     ],
     "days": [
       0,
@@ -1454,15 +1503,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 11,
-    "createdAt": "2026-09-23T10:54:25.890Z",
-    "updatedAt": "2026-09-23T10:54:30.267Z",
+    "createdAt": "2026-09-23T11:30:41.442Z",
+    "updatedAt": "2026-09-23T11:30:45.676Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceba2",
-    "farmer": "6ab3afe1cd9cab7004fceb9f",
+    "_id": "6ab3b861d2dd2afa642102b2",
+    "farmer": "6ab3b861d2dd2afa642102af",
     "name": "Strawberries",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 600,
     "unit": "box",
     "quantityAvailable": 30,
@@ -1471,8 +1520,9 @@
     "image": "/uploads/seed/strawberry.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb45"
+      "6ab3b860d2dd2afa64210255"
     ],
     "days": [
       0,
@@ -1482,15 +1532,15 @@
     "ratingAvg": 2,
     "ratingCount": 1,
     "totalSold": 9,
-    "createdAt": "2026-09-23T10:54:25.986Z",
-    "updatedAt": "2026-09-23T10:54:30.298Z",
+    "createdAt": "2026-09-23T11:30:41.539Z",
+    "updatedAt": "2026-09-23T11:30:45.702Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceba3",
-    "farmer": "6ab3afe1cd9cab7004fceb9f",
+    "_id": "6ab3b861d2dd2afa642102b3",
+    "farmer": "6ab3b861d2dd2afa642102af",
     "name": "Kinnow Oranges",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 320,
     "unit": "dozen",
     "quantityAvailable": 40,
@@ -1499,8 +1549,9 @@
     "image": "/uploads/seed/orange.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb45"
+      "6ab3b860d2dd2afa64210255"
     ],
     "days": [
       0,
@@ -1510,15 +1561,15 @@
     "ratingAvg": 3.5,
     "ratingCount": 2,
     "totalSold": 17,
-    "createdAt": "2026-09-23T10:54:25.988Z",
-    "updatedAt": "2026-09-23T10:54:30.330Z",
+    "createdAt": "2026-09-23T11:30:41.542Z",
+    "updatedAt": "2026-09-23T11:30:45.730Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceba4",
-    "farmer": "6ab3afe1cd9cab7004fceb9f",
+    "_id": "6ab3b861d2dd2afa642102b4",
+    "farmer": "6ab3b861d2dd2afa642102af",
     "name": "Sweet Potatoes",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 160,
     "unit": "kg",
     "quantityAvailable": 35,
@@ -1527,8 +1578,9 @@
     "image": "/uploads/seed/sweet-potato.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb45"
+      "6ab3b860d2dd2afa64210255"
     ],
     "days": [
       0,
@@ -1538,15 +1590,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 27,
-    "createdAt": "2026-09-23T10:54:25.990Z",
-    "updatedAt": "2026-09-23T10:54:30.362Z",
+    "createdAt": "2026-09-23T11:30:41.544Z",
+    "updatedAt": "2026-09-23T11:30:45.755Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceba5",
-    "farmer": "6ab3afe1cd9cab7004fceb9f",
+    "_id": "6ab3b861d2dd2afa642102b5",
+    "farmer": "6ab3b861d2dd2afa642102af",
     "name": "Sweet Corn",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 80,
     "unit": "piece",
     "quantityAvailable": 50,
@@ -1555,8 +1607,9 @@
     "image": "/uploads/seed/corn.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb45"
+      "6ab3b860d2dd2afa64210255"
     ],
     "days": [
       0,
@@ -1566,15 +1619,15 @@
     "ratingAvg": 4.25,
     "ratingCount": 4,
     "totalSold": 10,
-    "createdAt": "2026-09-23T10:54:25.992Z",
-    "updatedAt": "2026-09-23T10:54:30.394Z",
+    "createdAt": "2026-09-23T11:30:41.546Z",
+    "updatedAt": "2026-09-23T11:30:45.780Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceba6",
-    "farmer": "6ab3afe1cd9cab7004fceb9f",
+    "_id": "6ab3b861d2dd2afa642102b6",
+    "farmer": "6ab3b861d2dd2afa642102af",
     "name": "Garlic",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 600,
     "unit": "kg",
     "quantityAvailable": 20,
@@ -1583,8 +1636,9 @@
     "image": "/uploads/seed/garlic.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb45"
+      "6ab3b860d2dd2afa64210255"
     ],
     "days": [
       0,
@@ -1594,15 +1648,15 @@
     "ratingAvg": 4.75,
     "ratingCount": 4,
     "totalSold": 15,
-    "createdAt": "2026-09-23T10:54:25.994Z",
-    "updatedAt": "2026-09-23T10:54:30.424Z",
+    "createdAt": "2026-09-23T11:30:41.548Z",
+    "updatedAt": "2026-09-23T11:30:45.805Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe1cd9cab7004fceba7",
-    "farmer": "6ab3afe1cd9cab7004fceb9f",
+    "_id": "6ab3b861d2dd2afa642102b7",
+    "farmer": "6ab3b861d2dd2afa642102af",
     "name": "Fresh Ginger",
-    "category": "6ab3afe0cd9cab7004fceb37",
+    "category": "6ab3b860d2dd2afa64210247",
     "price": 700,
     "unit": "kg",
     "quantityAvailable": 15,
@@ -1611,8 +1665,9 @@
     "image": "/uploads/seed/ginger.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb45"
+      "6ab3b860d2dd2afa64210255"
     ],
     "days": [
       0,
@@ -1622,15 +1677,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 19,
-    "createdAt": "2026-09-23T10:54:25.996Z",
-    "updatedAt": "2026-09-23T10:54:30.456Z",
+    "createdAt": "2026-09-23T11:30:41.550Z",
+    "updatedAt": "2026-09-23T11:30:45.834Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe2cd9cab7004fcebac",
-    "farmer": "6ab3afe2cd9cab7004fceba9",
+    "_id": "6ab3b861d2dd2afa642102bc",
+    "farmer": "6ab3b861d2dd2afa642102b9",
     "name": "Red Apples",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 380,
     "unit": "kg",
     "quantityAvailable": 60,
@@ -1639,8 +1694,9 @@
     "image": "/uploads/seed/apple.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb46"
+      "6ab3b860d2dd2afa64210256"
     ],
     "days": [
       0,
@@ -1650,15 +1706,15 @@
     "ratingAvg": 3,
     "ratingCount": 1,
     "totalSold": 18,
-    "createdAt": "2026-09-23T10:54:26.096Z",
-    "updatedAt": "2026-09-23T10:54:30.488Z",
+    "createdAt": "2026-09-23T11:30:41.647Z",
+    "updatedAt": "2026-09-23T11:30:45.860Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe2cd9cab7004fcebad",
-    "farmer": "6ab3afe2cd9cab7004fceba9",
+    "_id": "6ab3b861d2dd2afa642102bd",
+    "farmer": "6ab3b861d2dd2afa642102b9",
     "name": "Green Apples",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 420,
     "unit": "kg",
     "quantityAvailable": 30,
@@ -1667,8 +1723,9 @@
     "image": "/uploads/seed/green-apple.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb46"
+      "6ab3b860d2dd2afa64210256"
     ],
     "days": [
       0,
@@ -1678,15 +1735,15 @@
     "ratingAvg": 4.33,
     "ratingCount": 3,
     "totalSold": 23,
-    "createdAt": "2026-09-23T10:54:26.098Z",
-    "updatedAt": "2026-09-23T10:54:30.516Z",
+    "createdAt": "2026-09-23T11:30:41.650Z",
+    "updatedAt": "2026-09-23T11:30:45.885Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe2cd9cab7004fcebae",
-    "farmer": "6ab3afe2cd9cab7004fceba9",
+    "_id": "6ab3b861d2dd2afa642102be",
+    "farmer": "6ab3b861d2dd2afa642102b9",
     "name": "Peaches",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 450,
     "unit": "kg",
     "quantityAvailable": 25,
@@ -1695,8 +1752,9 @@
     "image": "/uploads/seed/peach.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb46"
+      "6ab3b860d2dd2afa64210256"
     ],
     "days": [
       0,
@@ -1706,15 +1764,15 @@
     "ratingAvg": 4.67,
     "ratingCount": 3,
     "totalSold": 18,
-    "createdAt": "2026-09-23T10:54:26.100Z",
-    "updatedAt": "2026-09-23T10:54:30.542Z",
+    "createdAt": "2026-09-23T11:30:41.652Z",
+    "updatedAt": "2026-09-23T11:30:45.909Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe2cd9cab7004fcebaf",
-    "farmer": "6ab3afe2cd9cab7004fceba9",
+    "_id": "6ab3b861d2dd2afa642102bf",
+    "farmer": "6ab3b861d2dd2afa642102b9",
     "name": "Cherries",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 1200,
     "unit": "kg",
     "quantityAvailable": 10,
@@ -1723,8 +1781,9 @@
     "image": "/uploads/seed/cherries.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb46"
+      "6ab3b860d2dd2afa64210256"
     ],
     "days": [
       0,
@@ -1734,15 +1793,15 @@
     "ratingAvg": 4.8,
     "ratingCount": 5,
     "totalSold": 29,
-    "createdAt": "2026-09-23T10:54:26.102Z",
-    "updatedAt": "2026-09-23T10:54:30.571Z",
+    "createdAt": "2026-09-23T11:30:41.654Z",
+    "updatedAt": "2026-09-23T11:30:45.938Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe2cd9cab7004fcebb0",
-    "farmer": "6ab3afe2cd9cab7004fceba9",
+    "_id": "6ab3b861d2dd2afa642102c0",
+    "farmer": "6ab3b861d2dd2afa642102b9",
     "name": "Kiwi",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 900,
     "unit": "kg",
     "quantityAvailable": 12,
@@ -1751,8 +1810,9 @@
     "image": "/uploads/seed/kiwi.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb46"
+      "6ab3b860d2dd2afa64210256"
     ],
     "days": [
       0,
@@ -1762,15 +1822,15 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 15,
-    "createdAt": "2026-09-23T10:54:26.103Z",
-    "updatedAt": "2026-09-23T10:54:30.605Z",
+    "createdAt": "2026-09-23T11:30:41.656Z",
+    "updatedAt": "2026-09-23T11:30:45.965Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe2cd9cab7004fcebb1",
-    "farmer": "6ab3afe2cd9cab7004fceba9",
+    "_id": "6ab3b861d2dd2afa642102c1",
+    "farmer": "6ab3b861d2dd2afa642102b9",
     "name": "Pears",
-    "category": "6ab3afe0cd9cab7004fceb38",
+    "category": "6ab3b860d2dd2afa64210248",
     "price": 350,
     "unit": "kg",
     "quantityAvailable": 20,
@@ -1779,8 +1839,9 @@
     "image": "/uploads/seed/pear.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb46"
+      "6ab3b860d2dd2afa64210256"
     ],
     "days": [
       0,
@@ -1790,15 +1851,15 @@
     "ratingAvg": 5,
     "ratingCount": 1,
     "totalSold": 19,
-    "createdAt": "2026-09-23T10:54:26.105Z",
-    "updatedAt": "2026-09-23T10:54:30.634Z",
+    "createdAt": "2026-09-23T11:30:41.658Z",
+    "updatedAt": "2026-09-23T11:30:45.992Z",
     "__v": 0
   },
   {
-    "_id": "6ab3afe2cd9cab7004fcebb8",
-    "farmer": "6ab3afe2cd9cab7004fcebb6",
+    "_id": "6ab3b861d2dd2afa642102c8",
+    "farmer": "6ab3b861d2dd2afa642102c6",
     "name": "Goat Milk",
-    "category": "6ab3afe0cd9cab7004fceb39",
+    "category": "6ab3b860d2dd2afa64210249",
     "price": 300,
     "unit": "litre",
     "quantityAvailable": 10,
@@ -1807,8 +1868,9 @@
     "image": "/uploads/seed/milk.webp",
     "status": "available",
     "isRemoved": false,
+    "deletedByFarmer": false,
     "markets": [
-      "6ab3afe0cd9cab7004fceb44"
+      "6ab3b860d2dd2afa64210254"
     ],
     "days": [
       1
@@ -1817,8 +1879,8 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 0,
-    "createdAt": "2026-09-23T10:54:26.293Z",
-    "updatedAt": "2026-09-23T10:54:30.661Z",
+    "createdAt": "2026-09-23T11:30:41.876Z",
+    "updatedAt": "2026-09-23T11:30:46.017Z",
     "__v": 0
   }
 ]

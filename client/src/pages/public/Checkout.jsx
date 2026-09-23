@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { useCart } from '../../context/CartContext';
@@ -51,11 +51,11 @@ export default function Checkout() {
   const [choices, setChoices] = useState({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const placed = useRef(false);
+  const [placed, setPlaced] = useState(false);
 
   const setChoice = useCallback((farmerId, value) => setChoices((c) => ({ ...c, [farmerId]: value })), []);
 
-  if (!cart.items.length && !placed.current) return <Navigate to="/cart" replace />;
+  if (!cart.items.length && !placed) return <Navigate to="/cart" replace />;
 
   const ready = cart.groups.every((g) => choices[g.farmer._id]?.slotStart);
 
@@ -76,7 +76,7 @@ export default function Checkout() {
         items: g.items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
       }));
       const res = await api.post('/orders', { groups });
-      placed.current = true;
+      setPlaced(true);
       navigate('/checkout/success', { state: { orders: res.orders }, replace: true });
       cart.clear();
       toast('Pre-order placed! Check your e-mail and notifications.');

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -12,7 +12,7 @@ const DEMO = [
 
 export default function Login() {
   useDocumentTitle('Log in');
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,6 +20,8 @@ export default function Login() {
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+
+  if (user && !busy) return <Navigate to={homeFor(user)} replace />;
 
   async function submit(e) {
     e.preventDefault();

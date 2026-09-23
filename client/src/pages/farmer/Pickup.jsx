@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { api } from '../../api/client';
@@ -7,32 +7,28 @@ import { DashHeader } from '../../components/common/PageHeader';
 import LocationPicker from '../../components/map/LocationPicker';
 import DayDots from '../../components/common/DayDots';
 import { PageLoader } from '../../components/common/Loader';
-import { DAY_NAMES, time12 } from '../../utils/format';
+import { DAY_NAMES, formatDateKey, time12, toDateKey } from '../../utils/format';
 
 /** Markets the farmer sells at, weekly pickup windows, slot settings, cut-off and stall map pin. */
 export default function FarmerPickup() {
   useDocumentTitle('Markets & pickup');
-  const { toast } = useToast();
-  const { data, loading } = useFetch('/farmer/me');
+  const { data } = useFetch('/farmer/me');
   const { data: marketData } = useFetch('/markets');
-  const [markets, setMarkets] = useState([]);
-  const [windows, setWindows] = useState([]);
-  const [settings, setSettings] = useState({ slotMinutes: 30, slotCapacity: 6, orderCutoffHours: 12 });
-  const [pin, setPin] = useState({ lat: '', lng: '' });
+  if (!data || !marketData) return <PageLoader />;
+  return <PickupEditor farmer={data.farmer} allMarkets={marketData.markets} />;
+}
+
+function PickupEditor({ farmer, allMarkets }) {
+  const { toast } = useToast();
+  const [markets, setMarkets] = useState(() => farmer.markets.map((m) => m._id));
+  const [windows, setWindows] = useState(() => farmer.pickupWindows.map((w) => ({ market: w.market?._id || w.market, day: w.day, start: w.start, end: w.end })));
+  const [settings, setSettings] = useState({ slotMinutes: farmer.slotMinutes, slotCapacity: farmer.slotCapacity, orderCutoffHours: farmer.orderCutoffHours });
+  const [pin, setPin] = useState({ lat: farmer.latitude ?? '', lng: farmer.longitude ?? '' });
+  const [blocked, setBlocked] = useState(() => farmer.blockedDates || []);
+  const [newDate, setNewDate] = useState('');
   const [busy, setBusy] = useState(false);
   const [savingPin, setSavingPin] = useState(false);
 
-  useEffect(() => {
-    if (!data) return;
-    const f = data.farmer;
-    setMarkets(f.markets.map((m) => m._id));
-    setWindows(f.pickupWindows.map((w) => ({ market: w.market?._id || w.market, day: w.day, start: w.start, end: w.end })));
-    setSettings({ slotMinutes: f.slotMinutes, slotCapacity: f.slotCapacity, orderCutoffHours: f.orderCutoffHours });
-    setPin({ lat: f.latitude ?? '', lng: f.longitude ?? '' });
-  }, [data]);
-
-  if (loading && !data) return <PageLoader />;
-  const allMarkets = marketData?.markets || [];
   const marketById = Object.fromEntries(allMarkets.map((m) => [m._id, m]));
 
   function toggleMarket(id) {
@@ -51,8 +47,10 @@ export default function FarmerPickup() {
   async function save() {
     setBusy(true);
     try {
-      await api.put('/farmer/pickup', { markets, pickupWindows: windows, ...settings });
+      const res = await api.put('/farmer/pickup', { markets, pickupWindows: windows, blockedDates: blocked, ...settings });
+      setBlocked(res.farmer.blockedDates || []);
       toast('Pickup settings saved');
+      if (res.clashes) toast(`${res.clashes} open pre-order(s) fall on a closed date — please decline or contact those customers`, 'error');
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -153,7 +151,33 @@ export default function FarmerPickup() {
           </div>
         ))}
 
-        <h6 className="mt-4">3. Slots & cut-off</h6>
+        <h6 className="mt-4">3. Closed dates</h6>
+        <p className="fs-7 text-muted-2 mb-2">Not coming to the market on a certain day (holiday, harvest failed, closed for the week)? Add the date and customers can’t book pickups for it.</p>
+        <div className="d-flex gap-2 flex-wrap align-items-center mb-2">
+          <input type="date" className="form-control form-control-sm w-auto" min={toDateKey()} value={newDate} onChange={(e) => setNewDate(e.target.value)} aria-label="Closed date" />
+          <button
+            type="button"
+            className="btn btn-soft btn-sm"
+            disabled={!newDate || blocked.includes(newDate)}
+            onClick={() => {
+              setBlocked([...blocked, newDate].sort());
+              setNewDate('');
+            }}
+          >
+            <i className="bi bi-calendar-x" /> Add closed date
+          </button>
+        </div>
+        <div className="d-flex gap-2 flex-wrap">
+          {blocked.length === 0 && <span className="small text-muted-2">No closed dates.</span>}
+          {blocked.map((d) => (
+            <span key={d} className="chip chip-danger">
+              {formatDateKey(d, { withYear: true })}
+              <button type="button" className="btn-close ms-1" style={{ fontSize: '.55rem' }} onClick={() => setBlocked(blocked.filter((x) => x !== d))} aria-label={`Remove ${d}`} />
+            </span>
+          ))}
+        </div>
+
+        <h6 className="mt-4">4. Slots & cut-off</h6>
         <div className="row g-3">
           <div className="col-md-4">
             <label className="form-label" htmlFor="slotMinutes">Slot length</label>
@@ -182,7 +206,7 @@ export default function FarmerPickup() {
       <div className="panel">
         <div className="panel-head">
           <div>
-            <h5>4. Stall location (map pin)</h5>
+            <h5>5. Stall location (map pin)</h5>
             <div className="fs-7 text-muted-2">Shown to customers on the map with directions to your pickup point.</div>
           </div>
         </div>

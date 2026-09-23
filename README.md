@@ -21,16 +21,17 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 **Customer**
 - Register (name, contact number, e-mail, address) and log in to a personal dashboard
 - Browse markets by location (“near me”), city and day; see the farmers at each market
+- Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
 - Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
-- Shop with search and filters: category, market, market day, price range, in stock; sorting
+- Shop with search and filters: location (city), category, market, market day, price range, in stock; sorting
 - Product details: price, unit, quantity available, farmer, reviews
 - Cart grouped by farmer → choose a pickup **date and time slot** inside the farmer’s windows → place pre-order (no online payment)
 - Order status: placed → accepted → ready for pickup → completed (or declined / cancelled)
 - View, **modify** (items + slot) and **cancel** orders before the farmer’s cut-off time; order history and **reorder**
 - Favourite farmers and products (with **restock alerts**) and saved markets
 - Reviews and ratings for farmers and products after a completed order
-- In-app notifications + e-mail for order confirmation and “ready for pickup”
+- In-app notifications + e-mail for order confirmation and “ready for pickup”, including route-friendly pickup details (market, address, time slot and a Google Maps directions link)
 - Optional **family sharing**: linked household members can see each other’s pre-orders
 - **AI assistant** “Basket” (chat widget) answering market timings, farmer availability, pickup windows and product questions from live data
 
@@ -41,6 +42,7 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 - **Recurring weekly stock template** (manual “apply now” or automatic every week) — reserved pre-orders are respected
 - Mark items sold out or temporarily unavailable
 - Pre-orders: accept / decline (with reason) / mark ready / complete; set slot length, slot capacity and order cut-off hours
+- **Closed dates** (“not at the market this week”): customers cannot book pickups on those days and the farmer is warned about existing pre-orders on them
 - Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
 - Read and reply to customer reviews
 
@@ -84,6 +86,7 @@ TechWiz2026/
 ├── database/
 │   ├── marketlink-schema.mongodb.js   collections, JSON-schema validators and indexes (mongosh)
 │   └── sample-data/                   exported demo / test data (JSON, one file per collection)
+├── render.yaml             one-click deployment blueprint for Render.com
 └── package.json            helper scripts for the whole project
 ```
 
@@ -120,6 +123,8 @@ npm run dev
 
 Open **http://localhost:5173**.
 
+**Code quality:** `npm run lint` runs ESLint on the server and the client.
+
 **Production build** (one server on port 5000 serves both the API and the React app):
 
 ```bash
@@ -136,6 +141,7 @@ npm start          # then open http://localhost:5000
 | `PORT` | API port (default 5000) |
 | `CLIENT_URL` | React dev URL allowed by CORS (default `http://localhost:5173`) |
 | `CURRENCY` | currency symbol used in e-mails / assistant (default `Rs`) |
+| `TZ` | time zone of the markets, used for pickup slots and cut-off times (default `Asia/Karachi`) |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | optional e-mail settings. If `SMTP_HOST` is empty, e-mails are printed to the server console instead of being sent |
 
 The front-end currency symbol can be changed with `VITE_CURRENCY` in `client/.env` (default `Rs`).
@@ -160,7 +166,7 @@ Created by `npm run seed`:
 
 Demo data: 8 markets (Karachi, Lahore, Islamabad), 8 categories, 12 farmers, 62 products,
 ~440 orders over the last 8 weeks (including upcoming pre-orders in every status), ~330 reviews,
-notifications, announcements and a saved report.
+notifications, announcements, a saved report and a closed date for Bloom & Bough Nursery (next Friday).
 
 ---
 
@@ -205,11 +211,11 @@ atomic stock reservation so two customers can never buy the same last item.
 
 ## 8. Deployment (optional)
 
-1. Create a free MongoDB Atlas cluster and copy the connection string.
-2. Push this repository to GitHub and create a **Web Service** on Render (or Railway):
-   - Build command: `npm run install:all && npm run build`
-   - Start command: `npm start`
-   - Environment: `NODE_ENV=production`, `MONGO_URI=<atlas uri>`, `JWT_SECRET=<random>`
+1. Create a free MongoDB Atlas cluster, allow network access and copy the connection string.
+2. On Render choose **New → Blueprint** and select this repository — `render.yaml` sets up the web service
+   (build: `npm run install:all && npm run build`, start: `npm start`). Enter `MONGO_URI` when asked.
+   (Manual setup works too: same build/start commands with `NODE_ENV=production`, `TZ=Asia/Karachi`,
+   `MONGO_URI` and a random `JWT_SECRET`.)
 3. Run the seed once from your computer with `MONGO_URI` pointing to Atlas: `npm run seed`.
 
 ---
@@ -219,7 +225,8 @@ atomic stock reservation so two customers can never buy the same last item.
 - Payment is settled in person at pickup; there is no payment gateway (per SRS).
 - Pickup only — no delivery or courier logistics (per SRS).
 - Farmer identity / organic certification is not verified; tags such as “Pesticide-free” are the farmer’s own description.
-- Times are handled in the server’s local time zone.
+- All markets are in one time zone (`TZ`, default Asia/Karachi); pickup slots and cut-off times use it.
+- The e-mail address is the login name (the SRS example table’s `username`).
 - The project uses MongoDB, so the database definition is provided as a mongosh script plus JSON sample data instead of `.sql` files.
 
 ---

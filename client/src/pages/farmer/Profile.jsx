@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
@@ -13,21 +13,22 @@ import { ApprovalBanner } from './Dashboard';
 
 export default function FarmerProfile() {
   useDocumentTitle('Stall profile');
+  const { data, setData } = useFetch('/farmer/me');
+  if (!data) return <PageLoader />;
+  return <ProfileEditor data={data} setData={setData} />;
+}
+
+function ProfileEditor({ data, setData }) {
   const { user, refresh } = useAuth();
   const { toast } = useToast();
-  const { data, loading, setData } = useFetch('/farmer/me');
-  const [form, setForm] = useState(null);
+  const [form, setForm] = useState(() => {
+    const f = data.farmer;
+    return { stallName: f.stallName, contactPerson: f.contactPerson, phone: f.phone, address: f.address, city: f.city || '', bio: f.bio || '', tags: (f.tags || []).join(', ') };
+  });
   const [logo, setLogo] = useState(null);
   const [cover, setCover] = useState(null);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    if (!data) return;
-    const f = data.farmer;
-    setForm({ stallName: f.stallName, contactPerson: f.contactPerson, phone: f.phone, address: f.address, city: f.city || '', bio: f.bio || '', tags: (f.tags || []).join(', ') });
-  }, [data]);
-
-  if ((loading && !data) || !form) return <PageLoader />;
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   async function save(e) {
@@ -75,7 +76,7 @@ export default function FarmerProfile() {
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="s-phone">Contact number</label>
-                <input id="s-phone" name="phone" className="form-control" required value={form.phone} onChange={change} />
+                <input id="s-phone" name="phone" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title="7-20 digits, spaces, +, - or brackets" value={form.phone} onChange={change} />
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="s-email">E-mail</label>

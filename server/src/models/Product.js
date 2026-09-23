@@ -16,9 +16,10 @@ const productSchema = new Schema(
     image: String,
     status: { type: String, enum: Object.values(PRODUCT_STATUS), default: PRODUCT_STATUS.AVAILABLE },
 
-    // Admin moderation
+    // Admin moderation (isRemoved) and farmer deletion of products that have order history
     isRemoved: { type: Boolean, default: false },
     removedReason: String,
+    deletedByFarmer: { type: Boolean, default: false },
 
     // Copied from the farmer profile so products can be filtered by market / day quickly
     markets: [{ type: Schema.Types.ObjectId, ref: 'Market' }],

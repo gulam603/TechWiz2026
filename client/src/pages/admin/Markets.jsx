@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
@@ -15,16 +15,12 @@ import { DAY_LETTER, DAY_NAMES, time12 } from '../../utils/format';
 
 const EMPTY = { name: '', description: '', address: '', city: '', latitude: '', longitude: '', operatingDays: [], openTime: '07:00', closeTime: '13:00', mapProvider: 'openstreetmap', mapLink: '', isActive: true };
 
-function MarketForm({ open, market, onClose, onSaved }) {
+// Rendered with a `key`, so the form starts fresh for every market.
+function MarketForm({ market, onClose, onSaved }) {
   const { toast } = useToast();
-  const [form, setForm] = useState(EMPTY);
+  const [form, setForm] = useState(() => (market ? { ...EMPTY, ...market, mapLink: market.mapLink || '', description: market.description || '', city: market.city || '' } : EMPTY));
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    setFile(null);
-    setForm(market ? { ...EMPTY, ...market, mapLink: market.mapLink || '', description: market.description || '' } : EMPTY);
-  }, [market, open]);
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const toggleDay = (d) => setForm({ ...form, operatingDays: form.operatingDays.includes(d) ? form.operatingDays.filter((x) => x !== d) : [...form.operatingDays, d].sort() });
@@ -50,7 +46,7 @@ function MarketForm({ open, market, onClose, onSaved }) {
   }
 
   return (
-    <Modal open={open} onClose={onClose} title={market ? `Edit ${market.name}` : 'Add a market'} size="modal-lg">
+    <Modal open onClose={onClose} title={market ? `Edit ${market.name}` : 'Add a market'} size="modal-lg">
       <form onSubmit={submit}>
         <div className="row g-3">
           <div className="col-md-7">
@@ -237,15 +233,17 @@ export default function AdminMarkets() {
           </table>
         </div>
       </div>
-      <MarketForm
-        open={open}
-        market={editing}
-        onClose={() => setOpen(false)}
-        onSaved={() => {
-          setOpen(false);
-          reload();
-        }}
-      />
+      {open && (
+        <MarketForm
+          key={editing?._id || 'new'}
+          market={editing}
+          onClose={() => setOpen(false)}
+          onSaved={() => {
+            setOpen(false);
+            reload();
+          }}
+        />
+      )}
       <ConfirmModal
         open={Boolean(deleting)}
         title={`Remove ${deleting?.name}?`}

@@ -18,7 +18,7 @@ const userSchema = new Schema(
     // Only the bcrypt hash is stored. select:false keeps it out of normal queries.
     password: { type: String, required: true, minlength: 6, select: false },
     role: { type: String, enum: Object.values(ROLES), default: ROLES.CUSTOMER },
-    phone: { type: String, trim: true, maxlength: 20 },
+    phone: { type: String, trim: true, match: [/^\+?[\d\s()-]{7,20}$/, 'Please enter a valid contact number'] },
     address: { type: String, trim: true, maxlength: 250 },
     city: { type: String, trim: true, maxlength: 60 },
     status: { type: String, enum: Object.values(USER_STATUS), default: USER_STATUS.ACTIVE },

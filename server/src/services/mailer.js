@@ -34,10 +34,13 @@ const escapeHtml = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&am
 export async function sendMail({ to, subject, message }) {
   if (!to) return;
   try {
-    const html = layout(escapeHtml(subject), `<p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>`);
+    const body = escapeHtml(message)
+      .replace(/(https:\/\/[^\s<]+)/g, '<a href="$1" style="color:#2e7d4f">$1</a>')
+      .replace(/\n/g, '<br>');
+    const html = layout(escapeHtml(subject), `<p>${body}</p>`);
     const info = await transporter.sendMail({ from: env.smtp.from, to, subject: `MarketLink: ${subject}`, text: message, html });
     if (!env.smtp.host && env.nodeEnv !== 'test') {
-      console.log(`[mail] (console mode) To: ${to} | Subject: ${subject}`);
+      console.log(`[mail] (console mode) To: ${to} | Subject: ${subject}\n       ${message.replace(/\n/g, '\n       ')}`);
     }
     return info;
   } catch (err) {

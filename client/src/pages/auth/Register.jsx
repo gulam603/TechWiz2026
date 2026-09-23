@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
-import { useAuth } from '../../context/AuthContext';
+import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 
@@ -10,13 +10,15 @@ export const passwordOk = (p) => /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/.test(p);
 
 export default function Register() {
   useDocumentTitle('Create account');
-  const { register } = useAuth();
+  const { register, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', password: '', confirm: '' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  if (user && !busy) return <Navigate to={homeFor(user)} replace />;
 
   async function submit(e) {
     e.preventDefault();
@@ -53,7 +55,7 @@ export default function Register() {
           </div>
           <div className="col-md-6">
             <label className="form-label" htmlFor="r-phone">Contact number</label>
-            <input id="r-phone" name="phone" type="tel" className="form-control" required value={form.phone} onChange={change} autoComplete="tel" placeholder="+92 300 1234567" />
+            <input id="r-phone" name="phone" type="tel" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title="7-20 digits, spaces, +, - or brackets" value={form.phone} onChange={change} autoComplete="tel" placeholder="+92 300 1234567" />
           </div>
           <div className="col-md-8">
             <label className="form-label" htmlFor="r-address">Address</label>

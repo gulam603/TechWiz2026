@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
@@ -17,16 +17,9 @@ import { CURRENCY } from '../../config';
 const EMPTY = { name: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '' };
 
 export function ImageInput({ label = 'Image', current, file, onFile }) {
-  const [preview, setPreview] = useState(null);
-  useEffect(() => {
-    if (!file) {
-      setPreview(null);
-      return undefined;
-    }
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+  // Temporary browser URL so the chosen image can be previewed before upload
+  const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
+  useEffect(() => () => preview && URL.revokeObjectURL(preview), [preview]);
   return (
     <div>
       <span className="form-label d-block">{label}</span>
@@ -42,28 +35,24 @@ export function ImageInput({ label = 'Image', current, file, onFile }) {
   );
 }
 
-function ProductForm({ open, product, categories, units, onClose, onSaved }) {
+// Rendered with a `key`, so its state starts fresh for every product that is edited.
+function ProductForm({ product, categories, units, onClose, onSaved }) {
   const { toast } = useToast();
-  const [form, setForm] = useState(EMPTY);
+  const [form, setForm] = useState(() =>
+    product
+      ? {
+          name: product.name,
+          category: product.category?._id || '',
+          price: product.price,
+          unit: product.unit,
+          quantityAvailable: product.quantityAvailable,
+          templateQuantity: product.templateQuantity,
+          description: product.description || '',
+        }
+      : EMPTY
+  );
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    setFile(null);
-    setForm(
-      product
-        ? {
-            name: product.name,
-            category: product.category?._id || '',
-            price: product.price,
-            unit: product.unit,
-            quantityAvailable: product.quantityAvailable,
-            templateQuantity: product.templateQuantity,
-            description: product.description || '',
-          }
-        : EMPTY
-    );
-  }, [product, open]);
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -84,7 +73,7 @@ function ProductForm({ open, product, categories, units, onClose, onSaved }) {
   }
 
   return (
-    <Modal open={open} onClose={onClose} title={product ? `Edit ${product.name}` : 'Add a product'} size="modal-lg">
+    <Modal open onClose={onClose} title={product ? `Edit ${product.name}` : 'Add a product'} size="modal-lg">
       <form onSubmit={submit}>
         <div className="row g-3">
           <div className="col-md-7">
@@ -143,9 +132,9 @@ function ProductForm({ open, product, categories, units, onClose, onSaved }) {
   );
 }
 
+// Parent passes key={value}, so the input resets whenever the saved value changes.
 function NumberCell({ value, onSave, label, disabled }) {
   const [v, setV] = useState(value);
-  useEffect(() => setV(value), [value]);
   const commit = () => {
     if (String(v) !== String(value) && v !== '' && Number(v) >= 0) onSave(Number(v));
     else setV(value);
@@ -240,7 +229,7 @@ export default function FarmerProducts() {
   }
 
   if (loading && !data) return <PageLoader />;
-  const products = data.products.filter((p) => !p.isRemoved || status === 'removed');
+  const products = data.products; // includes listings an admin removed, shown with the reason
 
   return (
     <>
@@ -348,10 +337,10 @@ export default function FarmerProducts() {
                       {money(p.price)}/{p.unit}
                     </td>
                     <td>
-                      <NumberCell value={p.quantityAvailable} label={`Stock of ${p.name}`} disabled={!approved} onSave={(n) => quickUpdate(p, { quantityAvailable: n })} />
+                      <NumberCell key={`q${p.quantityAvailable}`} value={p.quantityAvailable} label={`Stock of ${p.name}`} disabled={!approved} onSave={(n) => quickUpdate(p, { quantityAvailable: n })} />
                     </td>
                     <td>
-                      <NumberCell value={p.templateQuantity} label={`Weekly template of ${p.name}`} disabled={!approved} onSave={(n) => quickUpdate(p, { templateQuantity: n })} />
+                      <NumberCell key={`t${p.templateQuantity}`} value={p.templateQuantity} label={`Weekly template of ${p.name}`} disabled={!approved} onSave={(n) => quickUpdate(p, { templateQuantity: n })} />
                     </td>
                     <td>
                       <select className="form-select form-select-sm" style={{ width: 140 }} value={p.status} onChange={(e) => setStatus(p, e.target.value)} aria-label={`Status of ${p.name}`} disabled={!approved}>
@@ -389,17 +378,19 @@ export default function FarmerProducts() {
         )}
       </div>
 
-      <ProductForm
-        open={formOpen}
-        product={editing}
-        categories={catData?.categories || []}
-        units={data.units}
-        onClose={() => setFormOpen(false)}
-        onSaved={() => {
-          setFormOpen(false);
-          reload();
-        }}
-      />
+      {formOpen && (
+        <ProductForm
+          key={editing?._id || 'new'}
+          product={editing}
+          categories={catData?.categories || []}
+          units={data.units}
+          onClose={() => setFormOpen(false)}
+          onSaved={() => {
+            setFormOpen(false);
+            reload();
+          }}
+        />
+      )}
       <ConfirmModal open={Boolean(deleting)} title={`Delete ${deleting?.name}?`} message="Customers will no longer see this product. Past orders keep their history." confirmLabel="Delete" danger onConfirm={remove} onClose={() => setDeleting(null)} />
     </>
   );

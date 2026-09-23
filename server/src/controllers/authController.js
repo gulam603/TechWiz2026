@@ -23,10 +23,10 @@ async function buildSession(user) {
   return data;
 }
 
-async function startSession(res, user) {
+async function startSession(req, res, user) {
   user.lastLoginAt = new Date();
   await user.save();
-  setAuthCookie(res, signToken(user));
+  setAuthCookie(req, res, signToken(user));
   return buildSession(user);
 }
 
@@ -39,7 +39,7 @@ export async function registerCustomer(req, res) {
     role: ROLES.CUSTOMER,
     status: USER_STATUS.ACTIVE,
   });
-  res.status(201).json(await startSession(res, user));
+  res.status(201).json(await startSession(req, res, user));
 }
 
 // POST /api/auth/register-farmer  (farmer / stall sign up, needs admin approval)
@@ -88,7 +88,7 @@ export async function registerFarmer(req, res) {
     }
   );
 
-  res.status(201).json(await startSession(res, user));
+  res.status(201).json(await startSession(req, res, user));
 }
 
 async function verifyCredentials(email, password) {
@@ -106,24 +106,25 @@ async function verifyCredentials(email, password) {
 export async function login(req, res) {
   const user = await verifyCredentials(req.body.email, req.body.password);
   if (user.role === ROLES.ADMIN) throw new AppError('Administrators must use the admin login page', 403);
-  res.json(await startSession(res, user));
+  res.json(await startSession(req, res, user));
 }
 
 // POST /api/auth/admin/login  (separate admin portal)
 export async function adminLogin(req, res) {
   const user = await verifyCredentials(req.body.email, req.body.password);
   if (user.role !== ROLES.ADMIN) throw new AppError('This login is for administrators only', 403);
-  res.json(await startSession(res, user));
+  res.json(await startSession(req, res, user));
 }
 
 // POST /api/auth/logout
 export function logout(req, res) {
-  clearAuthCookie(res);
+  clearAuthCookie(req, res);
   res.json({ message: 'Logged out' });
 }
 
-// GET /api/auth/me
+// GET /api/auth/me  -> { user: null } for visitors who are not logged in
 export async function me(req, res) {
+  if (!req.user) return res.json({ user: null });
   res.json(await buildSession(req.user));
 }
 

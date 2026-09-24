@@ -9,6 +9,8 @@ import ProductCard from '../../components/cards/ProductCard';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { moneyCompact, timeAgo } from '../../utils/format';
+import { NOTIF_ICONS } from '../../components/layout/NotificationBell';
+import RatingStars from '../../components/common/RatingStars';
 
 function greeting() {
   const h = new Date().getHours();
@@ -22,7 +24,7 @@ export default function CustomerDashboard() {
   const { user } = useAuth();
   const { data, loading } = useFetch('/customer/dashboard');
   if (loading && !data) return <PageLoader />;
-  const { stats, upcoming, notifications, suggestions } = data;
+  const { stats, upcoming, notifications, suggestions, farmers = [] } = data;
   const ready = upcoming.filter((o) => o.status === 'ready');
 
   return (
@@ -63,7 +65,7 @@ export default function CustomerDashboard() {
           <KpiCard variant="info" icon="bi-wallet2" label="Spent at markets" value={moneyCompact(stats.totalSpent)} sub="paid at pickup" />
         </div>
         <div className="col-6 col-xl-3">
-          <KpiCard variant="warn" icon="bi-heart" label="Favourites" value={stats.favorites} sub={`${stats.savedMarkets} saved markets`} />
+          <KpiCard variant="warn" icon="bi-heart" label="Favourites" value={stats.favorites} sub={`${stats.favoriteFarmers ?? 0} farmers · ${stats.savedMarkets} saved markets`} />
         </div>
       </div>
 
@@ -100,7 +102,7 @@ export default function CustomerDashboard() {
               {notifications.map((n) => (
                 <Link key={n._id} to={n.link || '/account/notifications'} className={`notif-item ${n.read ? '' : 'unread'}`}>
                   <span className="notif-icon">
-                    <i className={`bi ${n.type === 'order' ? 'bi-bag-check' : n.type === 'restock' ? 'bi-arrow-repeat' : 'bi-megaphone'}`} />
+                    <i className={`bi ${NOTIF_ICONS[n.type] || 'bi-bell'}`} />
                   </span>
                   <span className="min-w-0">
                     <strong className="d-block small text-truncate">{n.title}</strong>
@@ -111,6 +113,37 @@ export default function CustomerDashboard() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="panel mb-4">
+        <div className="panel-head">
+          <h5>
+            <i className="bi bi-heart" /> Your favourite farmers
+          </h5>
+          <Link to={farmers.length ? '/account/favorites' : '/farmers'} className="link-arrow small">
+            {farmers.length ? 'All favourites' : 'Find farmers'} <i className="bi bi-arrow-right" />
+          </Link>
+        </div>
+        {farmers.length === 0 ? (
+          <p className="small text-muted-2 mb-0">Tap the heart on a farmer's stall page to follow them here and reorder quickly.</p>
+        ) : (
+          <div className="fav-farmers">
+            {farmers.map((f) => (
+              <Link key={f._id} to={`/farmers/${f.slug}`} className="farmer-mini">
+                <span className="logo">
+                  <img src={f.logo} alt="" />
+                </span>
+                <span className="flex-grow-1 min-w-0">
+                  <strong className="d-block small text-truncate">{f.stallName}</strong>
+                  <span className="fs-7 text-muted-2 d-block text-truncate">
+                    <i className="bi bi-geo-alt" /> {f.city} · {f.inStock} in stock
+                  </span>
+                  <RatingStars value={f.ratingAvg} count={f.ratingCount} />
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="panel">

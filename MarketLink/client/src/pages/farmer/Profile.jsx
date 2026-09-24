@@ -40,8 +40,34 @@ function ProfileEditor({ data, setData }) {
   const [logo, setLogo] = useState(null);
   const [cover, setCover] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [writing, setWriting] = useState(false);
+  const [variant, setVariant] = useState(0);
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  // "Generate with AI": a short "about the farm" text from the stall details
+  async function writeBio() {
+    if (form.stallName.trim().length < 2) return toast('Type the stall / farm name first', 'error');
+    setWriting(true);
+    try {
+      const res = await api.post('/farmer/describe', {
+        stallName: form.stallName,
+        contactPerson: form.contactPerson,
+        city: form.city,
+        categories: form.categories,
+        tags: form.tags,
+        markets: (data.farmer.markets || []).map((m) => m._id || m),
+        variant,
+      });
+      setForm((f) => ({ ...f, bio: res.description }));
+      setVariant((v) => v + 1);
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      setWriting(false);
+    }
+    return undefined;
+  }
 
   async function save(e) {
     e.preventDefault();
@@ -110,8 +136,14 @@ function ProfileEditor({ data, setData }) {
                 </select>
               </div>
               <div className="col-12">
-                <label className="form-label" htmlFor="s-bio">About your farm</label>
-                <textarea id="s-bio" name="bio" rows={4} className="form-control" value={form.bio} onChange={change} maxLength={1200} />
+                <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+                  <label className="form-label mb-0" htmlFor="s-bio">About your farm</label>
+                  <button type="button" className="btn btn-sm btn-ai" onClick={writeBio} disabled={writing}>
+                    {writing ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" />} {variant ? 'Try another' : 'Generate with AI'}
+                  </button>
+                </div>
+                <textarea id="s-bio" name="bio" rows={5} className="form-control" value={form.bio} onChange={change} maxLength={1200} />
+                <span className="fs-7 text-muted-2">The AI uses your stall name, city, categories, practices and markets. Edit the text before saving.</span>
               </div>
               <div className="col-12">
                 <span className="form-label d-block">What you grow / sell</span>

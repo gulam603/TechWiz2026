@@ -11,6 +11,7 @@ import {
   Category,
   City,
   ContactMessage,
+  ContentFlag,
   Farmer,
   Market,
   Notification,
@@ -18,6 +19,7 @@ import {
   Product,
   Report,
   Review,
+  StockMovement,
   User,
 } from '../models/index.js';
 import { ORDER_STATUS, ROLES, TERMS_VERSION, USER_STATUS } from '../utils/constants.js';
@@ -32,6 +34,8 @@ import fs from 'node:fs';
 
 // Real product photos (Open Images, CC BY 2.0) keyed by product name - see server/uploads/photos/CREDITS.md
 const PHOTOS = JSON.parse(fs.readFileSync(new URL('./photoCredits.json', import.meta.url), 'utf8'));
+// Extra photos for the product-page gallery (same source and licence)
+const GALLERY = JSON.parse(fs.readFileSync(new URL('./galleryCredits.json', import.meta.url), 'utf8'));
 
 // Small deterministic random generator so every seed produces the same demo data
 let state = 20260923;
@@ -63,7 +67,7 @@ function orderNumber(date) {
 }
 
 async function clearDatabase() {
-  const models = [Announcement, AssistantChat, Category, City, ContactMessage, Farmer, Market, Notification, Order, Product, Report, Review, User];
+  const models = [Announcement, AssistantChat, Category, City, ContactMessage, ContentFlag, StockMovement, Farmer, Market, Notification, Order, Product, Report, Review, User];
   for (const Model of models) {
     await Model.deleteMany({});
     await Model.init(); // make sure indexes exist
@@ -148,6 +152,7 @@ async function main() {
         description: p.desc,
         image: PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : `/uploads/seed/${p.img}.webp`,
         imageCredit: PHOTOS[p.name] ? { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } : undefined,
+        gallery: (GALLERY[p.name] || []).map((g) => ({ url: `/uploads/photos/gallery/${g.file}`, credit: { author: g.author, source: g.source, license: g.license } })),
         markets: farmer.markets,
         days: farmer.operatingDays,
         farmerActive: farmer.isActive,
@@ -278,6 +283,7 @@ async function main() {
   console.log(`[seed] ${inserted.length} historical orders`);
 
   // ---------------------------------------------------------------- upcoming (open) orders
+  const stockLog = [];
   async function openOrder(customer, farmerKey, lines, status, { dateIndex = 0, slotIndex = 0, note } = {}) {
     const { farmer } = farmerByKey[farmerKey];
     await farmer.populate('pickupWindows.market', 'name address');
@@ -320,6 +326,7 @@ async function main() {
       ],
       { timestamps: false }
     );
+    stockLog.push(...items.map((i) => ({ product: i.product, change: -i.quantity, type: 'order_reserved', order: order._id, orderNumber: order.orderNumber, by: 'customer', at: createdAt })));
     return order;
   }
 
@@ -390,6 +397,74 @@ async function main() {
     { user: admin._id, type: 'account', title: 'New farmer registration', message: 'Sunny Acres Poultry (Rashid Mehmood) is waiting for approval.', link: '/admin/farmers?status=pending' },
     { user: admin._id, type: 'system', title: 'New contact message', message: 'Tariq Jamil: Joining as a farmer', link: '/admin/messages' },
   ]);
+
+  // ---------------------------------------------------------------- inventory log, low-stock alerts, moderation queue
+  const allProducts = await Product.find().lean();
+  const weekStart = startOfDay(addDays(new Date(), -((new Date().getDay() + 6) % 7)));
+  const reservedNow = new Map();
+  for (const m of stockLog) reservedNow.set(String(m.product), (reservedNow.get(String(m.product)) || 0) - m.change);
+  const movementDocs = [];
+  for (const p of allProducts) {
+    const opening = p.quantityAvailable + (reservedNow.get(String(p._id)) || 0);
+    movementDocs.push({ farmer: p.farmer, product: p._id, productName: p.name, unit: p.unit, change: opening, quantityAfter: opening, type: 'template', reason: 'Weekly stock template', by: 'system', createdAt: weekStart, updatedAt: weekStart });
+  }
+  // A few hand adjustments at Malir Green Fields so the log shows every kind of movement
+  const malirFarmer = farmerByKey.malir.farmer;
+  const demoAdjust = [
+    ['Farm Potatoes', 10, 'restock', 'Harvest / restock: second picking'],
+    ['Purple Brinjal', -2, 'waste', 'Damaged or spoiled: bruised in transport'],
+    ['Red Onions', -3, 'stall_sale', 'Sold at the stall'],
+  ];
+  let running = new Map(allProducts.map((p) => [String(p._id), p.quantityAvailable + (reservedNow.get(String(p._id)) || 0)]));
+  for (const [name, change, type, reason] of demoAdjust) {
+    const p = await Product.findOne({ farmer: malirFarmer._id, name });
+    if (!p || p.quantityAvailable + change < 0) continue;
+    p.quantityAvailable += change;
+    await p.save();
+    const at = new Date(weekStart.getTime() + 26 * 3600 * 1000);
+    running.set(String(p._id), (running.get(String(p._id)) || 0) + change);
+    movementDocs.push({ farmer: p.farmer, product: p._id, productName: p.name, unit: p.unit, change, quantityAfter: running.get(String(p._id)), type, reason, by: 'farmer', createdAt: at, updatedAt: at });
+  }
+  for (const m of stockLog.sort((a, b) => a.at - b.at)) {
+    const p = allProducts.find((x) => String(x._id) === String(m.product));
+    running.set(String(m.product), (running.get(String(m.product)) || 0) + m.change);
+    movementDocs.push({ farmer: p.farmer, product: p._id, productName: p.name, unit: p.unit, change: m.change, quantityAfter: Math.max(0, running.get(String(m.product))), type: m.type, reason: `Pre-order ${m.orderNumber}`, order: m.order, orderNumber: m.orderNumber, by: m.by, createdAt: m.at, updatedAt: m.at });
+  }
+  await StockMovement.insertMany(movementDocs, { timestamps: false });
+
+  // Low-stock alerts for products already at their alert level (in-app only while seeding)
+  const low = await Product.find({ isRemoved: false, status: { $ne: 'unavailable' } }).populate('farmer', 'user stallName');
+  const lowNotes = [];
+  for (const p of low) {
+    if (p.quantityAvailable > (p.lowStockThreshold ?? 5)) continue;
+    const soldOut = p.quantityAvailable <= 0;
+    p.lowStockAlertedAt = new Date();
+    if (soldOut) p.soldOutAlertedAt = new Date();
+    await p.save();
+    lowNotes.push({
+      user: p.farmer.user,
+      type: 'stock',
+      title: soldOut ? `${p.name} is sold out` : `Low stock: ${p.name}`,
+      message: soldOut ? `${p.name} has no stock left, so customers cannot pre-order it. Add stock in Inventory when you have more.` : `Only ${p.quantityAvailable} ${p.unit} of ${p.name} left at ${p.farmer.stallName}. Restock it in Inventory before it sells out.`,
+      link: '/farmer/inventory',
+    });
+  }
+  if (lowNotes.length) await Notification.insertMany(lowNotes);
+
+  // Moderation queue: one report from a customer and one review held by the word filter
+  const someReview = await Review.findOne({ isRemoved: false, comment: { $exists: true } }).sort({ createdAt: -1 });
+  const bilal = customerByKey.bilal;
+  const flagged = [];
+  if (someReview) flagged.push({ targetType: 'review', review: someReview._id, product: someReview.product, farmer: someReview.farmer, reason: 'misleading', note: 'This review talks about a different stall.', reporter: bilal._id });
+  const heldOrder = await Order.findOne({ customer: customerByKey.usman._id, status: ORDER_STATUS.COMPLETED });
+  if (heldOrder) {
+    const held = await Review.create({ type: 'farmer', farmer: heldOrder.farmer, customer: customerByKey.usman._id, order: heldOrder._id, rating: 1, comment: 'Total bakwas, the stall was closed when I came.', isRemoved: true, removedReason: 'Held for moderation' });
+    flagged.push({ targetType: 'review', review: held._id, farmer: heldOrder.farmer, reason: 'auto_language', note: 'Contains "bakwas"' });
+  }
+  const listing = allProducts.find((p) => p.name === 'Green Olives in Brine');
+  if (listing) flagged.push({ targetType: 'product', product: listing._id, farmer: listing.farmer, reason: 'wrong_info', note: 'The jar size in the photo is different from the one sold.', reporter: ayesha._id });
+  await ContentFlag.insertMany(flagged);
+  console.log(`[seed] ${movementDocs.length} stock movements, ${lowNotes.length} low-stock alerts, ${flagged.length} moderation reports`);
 
   const to = new Date();
   const from = startOfDay(addDays(to, -29));

@@ -66,12 +66,15 @@ Each product category has its own pastel tile colour (stored on the category).
 | Product card | produce tile (4:3) + category, name, farmer, rating, price per unit, add button; lifts on hover |
 | Produce tile | real photos fill the tile (`img.photo`, object-fit cover); 3D illustrations float on a pastel tile |
 | Status badges | orders (placed, accepted, ready, completed, declined, cancelled), accounts (active, pending, suspended, inactive), products (available, sold out, unavailable, removed) |
-| KPI cards | icon on the left, label, value, sub-text (labels never wrap); first card is the dark "lead" card |
-| Admin shell | forest sidebar with section labels, lime active marker and counters (pending farmers, new messages, open orders); icon-only collapsed mode with tooltips |
+| KPI cards | icon on the left, label, value, sub-text (one line on laptops, up to two lines on phones); first card is the dark "lead" card |
+| App shell | one layout for the customer, farmer and admin areas: flat forest sidebar (no gradient) with section labels, lime active marker and counters; icon-only collapsed mode with tooltips |
 | DataTables grid | rounded table, cream header, pill search box, CSV / Excel / Print buttons, forest pagination, responsive child rows on phones |
 | Filter bar | small uppercase labels over compact selects, date and number inputs; "Clear n filters" link |
 | Avatar | round photo (profile upload) or initials; sizes sm / default / lg / xl |
-| Write with AI | pill button with a lime gradient and the `bi-stars` icon next to the description field |
+| Write with AI | pill button with a lime gradient and the `bi-stars` icon next to the description field (product descriptions and "Generate with AI" farm descriptions) |
+| Password field | one eye button inside the field to show or hide the password; the browser's own reveal button is hidden |
+| Product gallery | main photo with arrows and a "1 / 3" counter, thumbnails below, swipe on phones, credit line follows the photo |
+| Report link | small muted "Report" link with a flag icon under reviews, listings and stall pages; opens a reason dialog |
 | Panels and tables | white panels with 1 px line border; tables scroll sideways on small screens instead of squeezing names |
 | Modal / drawer | backdrop blur, Escape to close; the mobile drawer is portalled to `<body>` so it never sits inside the sticky header |
 | Toasts | bottom centre, above the tab bar on phones |

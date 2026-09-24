@@ -13,8 +13,19 @@ const productSchema = new Schema(
     unit: { type: String, enum: UNITS, default: 'kg' },
     quantityAvailable: { type: Number, default: 0, min: [0, 'Quantity cannot be negative'] },
     templateQuantity: { type: Number, default: 0, min: 0 }, // weekly recurring stock
+    // Inventory: an alert (e-mail + notification) is sent when stock drops to this level
+    lowStockThreshold: { type: Number, default: 5, min: 0, max: 100000 },
+    lowStockAlertedAt: Date, // set when the alert was sent; cleared again after restocking
+    soldOutAlertedAt: Date, // a second alert when the product sells out
     description: { type: String, trim: true, maxlength: 1500 },
     image: String,
+    // Extra photos for the gallery on the product page (the main photo is `image`)
+    gallery: [
+      {
+        url: { type: String, required: true },
+        credit: { author: String, source: String, license: String },
+      },
+    ],
     // Attribution for licensed stock photos (seed data); cleared when the farmer uploads their own image
     imageCredit: {
       author: String,

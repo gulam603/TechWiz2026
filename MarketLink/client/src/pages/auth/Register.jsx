@@ -5,6 +5,7 @@ import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import TermsCheckbox from '../../components/legal/TermsCheckbox';
+import PasswordInput from '../../components/common/PasswordInput';
 
 export const PASSWORD_HINT = 'At least 8 characters with letters and numbers';
 export const passwordOk = (p) => /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/.test(p);
@@ -69,11 +70,11 @@ export default function Register() {
           </div>
           <div className="col-md-6">
             <label className="form-label" htmlFor="r-pass">Password</label>
-            <input id="r-pass" name="password" type="password" className="form-control" required value={form.password} onChange={change} autoComplete="new-password" />
+            <PasswordInput id="r-pass" name="password" required value={form.password} onChange={change} autoComplete="new-password" />
           </div>
           <div className="col-md-6">
             <label className="form-label" htmlFor="r-confirm">Confirm password</label>
-            <input id="r-confirm" name="confirm" type="password" className="form-control" required value={form.confirm} onChange={change} autoComplete="new-password" />
+            <PasswordInput id="r-confirm" name="confirm" required value={form.confirm} onChange={change} autoComplete="new-password" />
           </div>
           <div className="col-12 fs-7 text-muted-2">{PASSWORD_HINT}.</div>
           <div className="col-12">

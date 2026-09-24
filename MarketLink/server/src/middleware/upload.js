@@ -12,7 +12,7 @@ const ALLOWED = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.web
  * Only image types are accepted and the file name is randomised so users cannot
  * overwrite files or upload scripts.
  */
-export function imageUpload(folder) {
+export function imageUpload(folder, maxFiles = 2) {
   const dir = path.join(UPLOAD_ROOT, folder);
   fs.mkdirSync(dir, { recursive: true });
 
@@ -23,7 +23,7 @@ export function imageUpload(folder) {
 
   return multer({
     storage,
-    limits: { fileSize: 2 * 1024 * 1024, files: 2 },
+    limits: { fileSize: 2 * 1024 * 1024, files: maxFiles },
     fileFilter: (req, file, cb) => {
       if (ALLOWED[file.mimetype]) cb(null, true);
       else cb(new AppError('Only JPG, PNG, WEBP or GIF images are allowed', 400));

@@ -6,6 +6,9 @@ import { ROLES } from '../utils/constants.js';
 
 import * as auth from '../controllers/authController.js';
 import * as tools from '../controllers/adminToolsController.js';
+import * as stock from '../controllers/inventoryController.js';
+import * as sales from '../controllers/salesController.js';
+import * as moderation from '../controllers/moderationController.js';
 import * as pub from '../controllers/publicController.js';
 import * as markets from '../controllers/marketController.js';
 import * as farmers from '../controllers/farmerController.js';
@@ -33,7 +36,8 @@ const authLimiter = rateLimit({
 const formLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 40, standardHeaders: true, legacyHeaders: false, message: { message: 'Too many requests. Please try again later.' } });
 const chatLimiter = rateLimit({ windowMs: 60 * 1000, limit: 30, message: { message: 'You are sending messages too quickly.' } });
 
-const productImage = imageUpload('products');
+const productImage = imageUpload('products', 6);
+const productPhotos = productImage.fields([{ name: 'image', maxCount: 1 }, { name: 'gallery', maxCount: 4 }]); // main photo + up to 4 more
 const farmerImages = imageUpload('farmers');
 const marketImage = imageUpload('markets');
 const categoryIcon = imageUpload('categories');
@@ -76,6 +80,8 @@ router.get('/products/price-range', products.priceRange);
 router.get('/products/:id', optionalAuth, products.getProduct);
 
 router.get('/reviews', reviews.listReviews);
+router.get('/reviews/eligible', protect, reviews.reviewEligibility);
+router.post('/flags', protect, formLimiter, reviews.reportContent); // report a review, listing or stall
 router.post('/assistant', chatLimiter, optionalAuth, assistant.chat);
 router.get('/assistant/history', optionalAuth, assistant.history);
 router.delete('/assistant/history', optionalAuth, assistant.clearHistory);
@@ -104,6 +110,8 @@ router.put('/orders/:id', ...customerOnly, orders.modifyOrder);
 router.post('/orders/:id/cancel', ...customerOnly, orders.cancelOrder);
 router.get('/orders/:id/reorder', ...customerOnly, orders.reorderItems);
 router.post('/reviews', ...customerOnly, reviews.createReview);
+router.get('/reviews/mine', ...customerOnly, reviews.myReviews);
+router.get('/customer/badges', ...customerOnly, reviews.customerBadges);
 
 // ---------- Farmer ----------
 const farmerOnly = [protect, authorize(ROLES.FARMER), loadFarmer];
@@ -115,8 +123,8 @@ router.get('/farmer/insights', ...farmerOnly, farm.farmerInsights);
 
 router.get('/farmer/products', ...farmerOnly, farm.myProducts);
 router.post('/farmer/products/describe', ...approvedFarmer, tools.writeDescription); // "Write with AI"
-router.post('/farmer/products', ...approvedFarmer, productImage.single('image'), farm.createProduct);
-router.put('/farmer/products/:id', ...approvedFarmer, productImage.single('image'), farm.updateProduct);
+router.post('/farmer/products', ...approvedFarmer, productPhotos, farm.createProduct);
+router.put('/farmer/products/:id', ...approvedFarmer, productPhotos, farm.updateProduct);
 router.patch('/farmer/products/:id/status', ...approvedFarmer, farm.setProductStatus);
 router.delete('/farmer/products/:id', ...approvedFarmer, farm.deleteProduct);
 router.put('/farmer/template', ...approvedFarmer, farm.updateTemplate);
@@ -125,6 +133,13 @@ router.post('/farmer/template/apply', ...approvedFarmer, farm.applyTemplateNow);
 router.get('/farmer/orders', ...farmerOnly, farm.farmerOrders);
 router.post('/farmer/orders/:id/:action', ...approvedFarmer, farm.updateOrderStatus);
 router.get('/farmer/reviews', ...farmerOnly, farm.farmerReviews);
+router.get('/farmer/badges', ...farmerOnly, stock.farmerBadges);
+router.post('/farmer/describe', ...farmerOnly, tools.writeFarmBio); // "Generate with AI" for About your farm
+router.get('/farmer/inventory', ...approvedFarmer, stock.inventory);
+router.get('/farmer/inventory/movements', ...approvedFarmer, stock.movements);
+router.post('/farmer/inventory/:id/adjust', ...approvedFarmer, stock.adjustStock);
+router.put('/farmer/inventory/:id/threshold', ...approvedFarmer, stock.setThreshold);
+router.get('/farmer/reports/sales', ...approvedFarmer, sales.salesReport);
 router.post('/farmer/reviews/:id/respond', ...farmerOnly, farm.respondToReview);
 
 // ---------- Admin ----------
@@ -158,6 +173,9 @@ router.get('/admin/products', ...adminOnly, admin.adminProducts);
 router.patch('/admin/products/:id/moderate', ...adminOnly, admin.moderateProduct);
 router.get('/admin/reviews', ...adminOnly, admin.adminReviews);
 router.patch('/admin/reviews/:id/moderate', ...adminOnly, admin.moderateReview);
+router.get('/admin/moderation/summary', ...adminOnly, moderation.moderationSummary);
+router.patch('/admin/moderation/:id', ...adminOnly, moderation.resolveFlag);
+router.post('/admin/farmers/describe', ...adminOnly, tools.writeFarmBio);
 
 router.get('/admin/categories', ...adminOnly, admin.adminCategories);
 router.post('/admin/categories', ...adminOnly, categoryIcon.single('icon'), admin.createCategory);

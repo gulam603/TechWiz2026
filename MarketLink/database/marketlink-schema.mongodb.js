@@ -204,9 +204,17 @@ createCollection(
       unit: { enum: ['kg', 'g', 'lb', 'dozen', 'piece', 'bunch', 'litre', 'pack', 'jar', 'loaf', 'box'] },
       quantityAvailable: num(0),
       templateQuantity: num(0),
+      lowStockThreshold: num(0, 100000),
+      lowStockAlertedAt: date,
+      soldOutAlertedAt: date,
       description: str(1500),
       image: str(),
       imageCredit: { bsonType: 'object', properties: { author: str(), source: str(), license: str() } },
+      gallery: {
+        bsonType: 'array',
+        maxItems: 4,
+        items: { bsonType: 'object', required: ['url'], properties: { url: str(), credit: { bsonType: 'object', properties: { author: str(), source: str(), license: str() } } } },
+      },
       status: { enum: ['available', 'sold_out', 'unavailable'] },
       isRemoved: bool,
       removedReason: str(),
@@ -290,7 +298,7 @@ createCollection(
   [[{ product: 1, isRemoved: 1 }], [{ farmer: 1, isRemoved: 1 }], [{ customer: 1, order: 1 }]]
 );
 
-// notifications: in-app alerts (order updates, restock alerts, announcements)
+// notifications: in-app alerts (order updates, restock and low-stock alerts, reviews, moderation, announcements)
 createCollection(
   'notifications',
   {
@@ -298,7 +306,7 @@ createCollection(
     required: ['user', 'title', 'message'],
     properties: {
       user: objectId,
-      type: { enum: ['order', 'restock', 'announcement', 'review', 'account', 'system'] },
+      type: { enum: ['order', 'restock', 'stock', 'announcement', 'review', 'account', 'moderation', 'system'] },
       title: str(),
       message: str(),
       link: str(),
@@ -328,7 +336,9 @@ createCollection(
     required: ['generatedBy', 'reportType'],
     properties: {
       generatedBy: objectId,
-      reportType: { enum: ['platform_overview', 'orders_summary', 'revenue_by_market', 'top_farmers'] },
+      reportType: {
+        enum: ['platform_overview', 'orders_summary', 'revenue_by_market', 'top_farmers', 'sales_by_category', 'customer_activity', 'inventory_status', 'city_overview', 'reviews_moderation'],
+      },
       title: str(),
       from: date,
       to: date,
@@ -346,6 +356,58 @@ createCollection(
     required: ['name', 'email', 'message'],
     properties: { name: str(80), email: str(120), subject: str(150), message: str(2000), status: { enum: ['new', 'read'] }, createdAt: date, updatedAt: date },
   }
+);
+
+// stockmovements: inventory log, every change to a product's stock (pre-orders, cancellations,
+// the weekly template and the farmer's own adjustments)
+createCollection(
+  'stockmovements',
+  {
+    bsonType: 'object',
+    required: ['farmer', 'product', 'productName', 'change', 'quantityAfter', 'type'],
+    properties: {
+      farmer: objectId,
+      product: objectId,
+      productName: str(),
+      unit: str(),
+      change: num(),
+      quantityAfter: num(0),
+      type: { enum: ['initial', 'restock', 'adjustment', 'waste', 'stall_sale', 'correction', 'template', 'order_reserved', 'order_released', 'order_changed'] },
+      reason: str(200),
+      order: objectId,
+      orderNumber: str(),
+      by: { enum: ['farmer', 'customer', 'admin', 'system'] },
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [[{ farmer: 1, createdAt: -1 }], [{ product: 1, createdAt: -1 }]]
+);
+
+// contentflags: content moderation queue (reports by users and reviews held by the word filter)
+createCollection(
+  'contentflags',
+  {
+    bsonType: 'object',
+    required: ['targetType', 'reason'],
+    properties: {
+      targetType: { enum: ['review', 'product', 'farmer'] },
+      review: objectId,
+      product: objectId,
+      farmer: objectId,
+      reason: { enum: ['spam', 'offensive', 'misleading', 'wrong_info', 'other', 'auto_language'] },
+      note: str(500),
+      reporter: objectId,
+      status: { enum: ['open', 'resolved', 'dismissed'] },
+      action: { enum: ['none', 'removed', 'restored', 'suspended'] },
+      resolutionNote: str(300),
+      resolvedBy: objectId,
+      resolvedAt: date,
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [[{ status: 1, createdAt: -1 }], [{ targetType: 1, review: 1, product: 1, farmer: 1 }]]
 );
 
 print(`\nDatabase "${dbName}" is ready. Now run "npm run seed" inside /server to insert demo data.`);

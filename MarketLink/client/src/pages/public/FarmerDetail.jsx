@@ -8,6 +8,8 @@ import DirectionsMap from '../../components/map/DirectionsMap';
 import RatingStars from '../../components/common/RatingStars';
 import DayDots from '../../components/common/DayDots';
 import FavButton from '../../components/common/FavButton';
+import WriteReviewButton from '../../components/reviews/WriteReviewButton';
+import ReportButton from '../../components/reviews/ReportButton';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { coverFor, DAY_SHORT, formatDateKey, time12 } from '../../utils/format';
@@ -15,7 +17,7 @@ import { isIllustration } from '../../utils/images';
 
 export default function FarmerDetail() {
   const { slug } = useParams();
-  const { data, loading, error } = useFetch(`/farmers/${slug}`);
+  const { data, loading, error, reload } = useFetch(`/farmers/${slug}`);
   const [cat, setCat] = useState('');
   const [allReviews, setAllReviews] = useState(false);
   useDocumentTitle(data?.farmer?.stallName);
@@ -132,9 +134,12 @@ export default function FarmerDetail() {
             </div>
           )}
 
-          <div className="d-flex align-items-end justify-content-between mt-5 mb-3">
-            <h2 className="h3 mb-0">Reviews</h2>
-            {farmer.ratingCount > 0 && <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />}
+          <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-5 mb-3">
+            <div className="d-flex align-items-center gap-3 flex-wrap">
+              <h2 className="h3 mb-0">Reviews</h2>
+              {farmer.ratingCount > 0 && <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />}
+            </div>
+            <WriteReviewButton type="farmer" id={farmer._id} name={farmer.stallName} onDone={reload} />
           </div>
           <div className="soft-panel">
             {reviews.length === 0 ? (
@@ -147,6 +152,9 @@ export default function FarmerDetail() {
                 {allReviews ? 'Show fewer reviews' : `Show ${reviews.length - 5} more reviews`}
               </button>
             )}
+          </div>
+          <div className="text-end mt-2">
+            <ReportButton targetType="farmer" targetId={farmer._id} label="Report this stall" />
           </div>
         </div>
 

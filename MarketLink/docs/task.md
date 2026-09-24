@@ -27,6 +27,11 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Terms & Conditions page and required checkbox on both sign-up forms
 - [x] Profile photo upload (all roles)
 - [x] More filters: rating and farming practice (shop, farmers), produce category and city (markets)
+- [x] Write reviews for farmers and products from the product page, the stall page or "My reviews" (grouped by pickup)
+- [x] Report a review, a product listing or a stall to the admin
+- [x] Favourite farmers from the stall page, farmer cards and the product page; favourite farmers on the dashboard
+- [x] Product photo gallery (up to 5 photos, thumbnails, arrows, swipe, keyboard, credit per photo)
+- [x] Own account area with the same sidebar layout as the admin area
 
 ## 2. Farmer features
 
@@ -43,6 +48,12 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Selling features (stock, pre-orders, pickup, reviews) hidden and blocked until admin approval
 - [x] "Write with AI" product descriptions (Claude with an API key, built-in writer otherwise)
 - [x] City chosen from the cities table
+- [x] Inventory: stock on hand, stock reserved by open pre-orders, stock value, adjust (restock, stall sale, waste, correction), full stock log
+- [x] Low-stock alerts per product (alert level) by e-mail (Nodemailer SMTP) and in-app notification, plus a sold-out alert
+- [x] Sales insights report: revenue vs previous period, best sellers, categories, markets, busiest days and pickup times, returning customers, printable
+- [x] Extra product photos (gallery) in the product form
+- [x] "Generate with AI" for the "About the farm" text
+- [x] Same sidebar layout as the admin area (collapsible, mobile drawer)
 
 ## 3. Admin features
 
@@ -57,11 +68,15 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Admin creates farmer and customer accounts (invite e-mail) and places orders for customers
 - [x] Customer order history and customer × farmer purchase analytics with charts
 - [x] Cities table (admin CRUD) used by city dropdowns; market categories dropdown
+- [x] "Generate with AI" farm description when the admin adds a farmer
+- [x] Content moderation queue: user reports and reviews held by the word filter; publish, remove, restore, suspend stall or dismiss
+- [x] Platform-wide reports: sales by category, customer activity, inventory & low stock, cities overview, reviews & moderation (DataTables with CSV / Excel / Print)
 
 ## 4. Other requirements
 
 - [x] Role-based access control (API and UI)
-- [x] Responsive: laptop layout, mobile drawer menu, mobile bottom tab bar
+- [x] Responsive: laptop layout, mobile drawer menu, mobile bottom tab bar; every account page checked at 360, 390 and 768 px
+- [x] One show/hide eye button in password fields (browser's own reveal button hidden); flat sidebar colour
 - [x] E-mail and in-app notifications for confirmations and ready-for-pickup (Nodemailer SMTP, e.g. Gmail app password; branded HTML e-mails)
 - [x] About Us and Contact Us (static contact + Google Map)
 - [x] No emoji in the interface – Bootstrap icons everywhere
@@ -71,7 +86,9 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 ## 5. Quality checks (last full run)
 
 - [x] ESLint (client and server) – no errors
-- [x] API suites: 69 + 23 checks, 32 extra SRS checks, 33 admin-tools checks
+- [x] API suites: 69 + 23 checks, 32 extra SRS checks, 33 admin-tools checks, 31 round-4 checks (inventory, alerts, sales, reviews, moderation, reports)
+- [x] Round-4 browser test: 111 checks (password eye, shells, reviews, gallery, report, inventory, sales, gallery upload, AI bio, moderation, reports, mobile at 360 / 390 / 768)
+- [x] Low-stock and sold-out e-mails delivered through a local SMTP server
 - [x] Admin browser test: shell, collapse, place order, CSV export, add farmer, customer history, analytics, cities, mobile drawer, pending-farmer lock, Write with AI
 - [x] SMTP delivery tested with a local SMTP server (login, order, approval and reset e-mails)
 - [x] Browser flows: customer → farmer → admin, filters, maps, closed dates, sign-up wizard, password reset

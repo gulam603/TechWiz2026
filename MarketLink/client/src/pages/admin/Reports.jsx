@@ -7,11 +7,14 @@ import { DashHeader } from '../../components/common/PageHeader';
 import KpiCard from '../../components/common/KpiCard';
 import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, ColumnChart, TrendChart } from '../../components/charts/Charts';
+import DataGrid from '../../components/admin/DataGrid';
+import { display, esc, moneyCell } from '../../utils/cells';
 import { formatDate, formatDateKey, money, moneyCompact, ORDER_STATUS_META, toDateKey } from '../../utils/format';
 
 /** Turns the report into rows for the table view and CSV export. */
 function reportTable(report) {
   const d = report.data;
+  if (d.columns) return { columns: d.columns.map((c) => c.label), rows: d.rows.map((r) => d.columns.map((c) => r[c.key])) };
   switch (report.reportType) {
     case 'revenue_by_market':
       return { columns: ['Market', 'City', 'Orders', 'Completed', 'Revenue', 'Share %'], rows: d.rows.map((r) => [r.market, r.city, r.orders, r.completed, r.revenue, r.share]) };
@@ -53,10 +56,80 @@ function StatusTable({ byStatus }) {
   );
 }
 
+// KPI cards of the table-based reports (sales by category, customers, inventory, cities, reviews)
+const TOTAL_META = {
+  revenue: ['Revenue (completed)', 'bi-cash-stack', 'money'],
+  items: ['Items sold', 'bi-basket'],
+  categories: ['Categories', 'bi-tags'],
+  customers: ['Customers', 'bi-people'],
+  active: ['Ordered in period', 'bi-bag-check'],
+  newCustomers: ['New customers', 'bi-person-plus'],
+  repeat: ['Repeat customers', 'bi-arrow-repeat'],
+  orders: ['Orders', 'bi-receipt'],
+  products: ['Products', 'bi-basket'],
+  lowStock: ['Low stock', 'bi-exclamation-triangle'],
+  soldOut: ['Sold out', 'bi-x-circle'],
+  units: ['Units in stock', 'bi-box-seam'],
+  stockValue: ['Stock value', 'bi-wallet2', 'money'],
+  cities: ['Cities', 'bi-buildings'],
+  activeCities: ['Cities with orders', 'bi-geo-alt'],
+  reviews: ['Reviews', 'bi-chat-square-quote'],
+  averageRating: ['Average rating', 'bi-star'],
+  removedReviews: ['Removed reviews', 'bi-eye-slash'],
+  reports: ['Content reports', 'bi-flag'],
+  openReports: ['Open reports', 'bi-hourglass-split'],
+  resolvedReports: ['Handled reports', 'bi-check2-circle'],
+};
+const VARIANTS = ['accent', '', 'info', 'warn', '', 'danger'];
+
+function GenericReport({ report }) {
+  const d = report.data;
+  const chart = d.chart;
+  const chartData = chart ? (chart.data ? d[chart.data] : d.rows).filter((r) => r[chart.value] > 0).slice(0, chart.top || 12) : [];
+  const columns = d.columns.map((c) => ({
+    data: c.key,
+    title: c.label,
+    className: c.num || c.money ? 'text-end' : '',
+    render: c.money ? display(moneyCell) : c.key === d.columns[0].key ? display((v) => `<strong class="small">${esc(v)}</strong>`) : undefined,
+  }));
+  const totals = Object.entries(d.totals).filter(([k]) => TOTAL_META[k]);
+  const col = totals.length > 4 ? 'col-6 col-md-4 col-xl-2' : totals.length === 4 ? 'col-6 col-lg-3' : 'col-6 col-md-4';
+  return (
+    <>
+      <div className="row g-2 g-xl-3 mb-3 kpi-row">
+        {totals.map(([k, v], i) => {
+          const [label, icon, kind] = TOTAL_META[k];
+          return (
+            <div key={k} className={col}>
+              <KpiCard variant={VARIANTS[i % VARIANTS.length] || undefined} icon={icon} label={label} value={kind === 'money' ? moneyCompact(v) : v} />
+            </div>
+          );
+        })}
+      </div>
+      <div className="row g-3">
+        {chart && (
+          <div className="col-xl-4">
+            <ChartCard title={chart.data ? 'Reviews by rating' : `${chart.name} by ${chart.label}`} subtitle={chart.top ? `Top ${chart.top}` : undefined}>
+              {chartData.length ? <BarList data={chartData} labelKey={chart.label} valueKey={chart.value} name={chart.name} valueFormatter={chart.money ? moneyCompact : undefined} /> : <p className="small text-muted-2 mb-0">No data in this period.</p>}
+            </ChartCard>
+          </div>
+        )}
+        <div className={chart ? 'col-xl-8' : 'col-12'}>
+          <div className="table-card">
+            <DataGrid key={report._id || report.generatedAt} data={d.rows} columns={columns} order={[]} exportName={report.title} pageLength={10} />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 function ReportView({ report }) {
   const d = report.data;
   const t = d.totals;
   const table = reportTable(report);
+
+  if (d.columns) return <GenericReport report={report} />;
 
   if (report.reportType === 'revenue_by_market') {
     return (
@@ -201,7 +274,7 @@ export default function AdminReports() {
   if (!data) return <PageLoader />;
   return (
     <div className="report-print">
-      <DashHeader title="Reports & analytics" subtitle="Platform-wide reports: orders, revenue across markets and the most active farmers." />
+      <DashHeader title="Reports & analytics" subtitle="Platform-wide reports: orders, revenue by market, city and category, farmers, customers, inventory and reviews & moderation." />
       <form className="panel mb-4 no-print" onSubmit={generate}>
         <div className="row g-3 align-items-end">
           <div className="col-md-4">

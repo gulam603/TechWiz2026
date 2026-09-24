@@ -80,6 +80,14 @@ export async function customerDashboard(req, res) {
     suggestions = suggestions.concat(more);
   }
 
+  // Favourite farmers with how many products they have in stock this week
+  const farmers = await Farmer.find({ _id: { $in: req.user.favoriteFarmers || [] }, isActive: true }).select('stallName slug logo city ratingAvg ratingCount').limit(6).lean();
+  const stockCounts = await Product.aggregate([
+    { $match: { ...Product.publicFilter(), status: 'available', farmer: { $in: farmers.map((f) => f._id) } } },
+    { $group: { _id: '$farmer', n: { $sum: 1 } } },
+  ]);
+  const inStock = new Map(stockCounts.map((c) => [String(c._id), c.n]));
+
   res.json({
     stats: {
       activeOrders: activeCount,
@@ -87,10 +95,12 @@ export async function customerDashboard(req, res) {
       totalSpent: round2(completedOrders.reduce((s, o) => s + o.totalAmount, 0)),
       favorites: (req.user.favoriteFarmers?.length || 0) + (req.user.favoriteProducts?.length || 0),
       savedMarkets: req.user.savedMarkets?.length || 0,
+      favoriteFarmers: req.user.favoriteFarmers?.length || 0,
     },
     upcoming,
     notifications,
     suggestions,
+    farmers: farmers.map((f) => ({ ...f, inStock: inStock.get(String(f._id)) || 0 })),
   });
 }
 

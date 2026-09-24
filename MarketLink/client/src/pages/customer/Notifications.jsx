@@ -8,8 +8,8 @@ import EmptyState from '../../components/common/EmptyState';
 import Pagination from '../../components/common/Pagination';
 import { PageLoader } from '../../components/common/Loader';
 import { formatDate, timeAgo } from '../../utils/format';
+import { NOTIF_ICONS as ICONS } from '../../components/layout/NotificationBell';
 
-const ICONS = { order: 'bi-bag-check', restock: 'bi-arrow-repeat', announcement: 'bi-megaphone', review: 'bi-star', account: 'bi-person-check', system: 'bi-info-circle' };
 
 /** In-app notifications (shared by customers, farmers and admins). */
 export default function Notifications() {
@@ -37,7 +37,7 @@ export default function Notifications() {
     <>
       <DashHeader
         title="Notifications"
-        subtitle={`${data.unread} unread · order updates, restock alerts and announcements`}
+        subtitle={`${data.unread} unread · order updates, stock alerts, reviews and announcements`}
         actions={
           data.unread > 0 && (
             <button type="button" className="btn btn-white" onClick={markAll}>

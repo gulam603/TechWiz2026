@@ -4,6 +4,7 @@ import { OPEN_ORDER_STATUSES, PRODUCT_STATUS } from '../utils/constants.js';
 import { isoWeekKey } from '../utils/dates.js';
 import { round2 } from '../utils/helpers.js';
 import { notifyMany } from './notify.js';
+import { checkLowStock, recordMovements } from './inventory.js';
 
 /** Merge duplicate lines and validate quantities: [{productId, quantity}] */
 export function normaliseItems(rawItems) {
@@ -128,16 +129,21 @@ export async function applyWeeklyTemplate(farmer, { notifyFans = true } = {}) {
 
   let updated = 0;
   const restocked = [];
+  const movements = [];
   for (const product of products) {
     if (product.status === PRODUCT_STATUS.UNAVAILABLE) continue;
     const wasEmpty = product.quantityAvailable <= 0;
+    const before = product.quantityAvailable;
     product.quantityAvailable = Math.max(0, product.templateQuantity - (reserved.get(String(product._id)) || 0));
     if (product.status === PRODUCT_STATUS.SOLD_OUT && product.quantityAvailable > 0) product.status = PRODUCT_STATUS.AVAILABLE;
     await product.save();
+    movements.push({ product, change: product.quantityAvailable - before, type: 'template', reason: 'Weekly stock template', by: 'system' });
     updated += 1;
     if (wasEmpty && product.quantityAvailable > 0) restocked.push(product);
   }
   await Farmer.updateOne({ _id: farmer._id }, { templateLastAppliedWeek: isoWeekKey() });
+  await recordMovements(movements);
+  await checkLowStock(products.map((p) => p._id));
 
   if (notifyFans && updated) {
     for (const p of restocked) await notifyRestock(p);

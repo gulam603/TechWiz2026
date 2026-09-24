@@ -4,7 +4,7 @@ import { api } from '../../api/client';
 import useClickOutside from '../../hooks/useClickOutside';
 import { timeAgo } from '../../utils/format';
 
-const ICONS = { order: 'bi-bag-check', restock: 'bi-arrow-repeat', announcement: 'bi-megaphone', review: 'bi-star', account: 'bi-person-check', system: 'bi-info-circle' };
+export const NOTIF_ICONS = { order: 'bi-bag-check', restock: 'bi-arrow-repeat', stock: 'bi-box-seam', announcement: 'bi-megaphone', review: 'bi-star', account: 'bi-person-check', moderation: 'bi-flag', system: 'bi-info-circle' };
 
 /** Bell icon with unread count. Polls the API every 30 seconds for new in-app alerts. */
 export default function NotificationBell({ allLink }) {
@@ -72,7 +72,7 @@ export default function NotificationBell({ allLink }) {
           {items.map((n) => (
             <button type="button" key={n._id} className={`notif-item w-100 border-0 text-start ${n.read ? 'bg-transparent' : 'unread'}`} onClick={() => openItem(n)}>
               <span className="notif-icon">
-                <i className={`bi ${ICONS[n.type] || 'bi-bell'}`} />
+                <i className={`bi ${NOTIF_ICONS[n.type] || 'bi-bell'}`} />
               </span>
               <span className="min-w-0">
                 <strong className="d-block small">{n.title}</strong>

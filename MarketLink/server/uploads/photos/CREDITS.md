@@ -69,3 +69,120 @@ The photos were cropped to 4:3 and resized to 800 x 600 WebP for the website.
 | Watermelon | `watermelon.webp` | bharat ram | [Flickr](https://www.flickr.com/photos/12x/6748243111) |
 | Whole Wheat Naan | `whole-wheat-naan.webp` | Denise Krebs | [Flickr](https://www.flickr.com/photos/mrsdkrebs/10636042286) |
 | Wild Sidr Honey | `wild-sidr-honey.webp` | Annabelle Orozco | [Flickr](https://www.flickr.com/photos/annabelleorozco/7915650268) |
+
+## Gallery photos (extra photos on the product pages)
+
+| Product | File | Photographer | Source | Licence |
+| --- | --- | --- | --- | --- |
+| Vine Tomatoes | gallery/vine-tomatoes-2.webp | Tony Austin | https://www.flickr.com/photos/tonyaustin/5145408816 | CC BY 2.0 |
+| Vine Tomatoes | gallery/vine-tomatoes-3.webp | Scot Nelson | https://www.flickr.com/photos/scotnelson/16602689331 | CC BY 2.0 |
+| Sweet Carrots | gallery/sweet-carrots-2.webp | Ecotrust | https://www.flickr.com/photos/ecotrust/9498702654 | CC BY 2.0 |
+| Sweet Carrots | gallery/sweet-carrots-3.webp | Laura | https://www.flickr.com/photos/tigergirl/6774215356 | CC BY 2.0 |
+| Farm Potatoes | gallery/farm-potatoes-2.webp | taylorandayumi | https://www.flickr.com/photos/taylorandayumi/2722398528 | CC BY 2.0 |
+| Farm Potatoes | gallery/farm-potatoes-3.webp | Bratislavská župa | https://www.flickr.com/photos/fotopavolfreso/6179259000 | CC BY 2.0 |
+| Red Onions | gallery/red-onions-2.webp | Johan Bichel Lindegaard | https://www.flickr.com/photos/accidentdesigns/5560910594 | CC BY 2.0 |
+| Red Onions | gallery/red-onions-3.webp | macinate | https://www.flickr.com/photos/macinate/2103215408 | CC BY 2.0 |
+| Desi Cucumbers | gallery/desi-cucumbers-2.webp | Annie Mole | https://www.flickr.com/photos/anniemole/2792318110 | CC BY 2.0 |
+| Desi Cucumbers | gallery/desi-cucumbers-3.webp | His Sad Shadow | https://www.flickr.com/photos/54571512@N07/18832838753 | CC BY 2.0 |
+| Purple Brinjal | gallery/purple-brinjal-2.webp | Counse | https://www.flickr.com/photos/cbroders/5968689301 | CC BY 2.0 |
+| Purple Brinjal | gallery/purple-brinjal-3.webp | Håvar og Solveig | https://www.flickr.com/photos/seenful/3826712768 | CC BY 2.0 |
+| Capsicum Mix | gallery/capsicum-mix-2.webp | Eric Rosenbaum | https://www.flickr.com/photos/ericrosenbaum/8534574527 | CC BY 2.0 |
+| Capsicum Mix | gallery/capsicum-mix-3.webp | joe beasley | https://www.flickr.com/photos/23563996@N06/2356155117 | CC BY 2.0 |
+| Green Chillies | gallery/green-chillies-2.webp | Danielle Walquist  Lynch | https://www.flickr.com/photos/25195310@N02/3853486272 | CC BY 2.0 |
+| Green Chillies | gallery/green-chillies-3.webp | jakerome | https://www.flickr.com/photos/jakerome/4745134128 | CC BY 2.0 |
+| Sindhri Mangoes | gallery/sindhri-mangoes-2.webp | instinctify | https://www.flickr.com/photos/instinctify/3992572489 | CC BY 2.0 |
+| Sindhri Mangoes | gallery/sindhri-mangoes-3.webp | Ana Rodríguez  Carrington | https://www.flickr.com/photos/ana_carrington/4093571989 | CC BY 2.0 |
+| Chaunsa Mangoes | gallery/chaunsa-mangoes-2.webp | Fernanda Ramalho | https://www.flickr.com/photos/nanda_ac/2904757195 | CC BY 2.0 |
+| Chaunsa Mangoes | gallery/chaunsa-mangoes-3.webp | Yvette  Tan | https://www.flickr.com/photos/glossmania/8741301104 | CC BY 2.0 |
+| Bananas | gallery/bananas-2.webp | Yuya Tamai | https://www.flickr.com/photos/tamaiyuya/6024251426 | CC BY 2.0 |
+| Bananas | gallery/bananas-3.webp | Kai Chan Vong | https://www.flickr.com/photos/kaichanvong/3323447663 | CC BY 2.0 |
+| Watermelon | gallery/watermelon-2.webp | zeevveez | https://www.flickr.com/photos/zeevveez/19769689843 | CC BY 2.0 |
+| Watermelon | gallery/watermelon-3.webp | liz west | https://www.flickr.com/photos/calliope/30594833 | CC BY 2.0 |
+| Cantaloupe Melon | gallery/cantaloupe-melon-2.webp | Jessica Fiess-Hill | https://www.flickr.com/photos/gesika22/6177041324 | CC BY 2.0 |
+| Cantaloupe Melon | gallery/cantaloupe-melon-3.webp | Reynosa Blogs | https://www.flickr.com/photos/bloggers/2619500957 | CC BY 2.0 |
+| Tender Coconuts | gallery/tender-coconuts-2.webp | Venetia Joubert Sarah Oosterveld | https://www.flickr.com/photos/venetiajoubert/3330129785 | CC BY 2.0 |
+| Tender Coconuts | gallery/tender-coconuts-3.webp | SteveR- | https://www.flickr.com/photos/git/159872559 | CC BY 2.0 |
+| Lemons | gallery/lemons-2.webp | Leslie Seaton | https://www.flickr.com/photos/lacatholique/8449071333 | CC BY 2.0 |
+| Lemons | gallery/lemons-3.webp | 6SN7 | https://www.flickr.com/photos/47800690@N03/11421505934 | CC BY 2.0 |
+| Fresh Buffalo Milk | gallery/fresh-buffalo-milk-2.webp | Tony Bowall Photography | https://www.flickr.com/photos/tonybphotos/6923706605/ | CC BY 2.0 |
+| Desi Eggs | gallery/desi-eggs-2.webp | James Bowe | https://www.flickr.com/photos/jamesrbowe/7177637421 | CC BY 2.0 |
+| Desi Eggs | gallery/desi-eggs-3.webp | Victoria Rachitzky Hoch | https://www.flickr.com/photos/viclic/272759452 | CC BY 2.0 |
+| Hand-churned Butter | gallery/hand-churned-butter-2.webp | Jessica Merz | https://www.flickr.com/photos/jessicafm/71922825 | CC BY 2.0 |
+| Natural Yogurt | gallery/natural-yogurt-2.webp | Karen Lee | https://www.flickr.com/photos/ecokaren/6554283227 | CC BY 2.0 |
+| Country Sourdough Loaf | gallery/country-sourdough-loaf-2.webp | niki georgiev | https://www.flickr.com/photos/85189931@N00/21958421901 | CC BY 2.0 |
+| Country Sourdough Loaf | gallery/country-sourdough-loaf-3.webp | with wind | https://www.flickr.com/photos/withwind/13405942925 | CC BY 2.0 |
+| Classic Baguette | gallery/classic-baguette-2.webp | N i c o l a | https://www.flickr.com/photos/15216811@N06/7304112900 | CC BY 2.0 |
+| Classic Baguette | gallery/classic-baguette-3.webp | ken tam | https://www.flickr.com/photos/kanuck/311463043 | CC BY 2.0 |
+| Butter Croissants | gallery/butter-croissants-2.webp | mpellegr | https://www.flickr.com/photos/niputaidea/4089407990 | CC BY 2.0 |
+| Butter Croissants | gallery/butter-croissants-3.webp | Andrew Malone | https://www.flickr.com/photos/andrewmalone/5408824268 | CC BY 2.0 |
+| Whole Wheat Naan | gallery/whole-wheat-naan-2.webp | Chris | https://www.flickr.com/photos/chrisfp/9562738059 | CC BY 2.0 |
+| Whole Wheat Naan | gallery/whole-wheat-naan-3.webp | Jun Seita | https://www.flickr.com/photos/jseita/6211005002 | CC BY 2.0 |
+| Sesame Bagels | gallery/sesame-bagels-2.webp | Lwp Kommunikáció | https://www.flickr.com/photos/lwpkommunikacio/15571964118 | CC BY 2.0 |
+| Sesame Bagels | gallery/sesame-bagels-3.webp | PentaxLimited | https://www.flickr.com/photos/pentaxlimited/3893854916 | CC BY 2.0 |
+| Seasonal Fruit Pie | gallery/seasonal-fruit-pie-2.webp | Natalie HG | https://www.flickr.com/photos/nataliehg/4110416268 | CC BY 2.0 |
+| Seasonal Fruit Pie | gallery/seasonal-fruit-pie-3.webp | dann toliver | https://www.flickr.com/photos/00dann/421599024 | CC BY 2.0 |
+| Oat Chocolate Cookies | gallery/oat-chocolate-cookies-2.webp | Basheer Tome | https://www.flickr.com/photos/basheertome/2126251562 | CC BY 2.0 |
+| Oat Chocolate Cookies | gallery/oat-chocolate-cookies-3.webp | mazaletel | https://www.flickr.com/photos/meg-z/7799802164 | CC BY 2.0 |
+| Fresh Mint (Podina) | gallery/fresh-mint-podina-2.webp | Darya Pino | https://www.flickr.com/photos/summertomato/3570433046 | CC BY 2.0 |
+| Fresh Mint (Podina) | gallery/fresh-mint-podina-3.webp | Alden Chadwick | https://www.flickr.com/photos/aldenchadwick/9191735191 | CC BY 2.0 |
+| Coriander (Dhania) | gallery/coriander-dhania-2.webp | Amber DeGrace | https://www.flickr.com/photos/ink_mama/6635482571 | CC BY 2.0 |
+| Coriander (Dhania) | gallery/coriander-dhania-3.webp | Karen | https://www.flickr.com/photos/karent/4697152537 | CC BY 2.0 |
+| Baby Spinach | gallery/baby-spinach-2.webp | Amy Selleck | https://www.flickr.com/photos/amyselleck/17717088786 | CC BY 2.0 |
+| Baby Spinach | gallery/baby-spinach-3.webp | Vegan Feast Catering | https://www.flickr.com/photos/veganfeast/4631088290 | CC BY 2.0 |
+| Iceberg Lettuce | gallery/iceberg-lettuce-2.webp | Eric BC Lim | https://www.flickr.com/photos/ericlbc/3704847104 | CC BY 2.0 |
+| Iceberg Lettuce | gallery/iceberg-lettuce-3.webp | Bob Doran | https://www.flickr.com/photos/humblog/4936086275/ | CC BY 2.0 |
+| Button Mushrooms | gallery/button-mushrooms-2.webp | hermanturnip | https://www.flickr.com/photos/hermanturnip/3377515936 | CC BY 2.0 |
+| Wild Sidr Honey | gallery/wild-sidr-honey-2.webp | Chris Gardiner | https://www.flickr.com/photos/cgardinerphoto/21188797484 | CC BY 2.0 |
+| Wild Sidr Honey | gallery/wild-sidr-honey-3.webp | Mike Lee | https://www.flickr.com/photos/curiouslee/3226737739 | CC BY 2.0 |
+| Acacia Honey | gallery/acacia-honey-2.webp | Annabelle Orozco | https://www.flickr.com/photos/annabelleorozco/7915650268 | CC BY 2.0 |
+| Acacia Honey | gallery/acacia-honey-3.webp | Col Ford and Natasha de Vere | https://www.flickr.com/photos/col_and_tasha/21487273820 | CC BY 2.0 |
+| Strawberry Jam | gallery/strawberry-jam-2.webp | Personal Creations | https://www.flickr.com/photos/personalcreations/15120095985 | CC BY 2.0 |
+| Green Olives in Brine | gallery/green-olives-in-brine-2.webp | iamNigelMorris | https://www.flickr.com/photos/34639903@N03/3370154896 | CC BY 2.0 |
+| Green Olives in Brine | gallery/green-olives-in-brine-3.webp | Itinerant Tightwad | https://www.flickr.com/photos/itineranttightwad/3695519594 | CC BY 2.0 |
+| Chakki Atta (5 kg) | gallery/chakki-atta-5-kg-2.webp | M@ck | https://www.flickr.com/photos/45141186@N00/2388136314 | CC BY 2.0 |
+| Chakki Atta (5 kg) | gallery/chakki-atta-5-kg-3.webp | thedabblist | https://www.flickr.com/photos/64636759@N07/9669540222 | CC BY 2.0 |
+| Aged Basmati Rice | gallery/aged-basmati-rice-2.webp | babbagecabbage | https://www.flickr.com/photos/babbagecabbage/3277081873 | CC BY 2.0 |
+| Aged Basmati Rice | gallery/aged-basmati-rice-3.webp | Cali4beach | https://www.flickr.com/photos/cali4beach/6716158893 | CC BY 2.0 |
+| Red Kidney Beans | gallery/red-kidney-beans-2.webp | tamba2010 | https://www.flickr.com/photos/53573914@N08/6068213855 | CC BY 2.0 |
+| Red Kidney Beans | gallery/red-kidney-beans-3.webp | NatalieMaynor | https://www.flickr.com/photos/nataliemaynor/7295912130 | CC BY 2.0 |
+| Roasted Peanuts | gallery/roasted-peanuts-2.webp | psyberartist | https://www.flickr.com/photos/psyberartist/2369939495 | CC BY 2.0 |
+| Roasted Peanuts | gallery/roasted-peanuts-3.webp | cbertel | https://www.flickr.com/photos/cbertel/2811571854 | CC BY 2.0 |
+| Green Peas (Matar) | gallery/green-peas-matar-2.webp | Paul Wilkinson | https://www.flickr.com/photos/eepaul/8042519481 | CC BY 2.0 |
+| Green Peas (Matar) | gallery/green-peas-matar-3.webp | Caroline | https://www.flickr.com/photos/hills_alive/4807243411 | CC BY 2.0 |
+| Sunflower Bunch | gallery/sunflower-bunch-2.webp | Navaneeth KN | https://www.flickr.com/photos/navaneethkn/8512296909 | CC BY 2.0 |
+| Sunflower Bunch | gallery/sunflower-bunch-3.webp | Michele Frazier | https://www.flickr.com/photos/michelecolettefrazier/10497617483 | CC BY 2.0 |
+| Desi Rose Bouquet | gallery/desi-rose-bouquet-2.webp | Nik | https://www.flickr.com/photos/nikboi/9620446080/ | CC BY 2.0 |
+| Desi Rose Bouquet | gallery/desi-rose-bouquet-3.webp | Margaux-Marguerite Duquesnoy | https://www.flickr.com/photos/124559226@N08/15611692510 | CC BY 2.0 |
+| Tulip Bunch | gallery/tulip-bunch-2.webp | Pamela Kelly | https://www.flickr.com/photos/76316120@N02/16276869707 | CC BY 2.0 |
+| Tulip Bunch | gallery/tulip-bunch-3.webp | Fort George G. Meade Public Affairs Office | https://www.flickr.com/photos/ftmeade/17168095151 | CC BY 2.0 |
+| Money Plant (Potted) | gallery/money-plant-potted-2.webp | Jane Lenahan | https://www.flickr.com/photos/83478713@N04/9517630535 | CC BY 2.0 |
+| Mini Cactus | gallery/mini-cactus-2.webp | Amante Darmanin | https://www.flickr.com/photos/amantedar/5780158943/ | CC BY 2.0 |
+| Mini Cactus | gallery/mini-cactus-3.webp | tim | https://www.flickr.com/photos/frumbert/6146570482 | CC BY 2.0 |
+| Hibiscus Plant | gallery/hibiscus-plant-2.webp | dbgg1979 | https://www.flickr.com/photos/dbgg1979/3881173400 | CC BY 2.0 |
+| Hibiscus Plant | gallery/hibiscus-plant-3.webp | Selene Weijenberg | https://www.flickr.com/photos/selene_w/2438707413 | CC BY 2.0 |
+| Strawberries | gallery/strawberries-2.webp | Kabsik Park | https://www.flickr.com/photos/royalty-free-images/139764664 | CC BY 2.0 |
+| Strawberries | gallery/strawberries-3.webp | Milestoned | https://www.flickr.com/photos/baccharus/4799105162 | CC BY 2.0 |
+| Kinnow Oranges | gallery/kinnow-oranges-2.webp | microphylum | https://www.flickr.com/photos/32258957@N06/3129670771 | CC BY 2.0 |
+| Kinnow Oranges | gallery/kinnow-oranges-3.webp | Will Scullin | https://www.flickr.com/photos/wscullin/5298175224 | CC BY 2.0 |
+| Sweet Potatoes | gallery/sweet-potatoes-2.webp | nevena  kukoljac | https://www.flickr.com/photos/misskukoljac/16680941695 | CC BY 2.0 |
+| Sweet Potatoes | gallery/sweet-potatoes-3.webp | One 1 | https://www.flickr.com/photos/128042092@N07/15943569406 | CC BY 2.0 |
+| Sweet Corn | gallery/sweet-corn-2.webp | Ninad Chaudhari | https://www.flickr.com/photos/ninadchaudhari/4528805312 | CC BY 2.0 |
+| Sweet Corn | gallery/sweet-corn-3.webp | Ozzy Delaney | https://www.flickr.com/photos/24931020@N02/15362528175 | CC BY 2.0 |
+| Garlic | gallery/garlic-2.webp | DaveBleasdale | https://www.flickr.com/photos/sidelong/15625291855 | CC BY 2.0 |
+| Garlic | gallery/garlic-3.webp | Sammy JayJay | https://www.flickr.com/photos/sammyjayjay/14696971725 | CC BY 2.0 |
+| Fresh Ginger | gallery/fresh-ginger-2.webp | Jungle Rebel | https://www.flickr.com/photos/junglegarden/14465182136 | CC BY 2.0 |
+| Fresh Ginger | gallery/fresh-ginger-3.webp | Yvon | https://www.flickr.com/photos/bellissima_italia/4142613361 | CC BY 2.0 |
+| Red Apples | gallery/red-apples-2.webp | nerissa's ring | https://www.flickr.com/photos/21524179@N08/3935707212 | CC BY 2.0 |
+| Red Apples | gallery/red-apples-3.webp | Gipuntoe / exesofblu | https://www.flickr.com/76992199@N00/5078821670/ | CC BY 2.0 |
+| Green Apples | gallery/green-apples-2.webp | Patrick Bombaert | https://www.flickr.com/photos/capture-creation/20652804449 | CC BY 2.0 |
+| Green Apples | gallery/green-apples-3.webp | S.Su | https://www.flickr.com/photos/24550592@N08/2448068898/ | CC BY 2.0 |
+| Peaches | gallery/peaches-2.webp | @ferchos04 II | https://www.flickr.com/photos/fernando680411/20271701656 | CC BY 2.0 |
+| Peaches | gallery/peaches-3.webp | Ralph Daily | https://www.flickr.com/photos/ralphandjenny/2826472468 | CC BY 2.0 |
+| Cherries | gallery/cherries-2.webp | KitAy | https://www.flickr.com/photos/kitpfish/562254367 | CC BY 2.0 |
+| Cherries | gallery/cherries-3.webp | Paul Asman and Jill Lenoble | https://www.flickr.com/photos/pauljill/4828845854 | CC BY 2.0 |
+| Kiwi | gallery/kiwi-2.webp | Tatsuo Yamashita | https://www.flickr.com/photos/yto/19173747105 | CC BY 2.0 |
+| Kiwi | gallery/kiwi-3.webp | Cmo Mtl | https://www.flickr.com/photos/cmo_ptgr/6802343934 | CC BY 2.0 |
+| Pears | gallery/pears-2.webp | Rennett Stowe | https://www.flickr.com/photos/tomsaint/6080932705 | CC BY 2.0 |
+| Pears | gallery/pears-3.webp | Stefan | https://www.flickr.com/photos/92703742@N04/8426126549 | CC BY 2.0 |
+| Goat Milk | gallery/goat-milk-2.webp | Helga Birna Jónasdóttir | https://www.flickr.com/photos/helgabj/2629361722/ | CC BY 2.0 |
+| Goat Milk | gallery/goat-milk-3.webp | Mark Morgan | https://www.flickr.com/photos/markmorgantrinidad/16559405934 | CC BY 2.0 |

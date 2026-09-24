@@ -8,6 +8,7 @@ import { DashHeader } from '../../components/common/PageHeader';
 import { ConfirmModal } from '../../components/common/Modal';
 import Avatar from '../../components/common/Avatar';
 import ProfilePhoto from '../../components/common/ProfilePhoto';
+import PasswordInput from '../../components/common/PasswordInput';
 
 export function PasswordForm() {
   const { toast } = useToast();
@@ -40,16 +41,16 @@ export function PasswordForm() {
       <div className="d-grid gap-3">
         <div>
           <label className="form-label" htmlFor="pw-current">Current password</label>
-          <input id="pw-current" type="password" className="form-control" required value={form.currentPassword} onChange={(e) => setForm({ ...form, currentPassword: e.target.value })} autoComplete="current-password" />
+          <PasswordInput id="pw-current" required value={form.currentPassword} onChange={(e) => setForm({ ...form, currentPassword: e.target.value })} autoComplete="current-password" />
         </div>
         <div>
           <label className="form-label" htmlFor="pw-new">New password</label>
-          <input id="pw-new" type="password" className="form-control" required value={form.newPassword} onChange={(e) => setForm({ ...form, newPassword: e.target.value })} autoComplete="new-password" />
+          <PasswordInput id="pw-new" required value={form.newPassword} onChange={(e) => setForm({ ...form, newPassword: e.target.value })} autoComplete="new-password" />
           <div className="fs-7 text-muted-2 mt-1">At least 8 characters with letters and numbers.</div>
         </div>
         <div>
           <label className="form-label" htmlFor="pw-confirm">Confirm new password</label>
-          <input id="pw-confirm" type="password" className="form-control" required value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} autoComplete="new-password" />
+          <PasswordInput id="pw-confirm" required value={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.value })} autoComplete="new-password" />
         </div>
       </div>
       <button type="submit" className="btn btn-primary mt-3" disabled={busy}>

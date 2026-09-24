@@ -14,8 +14,9 @@ sends guests to the right login page and blocks other roles.
 | Bottom tab bar | `components/layout/MobileTabBar.jsx` | phones/tablets: 5 role-aware tabs (guest/customer: Home, Shop, Map, Basket, Account; farmer: Stall, Orders, Stock, Pickup, Profile; admin: Dashboard, Farmers, Orders, Markets, Reports) |
 | AI assistant | `components/chat/ChatWidget.jsx` | floating chat "Basket" with memory, saved history and Clear chat (not in the admin area) |
 | Footer | `components/layout/Footer.jsx` | links, team contact (Aptech Learning Centre, F.B. Area, Karachi), "Built by Team Omniverse", credits, Terms |
-| Dashboard layout | `components/layout/DashboardLayout.jsx` | customer and farmer areas: collapsible sidebar (icons only), chip navigation on small screens; pending farmers only see Dashboard, Stall profile and Notifications |
-| Admin layout | `components/admin/AdminLayout.jsx` | admin area only: no public navbar/footer/chat; collapsible dark sidebar (drawer on phones), top bar with Place order, Add farmer, notifications, account menu |
+| App shell | `components/layout/AppShell.jsx` | shared back-office layout of the customer, farmer and admin areas: flat forest sidebar with sections and counters, collapse to icons (remembered), drawer on phones, top bar with page title, quick actions, notification bell and account menu; no public navbar |
+| Dashboard layout | `components/layout/DashboardLayout.jsx` | customer and farmer sidebars on the app shell (counters: ready orders, pickups to review, new pre-orders, low stock); pending farmers only see Dashboard, Stall profile and Notifications; keeps the chat and the bottom tab bar |
+| Admin layout | `components/admin/AdminLayout.jsx` | admin sidebar on the app shell (counters: open orders, pending farmers, open reports, new messages), top bar with Place order, Add farmer; no chat |
 
 ## Public pages (anyone)
 
@@ -45,12 +46,13 @@ sends guests to the right login page and blocks other roles.
 | --- | --- | --- |
 | `/checkout` | Checkout | pickup date and time slot per farmer (inside the farmer's windows, respecting capacity, cut-off and closed dates), notes, place pre-order (pay at pickup) |
 | `/checkout/success` | Order placed | order numbers and pickup summary |
-| `/account` | Dashboard | greeting, ready-for-pickup alert, active and completed counts, upcoming pickups, latest updates, products picked for you |
+| `/account` | Dashboard | greeting, ready-for-pickup alert, active and completed counts, upcoming pickups, latest updates, favourite farmers, products picked for you |
 | `/account/orders` | My orders | Active / History / All tabs, reorder |
 | `/account/orders/:id` | Order detail | status timeline, pickup map with directions, modify items or slot, cancel (before cut-off), review product and farmer after completion |
 | `/account/favorites` | Favourites | favourite products (restock alerts), farmers and saved markets |
+| `/account/reviews` | My reviews | To review: completed pickups grouped by order (rate the stall, review each product); My reviews: posted reviews, farmer replies, reviews waiting for a check |
 | `/account/profile` | Profile & family | profile photo upload, personal details, password, full-width family sharing banner with household members |
-| `/account/notifications` | Notifications | order updates, restock alerts, announcements |
+| `/account/notifications` | Notifications | order updates, restock alerts, review replies, announcements |
 
 ## Farmer pages (role: farmer)
 
@@ -58,11 +60,13 @@ sends guests to the right login page and blocks other roles.
 | --- | --- | --- |
 | `/farmer` | Dashboard & insights | while pending: approval steps and stall-profile checklist only; once approved: revenue, total and pending orders, average order, revenue summary (7 / 30 days / all time), revenue chart, best-selling products, orders by status, upcoming pickups |
 | `/farmer/orders`, `/farmer/orders/:id` | Pre-orders | Open / New / Accepted / Ready / History tabs, accept, decline with reason, mark ready, complete |
-| `/farmer/products` | Weekly stock | add / edit / delete products (name, category, price, unit, quantity, description with "Write with AI", image), sold out / unavailable, weekly template (apply now or automatically) |
+| `/farmer/products` | Weekly stock | add / edit / delete products (name, category, price, unit, quantity, description with "Write with AI", main photo + up to 4 gallery photos), sold out / unavailable, weekly template (apply now or automatically); `?new=1` opens the Add product form |
+| `/farmer/inventory` | Inventory | KPIs (products, units, stock value, reserved, low stock, sold out), low-stock banner, products grid with Adjust / alert level / history, stock log with filters |
 | `/farmer/pickup` | Markets & pickup | markets and days, pickup windows, slot length and capacity, order cut-off hours, closed dates with clash warnings |
-| `/farmer/profile` | Stall profile | stall details, city dropdown, bio, categories, practices, logo, cover photo, map pin, own profile photo |
-| `/farmer/reviews` | Reviews | read and reply to reviews |
-| `/farmer/notifications` | Notifications | new orders, approvals, reviews |
+| `/farmer/profile` | Stall profile | stall details, city dropdown, bio with "Generate with AI", categories, practices, logo, cover photo, map pin, own profile photo |
+| `/farmer/reviews` | Reviews | read and reply to reviews, report an abusive review |
+| `/farmer/notifications` | Notifications | new orders, approvals, reviews, low-stock and sold-out alerts |
+| `/farmer/sales` | Sales report | period presets or custom dates, KPIs vs previous period, insights, revenue per day, categories, pickup days and times, markets, products and customers grids, print |
 
 ## Admin pages (role: admin, separate login, own layout)
 
@@ -79,16 +83,18 @@ Every admin table is a DataTables grid (search, sort, paging, CSV / Excel / Prin
 | `/admin/categories` | Categories | master data |
 | `/admin/products` | Product listings | remove or restore listings; filters: listing status, category, farmer, city, low stock, price range |
 | `/admin/reviews` | Reviews | remove or restore reviews; filters: visibility, product/farmer, rating, farmer, dates |
+| `/admin/moderation` | Moderation | KPIs, Open / Resolved / Dismissed tabs, reports about reviews, listings and stalls plus reviews held by the word filter; publish, remove, restore, suspend stall, dismiss (with a note) |
 | `/admin/announcements` | Announcements | publish site banner + in-app notification |
 | `/admin/messages` | Contact messages | inbox from the Contact page (open, mark read, reply by e-mail, delete) |
 | `/admin/notifications` | Notifications | system notices |
 | `/admin/purchases` | Customer purchases | which customer bought what from which farmer: KPIs, top customers, top farmers, amount per day, customer × farmer heat map, pairs table, most bought products; filters and export |
-| `/admin/reports` | Reports | platform overview, orders summary, revenue by market, most active farmers; CSV export and print (last item in the sidebar) |
+| `/admin/reports` | Reports | platform overview, orders summary, revenue by market, most active farmers, sales by category, customer activity, inventory & low stock, cities overview, reviews & moderation; CSV export and print (last item in the sidebar) |
 
 ## Responsive behaviour
 
-- **≥ 992 px (laptop/desktop):** full navbar, dashboard sidebar (collapsible), split auth screens; admin sidebar collapses to icons.
+- **≥ 992 px (laptop/desktop):** full navbar on public pages; the customer, farmer and admin areas share one back-office layout (flat green sidebar that collapses to icons), split auth screens.
 - **< 992 px (tablet/phone):** hamburger opens the drawer, bottom tab bar is fixed at the bottom,
   dashboards switch to chip navigation, the chat button and toasts sit above the tab bar. The admin
   sidebar becomes a slide-in drawer and DataTables rows fold extra columns into an expandable row.
+  On phones KPI labels wrap to two lines and tab pills scroll sideways instead of wrapping.
 - Checked with no horizontal scrolling at 360, 390, 768 and 1024 px on every page.

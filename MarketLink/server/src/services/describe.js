@@ -145,3 +145,64 @@ export async function describeProduct(details) {
   }
   return { description: localDescription(details), source: 'local' };
 }
+
+// ---------------------------------------------------------------- farm / stall descriptions ("About the farm")
+
+const FARM_OPENERS = [
+  (d) => `${d.stallName} is a local farm${d.city ? ` from ${d.city}` : ''}`,
+  (d) => `At ${d.stallName}${d.city ? ` near ${d.city}` : ''}, we grow food the way our families always have`,
+  (d) => `${d.stallName} brings fresh, seasonal produce${d.city ? ` from the fields around ${d.city}` : ''} straight to your market`,
+];
+
+const list = (items) => (items.length <= 1 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`);
+
+/** Built-in writer for the farm bio shown on the public stall page. */
+export function localFarmBio(d) {
+  const v = Math.abs(Number(d.variant) || 0);
+  const grows = d.categories.length ? list(d.categories.map((c) => c.toLowerCase())) : 'seasonal produce';
+  const parts = [`${FARM_OPENERS[v % FARM_OPENERS.length](d)}.`];
+  parts.push(
+    [`We bring ${grows}, picked and packed for every market day.`, `Our stall offers ${grows}, harvested close to market day so it reaches you fresh.`, `Look out for our ${grows} on every market day.`][v % 3]
+  );
+  const extra = d.practices.slice(0, 4);
+  if (extra.length) parts.push(`What makes us different: ${list(extra.map(lowerFirst))}.`);
+  if (d.markets.length) parts.push(`Find us at ${list(d.markets.slice(0, 3))}${d.markets.length > 3 ? ' and more' : ''}.`);
+  parts.push(v % 3 === 2 ? 'Pre-order on MarketLink and we will have your basket ready for pickup.' : 'Pre-order online, pick up at the stall and pay in person.');
+  return parts.join(' ');
+}
+
+async function claudeFarmBio(d) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    signal: AbortSignal.timeout(12000),
+    headers: { 'content-type': 'application/json', 'x-api-key': env.anthropic.apiKey, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({
+      model: env.anthropic.model,
+      max_tokens: 350,
+      system:
+        'You write the "About the farm" text for stalls on MarketLink, a farmers market pre-order website in Pakistan. Write 3 or 4 short, warm sentences (at most 80 words) in plain English, in the first person plural (we). No emoji, no prices, no invented awards or certifications, no quotation marks.',
+      messages: [
+        {
+          role: 'user',
+          content: `Stall: ${d.stallName}\nCity: ${d.city || 'unknown'}\nGrows / sells: ${d.categories.join(', ') || 'seasonal produce'}\nFarming practices: ${d.practices.join(', ') || 'none given'}\nMarkets: ${d.markets.join(', ') || 'none yet'}${d.variant ? '\nWrite a different version from before.' : ''}`,
+        },
+      ],
+    }),
+  });
+  if (!res.ok) throw new Error(`Claude API ${res.status}`);
+  const data = await res.json();
+  const text = data.content?.find((c) => c.type === 'text')?.text?.trim();
+  if (!text) throw new Error('Empty answer');
+  return text.replace(/^["']|["']$/g, '').slice(0, 1200);
+}
+
+export async function describeFarm(details) {
+  if (env.anthropic.apiKey) {
+    try {
+      return { description: await claudeFarmBio(details), source: 'claude' };
+    } catch (err) {
+      console.warn('[ai] Claude farm description failed, using the built-in writer:', err.message);
+    }
+  }
+  return { description: localFarmBio(details), source: 'local' };
+}

@@ -7,6 +7,7 @@ import { validatePickup } from '../services/slots.js';
 import { releaseItems, reserveItems, retakeItems } from '../services/stock.js';
 import { notify } from '../services/notify.js';
 import { canCustomerModify, canViewOrder, generateOrderNumber, pickupDetails, pushStatus, reviewState } from '../services/orders.js';
+import { changeMovements, checkLowStock, orderMovements, recordMovements } from '../services/inventory.js';
 
 const ORDER_POPULATE = [
   { path: 'farmer', select: 'stallName slug logo phone email address latitude longitude orderCutoffHours user' },
@@ -79,7 +80,11 @@ export async function createPreOrders(customer, rawGroups, { by = 'customer' } =
     throw err;
   }
 
-  // 3) Notifications (in-app + e-mail order confirmation with route-friendly pickup details)
+  // 3) Inventory log + low-stock alerts for the farmers
+  for (const { order } of created) await recordMovements(orderMovements(order, -1, 'order_reserved', by));
+  await checkLowStock(created.flatMap(({ order }) => order.items.map((i) => i.product)));
+
+  // 4) Notifications (in-app + e-mail order confirmation with route-friendly pickup details)
   for (const { order, farmer } of created) {
     const market = await Market.findById(order.market).select('name address latitude longitude').lean();
     await notify(
@@ -219,6 +224,8 @@ export async function modifyOrder(req, res) {
     }
     order.totalAmount = round2(order.items.reduce((sum, i) => sum + i.subtotal, 0));
     changes.push('items');
+    await recordMovements(changeMovements(oldItems, order.items, order, 'customer'));
+    await checkLowStock([...oldItems, ...order.items].map((i) => i.product));
   }
 
   if (pickup) {
@@ -255,6 +262,8 @@ export async function cancelOrder(req, res) {
   const order = await loadOwnOrder(req);
   assertModifiable(order, 'cancelled');
   await releaseItems(order.items);
+  await recordMovements(orderMovements(order, 1, 'order_released', 'customer'));
+  await checkLowStock(order.items.map((i) => i.product));
   pushStatus(order, ORDER_STATUS.CANCELLED, 'customer', req.body?.reason ? String(req.body.reason).slice(0, 200) : undefined);
   await order.save();
 

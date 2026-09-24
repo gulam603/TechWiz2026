@@ -3,8 +3,12 @@ import RatingStars from '../common/RatingStars';
 import { timeAgo } from '../../utils/format';
 import { productPath } from '../../utils/links';
 import Avatar from '../common/Avatar';
+import ReportButton from '../reviews/ReportButton';
+import { useAuth } from '../../context/AuthContext';
 
-export default function ReviewItem({ review, showProduct = false, farmerName }) {
+export default function ReviewItem({ review, showProduct = false, farmerName, reportable = true }) {
+  const { user } = useAuth();
+  const canReport = reportable && user && String(user._id) !== String(review.customer?._id || review.customer);
   return (
     <div className="review-item">
       <div className="d-flex align-items-center gap-2 mb-1">
@@ -29,6 +33,7 @@ export default function ReviewItem({ review, showProduct = false, farmerName }) 
           {review.response.text}
         </div>
       )}
+      {canReport && <ReportButton targetType="review" targetId={review._id} className="review-report" />}
     </div>
   );
 }

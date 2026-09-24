@@ -4,6 +4,7 @@ import AuthLayout from './AuthLayout';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import PasswordInput from '../../components/common/PasswordInput';
 
 export default function AdminLogin() {
   useDocumentTitle('Admin login');
@@ -46,7 +47,7 @@ export default function AdminLogin() {
         </div>
         <div className="mb-3">
           <label className="form-label" htmlFor="a-password">Password</label>
-          <input id="a-password" type="password" className="form-control form-control-lg" required autoComplete="current-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          <PasswordInput id="a-password" size="lg" required autoComplete="current-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
         </div>
         <button type="submit" className="btn btn-forest btn-lg w-100" disabled={busy}>
           {busy && <span className="spinner-border spinner-border-sm" />} Sign in securely

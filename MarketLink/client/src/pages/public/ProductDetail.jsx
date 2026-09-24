@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
-import ProduceImage from '../../components/common/ProduceImage';
+import ProductGallery from '../../components/common/ProductGallery';
 import RatingStars from '../../components/common/RatingStars';
 import QuantityStepper from '../../components/common/QuantityStepper';
 import FavButton from '../../components/common/FavButton';
 import ReviewItem from '../../components/cards/ReviewItem';
+import WriteReviewButton from '../../components/reviews/WriteReviewButton';
+import ReportButton from '../../components/reviews/ReportButton';
 import ProductCard from '../../components/cards/ProductCard';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
@@ -20,7 +22,7 @@ import { productPath } from '../../utils/links';
 export default function ProductDetail() {
   const { id } = useParams();
   const location = useLocation();
-  const { data, loading, error } = useFetch(`/products/${id}`);
+  const { data, loading, error, reload } = useFetch(`/products/${id}`);
   const [qty, setQty] = useState(1);
   const cart = useCart();
   const { user } = useAuth();
@@ -74,27 +76,11 @@ export default function ProductDetail() {
 
       <div className="row g-4 g-lg-5">
         <div className="col-lg-6">
-          <div className="pd-visual position-relative">
-            <ProduceImage src={product.image} alt={product.name} color={product.category?.color} />
-            <div className="position-absolute" style={{ top: 18, right: 18 }}>
+          <ProductGallery product={product}>
+            <div className="position-absolute pd-fav">
               <FavButton type="products" id={product._id} />
             </div>
-          </div>
-          {product.imageCredit?.author && (
-            <p className="photo-credit">
-              <i className="bi bi-camera" /> Photo: {product.imageCredit.author}
-              {product.imageCredit.source && (
-                <>
-                  {' '}
-                  ·{' '}
-                  <a href={product.imageCredit.source} target="_blank" rel="noreferrer">
-                    source
-                  </a>
-                </>
-              )}{' '}
-              · {product.imageCredit.license}
-            </p>
-          )}
+          </ProductGallery>
         </div>
 
         <div className="col-lg-6">
@@ -135,17 +121,20 @@ export default function ProductDetail() {
             {soldOut && <div className="small mt-2 text-muted-2">Tip: add it to favourites to get a restock alert.</div>}
           </div>
 
-          <Link to={`/farmers/${farmer.slug}`} className="farmer-mini mb-3">
-            <span className="logo">
-              <img src={farmer.logo} alt="" />
-            </span>
-            <span className="flex-grow-1">
-              <span className="fs-7 text-muted-2 d-block">Grown & sold by</span>
-              <strong className="d-block">{farmer.stallName}</strong>
-              <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
-            </span>
-            <i className="bi bi-chevron-right" />
-          </Link>
+          <div className="farmer-mini-wrap mb-3">
+            <Link to={`/farmers/${farmer.slug}`} className="farmer-mini">
+              <span className="logo">
+                <img src={farmer.logo} alt="" />
+              </span>
+              <span className="flex-grow-1 min-w-0">
+                <span className="fs-7 text-muted-2 d-block">Grown & sold by</span>
+                <strong className="d-block text-truncate">{farmer.stallName}</strong>
+                <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
+              </span>
+              <i className="bi bi-chevron-right" />
+            </Link>
+            <FavButton type="farmers" id={farmer._id} className="farmer-mini-fav" />
+          </div>
 
           <div className="soft-panel">
             <h6 className="mb-2">
@@ -178,9 +167,15 @@ export default function ProductDetail() {
       <section className="section pb-0">
         <div className="row g-4">
           <div className="col-lg-7">
-            <h2 className="h3 mb-3">Customer reviews</h2>
+            <div className="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-3">
+              <h2 className="h3 mb-0">Customer reviews</h2>
+              <WriteReviewButton type="product" id={product._id} name={product.name} onDone={reload} />
+            </div>
             <div className="soft-panel">
               {reviews.length === 0 ? <p className="text-muted-2 mb-0">No reviews yet. Reviews can be written after a completed pickup.</p> : reviews.map((r) => <ReviewItem key={r._id} review={r} farmerName={farmer.stallName} />)}
+            </div>
+            <div className="text-end mt-2">
+              <ReportButton targetType="product" targetId={product._id} label="Report this listing" />
             </div>
           </div>
           <div className="col-lg-5">

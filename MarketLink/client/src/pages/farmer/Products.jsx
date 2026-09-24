@@ -35,6 +35,62 @@ export function ImageInput({ label = 'Image', current, file, onFile }) {
   );
 }
 
+const MAX_GALLERY = 4;
+
+/** Extra product photos (up to 4) shown as a gallery on the product page. */
+function GalleryInput({ current, removed, onToggleRemove, files, onFiles }) {
+  const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
+  useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
+  const kept = current.filter((g) => !removed.includes(g.url)).length;
+  const room = MAX_GALLERY - kept - files.length;
+  return (
+    <div>
+      <span className="form-label d-block">
+        More photos <span className="text-muted-2 fw-normal">(optional, up to {MAX_GALLERY})</span>
+      </span>
+      <div className="gallery-input">
+        {current.map((g) => {
+          const gone = removed.includes(g.url);
+          return (
+            <div key={g.url} className={`gallery-thumb ${gone ? 'is-removed' : ''}`}>
+              <img src={g.url} alt="" />
+              <button type="button" onClick={() => onToggleRemove(g.url)} aria-label={gone ? 'Keep this photo' : 'Remove this photo'} title={gone ? 'Keep' : 'Remove'}>
+                <i className={`bi ${gone ? 'bi-arrow-counterclockwise' : 'bi-x-lg'}`} />
+              </button>
+            </div>
+          );
+        })}
+        {files.map((f, i) => (
+          <div key={previews[i]} className="gallery-thumb is-new">
+            <img src={previews[i]} alt="" />
+            <button type="button" onClick={() => onFiles(files.filter((_, j) => j !== i))} aria-label={`Remove ${f.name}`} title="Remove">
+              <i className="bi bi-x-lg" />
+            </button>
+          </div>
+        ))}
+        {room > 0 && (
+          <label className="gallery-add">
+            <i className="bi bi-images" aria-hidden="true" />
+            <span>Add photos</span>
+            <input
+              type="file"
+              multiple
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              className="d-none"
+              aria-label="Add more product photos"
+              onChange={(e) => {
+                onFiles([...files, ...Array.from(e.target.files || [])].slice(0, MAX_GALLERY - kept));
+                e.target.value = '';
+              }}
+            />
+          </label>
+        )}
+      </div>
+      <span className="fs-7 text-muted-2">Show the harvest, the packing or the farm. JPG, PNG or WEBP, max 2 MB each.</span>
+    </div>
+  );
+}
+
 // Rendered with a `key`, so its state starts fresh for every product that is edited.
 function ProductForm({ product, categories, units, onClose, onSaved }) {
   const { toast } = useToast();
@@ -52,6 +108,8 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
       : EMPTY
   );
   const [file, setFile] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
+  const [removeGallery, setRemoveGallery] = useState([]);
   const [busy, setBusy] = useState(false);
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -79,6 +137,8 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
     setBusy(true);
     try {
       const fd = toFormData(form, { image: file });
+      galleryFiles.forEach((f) => fd.append('gallery', f));
+      if (removeGallery.length) fd.append('removeGallery', removeGallery.join(','));
       if (product) await api.upload('PUT', `/farmer/products/${product._id}`, fd);
       else await api.upload('POST', '/farmer/products', fd);
       toast(product ? 'Product updated' : 'Product added to your stall');
@@ -138,8 +198,17 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
             </div>
             <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} placeholder="Type the product name, then press Write with AI" />
           </div>
-          <div className="col-12">
-            <ImageInput label="Product image" current={product?.image} file={file} onFile={setFile} />
+          <div className="col-md-5">
+            <ImageInput label="Main photo" current={product?.image} file={file} onFile={setFile} />
+          </div>
+          <div className="col-md-7">
+            <GalleryInput
+              current={product?.gallery || []}
+              removed={removeGallery}
+              onToggleRemove={(url) => setRemoveGallery((r) => (r.includes(url) ? r.filter((u) => u !== url) : [...r, url]))}
+              files={galleryFiles}
+              onFiles={setGalleryFiles}
+            />
           </div>
         </div>
         <div className="d-flex justify-content-end gap-2 mt-4">
@@ -192,6 +261,17 @@ export default function FarmerProducts() {
   const [deleting, setDeleting] = useState(null);
   const [applying, setApplying] = useState(false);
   const approved = user.status === 'active';
+  const showForm = formOpen || (approved && params.get('new') === '1');
+
+  function closeForm() {
+    setFormOpen(false);
+    setEditing(null);
+    if (params.get('new')) {
+      const next = new URLSearchParams(params);
+      next.delete('new');
+      setParams(next, { replace: true });
+    }
+  }
 
   function replace(product) {
     setData((d) => ({ ...d, products: d.products.map((p) => (p._id === product._id ? { ...p, ...product, category: p.category } : p)) }));
@@ -351,7 +431,15 @@ export default function FarmerProducts() {
                         </span>
                         <div>
                           <strong className="d-block small">{p.name}</strong>
-                          <span className="fs-7 text-muted-2">{p.category?.name}</span>
+                          <span className="fs-7 text-muted-2">
+                            {p.category?.name}
+                            {p.gallery?.length > 0 && (
+                              <>
+                                {' '}
+                                · <i className="bi bi-images" aria-hidden="true" /> {p.gallery.length + 1} photos
+                              </>
+                            )}
+                          </span>
                           {p.isRemoved && <div className="fs-7 text-danger">Removed: {p.removedReason}</div>}
                         </div>
                       </div>
@@ -401,15 +489,15 @@ export default function FarmerProducts() {
         )}
       </div>
 
-      {formOpen && (
+      {showForm && (
         <ProductForm
           key={editing?._id || 'new'}
           product={editing}
           categories={catData?.categories || []}
           units={data.units}
-          onClose={() => setFormOpen(false)}
+          onClose={closeForm}
           onSaved={() => {
-            setFormOpen(false);
+            closeForm();
             reload();
           }}
         />

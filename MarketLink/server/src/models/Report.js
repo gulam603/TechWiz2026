@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export const REPORT_TYPES = ['platform_overview', 'orders_summary', 'revenue_by_market', 'top_farmers'];
+export const REPORT_TYPES = ['platform_overview', 'orders_summary', 'revenue_by_market', 'top_farmers', 'sales_by_category', 'customer_activity', 'inventory_status', 'city_overview', 'reviews_moderation'];
 
 // A saved snapshot of a generated report so admins can look at it again later.
 const reportSchema = new mongoose.Schema(

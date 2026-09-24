@@ -43,6 +43,9 @@ const FarmerOrders = lazy(() => import('./pages/farmer/Orders'));
 const FarmerProducts = lazy(() => import('./pages/farmer/Products'));
 const FarmerPickup = lazy(() => import('./pages/farmer/Pickup'));
 const FarmerProfile = lazy(() => import('./pages/farmer/Profile'));
+const FarmerInventory = lazy(() => import('./pages/farmer/Inventory'));
+const FarmerSales = lazy(() => import('./pages/farmer/Sales'));
+const MyReviews = lazy(() => import('./pages/customer/MyReviews'));
 const FarmerReviews = lazy(() => import('./pages/farmer/Reviews'));
 
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -59,6 +62,7 @@ const AdminMessages = lazy(() => import('./pages/admin/Messages'));
 const AdminCities = lazy(() => import('./pages/admin/Cities'));
 const AdminCustomerDetail = lazy(() => import('./pages/admin/CustomerDetail'));
 const AdminPurchases = lazy(() => import('./pages/admin/Purchases'));
+const AdminModeration = lazy(() => import('./pages/admin/Moderation'));
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
 
 export default function App() {
@@ -90,37 +94,46 @@ export default function App() {
             <Route element={<ProtectedRoute roles={['customer']} />}>
               <Route path="checkout" element={<Checkout />} />
               <Route path="checkout/success" element={<CheckoutSuccess />} />
-              <Route path="account" element={<DashboardLayout role="customer" />}>
-                <Route index element={<CustomerDashboard />} />
-                <Route path="orders" element={<CustomerOrders />} />
-                <Route path="orders/:id" element={<OrderDetail />} />
-                <Route path="favorites" element={<Favorites />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="notifications" element={<Notifications />} />
-              </Route>
-            </Route>
-
-            {/* Farmer area */}
-            <Route element={<ProtectedRoute roles={['farmer']} />}>
-              <Route path="farmer" element={<DashboardLayout role="farmer" />}>
-                <Route index element={<FarmerDashboard />} />
-                <Route path="profile" element={<FarmerProfile />} />
-                <Route path="notifications" element={<Notifications />} />
-                {/* Selling features open only after admin approval */}
-                <Route element={<ApprovedFarmerRoute />}>
-                  <Route path="orders" element={<FarmerOrders />} />
-                  <Route path="products" element={<FarmerProducts />} />
-                  <Route path="pickup" element={<FarmerPickup />} />
-                  <Route path="reviews" element={<FarmerReviews />} />
-                  <Route path="orders/:id" element={<OrderDetail />} />
-                </Route>
-              </Route>
             </Route>
 
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="map" element={<PublicLayout footer={false} />}>
             <Route index element={<MapExplore />} />
+          </Route>
+
+          {/* Customer area: back-office shell (same sidebar as the admin area) */}
+          <Route path="account" element={<ProtectedRoute roles={['customer']} />}>
+            <Route element={<DashboardLayout role="customer" />}>
+              <Route index element={<CustomerDashboard />} />
+              <Route path="orders" element={<CustomerOrders />} />
+              <Route path="orders/:id" element={<OrderDetail />} />
+              <Route path="favorites" element={<Favorites />} />
+              <Route path="reviews" element={<MyReviews />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Route>
+
+          {/* Farmer area */}
+          <Route path="farmer" element={<ProtectedRoute roles={['farmer']} />}>
+            <Route element={<DashboardLayout role="farmer" />}>
+              <Route index element={<FarmerDashboard />} />
+              <Route path="profile" element={<FarmerProfile />} />
+              <Route path="notifications" element={<Notifications />} />
+              {/* Selling features open only after admin approval */}
+              <Route element={<ApprovedFarmerRoute />}>
+                <Route path="orders" element={<FarmerOrders />} />
+                <Route path="orders/:id" element={<OrderDetail />} />
+                <Route path="products" element={<FarmerProducts />} />
+                <Route path="inventory" element={<FarmerInventory />} />
+                <Route path="pickup" element={<FarmerPickup />} />
+                <Route path="reviews" element={<FarmerReviews />} />
+                <Route path="sales" element={<FarmerSales />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Route>
 
           {/* Admin area: its own layout without the public navbar, footer and chat */}
@@ -137,6 +150,7 @@ export default function App() {
               <Route path="categories" element={<AdminCategories />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="reviews" element={<AdminReviews />} />
+              <Route path="moderation" element={<AdminModeration />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="notifications" element={<Notifications />} />

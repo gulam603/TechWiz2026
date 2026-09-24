@@ -9,6 +9,7 @@ import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { timeAgo } from '../../utils/format';
 import Avatar from '../../components/common/Avatar';
+import ReportButton from '../../components/reviews/ReportButton';
 
 function ReplyBox({ review, onSaved }) {
   const { toast } = useToast();
@@ -38,7 +39,7 @@ function ReplyBox({ review, onSaved }) {
       </button>
     );
   return (
-    <form className="d-flex gap-2 mt-2" onSubmit={send}>
+    <form className="d-flex gap-2 mt-2 flex-grow-1" onSubmit={send}>
       <input className="form-control form-control-sm" value={text} onChange={(e) => setText(e.target.value)} placeholder="Write a friendly reply…" maxLength={1000} required aria-label="Reply" autoFocus />
       <button type="submit" className="btn btn-primary btn-sm" disabled={busy}>
         Post
@@ -98,7 +99,10 @@ export default function FarmerReviews() {
                   {r.response.text}
                 </div>
               )}
-              <ReplyBox review={r} onSaved={(rev) => setData((d) => ({ ...d, reviews: d.reviews.map((x) => (x._id === rev._id ? { ...x, response: rev.response } : x)) }))} />
+              <div className="d-flex align-items-center justify-content-between gap-2 flex-wrap">
+                <ReplyBox review={r} onSaved={(rev) => setData((d) => ({ ...d, reviews: d.reviews.map((x) => (x._id === rev._id ? { ...x, response: rev.response } : x)) }))} />
+                <ReportButton targetType="review" targetId={r._id} label="Report review" className="mt-2" />
+              </div>
             </div>
           ))}
         </div>

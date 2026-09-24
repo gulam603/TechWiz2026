@@ -5,17 +5,17 @@ let cache = null;
 let pending = null;
 
 /** Lists for the admin filter dropdowns (cities, markets, farmers, categories), loaded once. */
-export function useFilterOptions() {
+export function useFilterOptions(enabled = true) {
   const [options, setOptions] = useState(cache);
   useEffect(() => {
-    if (cache) return undefined;
+    if (cache || !enabled) return undefined;
     let alive = true;
     pending ||= api.get('/admin/filter-options').then((d) => (cache = d));
     pending.then((d) => alive && setOptions(d)).catch(() => {});
     return () => {
       alive = false;
     };
-  }, []);
+  }, [enabled]);
   return options || { cities: [], markets: [], farmers: [], categories: [] };
 }
 
@@ -39,8 +39,9 @@ function listFor(source, options) {
  * fields: [{ name, label, type: 'select' | 'date' | 'number', options: [...] | 'cities' | 'markets' | 'farmers' | 'categories' }]
  */
 export default function FilterBar({ fields, value, onChange }) {
-  const options = useFilterOptions();
-  const active = Object.values(value).filter((v) => v !== '' && v !== undefined).length;
+  // Admin lists are only loaded when a field needs them (farmer pages pass their own options)
+  const options = useFilterOptions(fields.some((f) => typeof f.options === 'string'));
+  const active = fields.filter((f) => value[f.name] !== '' && value[f.name] !== undefined).length;
   const set = (name, v) => onChange({ ...value, [name]: v });
   return (
     <div className="filter-bar" role="group" aria-label="Filters">
@@ -62,7 +63,7 @@ export default function FilterBar({ fields, value, onChange }) {
         </label>
       ))}
       {active > 0 && (
-        <button type="button" className="btn btn-sm btn-link filter-reset" onClick={() => onChange(Object.fromEntries(fields.map((f) => [f.name, ''])))}>
+        <button type="button" className="btn btn-sm btn-link filter-reset" onClick={() => onChange({ ...value, ...Object.fromEntries(fields.map((f) => [f.name, ''])) })}>
           <i className="bi bi-x-circle" /> Clear {active} filter{active > 1 ? 's' : ''}
         </button>
       )}

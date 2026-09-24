@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { Category, City, ContactMessage, Farmer, Market, Order, Product, Review, User } from '../models/index.js';
+import { Category, City, ContactMessage, ContentFlag, Farmer, Market, Order, Product, Review, User } from '../models/index.js';
 import AppError from '../utils/AppError.js';
 import { ORDER_STATUS, ROLES, USER_STATUS } from '../utils/constants.js';
 import { assertId, escapeRegex, isValidId, requireFields, round2, slugify, toNumber } from '../utils/helpers.js';
@@ -10,7 +10,7 @@ import { readFarmDetails } from './helpers/farmDetails.js';
 import { createPreOrders } from './orderController.js';
 import { sendMail } from '../services/mailer.js';
 import { notify } from '../services/notify.js';
-import { describeProduct } from '../services/describe.js';
+import { describeFarm, describeProduct } from '../services/describe.js';
 
 const PASSWORD_RULE = /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/;
 const OPEN_STATUSES = [ORDER_STATUS.PLACED, ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY];
@@ -566,6 +566,28 @@ const TABLES = {
       query: (q) => q.populate('customer', 'name avatar').populate('product', 'name slug').populate('farmer', 'stallName slug'),
     }),
 
+  // Content moderation queue: reports from users and automatic flags
+  flags: (req) =>
+    dataTableQuery({
+      req,
+      Model: ContentFlag,
+      filter: (f) => ({
+        ...(['open', 'resolved', 'dismissed'].includes(f.status) ? { status: f.status } : {}),
+        ...(['review', 'product', 'farmer'].includes(f.targetType) ? { targetType: f.targetType } : {}),
+        ...(f.reason ? { reason: String(f.reason) } : {}),
+        ...dateRange('createdAt', f.from, f.to),
+      }),
+      search: async (text) => ({ $or: [{ note: searchRegex(text) }, { reporter: { $in: await userIdsMatching(text) } }] }),
+      sortable: { createdAt: 'createdAt', status: 'status', reason: 'reason', targetType: 'targetType' },
+      query: (q) =>
+        q
+          .populate({ path: 'review', select: 'comment rating isRemoved removedReason customer', populate: { path: 'customer', select: 'name' } })
+          .populate('product', 'name slug image isRemoved')
+          .populate('farmer', 'stallName slug isActive')
+          .populate('reporter', 'name email role')
+          .populate('resolvedBy', 'name'),
+    }),
+
   // Contact form messages
   messages: (req) =>
     dataTableQuery({
@@ -613,4 +635,25 @@ export async function writeDescription(req, res) {
     variant: Number(req.body.variant) || 0,
   });
   res.json(result);
+}
+
+// POST /api/admin/farmers/describe and /api/farmer/describe  { stallName, city, categories, tags, markets, variant }
+export async function writeFarmBio(req, res) {
+  const stallName = String(req.body.stallName || req.farmer?.stallName || '').trim().slice(0, 100);
+  if (stallName.length < 2) throw new AppError('Type the stall / farm name first', 400);
+  const ids = (Array.isArray(req.body.categories) ? req.body.categories : String(req.body.categories || '').split(',')).filter(isValidId);
+  const marketIds = (Array.isArray(req.body.markets) ? req.body.markets : String(req.body.markets || '').split(',')).filter(isValidId);
+  const [cats, markets] = await Promise.all([Category.find({ _id: { $in: ids } }).select('name').lean(), Market.find({ _id: { $in: marketIds } }).select('name').lean()]);
+  const tags = Array.isArray(req.body.tags) ? req.body.tags : String(req.body.tags || '').split(',').map((t) => t.trim()).filter(Boolean);
+  res.json(
+    await describeFarm({
+      stallName,
+      contactPerson: String(req.body.contactPerson || '').trim().slice(0, 60),
+      city: String(req.body.city || '').trim().slice(0, 60),
+      categories: cats.map((c) => c.name),
+      markets: markets.map((m) => m.name),
+      practices: tags.slice(0, 6),
+      variant: Number(req.body.variant) || 0,
+    })
+  );
 }

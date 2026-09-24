@@ -10,6 +10,7 @@ import DayDots from '../../components/common/DayDots';
 import { PASSWORD_HINT, passwordOk } from './Register';
 import { time12 } from '../../utils/format';
 import TermsCheckbox from '../../components/legal/TermsCheckbox';
+import PasswordInput from '../../components/common/PasswordInput';
 
 const STEPS = ['Stall & account', 'Farm details', 'Markets & location'];
 const PRACTICES = ['Pesticide-free', 'Organic practices', 'Family farm', 'Free-range', 'Grass-fed', 'Hydroponic', 'Heirloom seeds', 'Picked daily', 'Small batch'];
@@ -63,7 +64,6 @@ export default function RegisterFarmer() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(EMPTY);
   const [customTag, setCustomTag] = useState('');
-  const [showPass, setShowPass] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -152,16 +152,11 @@ export default function RegisterFarmer() {
             </div>
             <div className="col-md-6">
               <label className="form-label" htmlFor="f-pass">Password *</label>
-              <div className="input-group">
-                <input id="f-pass" name="password" type={showPass ? 'text' : 'password'} className="form-control" value={form.password} onChange={change} autoComplete="new-password" />
-                <button type="button" className="btn btn-white" onClick={() => setShowPass(!showPass)} aria-label={showPass ? 'Hide password' : 'Show password'} style={{ borderRadius: '0 .85rem .85rem 0' }}>
-                  <i className={`bi ${showPass ? 'bi-eye-slash' : 'bi-eye'}`} />
-                </button>
-              </div>
+              <PasswordInput id="f-pass" name="password" value={form.password} onChange={change} autoComplete="new-password" />
             </div>
             <div className="col-md-6">
               <label className="form-label" htmlFor="f-confirm">Confirm password *</label>
-              <input id="f-confirm" name="confirm" type={showPass ? 'text' : 'password'} className="form-control" value={form.confirm} onChange={change} autoComplete="new-password" />
+              <PasswordInput id="f-confirm" name="confirm" value={form.confirm} onChange={change} autoComplete="new-password" />
             </div>
             <div className="col-12 fs-7 text-muted-2">{PASSWORD_HINT}.</div>
           </div>

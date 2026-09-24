@@ -2,6 +2,7 @@ import {
   Announcement,
   Category,
   ContactMessage,
+  ContentFlag,
   Farmer,
   Market,
   Order,
@@ -70,12 +71,13 @@ export async function adminDashboard(req, res) {
 
 // GET /api/admin/badges  (small counters for the admin sidebar)
 export async function adminBadges(req, res) {
-  const [pendingFarmers, newMessages, openOrders] = await Promise.all([
+  const [pendingFarmers, newMessages, openOrders, openFlags] = await Promise.all([
     User.countDocuments({ role: ROLES.FARMER, status: USER_STATUS.PENDING }),
     ContactMessage.countDocuments({ status: 'new' }),
     Order.countDocuments({ status: { $in: [ORDER_STATUS.PLACED, ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY] } }),
+    ContentFlag.countDocuments({ status: 'open' }),
   ]);
-  res.json({ pendingFarmers, newMessages, openOrders });
+  res.json({ pendingFarmers, newMessages, openOrders, openFlags });
 }
 
 // ---------------------------------------------------------------- farmers

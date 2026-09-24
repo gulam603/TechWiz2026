@@ -10,6 +10,7 @@ import { notify } from '../services/notify.js';
 import { pickupDetails, pushStatus } from '../services/orders.js';
 import { readFarmDetails } from './helpers/farmDetails.js';
 import { resolveCity } from './adminToolsController.js';
+import { checkLowStock, orderMovements, recordMovements } from '../services/inventory.js';
 
 // ---------------------------------------------------------------- profile
 
@@ -135,15 +136,19 @@ export async function createProduct(req, res) {
   const data = readProductBody(req.body);
   if (!(await Category.exists({ _id: data.category, isActive: true }))) throw new AppError('Please choose a valid category', 400);
   if (data.templateQuantity === undefined) data.templateQuantity = data.quantityAvailable || 0;
+  const files = req.files || {};
   const product = await Product.create({
     ...data,
     slug: await uniqueSlug(Product, data.name),
     farmer: req.farmer._id,
-    image: fileUrl('products', req.file),
+    image: fileUrl('products', files.image?.[0]),
+    gallery: (files.gallery || []).map((f) => ({ url: fileUrl('products', f) })),
     markets: req.farmer.markets,
     days: req.farmer.operatingDays,
     farmerActive: req.farmer.isActive,
   });
+  await recordMovements([{ product, change: product.quantityAvailable, type: 'initial', reason: 'New product', by: 'farmer' }]);
+  await checkLowStock([product._id]);
   res.status(201).json({ product });
 }
 
@@ -159,13 +164,21 @@ export async function updateProduct(req, res) {
   const data = readProductBody(req.body, { partial: true });
   if (data.category && !(await Category.exists({ _id: data.category, isActive: true }))) throw new AppError('Please choose a valid category', 400);
   const wasEmpty = product.quantityAvailable <= 0 || product.status === PRODUCT_STATUS.SOLD_OUT;
+  const before = product.quantityAvailable;
   if (data.name && data.name !== product.name) product.slug = await uniqueSlug(Product, data.name, product._id);
   Object.assign(product, data);
-  if (req.file) {
-    product.image = fileUrl('products', req.file);
+  const files = req.files || {};
+  if (files.image?.[0]) {
+    product.image = fileUrl('products', files.image[0]);
     product.imageCredit = undefined;
   }
+  // Gallery: remove the photos the farmer took out, then add the new uploads (5 photos at most in total)
+  const remove = [].concat(req.body.removeGallery || []).flatMap((v) => String(v).split(',')).filter(Boolean);
+  if (remove.length) product.gallery = product.gallery.filter((g) => !remove.includes(g.url));
+  for (const f of files.gallery || []) if (product.gallery.length < 4) product.gallery.push({ url: fileUrl('products', f) });
   await product.save();
+  await recordMovements([{ product, change: product.quantityAvailable - before, type: 'adjustment', reason: 'Edited in Weekly stock', by: 'farmer' }]);
+  await checkLowStock([product._id]);
   if (wasEmpty && product.quantityAvailable > 0 && product.status === PRODUCT_STATUS.AVAILABLE) await notifyRestock(product);
   res.json({ product });
 }
@@ -179,9 +192,11 @@ export async function setProductStatus(req, res) {
   if (status === PRODUCT_STATUS.AVAILABLE && product.quantityAvailable <= 0) {
     throw new AppError('Add stock quantity before marking the product as available', 400);
   }
+  const before = product.quantityAvailable;
   if (status === PRODUCT_STATUS.SOLD_OUT) product.quantityAvailable = 0;
   product.status = status;
   await product.save();
+  await recordMovements([{ product, change: product.quantityAvailable - before, type: 'adjustment', reason: 'Marked sold out', by: 'farmer' }]);
   if (wasEmpty && status === PRODUCT_STATUS.AVAILABLE) await notifyRestock(product);
   res.json({ product });
 }
@@ -276,7 +291,11 @@ export async function updateOrderStatus(req, res) {
   if (!rule.from.includes(order.status)) throw new AppError(`Cannot ${req.params.action} an order that is ${order.status}`, 400);
 
   const note = req.body?.note ? String(req.body.note).trim().slice(0, 300) : undefined;
-  if (rule.to === ORDER_STATUS.DECLINED) await releaseItems(order.items);
+  if (rule.to === ORDER_STATUS.DECLINED) {
+    await releaseItems(order.items);
+    await recordMovements(orderMovements(order, 1, 'order_released', 'farmer'));
+    await checkLowStock(order.items.map((i) => i.product));
+  }
   if (rule.to === ORDER_STATUS.COMPLETED) {
     order.completedAt = new Date();
     for (const item of order.items) await Product.updateOne({ _id: item.product }, { $inc: { totalSold: item.quantity } });

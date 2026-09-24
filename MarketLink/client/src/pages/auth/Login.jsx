@@ -4,6 +4,7 @@ import AuthLayout from './AuthLayout';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import PasswordInput from '../../components/common/PasswordInput';
 
 const DEMO = [
   { label: 'Customer', email: 'customer@marketlink.com', password: 'Customer@123' },
@@ -17,7 +18,6 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -56,20 +56,7 @@ export default function Login() {
               Forgot password?
             </Link>
           </div>
-          <div className="input-group">
-            <input
-              id="password"
-              type={show ? 'text' : 'password'}
-              className="form-control form-control-lg"
-              autoComplete="current-password"
-              required
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-            />
-            <button type="button" className="btn btn-white" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'} style={{ borderRadius: '0 1rem 1rem 0' }}>
-              <i className={`bi ${show ? 'bi-eye-slash' : 'bi-eye'}`} />
-            </button>
-          </div>
+          <PasswordInput id="password" size="lg" autoComplete="current-password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
         </div>
         <button type="submit" className="btn btn-primary btn-lg w-100" disabled={busy}>
           {busy && <span className="spinner-border spinner-border-sm" />} Log in

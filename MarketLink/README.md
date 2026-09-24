@@ -29,12 +29,14 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
 - Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
 - Readable product URLs: `/products/sindhri-mangoes`
-- Product details: price, unit, quantity available, farmer, reviews
+- Product details: price, unit, quantity available, farmer, reviews and a **photo gallery** (thumbnails, arrows, swipe)
 - Cart grouped by farmer → choose a pickup **date and time slot** inside the farmer’s windows → place pre-order (no online payment)
 - Order status: placed → accepted → ready for pickup → completed (or declined / cancelled)
 - View, **modify** (items + slot) and **cancel** orders before the farmer’s cut-off time; order history and **reorder**
-- Favourite farmers and products (with **restock alerts**) and saved markets
-- Reviews and ratings for farmers and products after a completed order
+- Favourite farmers and products (with **restock alerts**) and saved markets; favourite farmers on the dashboard
+- Reviews and ratings for farmers and products after a completed order — from the product page, the stall page
+  or **My reviews** (to-review list grouped by pickup); **Report** a review, listing or stall to the admin
+- Account area with the same sidebar layout as the admin area (collapsible, drawer on phones)
 - In-app notifications + e-mail for order confirmation and “ready for pickup”, including route-friendly pickup details (market, address, time slot and a Google Maps directions link)
 - Optional **family sharing**: linked household members can see each other’s pre-orders
 - **AI assistant** “Basket” (chat widget) answering market timings, farmer availability, pickup windows and product questions from live data,
@@ -47,8 +49,15 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
   needs admin approval before listing; until then only the approval status, stall profile and
   notifications are shown (stock, pre-orders and pickup settings stay locked)
 - Stall profile: bio, categories grown/sold, farming practices, logo and cover photo, markets, operating days, pickup windows, **map pin (lat/lng)**
-- Products: add / edit / delete with name, category, price, unit, quantity, description, image;
+- Products: add / edit / delete with name, category, price, unit, quantity, description, main photo and up to 4 extra photos;
   **“Write with AI”** writes the description from the product name (Claude with an API key, a built-in writer otherwise)
+- **Inventory**: stock on hand, stock reserved by open pre-orders, stock value, adjustments (harvest / restock, sold at the
+  stall, damaged, count correction) and a full **stock log** of every change
+- **Low-stock alerts**: an alert level per product; e-mail (Nodemailer SMTP) + in-app notification when stock reaches it,
+  and again when it sells out
+- **Sales report**: revenue vs the previous period, best sellers, categories, markets, busiest days and pickup times,
+  returning customers, plain-language insights; printable and exportable
+- **“Generate with AI”** for the “About your farm” text
 - **Recurring weekly stock template** (manual “apply now” or automatic every week) — reserved pre-orders are respected
 - Mark items sold out or temporarily unavailable
 - Pre-orders: accept / decline (with reason) / mark ready / complete; set slot length, slot capacity and order cut-off hours
@@ -60,14 +69,17 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Collapsible sidebar (Reports as the last item), compact dashboard: KPIs, orders/revenue chart, “needs attention”, recent orders, top farmers
 - **DataTables** on every admin table (server-side paging, search, sorting, CSV / Excel / Print) with filters
   (status, city, market, farmer, category, date ranges, amounts …)
-- Approve / suspend farmers; activate / deactivate customers; **create farmer and customer accounts** (invite e-mail)
+- Approve / suspend farmers; activate / deactivate customers; **create farmer and customer accounts** (invite e-mail,
+  **“Generate with AI”** for the farm description)
 - **Place an order for a customer** from a dialog (same stock and pickup-slot checks as the checkout)
 - **Customer history**: everything a customer bought, from which farmer, how much, orders per month
 - **Customer purchases** analytics: who buys what from which farmer — charts, heat map, exportable tables
 - Add / edit / remove markets (city dropdown, what is sold there, days, timings, map coordinates, map link, image)
 - **Cities table** used by every city dropdown
-- Moderate product listings and reviews
-- Reports: platform overview, orders summary, revenue by market, most active farmers (saved, printable, CSV export)
+- Moderate product listings and reviews; **content moderation queue** with user reports and reviews held by the
+  word filter (publish, remove, restore, suspend the stall or dismiss)
+- Reports: platform overview, orders summary, revenue by market, most active farmers, sales by category, customer
+  activity, inventory & low stock, cities overview, reviews & moderation (saved, printable, CSV / Excel export)
 - Master data: product categories; publish announcements (site banner + in-app notification)
 - Contact-us inbox
 

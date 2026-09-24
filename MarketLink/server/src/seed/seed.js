@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import { connectDB } from '../config/db.js';
 import {
   Announcement,
+  AssistantChat,
   Category,
   ContactMessage,
   Farmer,
@@ -25,6 +26,10 @@ import { generateSlots, getAvailability } from '../services/slots.js';
 import { refreshRatings } from '../services/ratings.js';
 import { buildReport, REPORT_TITLES } from '../services/reports.js';
 import * as data from './data.js';
+import fs from 'node:fs';
+
+// Real product photos (Open Images, CC BY 2.0) keyed by product name - see server/uploads/photos/CREDITS.md
+const PHOTOS = JSON.parse(fs.readFileSync(new URL('./photoCredits.json', import.meta.url), 'utf8'));
 
 // Small deterministic random generator so every seed produces the same demo data
 let state = 20260923;
@@ -56,7 +61,7 @@ function orderNumber(date) {
 }
 
 async function clearDatabase() {
-  const models = [Announcement, Category, ContactMessage, Farmer, Market, Notification, Order, Product, Report, Review, User];
+  const models = [Announcement, AssistantChat, Category, ContactMessage, Farmer, Market, Notification, Order, Product, Report, Review, User];
   for (const Model of models) {
     await Model.deleteMany({});
     await Model.init(); // make sure indexes exist
@@ -133,7 +138,8 @@ async function main() {
         quantityAvailable: p.qty,
         templateQuantity: p.template ?? p.qty,
         description: p.desc,
-        image: `/uploads/seed/${p.img}.webp`,
+        image: PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : `/uploads/seed/${p.img}.webp`,
+        imageCredit: PHOTOS[p.name] ? { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } : undefined,
         markets: farmer.markets,
         days: farmer.operatingDays,
         farmerActive: farmer.isActive,

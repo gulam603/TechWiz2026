@@ -14,6 +14,12 @@ const productSchema = new Schema(
     templateQuantity: { type: Number, default: 0, min: 0 }, // weekly recurring stock
     description: { type: String, trim: true, maxlength: 1500 },
     image: String,
+    // Attribution for licensed stock photos (seed data); cleared when the farmer uploads their own image
+    imageCredit: {
+      author: String,
+      source: String,
+      license: String,
+    },
     status: { type: String, enum: Object.values(PRODUCT_STATUS), default: PRODUCT_STATUS.AVAILABLE },
 
     // Admin moderation (isRemoved) and farmer deletion of products that have order history

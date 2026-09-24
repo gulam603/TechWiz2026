@@ -68,7 +68,7 @@ export default function NotificationBell({ allLink }) {
               </button>
             )}
           </div>
-          {items.length === 0 && <div className="text-center text-muted-2 small py-4">You're all caught up 🌱</div>}
+          {items.length === 0 && <div className="text-center text-muted-2 small py-4"><i className="bi bi-check2-circle me-1" /> You're all caught up</div>}
           {items.map((n) => (
             <button type="button" key={n._id} className={`notif-item w-100 border-0 text-start ${n.read ? 'bg-transparent' : 'unread'}`} onClick={() => openItem(n)}>
               <span className="notif-icon">

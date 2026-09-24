@@ -74,6 +74,21 @@ export default function ProductDetail() {
               <FavButton type="products" id={product._id} />
             </div>
           </div>
+          {product.imageCredit?.author && (
+            <p className="photo-credit">
+              <i className="bi bi-camera" /> Photo: {product.imageCredit.author}
+              {product.imageCredit.source && (
+                <>
+                  {' '}
+                  ·{' '}
+                  <a href={product.imageCredit.source} target="_blank" rel="noreferrer">
+                    source
+                  </a>
+                </>
+              )}{' '}
+              · {product.imageCredit.license}
+            </p>
+          )}
         </div>
 
         <div className="col-lg-6">

@@ -65,7 +65,7 @@ export default function Markets() {
             </div>
             <div className="col-md-4 d-flex gap-2 justify-content-md-end">
               <button type="button" className={`btn ${location ? 'btn-forest' : 'btn-white'}`} onClick={location ? () => setLocation(null) : nearMe} disabled={locating}>
-                {locating ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-crosshair" />} {location ? 'Near me ✓' : 'Near me'}
+                {locating ? <span className="spinner-border spinner-border-sm" /> : <i className={`bi ${location ? 'bi-check2-circle' : 'bi-crosshair'}`} />} Near me
               </button>
               <div className="tabs-pill">
                 <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')} aria-label="Grid view">

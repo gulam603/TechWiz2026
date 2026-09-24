@@ -157,7 +157,10 @@ export async function updateProduct(req, res) {
   if (data.category && !(await Category.exists({ _id: data.category, isActive: true }))) throw new AppError('Please choose a valid category', 400);
   const wasEmpty = product.quantityAvailable <= 0 || product.status === PRODUCT_STATUS.SOLD_OUT;
   Object.assign(product, data);
-  if (req.file) product.image = fileUrl('products', req.file);
+  if (req.file) {
+    product.image = fileUrl('products', req.file);
+    product.imageCredit = undefined;
+  }
   await product.save();
   if (wasEmpty && product.quantityAvailable > 0 && product.status === PRODUCT_STATUS.AVAILABLE) await notifyRestock(product);
   res.json({ product });

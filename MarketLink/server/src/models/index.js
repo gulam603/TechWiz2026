@@ -9,3 +9,4 @@ export { default as Notification } from './Notification.js';
 export { default as Announcement } from './Announcement.js';
 export { default as Report } from './Report.js';
 export { default as ContactMessage } from './ContactMessage.js';
+export { default as AssistantChat } from './AssistantChat.js';

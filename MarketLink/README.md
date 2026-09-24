@@ -34,7 +34,8 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 - Reviews and ratings for farmers and products after a completed order
 - In-app notifications + e-mail for order confirmation and “ready for pickup”, including route-friendly pickup details (market, address, time slot and a Google Maps directions link)
 - Optional **family sharing**: linked household members can see each other’s pre-orders
-- **AI assistant** “Basket” (chat widget) answering market timings, farmer availability, pickup windows and product questions from live data
+- **AI assistant** “Basket” (chat widget) answering market timings, farmer availability, pickup windows and product questions from live data,
+  with **memory** (follow-up questions such as “which farmers are there?”, your name and city), saved chat history and a **Clear chat** button
 
 **Farmer**
 - Register with a 3-step wizard — ① stall name, contact person, contact number, e-mail, password;
@@ -59,7 +60,8 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 - Master data: product categories; publish announcements (site banner + in-app notification)
 - Contact-us inbox and all orders
 
-**Other:** role-based access control (API + UI), responsive / mobile-friendly UI, About Us and Contact Us
+**Other:** role-based access control (API + UI), responsive / mobile-friendly UI (laptop layout, slide-in mobile menu,
+app-style bottom navigation bar on phones), Bootstrap icons instead of emoji, About Us and Contact Us
 (static team contact — Aptech Learning Centre, F.B. Area, Karachi — + Google Maps location + contact form).
 Subtle motion: floating produce on the login / sign-up banner (with mouse parallax), scroll-reveal cards,
 counting-up statistics; all animations switch off when the device asks for reduced motion.
@@ -88,10 +90,11 @@ MarketLink/
 │   │   ├── middleware/     auth / roles, uploads, error handling
 │   │   ├── routes/         all /api routes
 │   │   └── seed/           demo data, seed and export scripts
-│   └── uploads/            uploaded images (seed illustrations are in uploads/seed)
+│   └── uploads/            images: seed illustrations (uploads/seed), product photos + credits (uploads/photos), farmer uploads
 ├── database/
 │   ├── marketlink-schema.mongodb.js   collections, JSON-schema validators and indexes (mongosh)
 │   └── sample-data/                   exported demo / test data (JSON, one file per collection)
+├── docs/                   architecture.md, view.md, design.md, task.md, memories.md
 └── package.json            helper scripts for the whole project
 
 (render.yaml, the Render.com deployment blueprint, is in the repository root next to this folder.)
@@ -183,7 +186,7 @@ notifications, announcements, a saved report and a closed date for Bloom & Bough
 ## 5. Database
 
 MongoDB collections: `users`, `farmers`, `markets`, `categories`, `products`, `orders`, `reviews`,
-`notifications`, `announcements`, `reports`, `contactmessages`.
+`notifications`, `announcements`, `reports`, `contactmessages`, `assistantchats`.
 
 - `database/marketlink-schema.mongodb.js` — the database definition: every collection with its
   JSON-schema validator (fields, types, required fields, allowed values) and indexes.
@@ -207,7 +210,10 @@ MongoDB collections: `users`, `farmers`, `markets`, `categories`, `products`, `o
 - **AI assistant:** a rule-based assistant built into the API (`server/src/services/assistant.js`).
   It detects the intent of a question (market timings, farmer availability, pickup windows,
   product search, payment / delivery / cancellation FAQs, order status) and answers from live
-  database data. No external AI service or key is required.
+  database data. No external AI service or key is required. It remembers the conversation
+  (market, farmer, product, day, your name and city) so follow-up questions work; signed-in users'
+  history is saved in the `assistantchats` collection, guests' history stays in the browser, and
+  the chat's Clear chat button deletes both.
 - **E-mail:** Nodemailer — order confirmation, status updates (“ready for pickup” with directions),
   farmer approval and password-reset e-mails. By default they are printed in the server terminal
   (the reset link can be copied from there). Set `SMTP_HOST=ethereal` in `server/.env` for a free
@@ -250,7 +256,10 @@ atomic stock reservation so two customers can never buy the same last item.
 
 ## 10. Credits & AI tools
 
-- 3D produce illustrations: **Microsoft Fluent Emoji** (MIT licence).
+- Product photos: real photos from the **Open Images Dataset** (Google), published on Flickr by their
+  authors under **CC BY 2.0**. Every photographer is credited on the product page and in
+  `server/uploads/photos/CREDITS.md`.
+- 3D produce illustrations (banners, categories, farmer logos): **Microsoft Fluent Emoji** (MIT licence).
 - Map data © OpenStreetMap contributors; routing by OSRM.
 - UI: Bootstrap 5, Bootstrap Icons, Fraunces and Plus Jakarta Sans fonts (SIL Open Font Licence).
 - AI tools used: **Claude Code (Anthropic)** was used as a coding assistant during development.

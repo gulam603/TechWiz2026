@@ -390,6 +390,9 @@
     .produce-tile img {
       transform: scale(1.07) rotate(-3deg);
     }
+    .produce-tile img.photo {
+      transform: scale(1.05);
+    }
   }
   .card-top-badges {
     position: absolute;
@@ -1164,6 +1167,64 @@
       }
     }
   }
+  .chat-head-btn {
+    border: 0;
+    background: rgba(#fff, 0.12);
+    color: #fff;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    &:hover:not(:disabled) {
+      background: rgba(#fff, 0.22);
+    }
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+  .chat-memory {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    overflow-x: auto;
+    padding: 0.45rem 0.75rem;
+    background: rgba($ml-lime, 0.35);
+    border-bottom: 1px solid $ml-line;
+    font-size: 0.72rem;
+    scrollbar-width: none;
+  }
+  .chat-memory-label {
+    font-weight: 800;
+    color: $ml-forest;
+    white-space: nowrap;
+  }
+  .chat-memory-chip {
+    background: #fff;
+    border-radius: 50rem;
+    padding: 0.15rem 0.55rem;
+    white-space: nowrap;
+    color: $ml-forest;
+    font-weight: 600;
+    i {
+      color: $ml-green;
+    }
+  }
+  .chat-confirm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem;
+    background: #fff4ef;
+    border-bottom: 1px solid $ml-line;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $ml-ink;
+  }
   .chat-body {
     flex: 1;
     overflow-y: auto;
@@ -1172,6 +1233,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
+    > * {
+      flex-shrink: 0; // never squeeze a message or the product cards
+    }
   }
   .msg {
     max-width: 86%;
@@ -1192,6 +1256,16 @@
       border-bottom-right-radius: 0.3rem;
       align-self: flex-end;
     }
+    .chat-icon {
+      color: $ml-green;
+      margin-right: 0.15rem;
+    }
+    .bi-exclamation-triangle.chat-icon {
+      color: $ml-carrot;
+    }
+    .bi-star-fill.chat-icon {
+      color: $ml-honey;
+    }
   }
   .chat-cards {
     display: flex;
@@ -1201,7 +1275,7 @@
     align-self: stretch;
   }
   .chat-card {
-    flex: 0 0 190px;
+    flex: 0 0 200px;
     background: #fff;
     border: 1px solid $ml-line;
     border-radius: 0.9rem;
@@ -1369,5 +1443,197 @@
     border-radius: 50rem !important;
     min-width: 2.4rem;
     text-align: center;
+  }
+}
+
+// ------------------------------------------------------------------ mobile drawer menu
+.mobile-menu-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1085;
+}
+.mobile-menu-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(15, 30, 22, 0.45);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.2s ease both;
+}
+.mobile-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(360px, 88vw);
+  background: $ml-cream;
+  box-shadow: -20px 0 50px -20px rgba(15, 30, 22, 0.45);
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: drawerIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.mobile-menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid $ml-line;
+  background: #fff;
+}
+.mobile-menu-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+}
+.mobile-menu-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  border: 1px solid $ml-line;
+  border-radius: 1.1rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.mobile-menu-section {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $ml-muted;
+  margin: 1.1rem 0 0.4rem 0.4rem;
+}
+.mobile-menu-links {
+  display: grid;
+  gap: 0.15rem;
+  a,
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.9rem;
+    border: 0;
+    background: none;
+    color: $ml-ink;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    i {
+      font-size: 1.1rem;
+      color: $ml-green;
+      width: 1.3rem;
+    }
+    &:hover {
+      background: #fff;
+    }
+    &.active {
+      background: $ml-forest;
+      color: #fff;
+      i {
+        color: $ml-lime;
+      }
+    }
+  }
+}
+
+@keyframes drawerIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+// ------------------------------------------------------------------ mobile bottom tab bar
+.mobile-tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1040;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  height: calc(var(--ml-tabbar-h) + env(safe-area-inset-bottom, 0px));
+  padding: 0.35rem 0.35rem env(safe-area-inset-bottom, 0px);
+  background: rgba(#fff, 0.94);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-top: 1px solid $ml-line;
+  box-shadow: 0 -10px 30px -18px rgba(23, 59, 44, 0.35);
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    color: $ml-muted;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0.9rem;
+    -webkit-tap-highlight-color: transparent;
+    &:focus-visible {
+      outline: 2px solid $ml-green;
+      outline-offset: -2px;
+    }
+  }
+  .tab-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 1.9rem;
+    border-radius: 50rem;
+    font-size: 1.2rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  .tab.active {
+    color: $ml-forest;
+    .tab-icon {
+      background: $ml-lime;
+      color: $ml-forest;
+    }
+  }
+  .tab-count {
+    position: absolute;
+    top: -3px;
+    right: 2px;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    padding: 0 0.25rem;
+    border-radius: 50rem;
+    background: $ml-carrot;
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: countPop 0.45s ease;
+  }
+}
+
+// Leave room for the tab bar below the lg breakpoint
+@include media-breakpoint-down(lg) {
+  body {
+    padding-bottom: calc(var(--ml-tabbar-h) + env(safe-area-inset-bottom, 0px));
+  }
+  .chat-launcher {
+    bottom: calc(var(--ml-tabbar-h) + env(safe-area-inset-bottom, 0px) + 0.9rem);
+  }
+  .chat-panel {
+    bottom: calc(var(--ml-tabbar-h) + env(safe-area-inset-bottom, 0px) + 5.2rem);
+    height: min(560px, calc(100dvh - var(--ml-tabbar-h) - var(--ml-nav-h) - 6.5rem));
+  }
+  .toast-stack {
+    bottom: calc(var(--ml-tabbar-h) + env(safe-area-inset-bottom, 0px) + 1rem);
   }
 }

@@ -11,6 +11,7 @@ import FavButton from '../../components/common/FavButton';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { coverFor, DAY_SHORT, formatDateKey, time12 } from '../../utils/format';
+import { isIllustration } from '../../utils/images';
 
 export default function FarmerDetail() {
   const { slug } = useParams();
@@ -49,9 +50,13 @@ export default function FarmerDetail() {
           <img className="cover-photo" src={farmer.coverImage} alt="" />
         ) : (
           <>
-            <img className="cover-art" src={products[0]?.image || farmer.logo} alt="" style={{ width: 150, right: '8%', top: 24, transform: 'rotate(10deg)' }} />
-            <img className="cover-art" src={products[1]?.image || '/illustrations/leafy-greens.webp'} alt="" style={{ width: 96, right: '24%', top: 60, transform: 'rotate(-12deg)' }} />
-            <img className="cover-art" src={products[2]?.image || '/illustrations/carrot.webp'} alt="" style={{ width: 80, right: '38%', top: 20 }} />
+            {[
+              { src: products[0]?.image || farmer.logo, style: { width: 150, right: '8%', top: 24, transform: 'rotate(10deg)' } },
+              { src: products[1]?.image || '/illustrations/leafy-greens.webp', style: { width: 96, right: '24%', top: 60, transform: 'rotate(-12deg)' } },
+              { src: products[2]?.image || '/illustrations/carrot.webp', style: { width: 80, right: '38%', top: 20 } },
+            ].map((art, i) => (
+              <img key={i} className={`cover-art ${isIllustration(art.src) ? '' : 'photo-card'}`} src={art.src} alt="" style={art.style} />
+            ))}
           </>
         )}
       </div>

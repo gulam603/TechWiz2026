@@ -28,7 +28,7 @@ export default function Register() {
     setBusy(true);
     try {
       await register(form);
-      toast('Welcome to MarketLink! 🎉');
+      toast('Welcome to MarketLink!');
       navigate('/account', { replace: true });
     } catch (err) {
       setError(err.message);

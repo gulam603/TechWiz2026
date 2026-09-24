@@ -20,7 +20,7 @@ function createCollection(name, schema, indexes = []) {
     target.createCollection(name, { validator: { $jsonSchema: schema }, validationLevel: 'moderate' });
   }
   for (const [keys, options] of indexes) target[name].createIndex(keys, options || {});
-  print(`✔ ${name}`);
+  print(`[ok] ${name}`);
 }
 
 const objectId = { bsonType: 'objectId' };
@@ -147,6 +147,24 @@ createCollection(
   [[{ name: 1 }, { unique: true }], [{ slug: 1 }, { unique: true }]]
 );
 
+// assistantchats: the AI assistant's saved conversation and memory for a signed-in user
+createCollection(
+  'assistantchats',
+  {
+    bsonType: 'object',
+    required: ['user'],
+    properties: {
+      user: objectId,
+      messages: {
+        bsonType: 'array',
+        items: { bsonType: 'object', required: ['from', 'text'], properties: { from: { enum: ['me', 'bot'] }, text: str(4000), cards: { bsonType: 'array' }, at: date } },
+      },
+      memory: { bsonType: 'object' },
+    },
+  },
+  [[{ user: 1 }, { unique: true }]]
+);
+
 // products: weekly stock of a farmer
 createCollection(
   'products',
@@ -163,6 +181,7 @@ createCollection(
       templateQuantity: num(0),
       description: str(1500),
       image: str(),
+      imageCredit: { bsonType: 'object', properties: { author: str(), source: str(), license: str() } },
       status: { enum: ['available', 'sold_out', 'unavailable'] },
       isRemoved: bool,
       removedReason: str(),

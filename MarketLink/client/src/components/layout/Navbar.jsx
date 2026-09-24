@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../common/Logo';
 import NotificationBell from './NotificationBell';
@@ -7,35 +7,8 @@ import { homeFor, useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import useClickOutside from '../../hooks/useClickOutside';
 import { initials } from '../../utils/format';
-
-const LINKS = [
-  { to: '/products', label: 'Shop' },
-  { to: '/markets', label: 'Markets' },
-  { to: '/farmers', label: 'Farmers' },
-  { to: '/map', label: 'Map' },
-  { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
-];
-
-const MENUS = {
-  customer: [
-    { to: '/account', icon: 'bi-grid', label: 'My dashboard' },
-    { to: '/account/orders', icon: 'bi-bag', label: 'My orders' },
-    { to: '/account/favorites', icon: 'bi-heart', label: 'Favourites' },
-    { to: '/account/profile', icon: 'bi-person', label: 'Profile & family' },
-  ],
-  farmer: [
-    { to: '/farmer', icon: 'bi-graph-up', label: 'Dashboard & insights' },
-    { to: '/farmer/orders', icon: 'bi-receipt', label: 'Pre-orders' },
-    { to: '/farmer/products', icon: 'bi-basket', label: 'Weekly stock' },
-    { to: '/farmer/pickup', icon: 'bi-geo-alt', label: 'Markets & pickup' },
-  ],
-  admin: [
-    { to: '/admin', icon: 'bi-speedometer2', label: 'Admin dashboard' },
-    { to: '/admin/farmers', icon: 'bi-shop', label: 'Farmers' },
-    { to: '/admin/reports', icon: 'bi-file-earmark-bar-graph', label: 'Reports' },
-  ],
-};
+import MobileMenu from './MobileMenu';
+import { LINKS, MENUS } from './navConfig';
 
 function UserMenu() {
   const { user, logout } = useAuth();
@@ -83,9 +56,12 @@ function UserMenu() {
 export default function Navbar() {
   const { user } = useAuth();
   const { count } = useCart();
-  const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
+  // The drawer remembers the page it was opened on, so it closes by itself after any navigation.
+  const [menuPath, setMenuPath] = useState(null);
+  const menuOpen = menuPath === location.pathname;
+  const closeMenu = useCallback(() => setMenuPath(null), []);
   const isAdminArea = location.pathname.startsWith('/admin');
   const showCart = !user || user.role === 'customer';
   const [scrolled, setScrolled] = useState(false);
@@ -140,8 +116,8 @@ export default function Navbar() {
               </Link>
             </>
           )}
-          <button type="button" className="nav-icon-btn d-lg-none" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu" aria-expanded={menuOpen}>
-            <i className={`bi ${menuOpen ? 'bi-x-lg' : 'bi-list'}`} />
+          <button type="button" className="nav-icon-btn d-lg-none" onClick={() => setMenuPath(location.pathname)} aria-label="Open menu" aria-expanded={menuOpen}>
+            <i className="bi bi-list" />
           </button>
         </div>
       </nav>
@@ -152,30 +128,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {menuOpen && (
-        <div className="container pb-3 d-lg-none">
-          <GlobalSearch className="mb-2 d-sm-none" />
-          <ul className="navbar-nav gap-1">
-            {LINKS.map((l) => (
-              <li key={l.to}>
-                <NavLink to={l.to} className="nav-link" onClick={() => setMenuOpen(false)}>
-                  {l.label}
-                </NavLink>
-              </li>
-            ))}
-            {!user && (
-              <li className="d-flex gap-2 mt-2">
-                <Link to="/login" className="btn btn-white flex-fill" onClick={() => setMenuOpen(false)}>
-                  Log in
-                </Link>
-                <Link to="/register/farmer" className="btn btn-lime flex-fill" onClick={() => setMenuOpen(false)}>
-                  Sell with us
-                </Link>
-              </li>
-            )}
-          </ul>
-        </div>
-      )}
+      <MobileMenu open={menuOpen} onClose={closeMenu} />
     </header>
   );
 }

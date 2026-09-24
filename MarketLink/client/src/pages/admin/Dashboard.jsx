@@ -115,7 +115,13 @@ export default function AdminDashboard() {
                       <td className="text-end">{f.orders}</td>
                       <td className="text-end">{f.completed}</td>
                       <td className="text-end fw-semi">{money(f.revenue)}</td>
-                      <td className="text-end text-nowrap">{f.reviews ? `${f.rating} ★` : '–'}</td>
+                      <td className="text-end text-nowrap">{f.reviews ? (
+                            <>
+                              {f.rating} <i className="bi bi-star-fill text-warning" />
+                            </>
+                          ) : (
+                            '–'
+                          )}</td>
                     </tr>
                   ))}
                 </tbody>

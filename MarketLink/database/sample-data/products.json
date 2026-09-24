@@ -1,21 +1,26 @@
 [
   {
-    "_id": "6ab3f1cfe7db619be379e72f",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22eb8",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Vine Tomatoes",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 180,
     "unit": "kg",
     "quantityAvailable": 57,
     "templateQuantity": 60,
     "description": "Juicy red tomatoes ripened on the vine. Perfect for salads, karahi and chutneys.",
-    "image": "/uploads/seed/tomato.webp",
+    "image": "/uploads/photos/vine-tomatoes.webp",
+    "imageCredit": {
+      "author": "OakleyOriginals",
+      "source": "https://www.flickr.com/photos/oakleyoriginals/3782406876",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -25,28 +30,33 @@
     "farmerActive": true,
     "ratingAvg": 4.5,
     "ratingCount": 2,
-    "totalSold": 26,
-    "createdAt": "2026-09-23T15:35:43.902Z",
-    "updatedAt": "2026-09-23T15:35:47.786Z",
+    "totalSold": 29,
+    "createdAt": "2026-09-24T06:33:40.207Z",
+    "updatedAt": "2026-09-24T06:33:44.013Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1cfe7db619be379e730",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22eb9",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Sweet Carrots",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 120,
     "unit": "kg",
     "quantityAvailable": 42,
     "templateQuantity": 45,
     "description": "Crunchy winter carrots, great for gajar ka halwa or fresh juice.",
-    "image": "/uploads/seed/carrot.webp",
+    "image": "/uploads/photos/sweet-carrots.webp",
+    "imageCredit": {
+      "author": "David Amsler",
+      "source": "https://www.flickr.com/photos/amslerpix/10180357455/",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -56,28 +66,33 @@
     "farmerActive": true,
     "ratingAvg": 5,
     "ratingCount": 1,
-    "totalSold": 33,
-    "createdAt": "2026-09-23T15:35:43.905Z",
-    "updatedAt": "2026-09-23T15:35:47.820Z",
+    "totalSold": 30,
+    "createdAt": "2026-09-24T06:33:40.210Z",
+    "updatedAt": "2026-09-24T06:33:44.038Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1cfe7db619be379e731",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22eba",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Farm Potatoes",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 90,
     "unit": "kg",
     "quantityAvailable": 77,
     "templateQuantity": 80,
     "description": "Versatile all-purpose potatoes, washed and sorted.",
-    "image": "/uploads/seed/potato.webp",
+    "image": "/uploads/photos/farm-potatoes.webp",
+    "imageCredit": {
+      "author": "Tatsuo Yamashita",
+      "source": "https://www.flickr.com/photos/yto/18986066750",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -85,30 +100,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 6,
-    "totalSold": 33,
-    "createdAt": "2026-09-23T15:35:43.908Z",
-    "updatedAt": "2026-09-23T15:35:47.851Z",
+    "ratingAvg": 4,
+    "ratingCount": 3,
+    "totalSold": 34,
+    "createdAt": "2026-09-24T06:33:40.214Z",
+    "updatedAt": "2026-09-24T06:33:44.062Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1cfe7db619be379e732",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22ebb",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Red Onions",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 140,
     "unit": "kg",
     "quantityAvailable": 68,
     "templateQuantity": 70,
     "description": "Sharp, flavourful red onions from our dry fields.",
-    "image": "/uploads/seed/onion.webp",
+    "image": "/uploads/photos/red-onions.webp",
+    "imageCredit": {
+      "author": "Senado Federal",
+      "source": "https://www.flickr.com/photos/agenciasenado/15714731157",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -116,30 +136,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.5,
-    "ratingCount": 2,
-    "totalSold": 14,
-    "createdAt": "2026-09-23T15:35:43.910Z",
-    "updatedAt": "2026-09-23T15:35:47.878Z",
+    "ratingAvg": 5,
+    "ratingCount": 3,
+    "totalSold": 21,
+    "createdAt": "2026-09-24T06:33:40.218Z",
+    "updatedAt": "2026-09-24T06:33:44.086Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1cfe7db619be379e733",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22ebc",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Desi Cucumbers",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 100,
     "unit": "kg",
     "quantityAvailable": 28,
     "templateQuantity": 30,
     "description": "Small, crisp cucumbers with thin skin. Great for raita.",
-    "image": "/uploads/seed/cucumber.webp",
+    "image": "/uploads/photos/desi-cucumbers.webp",
+    "imageCredit": {
+      "author": "Peter Oelschlaeger",
+      "source": "https://www.flickr.com/photos/thunderpete/6063337466",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -147,30 +172,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 3.75,
-    "ratingCount": 4,
-    "totalSold": 29,
-    "createdAt": "2026-09-23T15:35:43.912Z",
-    "updatedAt": "2026-09-23T15:35:47.907Z",
+    "ratingAvg": 5,
+    "ratingCount": 1,
+    "totalSold": 25,
+    "createdAt": "2026-09-24T06:33:40.221Z",
+    "updatedAt": "2026-09-24T06:33:44.110Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1cfe7db619be379e734",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22ebd",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Purple Brinjal",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 110,
     "unit": "kg",
     "quantityAvailable": 24,
     "templateQuantity": 25,
     "description": "Glossy round brinjals ideal for bharta and baingan fry.",
-    "image": "/uploads/seed/eggplant.webp",
+    "image": "/uploads/photos/purple-brinjal.webp",
+    "imageCredit": {
+      "author": "Mike Mozart",
+      "source": "https://www.flickr.com/photos/jeepersmedia/14948233400",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -178,30 +208,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 2,
-    "totalSold": 21,
-    "createdAt": "2026-09-23T15:35:43.914Z",
-    "updatedAt": "2026-09-23T15:35:47.934Z",
+    "ratingAvg": 4,
+    "ratingCount": 1,
+    "totalSold": 16,
+    "createdAt": "2026-09-24T06:33:40.224Z",
+    "updatedAt": "2026-09-24T06:33:44.133Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1cfe7db619be379e735",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22ebe",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Capsicum Mix",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 320,
     "unit": "kg",
     "quantityAvailable": 0,
     "templateQuantity": 20,
     "description": "Green and red bell peppers. Sold out this week, back next harvest.",
-    "image": "/uploads/seed/bell-pepper.webp",
+    "image": "/uploads/photos/capsicum-mix.webp",
+    "imageCredit": {
+      "author": "erfan a. setiawan",
+      "source": "https://www.flickr.com/photos/postflowersyndroms/10382304176",
+      "license": "CC BY 2.0"
+    },
     "status": "sold_out",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -209,30 +244,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.83,
-    "ratingCount": 6,
-    "totalSold": 31,
-    "createdAt": "2026-09-23T15:35:43.916Z",
-    "updatedAt": "2026-09-23T15:35:47.963Z",
+    "ratingAvg": 5,
+    "ratingCount": 1,
+    "totalSold": 23,
+    "createdAt": "2026-09-24T06:33:40.226Z",
+    "updatedAt": "2026-09-24T06:33:44.157Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1cfe7db619be379e736",
-    "farmer": "6ab3f1cfe7db619be379e72b",
+    "_id": "6ab4c444b321b1ee43d22ebf",
+    "farmer": "6ab4c444b321b1ee43d22eb4",
     "name": "Green Chillies",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 240,
     "unit": "kg",
     "quantityAvailable": 11,
     "templateQuantity": 12,
     "description": "Fiery green chillies, freshly picked.",
-    "image": "/uploads/seed/chilli.webp",
+    "image": "/uploads/photos/green-chillies.webp",
+    "imageCredit": {
+      "author": "brownpau",
+      "source": "https://www.flickr.com/photos/brownpau/11757786526",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e723"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eac"
     ],
     "days": [
       0,
@@ -240,30 +280,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.33,
-    "ratingCount": 3,
-    "totalSold": 28,
-    "createdAt": "2026-09-23T15:35:43.918Z",
-    "updatedAt": "2026-09-23T15:35:47.989Z",
+    "ratingAvg": 5,
+    "ratingCount": 1,
+    "totalSold": 35,
+    "createdAt": "2026-09-24T06:33:40.228Z",
+    "updatedAt": "2026-09-24T06:33:44.179Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e73c",
-    "farmer": "6ab3f1d0e7db619be379e738",
+    "_id": "6ab4c444b321b1ee43d22ec5",
+    "farmer": "6ab4c444b321b1ee43d22ec1",
     "name": "Sindhri Mangoes",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 350,
     "unit": "kg",
     "quantityAvailable": 87,
     "templateQuantity": 90,
     "description": "The king of fruits. Sweet, fibre-less Sindhri mangoes.",
-    "image": "/uploads/seed/mango.webp",
+    "image": "/uploads/photos/sindhri-mangoes.webp",
+    "imageCredit": {
+      "author": "Martin Howard",
+      "source": "https://www.flickr.com/photos/martinhoward/5397244901",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e724",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22ead",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -271,30 +316,35 @@
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 2,
+    "ratingAvg": 4.33,
+    "ratingCount": 3,
     "totalSold": 21,
-    "createdAt": "2026-09-23T15:35:44.022Z",
-    "updatedAt": "2026-09-23T15:35:48.018Z",
+    "createdAt": "2026-09-24T06:33:40.332Z",
+    "updatedAt": "2026-09-24T06:33:44.203Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e73d",
-    "farmer": "6ab3f1d0e7db619be379e738",
+    "_id": "6ab4c444b321b1ee43d22ec6",
+    "farmer": "6ab4c444b321b1ee43d22ec1",
     "name": "Chaunsa Mangoes",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 400,
     "unit": "kg",
     "quantityAvailable": 40,
     "templateQuantity": 40,
     "description": "Late-season Chaunsa with rich, honey-like sweetness.",
-    "image": "/uploads/seed/mango.webp",
+    "image": "/uploads/photos/chaunsa-mangoes.webp",
+    "imageCredit": {
+      "author": "Milton Ramirez",
+      "source": "https://www.flickr.com/photos/tonmil/2635493222",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e724",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22ead",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -302,30 +352,35 @@
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 0,
-    "ratingCount": 0,
-    "totalSold": 22,
-    "createdAt": "2026-09-23T15:35:44.025Z",
-    "updatedAt": "2026-09-23T15:35:48.053Z",
+    "ratingAvg": 4.17,
+    "ratingCount": 6,
+    "totalSold": 18,
+    "createdAt": "2026-09-24T06:33:40.334Z",
+    "updatedAt": "2026-09-24T06:33:44.229Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e73e",
-    "farmer": "6ab3f1d0e7db619be379e738",
+    "_id": "6ab4c444b321b1ee43d22ec7",
+    "farmer": "6ab4c444b321b1ee43d22ec1",
     "name": "Bananas",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 180,
     "unit": "dozen",
     "quantityAvailable": 49,
     "templateQuantity": 50,
     "description": "Naturally ripened bananas from our riverside plots.",
-    "image": "/uploads/seed/banana.webp",
+    "image": "/uploads/photos/bananas.webp",
+    "imageCredit": {
+      "author": "Brendan C",
+      "source": "https://www.flickr.com/photos/brendan-c/5242022634",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e724",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22ead",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -333,30 +388,35 @@
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 4.8,
-    "ratingCount": 5,
-    "totalSold": 33,
-    "createdAt": "2026-09-23T15:35:44.027Z",
-    "updatedAt": "2026-09-23T15:35:48.099Z",
+    "ratingAvg": 4,
+    "ratingCount": 3,
+    "totalSold": 34,
+    "createdAt": "2026-09-24T06:33:40.338Z",
+    "updatedAt": "2026-09-24T06:33:44.253Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e73f",
-    "farmer": "6ab3f1d0e7db619be379e738",
+    "_id": "6ab4c444b321b1ee43d22ec8",
+    "farmer": "6ab4c444b321b1ee43d22ec1",
     "name": "Watermelon",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 70,
     "unit": "kg",
     "quantityAvailable": 35,
     "templateQuantity": 35,
     "description": "Crisp and sweet summer watermelons.",
-    "image": "/uploads/seed/watermelon.webp",
+    "image": "/uploads/photos/watermelon.webp",
+    "imageCredit": {
+      "author": "bharat ram",
+      "source": "https://www.flickr.com/photos/12x/6748243111",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e724",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22ead",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -364,30 +424,35 @@
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 4,
-    "ratingCount": 2,
-    "totalSold": 17,
-    "createdAt": "2026-09-23T15:35:44.029Z",
-    "updatedAt": "2026-09-23T15:35:48.130Z",
+    "ratingAvg": 3.67,
+    "ratingCount": 3,
+    "totalSold": 25,
+    "createdAt": "2026-09-24T06:33:40.341Z",
+    "updatedAt": "2026-09-24T06:33:44.278Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e740",
-    "farmer": "6ab3f1d0e7db619be379e738",
+    "_id": "6ab4c444b321b1ee43d22ec9",
+    "farmer": "6ab4c444b321b1ee43d22ec1",
     "name": "Cantaloupe Melon",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 150,
     "unit": "piece",
     "quantityAvailable": 20,
     "templateQuantity": 20,
     "description": "Fragrant melons, perfect for breakfast.",
-    "image": "/uploads/seed/melon.webp",
+    "image": "/uploads/photos/cantaloupe-melon.webp",
+    "imageCredit": {
+      "author": "yoppy",
+      "source": "https://www.flickr.com/photos/spilt-milk/964681042",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e724",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22ead",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -395,30 +460,35 @@
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 2.5,
-    "ratingCount": 2,
-    "totalSold": 11,
-    "createdAt": "2026-09-23T15:35:44.031Z",
-    "updatedAt": "2026-09-23T15:35:48.164Z",
+    "ratingAvg": 0,
+    "ratingCount": 0,
+    "totalSold": 22,
+    "createdAt": "2026-09-24T06:33:40.343Z",
+    "updatedAt": "2026-09-24T06:33:44.304Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e741",
-    "farmer": "6ab3f1d0e7db619be379e738",
+    "_id": "6ab4c444b321b1ee43d22eca",
+    "farmer": "6ab4c444b321b1ee43d22ec1",
     "name": "Tender Coconuts",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 200,
     "unit": "piece",
     "quantityAvailable": 15,
     "templateQuantity": 15,
     "description": "Fresh coconuts full of sweet water.",
-    "image": "/uploads/seed/coconut.webp",
+    "image": "/uploads/photos/tender-coconuts.webp",
+    "imageCredit": {
+      "author": "Simon_sees",
+      "source": "https://www.flickr.com/photos/39551170@N02/11267574635",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e724",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22ead",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -426,30 +496,35 @@
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 3.5,
-    "ratingCount": 2,
-    "totalSold": 11,
-    "createdAt": "2026-09-23T15:35:44.033Z",
-    "updatedAt": "2026-09-23T15:35:48.193Z",
+    "ratingAvg": 0,
+    "ratingCount": 0,
+    "totalSold": 8,
+    "createdAt": "2026-09-24T06:33:40.345Z",
+    "updatedAt": "2026-09-24T06:33:44.331Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e742",
-    "farmer": "6ab3f1d0e7db619be379e738",
+    "_id": "6ab4c444b321b1ee43d22ecb",
+    "farmer": "6ab4c444b321b1ee43d22ec1",
     "name": "Lemons",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 260,
     "unit": "kg",
     "quantityAvailable": 18,
     "templateQuantity": 18,
     "description": "Juicy desi lemons for sikanjabeen.",
-    "image": "/uploads/seed/lemon.webp",
+    "image": "/uploads/photos/lemons.webp",
+    "imageCredit": {
+      "author": "Kevan",
+      "source": "https://www.flickr.com/photos/kevandotorg/4799876694",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e724",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22ead",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -457,30 +532,35 @@
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 1,
-    "totalSold": 24,
-    "createdAt": "2026-09-23T15:35:44.035Z",
-    "updatedAt": "2026-09-23T15:35:48.220Z",
+    "ratingAvg": 4.6,
+    "ratingCount": 5,
+    "totalSold": 22,
+    "createdAt": "2026-09-24T06:33:40.347Z",
+    "updatedAt": "2026-09-24T06:33:44.356Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e748",
-    "farmer": "6ab3f1d0e7db619be379e744",
+    "_id": "6ab4c444b321b1ee43d22ed1",
+    "farmer": "6ab4c444b321b1ee43d22ecd",
     "name": "Fresh Buffalo Milk",
-    "category": "6ab3f1cfe7db619be379e71c",
+    "category": "6ab4c444b321b1ee43d22ea5",
     "price": 240,
     "unit": "litre",
     "quantityAvailable": 58,
     "templateQuantity": 60,
     "description": "Creamy, unhomogenised buffalo milk, chilled at milking.",
-    "image": "/uploads/seed/milk.webp",
+    "image": "/uploads/photos/fresh-buffalo-milk.webp",
+    "imageCredit": {
+      "author": "~Pawsitive~Candie_N",
+      "source": "https://www.flickr.com/photos/scjn/3533592997",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e722"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22eab"
     ],
     "days": [
       0,
@@ -488,30 +568,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.25,
-    "ratingCount": 4,
-    "totalSold": 30,
-    "createdAt": "2026-09-23T15:35:44.138Z",
-    "updatedAt": "2026-09-23T15:35:48.247Z",
+    "ratingAvg": 4,
+    "ratingCount": 2,
+    "totalSold": 31,
+    "createdAt": "2026-09-24T06:33:40.453Z",
+    "updatedAt": "2026-09-24T06:33:44.379Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e749",
-    "farmer": "6ab3f1d0e7db619be379e744",
+    "_id": "6ab4c444b321b1ee43d22ed2",
+    "farmer": "6ab4c444b321b1ee43d22ecd",
     "name": "Farm Paneer",
-    "category": "6ab3f1cfe7db619be379e71c",
+    "category": "6ab4c444b321b1ee43d22ea5",
     "price": 1400,
     "unit": "kg",
     "quantityAvailable": 10,
     "templateQuantity": 10,
     "description": "Soft paneer made the same morning. Perfect for palak paneer.",
-    "image": "/uploads/seed/cheese.webp",
+    "image": "/uploads/photos/farm-paneer.webp",
+    "imageCredit": {
+      "author": "Bordecia34",
+      "source": "https://www.flickr.com/photos/habesha/389922635",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e722"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22eab"
     ],
     "days": [
       0,
@@ -519,30 +604,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 1,
-    "totalSold": 17,
-    "createdAt": "2026-09-23T15:35:44.141Z",
-    "updatedAt": "2026-09-23T15:35:48.274Z",
+    "ratingAvg": 4,
+    "ratingCount": 3,
+    "totalSold": 25,
+    "createdAt": "2026-09-24T06:33:40.456Z",
+    "updatedAt": "2026-09-24T06:33:44.406Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e74a",
-    "farmer": "6ab3f1d0e7db619be379e744",
+    "_id": "6ab4c444b321b1ee43d22ed3",
+    "farmer": "6ab4c444b321b1ee43d22ecd",
     "name": "Desi Eggs",
-    "category": "6ab3f1cfe7db619be379e71c",
+    "category": "6ab4c444b321b1ee43d22ea5",
     "price": 450,
     "unit": "dozen",
     "quantityAvailable": 39,
     "templateQuantity": 40,
     "description": "Free-range desi eggs with deep orange yolks.",
-    "image": "/uploads/seed/egg.webp",
+    "image": "/uploads/photos/desi-eggs.webp",
+    "imageCredit": {
+      "author": "Gregg Tavares",
+      "source": "https://www.flickr.com/photos/greggman/12189654656",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e722"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22eab"
     ],
     "days": [
       0,
@@ -550,30 +640,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 1,
-    "totalSold": 36,
-    "createdAt": "2026-09-23T15:35:44.145Z",
-    "updatedAt": "2026-09-23T15:35:48.303Z",
+    "ratingAvg": 4.75,
+    "ratingCount": 4,
+    "totalSold": 38,
+    "createdAt": "2026-09-24T06:33:40.458Z",
+    "updatedAt": "2026-09-24T06:33:44.434Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e74b",
-    "farmer": "6ab3f1d0e7db619be379e744",
+    "_id": "6ab4c444b321b1ee43d22ed4",
+    "farmer": "6ab4c444b321b1ee43d22ecd",
     "name": "Hand-churned Butter",
-    "category": "6ab3f1cfe7db619be379e71c",
+    "category": "6ab4c444b321b1ee43d22ea5",
     "price": 900,
     "unit": "pack",
     "quantityAvailable": 15,
     "templateQuantity": 15,
     "description": "Traditional makhan, lightly salted, 250 g pack.",
-    "image": "/uploads/seed/butter.webp",
+    "image": "/uploads/photos/hand-churned-butter.webp",
+    "imageCredit": {
+      "author": "jibunkaiwai",
+      "source": "https://www.flickr.com/photos/97493971@N04/14903536851",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e722"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22eab"
     ],
     "days": [
       0,
@@ -581,30 +676,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.4,
-    "ratingCount": 5,
-    "totalSold": 32,
-    "createdAt": "2026-09-23T15:35:44.147Z",
-    "updatedAt": "2026-09-23T15:35:48.332Z",
+    "ratingAvg": 4.17,
+    "ratingCount": 6,
+    "totalSold": 27,
+    "createdAt": "2026-09-24T06:33:40.461Z",
+    "updatedAt": "2026-09-24T06:33:44.457Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e74c",
-    "farmer": "6ab3f1d0e7db619be379e744",
+    "_id": "6ab4c444b321b1ee43d22ed5",
+    "farmer": "6ab4c444b321b1ee43d22ecd",
     "name": "Natural Yogurt",
-    "category": "6ab3f1cfe7db619be379e71c",
+    "category": "6ab4c444b321b1ee43d22ea5",
     "price": 280,
     "unit": "kg",
     "quantityAvailable": 25,
     "templateQuantity": 25,
     "description": "Thick set dahi cultured overnight in clay pots.",
-    "image": "/uploads/seed/jar.webp",
+    "image": "/uploads/photos/natural-yogurt.webp",
+    "imageCredit": {
+      "author": "Benjamin Vander Steen",
+      "source": "https://www.flickr.com/photos/bjvs/4289648711",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e722"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22eab"
     ],
     "days": [
       0,
@@ -612,30 +712,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.4,
-    "ratingCount": 5,
-    "totalSold": 33,
-    "createdAt": "2026-09-23T15:35:44.150Z",
-    "updatedAt": "2026-09-23T15:35:48.361Z",
+    "ratingAvg": 4.71,
+    "ratingCount": 7,
+    "totalSold": 39,
+    "createdAt": "2026-09-24T06:33:40.463Z",
+    "updatedAt": "2026-09-24T06:33:44.484Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e752",
-    "farmer": "6ab3f1d0e7db619be379e74e",
+    "_id": "6ab4c444b321b1ee43d22edb",
+    "farmer": "6ab4c444b321b1ee43d22ed7",
     "name": "Country Sourdough Loaf",
-    "category": "6ab3f1cfe7db619be379e71d",
+    "category": "6ab4c444b321b1ee43d22ea6",
     "price": 950,
     "unit": "loaf",
     "quantityAvailable": 19,
     "templateQuantity": 20,
     "description": "36-hour fermented sourdough with a crackly crust.",
-    "image": "/uploads/seed/bread.webp",
+    "image": "/uploads/photos/country-sourdough-loaf.webp",
+    "imageCredit": {
+      "author": "winestem",
+      "source": "https://www.flickr.com/photos/winestem/11711682844",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -643,30 +748,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 0,
-    "ratingCount": 0,
-    "totalSold": 19,
-    "createdAt": "2026-09-23T15:35:44.279Z",
-    "updatedAt": "2026-09-23T15:35:48.390Z",
+    "ratingAvg": 5,
+    "ratingCount": 2,
+    "totalSold": 25,
+    "createdAt": "2026-09-24T06:33:40.566Z",
+    "updatedAt": "2026-09-24T06:33:44.513Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e753",
-    "farmer": "6ab3f1d0e7db619be379e74e",
+    "_id": "6ab4c444b321b1ee43d22edc",
+    "farmer": "6ab4c444b321b1ee43d22ed7",
     "name": "Classic Baguette",
-    "category": "6ab3f1cfe7db619be379e71d",
+    "category": "6ab4c444b321b1ee43d22ea6",
     "price": 450,
     "unit": "piece",
     "quantityAvailable": 25,
     "templateQuantity": 25,
     "description": "Crisp, airy French baguette.",
-    "image": "/uploads/seed/baguette.webp",
+    "image": "/uploads/photos/classic-baguette.webp",
+    "imageCredit": {
+      "author": "Jon Chan",
+      "source": "https://www.flickr.com/photos/130756145@N06/16929685187",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -674,30 +784,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.33,
+    "ratingAvg": 4.67,
     "ratingCount": 3,
-    "totalSold": 34,
-    "createdAt": "2026-09-23T15:35:44.282Z",
-    "updatedAt": "2026-09-23T15:35:48.426Z",
+    "totalSold": 31,
+    "createdAt": "2026-09-24T06:33:40.568Z",
+    "updatedAt": "2026-09-24T06:33:44.537Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e754",
-    "farmer": "6ab3f1d0e7db619be379e74e",
+    "_id": "6ab4c444b321b1ee43d22edd",
+    "farmer": "6ab4c444b321b1ee43d22ed7",
     "name": "Butter Croissants",
-    "category": "6ab3f1cfe7db619be379e71d",
+    "category": "6ab4c444b321b1ee43d22ea6",
     "price": 1200,
     "unit": "box",
     "quantityAvailable": 11,
     "templateQuantity": 12,
     "description": "Box of 4 flaky, all-butter croissants.",
-    "image": "/uploads/seed/croissant.webp",
+    "image": "/uploads/photos/butter-croissants.webp",
+    "imageCredit": {
+      "author": "Yukiko Matsuoka",
+      "source": "https://www.flickr.com/photos/yukikomatsuoka/12139089216",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -705,30 +820,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 2,
-    "totalSold": 24,
-    "createdAt": "2026-09-23T15:35:44.285Z",
-    "updatedAt": "2026-09-23T15:35:48.455Z",
+    "ratingAvg": 4,
+    "ratingCount": 3,
+    "totalSold": 32,
+    "createdAt": "2026-09-24T06:33:40.570Z",
+    "updatedAt": "2026-09-24T06:33:44.561Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e755",
-    "farmer": "6ab3f1d0e7db619be379e74e",
+    "_id": "6ab4c444b321b1ee43d22ede",
+    "farmer": "6ab4c444b321b1ee43d22ed7",
     "name": "Whole Wheat Naan",
-    "category": "6ab3f1cfe7db619be379e71d",
+    "category": "6ab4c444b321b1ee43d22ea6",
     "price": 300,
     "unit": "pack",
     "quantityAvailable": 30,
     "templateQuantity": 30,
     "description": "Pack of 6 soft whole-wheat naans.",
-    "image": "/uploads/seed/flatbread.webp",
+    "image": "/uploads/photos/whole-wheat-naan.webp",
+    "imageCredit": {
+      "author": "Denise Krebs",
+      "source": "https://www.flickr.com/photos/mrsdkrebs/10636042286",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -736,30 +856,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.67,
-    "ratingCount": 3,
-    "totalSold": 24,
-    "createdAt": "2026-09-23T15:35:44.288Z",
-    "updatedAt": "2026-09-23T15:35:48.494Z",
+    "ratingAvg": 3.5,
+    "ratingCount": 2,
+    "totalSold": 28,
+    "createdAt": "2026-09-24T06:33:40.573Z",
+    "updatedAt": "2026-09-24T06:33:44.586Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e756",
-    "farmer": "6ab3f1d0e7db619be379e74e",
+    "_id": "6ab4c444b321b1ee43d22edf",
+    "farmer": "6ab4c444b321b1ee43d22ed7",
     "name": "Sesame Bagels",
-    "category": "6ab3f1cfe7db619be379e71d",
+    "category": "6ab4c444b321b1ee43d22ea6",
     "price": 800,
     "unit": "pack",
     "quantityAvailable": 10,
     "templateQuantity": 10,
     "description": "Pack of 4 chewy sesame bagels.",
-    "image": "/uploads/seed/bagel.webp",
+    "image": "/uploads/photos/sesame-bagels.webp",
+    "imageCredit": {
+      "author": "brett jordan",
+      "source": "https://www.flickr.com/photos/x1brett/21198630385",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -767,30 +892,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4,
+    "ratingAvg": 5,
     "ratingCount": 1,
-    "totalSold": 22,
-    "createdAt": "2026-09-23T15:35:44.291Z",
-    "updatedAt": "2026-09-23T15:35:48.522Z",
+    "totalSold": 21,
+    "createdAt": "2026-09-24T06:33:40.575Z",
+    "updatedAt": "2026-09-24T06:33:44.611Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e757",
-    "farmer": "6ab3f1d0e7db619be379e74e",
+    "_id": "6ab4c444b321b1ee43d22ee0",
+    "farmer": "6ab4c444b321b1ee43d22ed7",
     "name": "Seasonal Fruit Pie",
-    "category": "6ab3f1cfe7db619be379e71d",
+    "category": "6ab4c444b321b1ee43d22ea6",
     "price": 1800,
     "unit": "piece",
     "quantityAvailable": 6,
     "templateQuantity": 6,
     "description": "Buttery pie filled with fruit of the week.",
-    "image": "/uploads/seed/pie.webp",
+    "image": "/uploads/photos/seasonal-fruit-pie.webp",
+    "imageCredit": {
+      "author": "6SN7",
+      "source": "https://www.flickr.com/photos/47800690@N03/4643208764",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -798,30 +928,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 3,
-    "ratingCount": 1,
-    "totalSold": 13,
-    "createdAt": "2026-09-23T15:35:44.293Z",
-    "updatedAt": "2026-09-23T15:35:48.555Z",
+    "ratingAvg": 5,
+    "ratingCount": 2,
+    "totalSold": 16,
+    "createdAt": "2026-09-24T06:33:40.578Z",
+    "updatedAt": "2026-09-24T06:33:44.634Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e758",
-    "farmer": "6ab3f1d0e7db619be379e74e",
+    "_id": "6ab4c444b321b1ee43d22ee1",
+    "farmer": "6ab4c444b321b1ee43d22ed7",
     "name": "Oat Chocolate Cookies",
-    "category": "6ab3f1cfe7db619be379e71d",
+    "category": "6ab4c444b321b1ee43d22ea6",
     "price": 650,
     "unit": "box",
     "quantityAvailable": 15,
     "templateQuantity": 15,
     "description": "Box of 6 chewy oat and dark chocolate cookies.",
-    "image": "/uploads/seed/cookie.webp",
+    "image": "/uploads/photos/oat-chocolate-cookies.webp",
+    "imageCredit": {
+      "author": "rusvaplauke",
+      "source": "https://www.flickr.com/photos/rusvaplauke/863804402",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -829,30 +964,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 3,
-    "totalSold": 22,
-    "createdAt": "2026-09-23T15:35:44.296Z",
-    "updatedAt": "2026-09-23T15:35:48.585Z",
+    "ratingAvg": 4.75,
+    "ratingCount": 4,
+    "totalSold": 26,
+    "createdAt": "2026-09-24T06:33:40.580Z",
+    "updatedAt": "2026-09-24T06:33:44.658Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e75e",
-    "farmer": "6ab3f1d0e7db619be379e75a",
+    "_id": "6ab4c444b321b1ee43d22ee7",
+    "farmer": "6ab4c444b321b1ee43d22ee3",
     "name": "Fresh Mint (Podina)",
-    "category": "6ab3f1cfe7db619be379e71e",
+    "category": "6ab4c444b321b1ee43d22ea7",
     "price": 60,
     "unit": "bunch",
     "quantityAvailable": 80,
     "templateQuantity": 80,
     "description": "Fragrant mint for chutney, raita and mint lemonade.",
-    "image": "/uploads/seed/herb.webp",
+    "image": "/uploads/photos/fresh-mint-podina.webp",
+    "imageCredit": {
+      "author": "Jonathan",
+      "source": "https://www.flickr.com/photos/jon_bedford/7615555650",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e725",
-      "6ab3f1cfe7db619be379e727"
+      "6ab4c444b321b1ee43d22eae",
+      "6ab4c444b321b1ee43d22eb0"
     ],
     "days": [
       3,
@@ -860,30 +1000,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.75,
-    "ratingCount": 4,
-    "totalSold": 36,
-    "createdAt": "2026-09-23T15:35:44.402Z",
-    "updatedAt": "2026-09-23T15:35:48.612Z",
+    "ratingAvg": 3.67,
+    "ratingCount": 3,
+    "totalSold": 34,
+    "createdAt": "2026-09-24T06:33:40.686Z",
+    "updatedAt": "2026-09-24T06:33:44.681Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e75f",
-    "farmer": "6ab3f1d0e7db619be379e75a",
+    "_id": "6ab4c444b321b1ee43d22ee8",
+    "farmer": "6ab4c444b321b1ee43d22ee3",
     "name": "Coriander (Dhania)",
-    "category": "6ab3f1cfe7db619be379e71e",
+    "category": "6ab4c444b321b1ee43d22ea7",
     "price": 50,
     "unit": "bunch",
     "quantityAvailable": 90,
     "templateQuantity": 90,
     "description": "Tender coriander with roots on for longer freshness.",
-    "image": "/uploads/seed/herb.webp",
+    "image": "/uploads/photos/coriander-dhania.webp",
+    "imageCredit": {
+      "author": "Qfamily",
+      "source": "https://www.flickr.com/photos/dasqfamily/2648343226",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e725",
-      "6ab3f1cfe7db619be379e727"
+      "6ab4c444b321b1ee43d22eae",
+      "6ab4c444b321b1ee43d22eb0"
     ],
     "days": [
       3,
@@ -891,30 +1036,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.67,
+    "ratingAvg": 4.33,
     "ratingCount": 3,
-    "totalSold": 28,
-    "createdAt": "2026-09-23T15:35:44.404Z",
-    "updatedAt": "2026-09-23T15:35:48.643Z",
+    "totalSold": 20,
+    "createdAt": "2026-09-24T06:33:40.689Z",
+    "updatedAt": "2026-09-24T06:33:44.705Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e760",
-    "farmer": "6ab3f1d0e7db619be379e75a",
+    "_id": "6ab4c444b321b1ee43d22ee9",
+    "farmer": "6ab4c444b321b1ee43d22ee3",
     "name": "Baby Spinach",
-    "category": "6ab3f1cfe7db619be379e71e",
+    "category": "6ab4c444b321b1ee43d22ea7",
     "price": 160,
     "unit": "bunch",
     "quantityAvailable": 40,
     "templateQuantity": 40,
     "description": "Young spinach leaves, washed and bunched.",
-    "image": "/uploads/seed/leafy-greens.webp",
+    "image": "/uploads/photos/baby-spinach.webp",
+    "imageCredit": {
+      "author": "Anna B",
+      "source": "https://www.flickr.com/photos/annas_bananas/8039953648",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e725",
-      "6ab3f1cfe7db619be379e727"
+      "6ab4c444b321b1ee43d22eae",
+      "6ab4c444b321b1ee43d22eb0"
     ],
     "days": [
       3,
@@ -922,30 +1072,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.5,
-    "ratingCount": 6,
-    "totalSold": 22,
-    "createdAt": "2026-09-23T15:35:44.409Z",
-    "updatedAt": "2026-09-23T15:35:48.671Z",
+    "ratingAvg": 4.25,
+    "ratingCount": 4,
+    "totalSold": 32,
+    "createdAt": "2026-09-24T06:33:40.691Z",
+    "updatedAt": "2026-09-24T06:33:44.729Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e761",
-    "farmer": "6ab3f1d0e7db619be379e75a",
+    "_id": "6ab4c444b321b1ee43d22eea",
+    "farmer": "6ab4c444b321b1ee43d22ee3",
     "name": "Iceberg Lettuce",
-    "category": "6ab3f1cfe7db619be379e71e",
+    "category": "6ab4c444b321b1ee43d22ea7",
     "price": 220,
     "unit": "piece",
     "quantityAvailable": 20,
     "templateQuantity": 20,
     "description": "Crisp lettuce heads for salads and burgers.",
-    "image": "/uploads/seed/leafy-greens.webp",
+    "image": "/uploads/photos/iceberg-lettuce.webp",
+    "imageCredit": {
+      "author": "Eric BC Lim",
+      "source": "https://www.flickr.com/photos/ericlbc/3704845618",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e725",
-      "6ab3f1cfe7db619be379e727"
+      "6ab4c444b321b1ee43d22eae",
+      "6ab4c444b321b1ee43d22eb0"
     ],
     "days": [
       3,
@@ -955,28 +1110,33 @@
     "farmerActive": true,
     "ratingAvg": 5,
     "ratingCount": 3,
-    "totalSold": 32,
-    "createdAt": "2026-09-23T15:35:44.411Z",
-    "updatedAt": "2026-09-23T15:35:48.701Z",
+    "totalSold": 31,
+    "createdAt": "2026-09-24T06:33:40.694Z",
+    "updatedAt": "2026-09-24T06:33:44.754Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e762",
-    "farmer": "6ab3f1d0e7db619be379e75a",
+    "_id": "6ab4c444b321b1ee43d22eeb",
+    "farmer": "6ab4c444b321b1ee43d22ee3",
     "name": "Broccoli",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 450,
     "unit": "kg",
     "quantityAvailable": 15,
     "templateQuantity": 15,
     "description": "Dense green broccoli crowns.",
-    "image": "/uploads/seed/broccoli.webp",
+    "image": "/uploads/photos/broccoli.webp",
+    "imageCredit": {
+      "author": "Mike Mozart",
+      "source": "https://www.flickr.com/photos/jeepersmedia/14948279090",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e725",
-      "6ab3f1cfe7db619be379e727"
+      "6ab4c444b321b1ee43d22eae",
+      "6ab4c444b321b1ee43d22eb0"
     ],
     "days": [
       3,
@@ -985,29 +1145,34 @@
     ],
     "farmerActive": true,
     "ratingAvg": 5,
-    "ratingCount": 1,
-    "totalSold": 24,
-    "createdAt": "2026-09-23T15:35:44.416Z",
-    "updatedAt": "2026-09-23T15:35:48.727Z",
+    "ratingCount": 2,
+    "totalSold": 23,
+    "createdAt": "2026-09-24T06:33:40.696Z",
+    "updatedAt": "2026-09-24T06:33:44.779Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e763",
-    "farmer": "6ab3f1d0e7db619be379e75a",
+    "_id": "6ab4c444b321b1ee43d22eec",
+    "farmer": "6ab4c444b321b1ee43d22ee3",
     "name": "Button Mushrooms",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 700,
     "unit": "pack",
     "quantityAvailable": 0,
     "templateQuantity": 15,
     "description": "400 g pack of white button mushrooms. Sold out this week.",
-    "image": "/uploads/seed/mushroom.webp",
+    "image": "/uploads/photos/button-mushrooms.webp",
+    "imageCredit": {
+      "author": "Steven Depolo",
+      "source": "https://www.flickr.com/photos/stevendepolo/9490470178",
+      "license": "CC BY 2.0"
+    },
     "status": "sold_out",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e725",
-      "6ab3f1cfe7db619be379e727"
+      "6ab4c444b321b1ee43d22eae",
+      "6ab4c444b321b1ee43d22eb0"
     ],
     "days": [
       3,
@@ -1015,120 +1180,70 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.5,
+    "ratingAvg": 5,
     "ratingCount": 2,
-    "totalSold": 21,
-    "createdAt": "2026-09-23T15:35:44.418Z",
-    "updatedAt": "2026-09-23T15:35:48.758Z",
+    "totalSold": 24,
+    "createdAt": "2026-09-24T06:33:40.698Z",
+    "updatedAt": "2026-09-24T06:33:44.804Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e768",
-    "farmer": "6ab3f1d0e7db619be379e765",
+    "_id": "6ab4c444b321b1ee43d22ef1",
+    "farmer": "6ab4c444b321b1ee43d22eee",
     "name": "Wild Sidr Honey",
-    "category": "6ab3f1cfe7db619be379e71f",
+    "category": "6ab4c444b321b1ee43d22ea8",
     "price": 3200,
     "unit": "jar",
     "quantityAvailable": 19,
     "templateQuantity": 20,
     "description": "500 g of raw, unfiltered Sidr (beri) honey.",
-    "image": "/uploads/seed/honey.webp",
+    "image": "/uploads/photos/wild-sidr-honey.webp",
+    "imageCredit": {
+      "author": "Annabelle Orozco",
+      "source": "https://www.flickr.com/photos/annabelleorozco/7915650268",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e724"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22ead"
     ],
     "days": [
       0,
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 0,
-    "ratingCount": 0,
-    "totalSold": 34,
-    "createdAt": "2026-09-23T15:35:44.526Z",
-    "updatedAt": "2026-09-23T15:35:48.785Z",
+    "ratingAvg": 4.5,
+    "ratingCount": 2,
+    "totalSold": 24,
+    "createdAt": "2026-09-24T06:33:40.803Z",
+    "updatedAt": "2026-09-24T06:33:44.831Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e769",
-    "farmer": "6ab3f1d0e7db619be379e765",
+    "_id": "6ab4c444b321b1ee43d22ef2",
+    "farmer": "6ab4c444b321b1ee43d22eee",
     "name": "Acacia Honey",
-    "category": "6ab3f1cfe7db619be379e71f",
+    "category": "6ab4c444b321b1ee43d22ea8",
     "price": 2200,
     "unit": "jar",
     "quantityAvailable": 25,
     "templateQuantity": 25,
     "description": "500 g light, floral acacia honey.",
-    "image": "/uploads/seed/honey.webp",
+    "image": "/uploads/photos/acacia-honey.webp",
+    "imageCredit": {
+      "author": "J.H. Fearless",
+      "source": "https://www.flickr.com/photos/jessicareeder/3881377113",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e724"
-    ],
-    "days": [
-      0,
-      5
-    ],
-    "farmerActive": true,
-    "ratingAvg": 0,
-    "ratingCount": 0,
-    "totalSold": 27,
-    "createdAt": "2026-09-23T15:35:44.528Z",
-    "updatedAt": "2026-09-23T15:35:48.812Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e76a",
-    "farmer": "6ab3f1d0e7db619be379e765",
-    "name": "Strawberry Jam",
-    "category": "6ab3f1cfe7db619be379e71f",
-    "price": 750,
-    "unit": "jar",
-    "quantityAvailable": 18,
-    "templateQuantity": 18,
-    "description": "Small-batch jam with 70% fruit.",
-    "image": "/uploads/seed/strawberry.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e724"
-    ],
-    "days": [
-      0,
-      5
-    ],
-    "farmerActive": true,
-    "ratingAvg": 4,
-    "ratingCount": 1,
-    "totalSold": 28,
-    "createdAt": "2026-09-23T15:35:44.531Z",
-    "updatedAt": "2026-09-23T15:35:48.845Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e76b",
-    "farmer": "6ab3f1d0e7db619be379e765",
-    "name": "Mango Chutney",
-    "category": "6ab3f1cfe7db619be379e71f",
-    "price": 650,
-    "unit": "jar",
-    "quantityAvailable": 14,
-    "templateQuantity": 14,
-    "description": "Sweet and tangy chutney made from raw mangoes.",
-    "image": "/uploads/seed/jar.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e724"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22ead"
     ],
     "days": [
       0,
@@ -1138,57 +1253,137 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 23,
-    "createdAt": "2026-09-23T15:35:44.533Z",
-    "updatedAt": "2026-09-23T15:35:48.872Z",
+    "createdAt": "2026-09-24T06:33:40.805Z",
+    "updatedAt": "2026-09-24T06:33:44.856Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e76c",
-    "farmer": "6ab3f1d0e7db619be379e765",
+    "_id": "6ab4c444b321b1ee43d22ef3",
+    "farmer": "6ab4c444b321b1ee43d22eee",
+    "name": "Strawberry Jam",
+    "category": "6ab4c444b321b1ee43d22ea8",
+    "price": 750,
+    "unit": "jar",
+    "quantityAvailable": 18,
+    "templateQuantity": 18,
+    "description": "Small-batch jam with 70% fruit.",
+    "image": "/uploads/photos/strawberry-jam.webp",
+    "imageCredit": {
+      "author": "John S. Quarterman",
+      "source": "https://www.flickr.com/photos/98706376@N00/5208302127",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22ead"
+    ],
+    "days": [
+      0,
+      5
+    ],
+    "farmerActive": true,
+    "ratingAvg": 4.33,
+    "ratingCount": 3,
+    "totalSold": 23,
+    "createdAt": "2026-09-24T06:33:40.808Z",
+    "updatedAt": "2026-09-24T06:33:44.879Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c444b321b1ee43d22ef4",
+    "farmer": "6ab4c444b321b1ee43d22eee",
+    "name": "Mango Chutney",
+    "category": "6ab4c444b321b1ee43d22ea8",
+    "price": 650,
+    "unit": "jar",
+    "quantityAvailable": 14,
+    "templateQuantity": 14,
+    "description": "Sweet and tangy chutney made from raw mangoes.",
+    "image": "/uploads/photos/mango-chutney.webp",
+    "imageCredit": {
+      "author": "Alex \"Skud\" Bayley",
+      "source": "https://www.flickr.com/photos/alexsbayley/8325484858",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22ead"
+    ],
+    "days": [
+      0,
+      5
+    ],
+    "farmerActive": true,
+    "ratingAvg": 4,
+    "ratingCount": 2,
+    "totalSold": 20,
+    "createdAt": "2026-09-24T06:33:40.812Z",
+    "updatedAt": "2026-09-24T06:33:44.905Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c444b321b1ee43d22ef5",
+    "farmer": "6ab4c444b321b1ee43d22eee",
     "name": "Green Olives in Brine",
-    "category": "6ab3f1cfe7db619be379e71f",
+    "category": "6ab4c444b321b1ee43d22ea8",
     "price": 950,
     "unit": "jar",
     "quantityAvailable": 10,
     "templateQuantity": 10,
     "description": "Hand-picked olives cured in salt brine.",
-    "image": "/uploads/seed/olive.webp",
+    "image": "/uploads/photos/green-olives-in-brine.webp",
+    "imageCredit": {
+      "author": "jules",
+      "source": "https://www.flickr.com/photos/stone-soup/5186237797",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e723",
-      "6ab3f1cfe7db619be379e724"
+      "6ab4c444b321b1ee43d22eac",
+      "6ab4c444b321b1ee43d22ead"
     ],
     "days": [
       0,
       5
     ],
     "farmerActive": true,
-    "ratingAvg": 4.2,
-    "ratingCount": 5,
-    "totalSold": 28,
-    "createdAt": "2026-09-23T15:35:44.536Z",
-    "updatedAt": "2026-09-23T15:35:48.902Z",
+    "ratingAvg": 5,
+    "ratingCount": 1,
+    "totalSold": 12,
+    "createdAt": "2026-09-24T06:33:40.814Z",
+    "updatedAt": "2026-09-24T06:33:44.932Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e772",
-    "farmer": "6ab3f1d0e7db619be379e76e",
+    "_id": "6ab4c444b321b1ee43d22efb",
+    "farmer": "6ab4c444b321b1ee43d22ef7",
     "name": "Chakki Atta (5 kg)",
-    "category": "6ab3f1cfe7db619be379e720",
+    "category": "6ab4c444b321b1ee43d22ea9",
     "price": 1100,
     "unit": "pack",
     "quantityAvailable": 40,
     "templateQuantity": 40,
     "description": "Stone-ground whole wheat flour in a 5 kg bag.",
-    "image": "/uploads/seed/wheat.webp",
+    "image": "/uploads/photos/chakki-atta-5-kg.webp",
+    "imageCredit": {
+      "author": "a200/a77Wells",
+      "source": "https://www.flickr.com/photos/aiwells/4408137370/",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e727",
-      "6ab3f1cfe7db619be379e725"
+      "6ab4c444b321b1ee43d22eb0",
+      "6ab4c444b321b1ee43d22eae"
     ],
     "days": [
       1,
@@ -1197,29 +1392,34 @@
     ],
     "farmerActive": true,
     "ratingAvg": 5,
-    "ratingCount": 2,
-    "totalSold": 32,
-    "createdAt": "2026-09-23T15:35:44.643Z",
-    "updatedAt": "2026-09-23T15:35:48.932Z",
+    "ratingCount": 7,
+    "totalSold": 43,
+    "createdAt": "2026-09-24T06:33:40.919Z",
+    "updatedAt": "2026-09-24T06:33:44.958Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e773",
-    "farmer": "6ab3f1d0e7db619be379e76e",
+    "_id": "6ab4c444b321b1ee43d22efc",
+    "farmer": "6ab4c444b321b1ee43d22ef7",
     "name": "Aged Basmati Rice",
-    "category": "6ab3f1cfe7db619be379e720",
+    "category": "6ab4c444b321b1ee43d22ea9",
     "price": 420,
     "unit": "kg",
     "quantityAvailable": 100,
     "templateQuantity": 100,
     "description": "Two-year aged basmati with long, fragrant grains.",
-    "image": "/uploads/seed/rice.webp",
+    "image": "/uploads/photos/aged-basmati-rice.webp",
+    "imageCredit": {
+      "author": "Vanessa Pike-Russell",
+      "source": "https://www.flickr.com/photos/lilcrabbygal/372888145",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e727",
-      "6ab3f1cfe7db619be379e725"
+      "6ab4c444b321b1ee43d22eb0",
+      "6ab4c444b321b1ee43d22eae"
     ],
     "days": [
       1,
@@ -1227,30 +1427,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 5,
+    "ratingAvg": 4.5,
     "ratingCount": 2,
-    "totalSold": 34,
-    "createdAt": "2026-09-23T15:35:44.647Z",
-    "updatedAt": "2026-09-23T15:35:48.963Z",
+    "totalSold": 35,
+    "createdAt": "2026-09-24T06:33:40.922Z",
+    "updatedAt": "2026-09-24T06:33:44.986Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e774",
-    "farmer": "6ab3f1d0e7db619be379e76e",
+    "_id": "6ab4c444b321b1ee43d22efd",
+    "farmer": "6ab4c444b321b1ee43d22ef7",
     "name": "Red Kidney Beans",
-    "category": "6ab3f1cfe7db619be379e720",
+    "category": "6ab4c444b321b1ee43d22ea9",
     "price": 480,
     "unit": "kg",
     "quantityAvailable": 30,
     "templateQuantity": 30,
     "description": "Cleaned rajma beans.",
-    "image": "/uploads/seed/beans.webp",
+    "image": "/uploads/photos/red-kidney-beans.webp",
+    "imageCredit": {
+      "author": "Alice Seba",
+      "source": "https://www.flickr.com/photos/vegetarianlost/8271866292",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e727",
-      "6ab3f1cfe7db619be379e725"
+      "6ab4c444b321b1ee43d22eb0",
+      "6ab4c444b321b1ee43d22eae"
     ],
     "days": [
       1,
@@ -1258,30 +1463,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.4,
-    "ratingCount": 5,
-    "totalSold": 49,
-    "createdAt": "2026-09-23T15:35:44.651Z",
-    "updatedAt": "2026-09-23T15:35:48.992Z",
+    "ratingAvg": 4.13,
+    "ratingCount": 8,
+    "totalSold": 55,
+    "createdAt": "2026-09-24T06:33:40.924Z",
+    "updatedAt": "2026-09-24T06:33:45.010Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e775",
-    "farmer": "6ab3f1d0e7db619be379e76e",
+    "_id": "6ab4c444b321b1ee43d22efe",
+    "farmer": "6ab4c444b321b1ee43d22ef7",
     "name": "Roasted Peanuts",
-    "category": "6ab3f1cfe7db619be379e720",
+    "category": "6ab4c444b321b1ee43d22ea9",
     "price": 600,
     "unit": "kg",
     "quantityAvailable": 25,
     "templateQuantity": 25,
     "description": "Sand-roasted peanuts, a winter favourite.",
-    "image": "/uploads/seed/peanuts.webp",
+    "image": "/uploads/photos/roasted-peanuts.webp",
+    "imageCredit": {
+      "author": "Marvin Lee",
+      "source": "https://www.flickr.com/photos/marvin_lee/5265470301",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e727",
-      "6ab3f1cfe7db619be379e725"
+      "6ab4c444b321b1ee43d22eb0",
+      "6ab4c444b321b1ee43d22eae"
     ],
     "days": [
       1,
@@ -1289,30 +1499,35 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 3.33,
+    "ratingAvg": 4.33,
     "ratingCount": 3,
-    "totalSold": 34,
-    "createdAt": "2026-09-23T15:35:44.653Z",
-    "updatedAt": "2026-09-23T15:35:49.020Z",
+    "totalSold": 42,
+    "createdAt": "2026-09-24T06:33:40.927Z",
+    "updatedAt": "2026-09-24T06:33:45.036Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e776",
-    "farmer": "6ab3f1d0e7db619be379e76e",
+    "_id": "6ab4c444b321b1ee43d22eff",
+    "farmer": "6ab4c444b321b1ee43d22ef7",
     "name": "Green Peas (Matar)",
-    "category": "6ab3f1cfe7db619be379e71a",
+    "category": "6ab4c444b321b1ee43d22ea3",
     "price": 220,
     "unit": "kg",
     "quantityAvailable": 35,
     "templateQuantity": 35,
     "description": "Sweet green peas in the pod.",
-    "image": "/uploads/seed/peas.webp",
+    "image": "/uploads/photos/green-peas-matar.webp",
+    "imageCredit": {
+      "author": "brett jordan",
+      "source": "https://www.flickr.com/photos/x1brett/6387887797",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e727",
-      "6ab3f1cfe7db619be379e725"
+      "6ab4c444b321b1ee43d22eb0",
+      "6ab4c444b321b1ee43d22eae"
     ],
     "days": [
       1,
@@ -1320,30 +1535,105 @@
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 4.8,
-    "ratingCount": 5,
-    "totalSold": 22,
-    "createdAt": "2026-09-23T15:35:44.656Z",
-    "updatedAt": "2026-09-23T15:35:49.048Z",
+    "ratingAvg": 5,
+    "ratingCount": 2,
+    "totalSold": 29,
+    "createdAt": "2026-09-24T06:33:40.929Z",
+    "updatedAt": "2026-09-24T06:33:45.064Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e77b",
-    "farmer": "6ab3f1d0e7db619be379e778",
+    "_id": "6ab4c445b321b1ee43d22f04",
+    "farmer": "6ab4c445b321b1ee43d22f01",
     "name": "Sunflower Bunch",
-    "category": "6ab3f1cfe7db619be379e721",
+    "category": "6ab4c444b321b1ee43d22eaa",
     "price": 900,
     "unit": "bunch",
     "quantityAvailable": 15,
     "templateQuantity": 15,
     "description": "Five bright sunflowers to light up any room.",
-    "image": "/uploads/seed/sunflower.webp",
+    "image": "/uploads/photos/sunflower-bunch.webp",
+    "imageCredit": {
+      "author": "Delaware Cooperative Extension",
+      "source": "https://www.flickr.com/photos/udextension/14452588297",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
+    ],
+    "days": [
+      0,
+      5
+    ],
+    "farmerActive": true,
+    "ratingAvg": 4,
+    "ratingCount": 3,
+    "totalSold": 17,
+    "createdAt": "2026-09-24T06:33:41.034Z",
+    "updatedAt": "2026-09-24T06:33:45.089Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f05",
+    "farmer": "6ab4c445b321b1ee43d22f01",
+    "name": "Desi Rose Bouquet",
+    "category": "6ab4c444b321b1ee43d22eaa",
+    "price": 700,
+    "unit": "bunch",
+    "quantityAvailable": 20,
+    "templateQuantity": 20,
+    "description": "A dozen fragrant desi gulab roses.",
+    "image": "/uploads/photos/desi-rose-bouquet.webp",
+    "imageCredit": {
+      "author": "Ling Manh Nguyen Tran",
+      "source": "https://www.flickr.com/photos/lingdezign/3738049394",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
+    ],
+    "days": [
+      0,
+      5
+    ],
+    "farmerActive": true,
+    "ratingAvg": 5,
+    "ratingCount": 4,
+    "totalSold": 11,
+    "createdAt": "2026-09-24T06:33:41.036Z",
+    "updatedAt": "2026-09-24T06:33:45.114Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f06",
+    "farmer": "6ab4c445b321b1ee43d22f01",
+    "name": "Tulip Bunch",
+    "category": "6ab4c444b321b1ee43d22eaa",
+    "price": 1500,
+    "unit": "bunch",
+    "quantityAvailable": 8,
+    "templateQuantity": 8,
+    "description": "Ten greenhouse tulips in mixed colours.",
+    "image": "/uploads/photos/tulip-bunch.webp",
+    "imageCredit": {
+      "author": "Thanh-Tung Nguyen",
+      "source": "https://www.flickr.com/photos/markryan1990/5409500700",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -1352,118 +1642,33 @@
     "farmerActive": true,
     "ratingAvg": 5,
     "ratingCount": 1,
-    "totalSold": 17,
-    "createdAt": "2026-09-23T15:35:44.773Z",
-    "updatedAt": "2026-09-23T15:35:49.080Z",
+    "totalSold": 21,
+    "createdAt": "2026-09-24T06:33:41.039Z",
+    "updatedAt": "2026-09-24T06:33:45.146Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e77c",
-    "farmer": "6ab3f1d0e7db619be379e778",
-    "name": "Desi Rose Bouquet",
-    "category": "6ab3f1cfe7db619be379e721",
-    "price": 700,
-    "unit": "bunch",
-    "quantityAvailable": 20,
-    "templateQuantity": 20,
-    "description": "A dozen fragrant desi gulab roses.",
-    "image": "/uploads/seed/rose.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
-    ],
-    "days": [
-      0,
-      5
-    ],
-    "farmerActive": true,
-    "ratingAvg": 4,
-    "ratingCount": 4,
-    "totalSold": 13,
-    "createdAt": "2026-09-23T15:35:44.776Z",
-    "updatedAt": "2026-09-23T15:35:49.119Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e77d",
-    "farmer": "6ab3f1d0e7db619be379e778",
-    "name": "Tulip Bunch",
-    "category": "6ab3f1cfe7db619be379e721",
-    "price": 1500,
-    "unit": "bunch",
-    "quantityAvailable": 8,
-    "templateQuantity": 8,
-    "description": "Ten greenhouse tulips in mixed colours.",
-    "image": "/uploads/seed/tulip.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
-    ],
-    "days": [
-      0,
-      5
-    ],
-    "farmerActive": true,
-    "ratingAvg": 2,
-    "ratingCount": 1,
-    "totalSold": 13,
-    "createdAt": "2026-09-23T15:35:44.778Z",
-    "updatedAt": "2026-09-23T15:35:49.146Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e77e",
-    "farmer": "6ab3f1d0e7db619be379e778",
+    "_id": "6ab4c445b321b1ee43d22f07",
+    "farmer": "6ab4c445b321b1ee43d22f01",
     "name": "Money Plant (Potted)",
-    "category": "6ab3f1cfe7db619be379e721",
+    "category": "6ab4c444b321b1ee43d22eaa",
     "price": 850,
     "unit": "piece",
     "quantityAvailable": 12,
     "templateQuantity": 12,
     "description": "Easy-care pothos in a 6-inch pot.",
-    "image": "/uploads/seed/potted-plant.webp",
+    "image": "/uploads/photos/money-plant-potted.webp",
+    "imageCredit": {
+      "author": "Ross Elliott",
+      "source": "https://www.flickr.com/photos/ross_elliott/4574608372/",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
-    ],
-    "days": [
-      0,
-      5
-    ],
-    "farmerActive": true,
-    "ratingAvg": 4,
-    "ratingCount": 2,
-    "totalSold": 13,
-    "createdAt": "2026-09-23T15:35:44.781Z",
-    "updatedAt": "2026-09-23T15:35:49.186Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e77f",
-    "farmer": "6ab3f1d0e7db619be379e778",
-    "name": "Mini Cactus",
-    "category": "6ab3f1cfe7db619be379e721",
-    "price": 450,
-    "unit": "piece",
-    "quantityAvailable": 18,
-    "templateQuantity": 18,
-    "description": "Cute desk cactus in a clay pot.",
-    "image": "/uploads/seed/cactus.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -1472,28 +1677,68 @@
     "farmerActive": true,
     "ratingAvg": 0,
     "ratingCount": 0,
-    "totalSold": 10,
-    "createdAt": "2026-09-23T15:35:44.783Z",
-    "updatedAt": "2026-09-23T15:35:49.213Z",
+    "totalSold": 9,
+    "createdAt": "2026-09-24T06:33:41.041Z",
+    "updatedAt": "2026-09-24T06:33:45.171Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e780",
-    "farmer": "6ab3f1d0e7db619be379e778",
+    "_id": "6ab4c445b321b1ee43d22f08",
+    "farmer": "6ab4c445b321b1ee43d22f01",
+    "name": "Mini Cactus",
+    "category": "6ab4c444b321b1ee43d22eaa",
+    "price": 450,
+    "unit": "piece",
+    "quantityAvailable": 18,
+    "templateQuantity": 18,
+    "description": "Cute desk cactus in a clay pot.",
+    "image": "/uploads/photos/mini-cactus.webp",
+    "imageCredit": {
+      "author": "Scott Wylie",
+      "source": "https://www.flickr.com/photos/scotbot/16576852608",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
+    ],
+    "days": [
+      0,
+      5
+    ],
+    "farmerActive": true,
+    "ratingAvg": 2,
+    "ratingCount": 1,
+    "totalSold": 13,
+    "createdAt": "2026-09-24T06:33:41.043Z",
+    "updatedAt": "2026-09-24T06:33:45.197Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f09",
+    "farmer": "6ab4c445b321b1ee43d22f01",
     "name": "Hibiscus Plant",
-    "category": "6ab3f1cfe7db619be379e721",
+    "category": "6ab4c444b321b1ee43d22eaa",
     "price": 1100,
     "unit": "piece",
     "quantityAvailable": 6,
     "templateQuantity": 6,
     "description": "Flowering gurhal plant for your balcony.",
-    "image": "/uploads/seed/hibiscus.webp",
+    "image": "/uploads/photos/hibiscus-plant.webp",
+    "imageCredit": {
+      "author": "Thomas Tolkien",
+      "source": "https://www.flickr.com/photos/tomtolkien/4080875237",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e722",
-      "6ab3f1cfe7db619be379e726"
+      "6ab4c444b321b1ee43d22eab",
+      "6ab4c444b321b1ee43d22eaf"
     ],
     "days": [
       0,
@@ -1501,144 +1746,67 @@
     ],
     "farmerActive": true,
     "ratingAvg": 5,
-    "ratingCount": 1,
-    "totalSold": 11,
-    "createdAt": "2026-09-23T15:35:44.786Z",
-    "updatedAt": "2026-09-23T15:35:49.240Z",
+    "ratingCount": 2,
+    "totalSold": 9,
+    "createdAt": "2026-09-24T06:33:41.045Z",
+    "updatedAt": "2026-09-24T06:33:45.224Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e785",
-    "farmer": "6ab3f1d0e7db619be379e782",
+    "_id": "6ab4c445b321b1ee43d22f0e",
+    "farmer": "6ab4c445b321b1ee43d22f0b",
     "name": "Strawberries",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 600,
     "unit": "box",
     "quantityAvailable": 30,
     "templateQuantity": 30,
     "description": "500 g box of sweet Lahore strawberries.",
-    "image": "/uploads/seed/strawberry.webp",
+    "image": "/uploads/photos/strawberries.webp",
+    "imageCredit": {
+      "author": "amrufm",
+      "source": "https://www.flickr.com/photos/amrufm/653669419",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e728"
+      "6ab4c444b321b1ee43d22eb1"
     ],
     "days": [
       0,
       4
     ],
     "farmerActive": true,
-    "ratingAvg": 2,
-    "ratingCount": 1,
-    "totalSold": 9,
-    "createdAt": "2026-09-23T15:35:44.897Z",
-    "updatedAt": "2026-09-23T15:35:49.267Z",
+    "ratingAvg": 0,
+    "ratingCount": 0,
+    "totalSold": 7,
+    "createdAt": "2026-09-24T06:33:41.147Z",
+    "updatedAt": "2026-09-24T06:33:45.253Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e786",
-    "farmer": "6ab3f1d0e7db619be379e782",
+    "_id": "6ab4c445b321b1ee43d22f0f",
+    "farmer": "6ab4c445b321b1ee43d22f0b",
     "name": "Kinnow Oranges",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 320,
     "unit": "dozen",
     "quantityAvailable": 40,
     "templateQuantity": 40,
     "description": "Juicy kinnow straight from Sargodha partners.",
-    "image": "/uploads/seed/orange.webp",
+    "image": "/uploads/photos/kinnow-oranges.webp",
+    "imageCredit": {
+      "author": "kizzzbeth",
+      "source": "https://www.flickr.com/photos/31403417@N00/5533711650",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e728"
-    ],
-    "days": [
-      0,
-      4
-    ],
-    "farmerActive": true,
-    "ratingAvg": 3.5,
-    "ratingCount": 2,
-    "totalSold": 17,
-    "createdAt": "2026-09-23T15:35:44.899Z",
-    "updatedAt": "2026-09-23T15:35:49.294Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e787",
-    "farmer": "6ab3f1d0e7db619be379e782",
-    "name": "Sweet Potatoes",
-    "category": "6ab3f1cfe7db619be379e71a",
-    "price": 160,
-    "unit": "kg",
-    "quantityAvailable": 35,
-    "templateQuantity": 35,
-    "description": "Roast them on coals for the perfect winter snack.",
-    "image": "/uploads/seed/sweet-potato.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e728"
-    ],
-    "days": [
-      0,
-      4
-    ],
-    "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 1,
-    "totalSold": 27,
-    "createdAt": "2026-09-23T15:35:44.902Z",
-    "updatedAt": "2026-09-23T15:35:49.322Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e788",
-    "farmer": "6ab3f1d0e7db619be379e782",
-    "name": "Sweet Corn",
-    "category": "6ab3f1cfe7db619be379e71a",
-    "price": 80,
-    "unit": "piece",
-    "quantityAvailable": 50,
-    "templateQuantity": 50,
-    "description": "Tender sweet corn cobs.",
-    "image": "/uploads/seed/corn.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e728"
-    ],
-    "days": [
-      0,
-      4
-    ],
-    "farmerActive": true,
-    "ratingAvg": 4.25,
-    "ratingCount": 4,
-    "totalSold": 10,
-    "createdAt": "2026-09-23T15:35:44.904Z",
-    "updatedAt": "2026-09-23T15:35:49.349Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d0e7db619be379e789",
-    "farmer": "6ab3f1d0e7db619be379e782",
-    "name": "Garlic",
-    "category": "6ab3f1cfe7db619be379e71a",
-    "price": 600,
-    "unit": "kg",
-    "quantityAvailable": 20,
-    "templateQuantity": 20,
-    "description": "Pungent desi garlic bulbs.",
-    "image": "/uploads/seed/garlic.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e728"
+      "6ab4c444b321b1ee43d22eb1"
     ],
     "days": [
       0,
@@ -1647,27 +1815,100 @@
     "farmerActive": true,
     "ratingAvg": 4.75,
     "ratingCount": 4,
-    "totalSold": 15,
-    "createdAt": "2026-09-23T15:35:44.907Z",
-    "updatedAt": "2026-09-23T15:35:49.382Z",
+    "totalSold": 18,
+    "createdAt": "2026-09-24T06:33:41.149Z",
+    "updatedAt": "2026-09-24T06:33:45.282Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d0e7db619be379e78a",
-    "farmer": "6ab3f1d0e7db619be379e782",
-    "name": "Fresh Ginger",
-    "category": "6ab3f1cfe7db619be379e71a",
-    "price": 700,
+    "_id": "6ab4c445b321b1ee43d22f10",
+    "farmer": "6ab4c445b321b1ee43d22f0b",
+    "name": "Sweet Potatoes",
+    "category": "6ab4c444b321b1ee43d22ea3",
+    "price": 160,
     "unit": "kg",
-    "quantityAvailable": 15,
-    "templateQuantity": 15,
-    "description": "Aromatic ginger root.",
-    "image": "/uploads/seed/ginger.webp",
+    "quantityAvailable": 35,
+    "templateQuantity": 35,
+    "description": "Roast them on coals for the perfect winter snack.",
+    "image": "/uploads/photos/sweet-potatoes.webp",
+    "imageCredit": {
+      "author": "Mike Licht",
+      "source": "https://www.flickr.com/photos/notionscapital/10894990276",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e728"
+      "6ab4c444b321b1ee43d22eb1"
+    ],
+    "days": [
+      0,
+      4
+    ],
+    "farmerActive": true,
+    "ratingAvg": 5,
+    "ratingCount": 2,
+    "totalSold": 28,
+    "createdAt": "2026-09-24T06:33:41.151Z",
+    "updatedAt": "2026-09-24T06:33:45.312Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f11",
+    "farmer": "6ab4c445b321b1ee43d22f0b",
+    "name": "Sweet Corn",
+    "category": "6ab4c444b321b1ee43d22ea3",
+    "price": 80,
+    "unit": "piece",
+    "quantityAvailable": 50,
+    "templateQuantity": 50,
+    "description": "Tender sweet corn cobs.",
+    "image": "/uploads/photos/sweet-corn.webp",
+    "imageCredit": {
+      "author": "Rosana Prada",
+      "source": "https://www.flickr.com/photos/zanastardust/1303616796",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eb1"
+    ],
+    "days": [
+      0,
+      4
+    ],
+    "farmerActive": true,
+    "ratingAvg": 5,
+    "ratingCount": 1,
+    "totalSold": 6,
+    "createdAt": "2026-09-24T06:33:41.154Z",
+    "updatedAt": "2026-09-24T06:33:45.336Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f12",
+    "farmer": "6ab4c445b321b1ee43d22f0b",
+    "name": "Garlic",
+    "category": "6ab4c444b321b1ee43d22ea3",
+    "price": 600,
+    "unit": "kg",
+    "quantityAvailable": 20,
+    "templateQuantity": 20,
+    "description": "Pungent desi garlic bulbs.",
+    "image": "/uploads/photos/garlic.webp",
+    "imageCredit": {
+      "author": "David, Bergin, Emmett and Elliott",
+      "source": "https://www.flickr.com/photos/beglen/151174701",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eb1"
     ],
     "days": [
       0,
@@ -1676,56 +1917,236 @@
     "farmerActive": true,
     "ratingAvg": 0,
     "ratingCount": 0,
-    "totalSold": 19,
-    "createdAt": "2026-09-23T15:35:44.909Z",
-    "updatedAt": "2026-09-23T15:35:49.409Z",
+    "totalSold": 12,
+    "createdAt": "2026-09-24T06:33:41.156Z",
+    "updatedAt": "2026-09-24T06:33:45.361Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d1e7db619be379e78f",
-    "farmer": "6ab3f1d1e7db619be379e78c",
+    "_id": "6ab4c445b321b1ee43d22f13",
+    "farmer": "6ab4c445b321b1ee43d22f0b",
+    "name": "Fresh Ginger",
+    "category": "6ab4c444b321b1ee43d22ea3",
+    "price": 700,
+    "unit": "kg",
+    "quantityAvailable": 15,
+    "templateQuantity": 15,
+    "description": "Aromatic ginger root.",
+    "image": "/uploads/photos/fresh-ginger.webp",
+    "imageCredit": {
+      "author": "Thomas Won",
+      "source": "https://www.flickr.com/photos/thomaswon9121/2836510402",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eb1"
+    ],
+    "days": [
+      0,
+      4
+    ],
+    "farmerActive": true,
+    "ratingAvg": 0,
+    "ratingCount": 0,
+    "totalSold": 16,
+    "createdAt": "2026-09-24T06:33:41.158Z",
+    "updatedAt": "2026-09-24T06:33:45.385Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f18",
+    "farmer": "6ab4c445b321b1ee43d22f15",
     "name": "Red Apples",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 380,
     "unit": "kg",
     "quantityAvailable": 60,
     "templateQuantity": 60,
     "description": "Crisp red apples from Swat.",
-    "image": "/uploads/seed/apple.webp",
+    "image": "/uploads/photos/red-apples.webp",
+    "imageCredit": {
+      "author": "Clyde Robinson",
+      "source": "https://www.flickr.com/photos/crobj/3074550049",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e729"
+      "6ab4c444b321b1ee43d22eb2"
     ],
     "days": [
       0,
       6
     ],
     "farmerActive": true,
-    "ratingAvg": 3,
-    "ratingCount": 1,
+    "ratingAvg": 4.5,
+    "ratingCount": 2,
     "totalSold": 18,
-    "createdAt": "2026-09-23T15:35:45.012Z",
-    "updatedAt": "2026-09-23T15:35:49.443Z",
+    "createdAt": "2026-09-24T06:33:41.261Z",
+    "updatedAt": "2026-09-24T06:33:45.409Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d1e7db619be379e790",
-    "farmer": "6ab3f1d1e7db619be379e78c",
+    "_id": "6ab4c445b321b1ee43d22f19",
+    "farmer": "6ab4c445b321b1ee43d22f15",
     "name": "Green Apples",
-    "category": "6ab3f1cfe7db619be379e71b",
+    "category": "6ab4c444b321b1ee43d22ea4",
     "price": 420,
     "unit": "kg",
     "quantityAvailable": 30,
     "templateQuantity": 30,
     "description": "Tart green apples for baking and snacking.",
-    "image": "/uploads/seed/green-apple.webp",
+    "image": "/uploads/photos/green-apples.webp",
+    "imageCredit": {
+      "author": "Selma Broeder",
+      "source": "https://www.flickr.com/photos/selma90/3675162262",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e729"
+      "6ab4c444b321b1ee43d22eb2"
+    ],
+    "days": [
+      0,
+      6
+    ],
+    "farmerActive": true,
+    "ratingAvg": 0,
+    "ratingCount": 0,
+    "totalSold": 17,
+    "createdAt": "2026-09-24T06:33:41.263Z",
+    "updatedAt": "2026-09-24T06:33:45.434Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f1a",
+    "farmer": "6ab4c445b321b1ee43d22f15",
+    "name": "Peaches",
+    "category": "6ab4c444b321b1ee43d22ea4",
+    "price": 450,
+    "unit": "kg",
+    "quantityAvailable": 25,
+    "templateQuantity": 25,
+    "description": "Soft, fragrant hill peaches.",
+    "image": "/uploads/photos/peaches.webp",
+    "imageCredit": {
+      "author": "Kurman Communications, Inc.",
+      "source": "https://www.flickr.com/photos/kurmanphotos/14844000216",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eb2"
+    ],
+    "days": [
+      0,
+      6
+    ],
+    "farmerActive": true,
+    "ratingAvg": 0,
+    "ratingCount": 0,
+    "totalSold": 14,
+    "createdAt": "2026-09-24T06:33:41.265Z",
+    "updatedAt": "2026-09-24T06:33:45.464Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f1b",
+    "farmer": "6ab4c445b321b1ee43d22f15",
+    "name": "Cherries",
+    "category": "6ab4c444b321b1ee43d22ea4",
+    "price": 1200,
+    "unit": "kg",
+    "quantityAvailable": 10,
+    "templateQuantity": 10,
+    "description": "Dark sweet cherries, short season only.",
+    "image": "/uploads/photos/cherries.webp",
+    "imageCredit": {
+      "author": "Pat (Cletch) Williams",
+      "source": "https://www.flickr.com/photos/cletch/19471553051",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eb2"
+    ],
+    "days": [
+      0,
+      6
+    ],
+    "farmerActive": true,
+    "ratingAvg": 5,
+    "ratingCount": 2,
+    "totalSold": 21,
+    "createdAt": "2026-09-24T06:33:41.268Z",
+    "updatedAt": "2026-09-24T06:33:45.493Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f1c",
+    "farmer": "6ab4c445b321b1ee43d22f15",
+    "name": "Kiwi",
+    "category": "6ab4c444b321b1ee43d22ea4",
+    "price": 900,
+    "unit": "kg",
+    "quantityAvailable": 12,
+    "templateQuantity": 12,
+    "description": "Tangy kiwis from Swat valley.",
+    "image": "/uploads/photos/kiwi.webp",
+    "imageCredit": {
+      "author": "Gaye Launder",
+      "source": "https://www.flickr.com/photos/28912254@N04/16480336605",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eb2"
+    ],
+    "days": [
+      0,
+      6
+    ],
+    "farmerActive": true,
+    "ratingAvg": 0,
+    "ratingCount": 0,
+    "totalSold": 22,
+    "createdAt": "2026-09-24T06:33:41.270Z",
+    "updatedAt": "2026-09-24T06:33:45.519Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab4c445b321b1ee43d22f1d",
+    "farmer": "6ab4c445b321b1ee43d22f15",
+    "name": "Pears",
+    "category": "6ab4c444b321b1ee43d22ea4",
+    "price": 350,
+    "unit": "kg",
+    "quantityAvailable": 20,
+    "templateQuantity": 20,
+    "description": "Juicy nashpati pears.",
+    "image": "/uploads/photos/pears.webp",
+    "imageCredit": {
+      "author": "Steven Jackson",
+      "source": "https://www.flickr.com/photos/jackson3/3860359915",
+      "license": "CC BY 2.0"
+    },
+    "status": "available",
+    "isRemoved": false,
+    "deletedByFarmer": false,
+    "markets": [
+      "6ab4c444b321b1ee43d22eb2"
     ],
     "days": [
       0,
@@ -1734,143 +2155,32 @@
     "farmerActive": true,
     "ratingAvg": 4.33,
     "ratingCount": 3,
-    "totalSold": 23,
-    "createdAt": "2026-09-23T15:35:45.014Z",
-    "updatedAt": "2026-09-23T15:35:49.475Z",
+    "totalSold": 14,
+    "createdAt": "2026-09-24T06:33:41.272Z",
+    "updatedAt": "2026-09-24T06:33:45.543Z",
     "__v": 0
   },
   {
-    "_id": "6ab3f1d1e7db619be379e791",
-    "farmer": "6ab3f1d1e7db619be379e78c",
-    "name": "Peaches",
-    "category": "6ab3f1cfe7db619be379e71b",
-    "price": 450,
-    "unit": "kg",
-    "quantityAvailable": 25,
-    "templateQuantity": 25,
-    "description": "Soft, fragrant hill peaches.",
-    "image": "/uploads/seed/peach.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e729"
-    ],
-    "days": [
-      0,
-      6
-    ],
-    "farmerActive": true,
-    "ratingAvg": 4.67,
-    "ratingCount": 3,
-    "totalSold": 18,
-    "createdAt": "2026-09-23T15:35:45.016Z",
-    "updatedAt": "2026-09-23T15:35:49.513Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d1e7db619be379e792",
-    "farmer": "6ab3f1d1e7db619be379e78c",
-    "name": "Cherries",
-    "category": "6ab3f1cfe7db619be379e71b",
-    "price": 1200,
-    "unit": "kg",
-    "quantityAvailable": 10,
-    "templateQuantity": 10,
-    "description": "Dark sweet cherries, short season only.",
-    "image": "/uploads/seed/cherries.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e729"
-    ],
-    "days": [
-      0,
-      6
-    ],
-    "farmerActive": true,
-    "ratingAvg": 4.8,
-    "ratingCount": 5,
-    "totalSold": 29,
-    "createdAt": "2026-09-23T15:35:45.018Z",
-    "updatedAt": "2026-09-23T15:35:49.542Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d1e7db619be379e793",
-    "farmer": "6ab3f1d1e7db619be379e78c",
-    "name": "Kiwi",
-    "category": "6ab3f1cfe7db619be379e71b",
-    "price": 900,
-    "unit": "kg",
-    "quantityAvailable": 12,
-    "templateQuantity": 12,
-    "description": "Tangy kiwis from Swat valley.",
-    "image": "/uploads/seed/kiwi.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e729"
-    ],
-    "days": [
-      0,
-      6
-    ],
-    "farmerActive": true,
-    "ratingAvg": 0,
-    "ratingCount": 0,
-    "totalSold": 15,
-    "createdAt": "2026-09-23T15:35:45.020Z",
-    "updatedAt": "2026-09-23T15:35:49.572Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d1e7db619be379e794",
-    "farmer": "6ab3f1d1e7db619be379e78c",
-    "name": "Pears",
-    "category": "6ab3f1cfe7db619be379e71b",
-    "price": 350,
-    "unit": "kg",
-    "quantityAvailable": 20,
-    "templateQuantity": 20,
-    "description": "Juicy nashpati pears.",
-    "image": "/uploads/seed/pear.webp",
-    "status": "available",
-    "isRemoved": false,
-    "deletedByFarmer": false,
-    "markets": [
-      "6ab3f1cfe7db619be379e729"
-    ],
-    "days": [
-      0,
-      6
-    ],
-    "farmerActive": true,
-    "ratingAvg": 5,
-    "ratingCount": 1,
-    "totalSold": 19,
-    "createdAt": "2026-09-23T15:35:45.022Z",
-    "updatedAt": "2026-09-23T15:35:49.601Z",
-    "__v": 0
-  },
-  {
-    "_id": "6ab3f1d1e7db619be379e79b",
-    "farmer": "6ab3f1d1e7db619be379e799",
+    "_id": "6ab4c445b321b1ee43d22f24",
+    "farmer": "6ab4c445b321b1ee43d22f22",
     "name": "Goat Milk",
-    "category": "6ab3f1cfe7db619be379e71c",
+    "category": "6ab4c444b321b1ee43d22ea5",
     "price": 300,
     "unit": "litre",
     "quantityAvailable": 10,
     "templateQuantity": 10,
     "description": "Fresh goat milk.",
-    "image": "/uploads/seed/milk.webp",
+    "image": "/uploads/photos/goat-milk.webp",
+    "imageCredit": {
+      "author": "Rebecca Siegel",
+      "source": "https://www.flickr.com/photos/grongar/5529448988",
+      "license": "CC BY 2.0"
+    },
     "status": "available",
     "isRemoved": false,
     "deletedByFarmer": false,
     "markets": [
-      "6ab3f1cfe7db619be379e727"
+      "6ab4c444b321b1ee43d22eb0"
     ],
     "days": [
       1
@@ -1879,8 +2189,8 @@
     "ratingAvg": 0,
     "ratingCount": 0,
     "totalSold": 0,
-    "createdAt": "2026-09-23T15:35:45.246Z",
-    "updatedAt": "2026-09-23T15:35:49.630Z",
+    "createdAt": "2026-09-24T06:33:41.490Z",
+    "updatedAt": "2026-09-24T06:33:45.569Z",
     "__v": 0
   }
 ]

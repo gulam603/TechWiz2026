@@ -71,6 +71,8 @@ router.get('/products/:id', optionalAuth, products.getProduct);
 
 router.get('/reviews', reviews.listReviews);
 router.post('/assistant', chatLimiter, optionalAuth, assistant.chat);
+router.get('/assistant/history', optionalAuth, assistant.history);
+router.delete('/assistant/history', optionalAuth, assistant.clearHistory);
 
 // ---------- Notifications (any logged-in user) ----------
 router.get('/notifications', protect, notifications.listNotifications);

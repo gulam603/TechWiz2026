@@ -452,6 +452,16 @@
 }
 
 // ------------------------------------------------------------------ product detail
+.photo-credit {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  color: $ml-muted;
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
 .pd-visual {
   border-radius: var(--ml-radius-lg);
   aspect-ratio: 1 / 1;
@@ -462,6 +472,11 @@
     img {
       width: 60%;
       height: 60%;
+    }
+    img.photo {
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
     }
   }
 }
@@ -546,6 +561,15 @@
     position: absolute;
     filter: drop-shadow(0 16px 18px rgba(23, 59, 44, 0.22));
     z-index: -1;
+    // real product photos become small tilted prints
+    &.photo-card {
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border: 4px solid #fff;
+      border-radius: 0.9rem;
+      filter: none;
+      box-shadow: 0 16px 30px -12px rgba(23, 59, 44, 0.45);
+    }
   }
   .cover-photo {
     position: absolute;
@@ -945,6 +969,9 @@
       border-radius: 0.9rem;
       img {
         width: 70%;
+      }
+      img.photo {
+        width: 100%;
       }
     }
   }

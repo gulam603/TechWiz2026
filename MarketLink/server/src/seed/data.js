@@ -496,7 +496,7 @@ export const farmerResponses = [
 
 export const announcements = [
   {
-    title: 'Mango season is here! 🥭',
+    title: 'Mango season is here!',
     message: 'Sindhri and Chaunsa mangoes are now available from Gadap Orchard Co. Pre-order early — they sell out by Sunday noon!',
     audience: 'all',
     isActive: true,

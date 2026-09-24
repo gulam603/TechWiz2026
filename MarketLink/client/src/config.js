@@ -30,10 +30,14 @@ export const CONTACT = {
   longitude: 67.0682,
 };
 
-// TODO: replace with your own team members before submitting (shown on the About page)
+// The team that created MarketLink (About page and footer)
+export const TEAM_NAME = 'Team Omniverse';
+export const TEAM_PLACE = 'Aptech Learning Centre, F.B. Area, Karachi';
+
+// Add each member's name to show it on the About page (cards show the area of work until then)
 export const TEAM = [
-  { name: 'Team Member 1', role: 'Team lead · Backend (Node / Express)' },
-  { name: 'Team Member 2', role: 'Frontend (React) · UI design' },
-  { name: 'Team Member 3', role: 'Database (MongoDB) · Testing' },
-  { name: 'Team Member 4', role: 'Maps integration · Documentation' },
+  { name: '', area: 'Team lead · Backend', role: 'Node / Express API, security and e-mails', icon: 'bi-hdd-network' },
+  { name: '', area: 'Frontend · UI design', role: 'React pages, design system and animations', icon: 'bi-palette' },
+  { name: '', area: 'Database · Testing', role: 'MongoDB schema, demo data and test runs', icon: 'bi-database-check' },
+  { name: '', area: 'Maps · Documentation', role: 'Leaflet maps, routes, AI assistant and docs', icon: 'bi-map' },
 ];

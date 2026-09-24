@@ -10,6 +10,7 @@ import Pagination from '../../components/common/Pagination';
 import Modal from '../../components/common/Modal';
 import { PageLoader } from '../../components/common/Loader';
 import { money } from '../../utils/format';
+import { productPath } from '../../utils/links';
 
 export default function AdminProducts() {
   useDocumentTitle('Moderate products');
@@ -85,7 +86,7 @@ export default function AdminProducts() {
                           <img src={p.image} alt="" className={p.image?.includes('/seed/') ? '' : 'photo'} />
                         </span>
                         <div>
-                          {p.isRemoved ? <strong className="small d-block">{p.name}</strong> : <Link to={`/products/${p._id}`} className="small fw-semi d-block">{p.name}</Link>}
+                          {p.isRemoved ? <strong className="small d-block">{p.name}</strong> : <Link to={productPath(p)} className="small fw-semi d-block">{p.name}</Link>}
                           <span className="fs-7 text-muted-2">{p.category?.name}</span>
                           {p.isRemoved && <div className="fs-7 text-danger">Removed: {p.removedReason}</div>}
                         </div>

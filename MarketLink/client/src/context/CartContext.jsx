@@ -14,7 +14,7 @@ function loadCart() {
 
 /**
  * Shopping cart kept in the browser (localStorage). Each line:
- * { productId, name, price, unit, image, categoryColor, maxQty, quantity, farmer: { _id, stallName, slug, logo } }
+ * { productId, slug, name, price, unit, image, categoryColor, maxQty, quantity, farmer: { _id, stallName, slug, logo } }
  * Items are grouped by farmer at checkout because every farmer has its own pickup slot.
  */
 export function CartProvider({ children }) {
@@ -41,6 +41,7 @@ export function CartProvider({ children }) {
         ...list,
         {
           productId: id,
+          slug: product.slug,
           name: product.name,
           price: product.price,
           unit: product.unit,

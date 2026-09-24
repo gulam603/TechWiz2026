@@ -6,7 +6,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import { ConfirmModal } from '../../components/common/Modal';
-import { initials } from '../../utils/format';
+import Avatar from '../../components/common/Avatar';
+import ProfilePhoto from '../../components/common/ProfilePhoto';
 
 export function PasswordForm() {
   const { toast } = useToast();
@@ -93,41 +94,66 @@ function FamilyPanel() {
     }
   }
 
+  const members = data?.members || [];
+  const canAdd = !data?.household || data.isOwner;
+
   return (
-    <div className="panel">
-      <div className="panel-head">
-        <h5>
-          <i className="bi bi-people" /> Family sharing <span className="chip chip-soft ms-1">optional</span>
-        </h5>
+    <section className="panel family-panel">
+      <div className="family-banner">
+        <span className="family-banner-icon" aria-hidden="true">
+          <i className="bi bi-people-fill" />
+        </span>
+        <div className="family-banner-text">
+          <h5>
+            Family sharing <span className="chip chip-soft">optional</span>
+          </h5>
+          <p>Link family members’ accounts so everyone in the household can see each other’s pre-orders and pickups.</p>
+        </div>
+        <span className="family-banner-count">
+          <strong>{members.length}</strong> {members.length === 1 ? 'member' : 'members'}
+        </span>
       </div>
-      <p className="small text-muted-2">Link family members' accounts so everyone in the household can see each other's pre-orders and pickups.</p>
-      {data?.members?.length > 0 && (
-        <div className="d-grid gap-2 mb-3">
-          {data.members.map((m) => (
-            <div key={m._id} className="d-flex align-items-center gap-2 border rounded-4 p-2 flex-wrap">
-              <span className="avatar avatar-sm">{initials(m.name)}</span>
-              <span className="flex-grow-1 small min-w-0 text-break">
-                <strong className="d-block">
-                  {m.name} {m.isMe && '(you)'}
-                </strong>
-                <span className="text-muted-2">{m.email}</span>
-              </span>
-              {m.isOwner && <span className="chip chip-lime">Owner</span>}
-              {(data.isOwner || m.isMe) && (
-                <button type="button" className="btn btn-sm btn-white" onClick={() => setRemoving(m)}>
-                  {m.isMe ? 'Leave' : 'Remove'}
-                </button>
-              )}
+
+      {members.length > 0 ? (
+        <div className="row g-2 mb-3">
+          {members.map((m) => (
+            <div key={m._id} className="col-md-6">
+              <div className="family-member">
+                <Avatar name={m.name} src={m.avatar} className="avatar-sm" />
+                <span className="family-member-text">
+                  <strong>
+                    {m.name} {m.isMe && <span className="text-muted-2 fw-normal">(you)</span>}
+                  </strong>
+                  <span>{m.email}</span>
+                </span>
+                {m.isOwner && <span className="chip chip-lime">Owner</span>}
+                {(data.isOwner || m.isMe) && (
+                  <button type="button" className="btn btn-sm btn-white" onClick={() => setRemoving(m)}>
+                    {m.isMe ? 'Leave' : 'Remove'}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
+      ) : (
+        <p className="small text-muted-2 mb-3">
+          <i className="bi bi-info-circle me-1" aria-hidden="true" />
+          No household yet. Add a family member who already has a MarketLink account to start one; you become the owner.
+        </p>
       )}
-      {(!data?.household || data.isOwner) && (
-        <form className="d-flex gap-2" onSubmit={add}>
-          <input type="email" className="form-control" placeholder="Family member's e-mail (must have an account)" value={email} onChange={(e) => setEmail(e.target.value)} required aria-label="Family member e-mail" />
-          <button type="submit" className="btn btn-primary text-nowrap" disabled={busy}>
-            <i className="bi bi-person-plus" /> Add
-          </button>
+
+      {canAdd && (
+        <form className="family-add" onSubmit={add}>
+          <label className="form-label" htmlFor="fam-email">
+            Add a family member
+          </label>
+          <div className="family-add-row">
+            <input id="fam-email" type="email" className="form-control" placeholder="Their e-mail (they need a MarketLink account)" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <button type="submit" className="btn btn-primary" disabled={busy}>
+              {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-person-plus" aria-hidden="true" />} Add member
+            </button>
+          </div>
         </form>
       )}
       <ConfirmModal
@@ -139,7 +165,7 @@ function FamilyPanel() {
         onConfirm={remove}
         onClose={() => setRemoving(null)}
       />
-    </div>
+    </section>
   );
 }
 
@@ -166,15 +192,16 @@ export default function Profile() {
 
   return (
     <>
-      <DashHeader title="Profile & family" subtitle="Manage your personal details, password and household sharing." />
-      <div className="row g-4">
+      <DashHeader title="Profile & family" subtitle="Manage your photo, personal details, password and household sharing." />
+      <div className="row g-4 mb-4">
         <div className="col-xl-7">
-          <form className="panel mb-4" onSubmit={save}>
+          <form className="panel" onSubmit={save}>
             <div className="panel-head">
               <h5>
                 <i className="bi bi-person" /> Personal details
               </h5>
             </div>
+            <ProfilePhoto />
             <div className="row g-3">
               <div className="col-md-6">
                 <label className="form-label" htmlFor="p-name">Full name</label>
@@ -198,15 +225,15 @@ export default function Profile() {
               </div>
             </div>
             <button type="submit" className="btn btn-primary mt-3" disabled={busy}>
-              Save changes
+              {busy && <span className="spinner-border spinner-border-sm" />} Save changes
             </button>
           </form>
-          <FamilyPanel />
         </div>
         <div className="col-xl-5">
           <PasswordForm />
         </div>
       </div>
+      <FamilyPanel />
     </>
   );
 }

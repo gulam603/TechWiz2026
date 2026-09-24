@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom';
 
-export function LogoMark({ size = 36 }) {
+/** MarketLink mark – designed in Canva (basket, leaf and handle in a rounded frame) and rebuilt as SVG. */
+export function LogoMark({ size = 38 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-      <rect width="64" height="64" rx="18" fill="#173B2C" />
-      <path d="M14 30h36l-4 20a4 4 0 0 1-4 3H22a4 4 0 0 1-4-3z" fill="#D4F06E" />
-      <path d="M22 30c0-7 4-13 10-13s10 6 10 13" fill="none" stroke="#D4F06E" strokeWidth="4" strokeLinecap="round" />
-      <path d="M32 17c2-6 7-8 12-7-1 5-5 9-12 7z" fill="#6DBE45" />
-      <path d="M24 37v10M32 37v10M40 37v10" stroke="#173B2C" strokeWidth="3" strokeLinecap="round" />
+    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="logo-mark">
+      <rect x="3" y="3" width="58" height="58" rx="15" fill="#ffffff" stroke="#0d3017" strokeWidth="4" />
+      <path d="M19 33c0-9.5 5.8-15 13-15s13 5.5 13 15" fill="none" stroke="#0d3017" strokeWidth="3.6" strokeLinecap="round" />
+      <path d="M32.5 31.5c-3.8-7.2-0.9-15.6 9.4-18 1.3 9.4-2.6 16.2-9.4 18z" fill="#3fa34d" />
+      <path d="M33.4 30.2c1.9-4.6 4.4-8.6 7.4-12.6" fill="none" stroke="#ffffff" strokeWidth="1.3" strokeLinecap="round" />
+      <rect x="12" y="32" width="40" height="6" rx="3" fill="#0d3017" />
+      <path d="M15.5 40h33l-3.6 13.6a4 4 0 0 1-3.9 3H23a4 4 0 0 1-3.9-3z" fill="#0d3017" />
+      <path d="M17.3 46.4h29.4M18.9 52.1h26.2M25.4 40.5l1.2 15.6M32 40.5v15.6M38.6 40.5l-1.2 15.6" fill="none" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   );
 }

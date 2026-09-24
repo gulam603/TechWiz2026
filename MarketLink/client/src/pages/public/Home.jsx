@@ -9,8 +9,9 @@ import RatingStars from '../../components/common/RatingStars';
 import { CardSkeletons } from '../../components/common/Loader';
 import DayDots from '../../components/common/DayDots';
 import CountUp from '../../components/common/CountUp';
-import { DAY_NAMES, initials, nextOccurrence, time12 } from '../../utils/format';
+import { DAY_NAMES, nextOccurrence, time12 } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
+import Avatar from '../../components/common/Avatar';
 
 const STEPS = [
   { icon: 'bi-search', title: 'Discover', text: 'See which farmers are at each market this week, what they have in stock and at what price.' },
@@ -360,7 +361,7 @@ export default function Home() {
                     <RatingStars value={r.rating} />
                     <blockquote>“{r.comment}”</blockquote>
                     <figcaption className="d-flex align-items-center gap-2 mt-auto">
-                      <span className="avatar avatar-sm">{initials(r.customer?.name)}</span>
+                      <Avatar name={r.customer?.name} src={r.customer?.avatar} className="avatar-sm" />
                       <span className="small">
                         <strong className="d-block">{r.customer?.name}</strong>
                         <span className="text-muted-2">

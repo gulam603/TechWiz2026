@@ -1,13 +1,17 @@
 import crypto from 'node:crypto';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { User, Farmer } from '../models/index.js';
 import { mailMode, sendMail } from '../services/mailer.js';
 import AppError from '../utils/AppError.js';
-import { ROLES, USER_STATUS } from '../utils/constants.js';
+import { ROLES, TERMS_VERSION, USER_STATUS } from '../utils/constants.js';
 import { pick, requireFields, toBool } from '../utils/helpers.js';
 import { readFarmDetails } from './helpers/farmDetails.js';
 import { uniqueSlug } from '../utils/slug.js';
 import { isoWeekKey } from '../utils/dates.js';
 import { clearAuthCookie, setAuthCookie, signToken } from '../middleware/auth.js';
+import { fileUrl } from '../middleware/upload.js';
+import { UPLOAD_ROOT } from '../utils/paths.js';
 import { notifyMany } from '../services/notify.js';
 
 const PASSWORD_RULE = /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/;
@@ -16,6 +20,14 @@ function checkPassword(password) {
   if (!PASSWORD_RULE.test(String(password || ''))) {
     throw new AppError('Password must be at least 8 characters and contain letters and numbers', 400);
   }
+}
+
+// Both sign-up forms must tick "I agree to the Terms & Conditions"
+function requireTerms(body) {
+  if (!toBool(body.acceptTerms)) {
+    throw new AppError('Please accept the Terms & Conditions to create an account', 400);
+  }
+  return { termsAcceptedAt: new Date(), termsVersion: TERMS_VERSION };
 }
 
 async function buildSession(user) {
@@ -37,8 +49,10 @@ async function startSession(req, res, user) {
 export async function registerCustomer(req, res) {
   requireFields(req.body, ['name', 'email', 'password', 'phone', 'address']);
   checkPassword(req.body.password);
+  const terms = requireTerms(req.body);
   const user = await User.create({
     ...pick(req.body, ['name', 'email', 'password', 'phone', 'address', 'city']),
+    ...terms,
     role: ROLES.CUSTOMER,
     status: USER_STATUS.ACTIVE,
   });
@@ -49,9 +63,7 @@ export async function registerCustomer(req, res) {
 export async function registerFarmer(req, res) {
   requireFields(req.body, ['stallName', 'contactPerson', 'phone', 'email', 'address', 'password']);
   checkPassword(req.body.password);
-  if (req.body.acceptTerms !== undefined && !toBool(req.body.acceptTerms)) {
-    throw new AppError('Please confirm that your details are correct and accept the market guidelines', 400);
-  }
+  const terms = requireTerms(req.body);
   const { stallName, contactPerson, phone, email, address, city, password } = req.body;
   // Optional details: bio, practices, what they grow, markets and map pin (validated before creating anything)
   const details = await readFarmDetails(req.body);
@@ -63,6 +75,7 @@ export async function registerFarmer(req, res) {
     phone,
     address,
     city,
+    ...terms,
     role: ROLES.FARMER,
     status: USER_STATUS.PENDING,
   });
@@ -146,6 +159,31 @@ export async function updateMe(req, res) {
   res.json(await buildSession(req.user));
 }
 
+// Deletes an uploaded profile photo from disk (only files inside uploads/avatars)
+async function deleteAvatarFile(url) {
+  if (!url || !url.startsWith('/uploads/avatars/')) return;
+  await fs.unlink(path.join(UPLOAD_ROOT, 'avatars', path.basename(url))).catch(() => {});
+}
+
+// PUT /api/auth/avatar  (multipart, field "avatar")
+export async function updateAvatar(req, res) {
+  if (!req.file) throw new AppError('Please choose a JPG, PNG or WEBP image', 400);
+  const old = req.user.avatar;
+  req.user.avatar = fileUrl('avatars', req.file);
+  await req.user.save();
+  await deleteAvatarFile(old);
+  res.json(await buildSession(req.user));
+}
+
+// DELETE /api/auth/avatar
+export async function removeAvatar(req, res) {
+  const old = req.user.avatar;
+  req.user.avatar = undefined;
+  await req.user.save();
+  await deleteAvatarFile(old);
+  res.json(await buildSession(req.user));
+}
+
 const hashToken = (token) => crypto.createHash('sha256').update(String(token)).digest('hex');
 
 // POST /api/auth/forgot-password  { email }
@@ -163,7 +201,9 @@ export async function forgotPassword(req, res) {
     await sendMail({
       to: user.email,
       subject: 'Reset your password',
-      message: `Hi ${user.name},\nWe received a request to reset your MarketLink password. Open this link within 30 minutes to choose a new one:\n${origin}/reset-password/${token}\nIf you did not ask for this, you can ignore this e-mail.`,
+      message: `Hi ${user.name},\nWe received a request to reset your MarketLink password. Use the button below within 30 minutes to choose a new one.\nIf you did not ask for this, you can ignore this e-mail - your password stays the same.`,
+      link: `${origin}/reset-password/${token}`,
+      linkLabel: 'Choose a new password',
     });
   }
   res.json({ message: 'If an account exists for this e-mail, a password reset link has been sent.', emailMode: mailMode() });

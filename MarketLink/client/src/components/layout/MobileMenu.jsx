@@ -4,8 +4,8 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Logo from '../common/Logo';
 import GlobalSearch from './GlobalSearch';
 import { useAuth } from '../../context/AuthContext';
-import { initials } from '../../utils/format';
 import { LINKS, MENUS } from './navConfig';
+import Avatar from '../common/Avatar';
 
 /**
  * Slide-in menu for phones and tablets. It is rendered into <body> (outside the sticky header)
@@ -53,7 +53,7 @@ export default function MobileMenu({ open, onClose }) {
 
           {user && (
             <div className="mobile-menu-user">
-              <span className="avatar">{initials(user.name)}</span>
+              <Avatar name={user.name} src={user.avatar} />
               <div className="min-w-0">
                 <strong className="d-block text-truncate">{user.name}</strong>
                 <span className="fs-7 text-muted-2 text-truncate d-block">{user.email}</span>

@@ -6,9 +6,9 @@ import GlobalSearch from './GlobalSearch';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import useClickOutside from '../../hooks/useClickOutside';
-import { initials } from '../../utils/format';
 import MobileMenu from './MobileMenu';
 import { LINKS, MENUS } from './navConfig';
+import Avatar from '../common/Avatar';
 
 function UserMenu() {
   const { user, logout } = useAuth();
@@ -26,7 +26,7 @@ function UserMenu() {
   return (
     <div className="ml-dropdown" ref={ref}>
       <button type="button" className="btn p-0 border-0 d-flex align-items-center gap-2" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Account menu">
-        <span className="avatar">{initials(user.name)}</span>
+        <Avatar name={user.name} src={user.avatar} />
         <span className="d-none d-xl-inline fw-semi small text-forest">{user.name.split(' ')[0]}</span>
         <i className="bi bi-chevron-down small d-none d-xl-inline" />
       </button>

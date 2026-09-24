@@ -19,10 +19,11 @@ import {
   Review,
   User,
 } from '../models/index.js';
-import { ORDER_STATUS, ROLES, USER_STATUS } from '../utils/constants.js';
+import { ORDER_STATUS, ROLES, TERMS_VERSION, USER_STATUS } from '../utils/constants.js';
 import { addDays, combineDateTime, isoWeekKey, startOfDay, toDateKey } from '../utils/dates.js';
 import { round2, slugify } from '../utils/helpers.js';
 import { generateSlots, getAvailability } from '../services/slots.js';
+import { uniqueSlug } from '../utils/slug.js';
 import { refreshRatings } from '../services/ratings.js';
 import { buildReport, REPORT_TITLES } from '../services/reports.js';
 import * as data from './data.js';
@@ -98,6 +99,8 @@ async function main() {
       email: f.email,
       password: data.PASSWORDS.farmer,
       role: ROLES.FARMER,
+      termsAcceptedAt: new Date(),
+      termsVersion: TERMS_VERSION,
       status: f.status,
       phone: f.phone,
       address: f.address,
@@ -132,6 +135,7 @@ async function main() {
       const product = await Product.create({
         farmer: farmer._id,
         name: p.name,
+        slug: await uniqueSlug(Product, p.name),
         category: categoryByKey[p.cat]._id,
         price: p.price,
         unit: p.unit,
@@ -164,6 +168,8 @@ async function main() {
       address: c.address,
       city: c.city,
       role: ROLES.CUSTOMER,
+      termsAcceptedAt: new Date(),
+      termsVersion: TERMS_VERSION,
       status: c.status || USER_STATUS.ACTIVE,
     });
   }

@@ -90,7 +90,7 @@ const productCard = (p) => ({
   title: p.name,
   subtitle: `${money(p.price)} / ${p.unit} · ${p.farmer?.stallName || ''}${p.status === PRODUCT_STATUS.AVAILABLE ? ` · ${p.quantityAvailable} left` : ' · sold out'}`,
   image: p.image,
-  link: `/products/${p._id}`,
+  link: `/products/${p.slug || p._id}`,
 });
 const marketCard = (m) => ({
   kind: 'market',

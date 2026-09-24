@@ -10,6 +10,7 @@
     "start": "node src/server.js",
     "seed": "node src/seed/seed.js",
     "export-data": "node src/seed/export.js",
+    "mail:test": "node src/scripts/mail-test.js",
     "lint": "eslint src"
   },
   "engines": {

@@ -15,7 +15,7 @@ export async function listReviews(req, res) {
   }
   if (isValidId(req.query.farmer)) filter.farmer = req.query.farmer;
   const [reviews, total] = await Promise.all([
-    Review.find(filter).populate('customer', 'name').populate('product', 'name').sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Review.find(filter).populate('customer', 'name avatar').populate('product', 'name slug').sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
     Review.countDocuments(filter),
   ]);
   res.json({ reviews, total, page, pages: Math.ceil(total / limit) });

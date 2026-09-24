@@ -9,6 +9,7 @@ import LocationPicker from '../../components/map/LocationPicker';
 import DayDots from '../../components/common/DayDots';
 import { PASSWORD_HINT, passwordOk } from './Register';
 import { time12 } from '../../utils/format';
+import TermsCheckbox from '../../components/legal/TermsCheckbox';
 
 const STEPS = ['Stall & account', 'Farm details', 'Markets & location'];
 const PRACTICES = ['Pesticide-free', 'Organic practices', 'Family farm', 'Free-range', 'Grass-fed', 'Hydroponic', 'Heirloom seeds', 'Picked daily', 'Small batch'];
@@ -48,7 +49,7 @@ function validate(step, f) {
     if (!f.city.trim()) return 'Please enter your city.';
     if (!f.categories.length) return 'Choose at least one thing you grow or sell.';
   }
-  if (step === 2 && !f.acceptTerms) return 'Please confirm your details and accept the market guidelines.';
+  if (step === 2 && !f.acceptTerms) return 'Please confirm your details and accept the Terms & Conditions.';
   return '';
 }
 
@@ -296,21 +297,16 @@ export default function RegisterFarmer() {
                 <span>{(catData?.categories || []).filter((c) => form.categories.includes(c._id)).map((c) => c.name).join(', ')}</span>
               </div>
             </div>
-            <div className="form-check">
-              <input
-                id="f-terms"
-                type="checkbox"
-                className="form-check-input"
-                checked={form.acceptTerms}
-                onChange={(e) => {
-                  setError('');
-                  setForm({ ...form, acceptTerms: e.target.checked });
-                }}
-              />
-              <label className="form-check-label small" htmlFor="f-terms">
-                I confirm these details are correct and I will keep my stock, prices and pickup times up to date. Payment is collected in person at pickup.
-              </label>
-            </div>
+            <TermsCheckbox
+              id="f-terms"
+              checked={form.acceptTerms}
+              onChange={(v) => {
+                setError('');
+                setForm((f) => ({ ...f, acceptTerms: v }));
+              }}
+            >
+              I confirm these details are correct and I will keep my stock, prices and pickup times up to date.{' '}
+            </TermsCheckbox>
           </div>
         )}
 

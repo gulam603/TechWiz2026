@@ -54,6 +54,12 @@ export function AuthProvider({ children }) {
         applySession(null);
       },
       updateProfile: async (form) => applySession(await api.put('/auth/me', form)),
+      uploadAvatar: async (file) => {
+        const fd = new FormData();
+        fd.append('avatar', file);
+        return applySession(await api.upload('PUT', '/auth/avatar', fd));
+      },
+      removeAvatar: async () => applySession(await api.del('/auth/avatar')),
       setUser,
       refresh,
     }),

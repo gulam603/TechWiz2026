@@ -7,7 +7,8 @@ import { DashHeader } from '../../components/common/PageHeader';
 import RatingStars from '../../components/common/RatingStars';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
-import { initials, timeAgo } from '../../utils/format';
+import { timeAgo } from '../../utils/format';
+import Avatar from '../../components/common/Avatar';
 
 function ReplyBox({ review, onSaved }) {
   const { toast } = useToast();
@@ -84,7 +85,7 @@ export default function FarmerReviews() {
           {reviews.map((r) => (
             <div key={r._id} className="panel">
               <div className="d-flex align-items-center gap-2 flex-wrap">
-                <span className="avatar avatar-sm">{initials(r.customer?.name)}</span>
+                <Avatar name={r.customer?.name} src={r.customer?.avatar} className="avatar-sm" />
                 <strong className="small">{r.customer?.name}</strong>
                 <RatingStars value={r.rating} />
                 <span className="chip chip-soft">{r.type === 'product' ? r.product?.name : 'Stall review'}</span>

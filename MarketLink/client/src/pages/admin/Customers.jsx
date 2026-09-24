@@ -8,7 +8,8 @@ import StatusBadge from '../../components/common/StatusBadge';
 import Pagination from '../../components/common/Pagination';
 import { ConfirmModal } from '../../components/common/Modal';
 import { PageLoader } from '../../components/common/Loader';
-import { formatDate, initials } from '../../utils/format';
+import { formatDate } from '../../utils/format';
+import Avatar from '../../components/common/Avatar';
 
 export default function AdminCustomers() {
   useDocumentTitle('Manage customers');
@@ -81,7 +82,7 @@ export default function AdminCustomers() {
                   <tr key={c._id}>
                     <td>
                       <div className="d-flex align-items-center gap-2">
-                        <span className="avatar avatar-sm">{initials(c.name)}</span>
+                        <Avatar name={c.name} src={c.avatar} className="avatar-sm" />
                         <strong className="small">{c.name}</strong>
                         {c.household && <span className="chip chip-soft" title="Family account">Family</span>}
                       </div>

@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { initials } from '../../utils/format';
+import Avatar from '../common/Avatar';
 
 export const NAVS = {
   customer: [
@@ -54,7 +54,7 @@ export default function DashboardLayout({ role }) {
       <div className="dash">
         <aside className="dash-sidebar" aria-label="Dashboard navigation">
           <div className="dash-user">
-            <span className="avatar">{initials(user?.name)}</span>
+            <Avatar name={user?.name} src={user?.avatar} />
             <div className="who">
               <strong>{role === 'farmer' && farmer ? farmer.stallName : user?.name}</strong>
               <span className="fs-7 text-muted-2 text-capitalize">{role === 'admin' ? 'Administrator' : role}</span>

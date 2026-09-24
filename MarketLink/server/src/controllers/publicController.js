@@ -31,7 +31,7 @@ export async function globalSearch(req, res) {
   const regex = containsRegex(q);
   const [products, farmers, markets] = await Promise.all([
     Product.find({ ...Product.publicFilter(), name: regex })
-      .select('name price unit image status quantityAvailable farmer category')
+      .select('name slug price unit image status quantityAvailable farmer category')
       .populate('farmer', 'stallName slug')
       .populate('category', 'name color')
       .limit(6)
@@ -89,7 +89,7 @@ export async function activeAnnouncements(req, res) {
 // GET /api/testimonials  -> recent 5-star reviews for the home page
 export async function testimonials(req, res) {
   const reviews = await Review.find({ isRemoved: false, rating: { $gte: 4 }, comment: { $exists: true, $ne: '' } })
-    .populate('customer', 'name')
+    .populate('customer', 'name avatar')
     .populate('farmer', 'stallName slug')
     .sort({ rating: -1, createdAt: -1 })
     .limit(6)

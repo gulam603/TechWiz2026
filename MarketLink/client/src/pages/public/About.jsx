@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useFetch from '../../hooks/useFetch';
 import { PageHero } from '../../components/common/PageHeader';
-import { TEAM } from '../../config';
+import { TEAM, TEAM_NAME, TEAM_PLACE } from '../../config';
 import { initials } from '../../utils/format';
+import { LogoMark } from '../../components/common/Logo';
 import CountUp from '../../components/common/CountUp';
 
 const VALUES = [
@@ -82,16 +83,39 @@ export default function About() {
           <div>
             <span className="eyebrow">The team</span>
             <h2 className="section-title">Who built MarketLink</h2>
-            <p>Created for the TechWiz 2026 “End-to-End Web Solutions” challenge.</p>
+            <p>Created by {TEAM_NAME} for the TechWiz 2026 “End-to-End Web Solutions” challenge.</p>
+          </div>
+        </div>
+        <div className="team-banner mb-3">
+          <span className="team-banner-mark">
+            <LogoMark size={64} />
+          </span>
+          <div className="team-banner-text">
+            <span className="team-banner-label">Designed and developed by</span>
+            <h3 className="team-banner-name">{TEAM_NAME}</h3>
+            <p className="mb-0">
+              <i className="bi bi-geo-alt me-1" aria-hidden="true" />
+              {TEAM_PLACE}
+            </p>
+          </div>
+          <div className="team-banner-chips">
+            <span className="chip hero-chip">
+              <i className="bi bi-trophy" aria-hidden="true" /> TechWiz 2026
+            </span>
+            <span className="chip hero-chip">
+              <i className="bi bi-basket2" aria-hidden="true" /> eGreen Basket
+            </span>
           </div>
         </div>
         <div className="row g-3 mb-5">
           {TEAM.map((m) => (
-            <div key={m.name} className="col-sm-6 col-lg-3">
+            <div key={m.area} className="col-sm-6 col-lg-3">
               <div className="team-card">
-                <span className="avatar">{initials(m.name)}</span>
-                <h5 className="mb-1">{m.name}</h5>
-                <p className="small text-muted-2 mb-0">{m.role}</p>
+                <span className="avatar">{m.name ? initials(m.name) : <i className={`bi ${m.icon}`} aria-hidden="true" />}</span>
+                <h5 className="mb-1">{m.name || m.area}</h5>
+                {m.name && <p className="small fw-semi text-forest mb-1">{m.area}</p>}
+                <p className="small text-muted-2 mb-2">{m.role}</p>
+                <span className="team-tag">{TEAM_NAME}</span>
               </div>
             </div>
           ))}

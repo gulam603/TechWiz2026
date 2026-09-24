@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import useClickOutside from '../../hooks/useClickOutside';
 import { money } from '../../utils/format';
+import { productPath } from '../../utils/links';
 
 /** Instant search across products, farmers and markets (debounced). */
 export default function GlobalSearch({ className = '', placeholder = 'Search produce, farmers, markets…', autoFocus = false }) {
@@ -61,7 +62,7 @@ export default function GlobalSearch({ className = '', placeholder = 'Search pro
           {total === 0 && <div className="text-muted-2 small p-3 text-center">No matches for “{q}”.</div>}
           {results.products.length > 0 && <div className="search-group-title">Products</div>}
           {results.products.map((p) => (
-            <Link key={p._id} to={`/products/${p._id}`} className="search-hit" onClick={close}>
+            <Link key={p._id} to={productPath(p)} className="search-hit" onClick={close}>
               <img src={p.image} alt="" />
               <span className="flex-grow-1">
                 <strong className="d-block small">{p.name}</strong>

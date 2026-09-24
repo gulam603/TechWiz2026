@@ -63,8 +63,8 @@ export async function getFarmer(req, res) {
       .sort({ status: 1, name: 1 })
       .lean(),
     Review.find({ farmer: farmer._id, isRemoved: false })
-      .populate('customer', 'name')
-      .populate('product', 'name')
+      .populate('customer', 'name avatar')
+      .populate('product', 'name slug')
       .sort({ createdAt: -1 })
       .limit(30)
       .lean(),

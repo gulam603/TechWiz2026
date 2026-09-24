@@ -6,6 +6,7 @@ import { money } from '../../utils/format';
 import ProduceImage from '../common/ProduceImage';
 import RatingStars from '../common/RatingStars';
 import FavButton from '../common/FavButton';
+import { productPath } from '../../utils/links';
 
 export default function ProductCard({ product }) {
   const cart = useCart();
@@ -34,7 +35,7 @@ export default function ProductCard({ product }) {
       <div className="product-body">
         <span className="product-cat">{product.category?.name}</span>
         <h3 className="product-name">
-          <Link to={`/products/${product._id}`}>{product.name}</Link>
+          <Link to={productPath(product)}>{product.name}</Link>
         </h3>
         {product.farmer?.stallName && (
           <div className="product-farmer">

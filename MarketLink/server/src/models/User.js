@@ -32,6 +32,9 @@ const userSchema = new Schema(
     household: { type: Schema.Types.ObjectId, ref: 'User' },
 
     lastLoginAt: Date,
+    // Terms & Conditions accepted at sign-up (the version is the "last updated" date of the terms)
+    termsAcceptedAt: Date,
+    termsVersion: { type: String, trim: true },
 
     // "Forgot password": only a SHA-256 hash of the one-time token is stored
     resetPasswordHash: { type: String, select: false },

@@ -281,7 +281,7 @@ export async function adminReviews(req, res) {
     Review.find(filter)
       .populate('customer', 'name email')
       .populate('farmer', 'stallName slug')
-      .populate('product', 'name')
+      .populate('product', 'name slug')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)

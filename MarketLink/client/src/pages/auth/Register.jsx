@@ -4,6 +4,7 @@ import AuthLayout from './AuthLayout';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import TermsCheckbox from '../../components/legal/TermsCheckbox';
 
 export const PASSWORD_HINT = 'At least 8 characters with letters and numbers';
 export const passwordOk = (p) => /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/.test(p);
@@ -13,7 +14,7 @@ export default function Register() {
   const { register, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', password: '', confirm: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', password: '', confirm: '', acceptTerms: false });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,6 +26,7 @@ export default function Register() {
     setError('');
     if (!passwordOk(form.password)) return setError(`Password: ${PASSWORD_HINT}.`);
     if (form.password !== form.confirm) return setError('Passwords do not match.');
+    if (!form.acceptTerms) return setError('Please accept the Terms & Conditions to create your account.');
     setBusy(true);
     try {
       await register(form);
@@ -74,6 +76,16 @@ export default function Register() {
             <input id="r-confirm" name="confirm" type="password" className="form-control" required value={form.confirm} onChange={change} autoComplete="new-password" />
           </div>
           <div className="col-12 fs-7 text-muted-2">{PASSWORD_HINT}.</div>
+          <div className="col-12">
+            <TermsCheckbox
+              id="r-terms"
+              checked={form.acceptTerms}
+              onChange={(v) => {
+                setError('');
+                setForm((f) => ({ ...f, acceptTerms: v }));
+              }}
+            />
+          </div>
         </div>
         <button type="submit" className="btn btn-primary btn-lg w-100 mt-3" disabled={busy}>
           {busy && <span className="spinner-border spinner-border-sm" />} Create account

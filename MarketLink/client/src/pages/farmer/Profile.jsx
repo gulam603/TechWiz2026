@@ -9,6 +9,7 @@ import { DashHeader } from '../../components/common/PageHeader';
 import { PageLoader } from '../../components/common/Loader';
 import { ImageInput } from './Products';
 import { PasswordForm } from '../customer/Profile';
+import ProfilePhoto from '../../components/common/ProfilePhoto';
 import { ApprovalBanner } from './Dashboard';
 
 export default function FarmerProfile() {
@@ -140,7 +141,16 @@ function ProfileEditor({ data, setData }) {
             </button>
           </form>
         </div>
-        <div className="col-xl-5">
+        <div className="col-xl-5 d-flex flex-column gap-4">
+          <div className="panel">
+            <div className="panel-head">
+              <h5>
+                <i className="bi bi-person-circle" /> Your photo
+              </h5>
+            </div>
+            <ProfilePhoto subtitle={`Contact person · ${data.farmer.stallName}`} />
+            <p className="small text-muted-2 mb-0">Shown in the menu and on your dashboard. Your stall logo and cover photo are set on the left.</p>
+          </div>
           <PasswordForm />
         </div>
       </div>

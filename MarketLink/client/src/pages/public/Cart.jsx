@@ -7,6 +7,7 @@ import QuantityStepper from '../../components/common/QuantityStepper';
 import EmptyState from '../../components/common/EmptyState';
 import { PageHero } from '../../components/common/PageHeader';
 import { money } from '../../utils/format';
+import { productPath } from '../../utils/links';
 
 export default function Cart() {
   useDocumentTitle('Your basket');
@@ -54,7 +55,7 @@ export default function Cart() {
                       <ProduceImage src={item.image} color={item.categoryColor} />
                     </div>
                     <div className="flex-grow-1 min-w-0">
-                      <Link to={`/products/${item.productId}`} className="name d-block text-truncate text-reset">
+                      <Link to={productPath(item)} className="name d-block text-truncate text-reset">
                         {item.name}
                       </Link>
                       <span className="small text-muted-2">

@@ -70,8 +70,10 @@ export async function listProducts(req, res) {
 
 // GET /api/products/:id
 export async function getProduct(req, res) {
-  if (!isValidId(req.params.id)) throw new AppError('Product not found', 404);
-  const product = await Product.findOne({ _id: req.params.id, isRemoved: false, farmerActive: true })
+  // Products open by readable slug (/products/sindhri-mangoes); old id links keep working
+  const key = String(req.params.id || '').toLowerCase();
+  const lookup = isValidId(key) ? { _id: key } : { slug: key };
+  const product = await Product.findOne({ ...lookup, isRemoved: false, farmerActive: true })
     .populate('category', 'name slug color')
     .populate({
       path: 'farmer',
@@ -83,7 +85,7 @@ export async function getProduct(req, res) {
 
   const [reviews, related] = await Promise.all([
     Review.find({ product: product._id, type: 'product', isRemoved: false })
-      .populate('customer', 'name')
+      .populate('customer', 'name avatar')
       .sort({ createdAt: -1 })
       .limit(20)
       .lean(),

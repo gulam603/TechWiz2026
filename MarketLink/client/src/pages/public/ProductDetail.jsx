@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import ProduceImage from '../../components/common/ProduceImage';
@@ -15,9 +15,11 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { DAY_SHORT, money, time12 } from '../../utils/format';
+import { productPath } from '../../utils/links';
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const location = useLocation();
   const { data, loading, error } = useFetch(`/products/${id}`);
   const [qty, setQty] = useState(1);
   const cart = useCart();
@@ -34,6 +36,10 @@ export default function ProductDetail() {
     );
 
   const { product, reviews, related } = data;
+  // Old links use the id; show the readable name in the address bar instead
+  if (product.slug && id !== product.slug) {
+    return <Navigate to={productPath(product) + location.search + location.hash} replace />;
+  }
   const farmer = product.farmer;
   const soldOut = product.status !== 'available' || product.quantityAvailable <= 0;
   const stockPct = Math.min(100, Math.round((product.quantityAvailable / Math.max(product.templateQuantity || product.quantityAvailable, 1)) * 100));

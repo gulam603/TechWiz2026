@@ -65,20 +65,28 @@
   gap: 0.55rem;
   color: $ml-forest;
   text-decoration: none !important;
+  // Wordmark from the Canva logo: bold geometric sans, "Link" in italic leaf green
+  .logo-mark {
+    flex-shrink: 0;
+  }
   .brand-name {
-    font-family: $headings-font-family;
-    font-size: 1.45rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
+    font-family: $font-family-sans-serif;
+    font-size: 1.42rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
     line-height: 1;
+    color: #0d3017;
   }
   .brand-name span {
-    color: $ml-green;
+    color: #268d3a;
     font-style: italic;
-    font-weight: 500;
+    font-weight: 700;
   }
   &.brand-light {
     color: #fff;
+    .brand-name {
+      color: #fff;
+    }
     .brand-name span {
       color: $ml-lime;
     }
@@ -142,6 +150,22 @@
     width: 3.5rem;
     height: 3.5rem;
     font-size: 1.2rem;
+  }
+  &.avatar-xl {
+    width: 4.75rem;
+    height: 4.75rem;
+    font-size: 1.5rem;
+  }
+  // Uploaded profile photo fills the circle
+  &.has-photo {
+    overflow: hidden;
+    background: $ml-sand;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
   }
 }
 

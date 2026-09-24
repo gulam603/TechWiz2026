@@ -9,6 +9,26 @@ dotenv.config({ path: path.resolve(path.dirname(fileURLToPath(import.meta.url)),
 // Hosting servers usually run in UTC, so the zone is set explicitly (TZ in .env).
 process.env.TZ = process.env.TZ || 'Asia/Karachi';
 
+// E-mail (Nodemailer). SMTP_SERVICE=gmail is a shortcut for smtp.gmail.com; port 465 uses SSL,
+// 587 uses STARTTLS (SMTP_SECURE can override). Gmail needs an App Password, not the normal password.
+// Gmail shows app passwords in groups of four ("abcd efgh ijkl mnop"); the spaces are not part of it
+const appPassword = (pass) => (/^[a-z]{4}( [a-z]{4}){3}$/i.test(pass.trim()) ? pass.replace(/\s+/g, '') : pass);
+
+function smtpConfig() {
+  const port = Number(process.env.SMTP_PORT) || 587;
+  const user = (process.env.SMTP_USER || '').trim();
+  const secure = process.env.SMTP_SECURE ? ['true', '1', 'yes'].includes(process.env.SMTP_SECURE.toLowerCase()) : port === 465;
+  return {
+    host: (process.env.SMTP_HOST || '').trim(),
+    service: (process.env.SMTP_SERVICE || '').trim(),
+    port,
+    secure,
+    user,
+    pass: appPassword(process.env.SMTP_PASS || ''),
+    from: process.env.MAIL_FROM || (user.includes('@') ? `MarketLink <${user}>` : 'MarketLink <no-reply@marketlink.local>'),
+  };
+}
+
 // Central place for configuration so the rest of the code never reads process.env directly.
 const env = {
   port: Number(process.env.PORT) || 5000,
@@ -18,13 +38,9 @@ const env = {
   jwtSecret: process.env.JWT_SECRET || 'dev-only-secret-change-me',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   currency: process.env.CURRENCY || 'Rs',
-  smtp: {
-    host: process.env.SMTP_HOST || '',
-    port: Number(process.env.SMTP_PORT) || 587,
-    user: process.env.SMTP_USER || '',
-    pass: process.env.SMTP_PASS || '',
-    from: process.env.MAIL_FROM || 'MarketLink <no-reply@marketlink.local>',
-  },
+  // Address of the website, used for the buttons in e-mails (e.g. https://marketlink.onrender.com)
+  appUrl: (process.env.APP_URL || `http://localhost:${Number(process.env.PORT) || 5000}`).replace(/\/+$/, ''),
+  smtp: smtpConfig(),
 };
 
 env.isProd = env.nodeEnv === 'production';

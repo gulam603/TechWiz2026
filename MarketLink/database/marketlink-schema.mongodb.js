@@ -174,6 +174,7 @@ createCollection(
     properties: {
       farmer: objectId,
       name: str(100),
+      slug: str(),
       category: objectId,
       price: num(0),
       unit: { enum: ['kg', 'g', 'lb', 'dozen', 'piece', 'bunch', 'litre', 'pack', 'jar', 'loaf', 'box'] },
@@ -196,7 +197,7 @@ createCollection(
       updatedAt: date,
     },
   },
-  [[{ farmer: 1, isRemoved: 1 }], [{ category: 1, price: 1 }], [{ markets: 1 }], [{ days: 1 }]]
+  [[{ farmer: 1, isRemoved: 1 }], [{ slug: 1 }], [{ category: 1, price: 1 }], [{ markets: 1 }], [{ days: 1 }]]
 );
 
 // orders: one pre-order = one farmer + one pickup slot (items are embedded)

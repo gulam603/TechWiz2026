@@ -99,7 +99,7 @@ export async function customerDashboard(req, res) {
 // GET /api/customer/family
 export async function getFamily(req, res) {
   if (!req.user.household) return res.json({ household: null, isOwner: false, members: [] });
-  const members = await User.find({ household: req.user.household }).select('name email').lean();
+  const members = await User.find({ household: req.user.household }).select('name email avatar').lean();
   res.json({
     household: req.user.household,
     isOwner: String(req.user.household) === String(req.user._id),

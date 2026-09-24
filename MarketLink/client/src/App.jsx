@@ -16,6 +16,7 @@ const Farmers = lazy(() => import('./pages/public/Farmers'));
 const FarmerDetail = lazy(() => import('./pages/public/FarmerDetail'));
 const MapExplore = lazy(() => import('./pages/public/MapExplore'));
 const About = lazy(() => import('./pages/public/About'));
+const Terms = lazy(() => import('./pages/public/Terms'));
 const Contact = lazy(() => import('./pages/public/Contact'));
 const Cart = lazy(() => import('./pages/public/Cart'));
 const Checkout = lazy(() => import('./pages/public/Checkout'));
@@ -70,6 +71,7 @@ export default function App() {
             <Route path="farmers" element={<Farmers />} />
             <Route path="farmers/:slug" element={<FarmerDetail />} />
             <Route path="about" element={<About />} />
+            <Route path="terms" element={<Terms />} />
             <Route path="contact" element={<Contact />} />
             <Route path="cart" element={<Cart />} />
             <Route path="login" element={<Login />} />

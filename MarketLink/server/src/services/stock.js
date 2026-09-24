@@ -106,7 +106,7 @@ export async function notifyRestock(product) {
       type: 'restock',
       title: `${product.name} is back in stock`,
       message: `Good news! ${product.name} is available again. Pre-order before it sells out.`,
-      link: `/products/${product._id}`,
+      link: `/products/${product.slug || product._id}`,
     }
   );
 }

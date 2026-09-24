@@ -36,6 +36,7 @@ const productImage = imageUpload('products');
 const farmerImages = imageUpload('farmers');
 const marketImage = imageUpload('markets');
 const categoryIcon = imageUpload('categories');
+const avatarImage = imageUpload('avatars');
 
 // ---------- Auth ----------
 router.post('/auth/register', formLimiter, auth.registerCustomer);
@@ -48,6 +49,8 @@ router.post('/auth/reset-password', authLimiter, auth.resetPassword);
 router.get('/auth/me', optionalAuth, auth.me);
 router.put('/auth/me', protect, auth.updateMe);
 router.put('/auth/password', protect, auth.changePassword);
+router.put('/auth/avatar', protect, avatarImage.single('avatar'), auth.updateAvatar);
+router.delete('/auth/avatar', protect, auth.removeAvatar);
 
 // ---------- Public catalogue (optionalAuth adds favourite flags when logged in) ----------
 router.get('/stats', pub.publicStats);

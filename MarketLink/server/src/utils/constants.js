@@ -37,3 +37,6 @@ export const ORDER_STATUS = Object.freeze({
 export const OPEN_ORDER_STATUSES = [ORDER_STATUS.PLACED, ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY];
 
 export const NOTIFICATION_TYPES = ['order', 'restock', 'announcement', 'review', 'account', 'system'];
+
+// Version of the Terms & Conditions (the "last updated" date shown on /terms)
+export const TERMS_VERSION = '2026-09-24';

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import Logo from '../common/Logo';
-import { CONTACT } from '../../config';
+import { CONTACT, TEAM_NAME } from '../../config';
 
 export default function Footer() {
   return (
@@ -49,9 +49,11 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom d-flex flex-wrap justify-content-between gap-2">
-          <span>© {new Date().getFullYear()} MarketLink · eGreen Basket</span>
           <span>
-            Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> · Illustrations: Microsoft Fluent Emoji (MIT) ·{' '}
+            © {new Date().getFullYear()} MarketLink · eGreen Basket · Built by <Link to="/about">{TEAM_NAME}</Link>
+          </span>
+          <span>
+            Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> · Photos: Open Images (CC BY 2.0) · Illustrations: Microsoft Fluent (MIT) · <Link to="/terms">Terms</Link> ·{' '}
             <Link to="/admin/login">Admin</Link>
           </span>
         </div>

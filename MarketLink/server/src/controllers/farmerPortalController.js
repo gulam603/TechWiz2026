@@ -135,6 +135,7 @@ export async function createProduct(req, res) {
   if (data.templateQuantity === undefined) data.templateQuantity = data.quantityAvailable || 0;
   const product = await Product.create({
     ...data,
+    slug: await uniqueSlug(Product, data.name),
     farmer: req.farmer._id,
     image: fileUrl('products', req.file),
     markets: req.farmer.markets,
@@ -156,6 +157,7 @@ export async function updateProduct(req, res) {
   const data = readProductBody(req.body, { partial: true });
   if (data.category && !(await Category.exists({ _id: data.category, isActive: true }))) throw new AppError('Please choose a valid category', 400);
   const wasEmpty = product.quantityAvailable <= 0 || product.status === PRODUCT_STATUS.SOLD_OUT;
+  if (data.name && data.name !== product.name) product.slug = await uniqueSlug(Product, data.name, product._id);
   Object.assign(product, data);
   if (req.file) {
     product.image = fileUrl('products', req.file);
@@ -378,7 +380,7 @@ export async function farmerInsights(req, res) {
 export async function farmerReviews(req, res) {
   const filter = { farmer: req.farmer._id, isRemoved: false };
   if (req.query.unanswered === 'true') filter['response.text'] = { $exists: false };
-  const reviews = await Review.find(filter).populate('customer', 'name').populate('product', 'name image').sort({ createdAt: -1 }).lean();
+  const reviews = await Review.find(filter).populate('customer', 'name avatar').populate('product', 'name slug image').sort({ createdAt: -1 }).lean();
   res.json({ reviews });
 }
 
@@ -394,7 +396,7 @@ export async function respondToReview(req, res) {
     type: 'review',
     title: `${req.farmer.stallName} replied to your review`,
     message: text.slice(0, 120),
-    link: review.product ? `/products/${review.product}` : `/farmers/${req.farmer.slug}`,
+    link: review.product ? `/products/${(await Product.findById(review.product).select('slug').lean())?.slug || review.product}` : `/farmers/${req.farmer.slug}`,
   });
   res.json({ review });
 }

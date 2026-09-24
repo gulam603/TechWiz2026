@@ -7,6 +7,7 @@ const productSchema = new Schema(
   {
     farmer: { type: Schema.Types.ObjectId, ref: 'Farmer', required: true },
     name: { type: String, required: [true, 'Product name is required'], trim: true, maxlength: 100 },
+    slug: { type: String, trim: true, lowercase: true }, // readable URL: /products/sindhri-mangoes
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: [true, 'Category is required'] },
     price: { type: Number, required: [true, 'Price is required'], min: [0, 'Price cannot be negative'] },
     unit: { type: String, enum: UNITS, default: 'kg' },
@@ -39,6 +40,7 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
+productSchema.index({ slug: 1 });
 productSchema.index({ farmer: 1, isRemoved: 1 });
 productSchema.index({ category: 1, price: 1 });
 productSchema.index({ markets: 1 });

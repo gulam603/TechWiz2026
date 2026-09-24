@@ -9,7 +9,10 @@ export async function notify(user, { type = 'system', title, message, link }, { 
   const userDoc = user?.email ? user : await User.findById(user).select('email name');
   if (!userDoc) return;
   await Notification.create({ user: userDoc._id, type, title, message, link });
-  if (email) await sendMail({ to: userDoc.email, subject: title, message });
+  if (email) {
+    const linkLabel = type === 'order' ? 'View the order' : type === 'account' ? 'Open my account' : 'Open MarketLink';
+    await sendMail({ to: userDoc.email, subject: title, message: userDoc.name ? `Hi ${userDoc.name},\n${message}` : message, link, linkLabel });
+  }
 }
 
 /** Sends the same in-app notification to many users at once. */

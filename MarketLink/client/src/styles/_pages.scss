@@ -366,6 +366,179 @@
   }
 }
 
+.page-hero .hero-chip {
+  background: #fff;
+  border: 1px solid $ml-line;
+  color: $ml-muted;
+}
+
+// ------------------------------------------------------------------ terms & conditions
+.terms-toc {
+  position: sticky;
+  top: calc(var(--ml-nav-h) + 1rem);
+  background: #fff;
+  border: 1px solid $ml-line;
+  border-radius: 1.4rem;
+  padding: 1.25rem 1.1rem;
+  ol {
+    list-style: none;
+    counter-reset: toc;
+    padding: 0;
+    margin: 0.6rem 0 0;
+    display: grid;
+    gap: 0.1rem;
+  }
+  li {
+    counter-increment: toc;
+  }
+  a {
+    display: flex;
+    gap: 0.55rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.6rem;
+    font-size: 0.88rem;
+    color: $ml-ink;
+    text-decoration: none;
+    line-height: 1.35;
+    &::before {
+      content: counter(toc);
+      min-width: 1.2rem;
+      color: $ml-green;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    &:hover {
+      background: $ml-sand;
+    }
+  }
+}
+
+.terms-panel {
+  background: #fff;
+  border: 1px solid $ml-line;
+  border-radius: 1.4rem;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.terms-content {
+  .terms-section {
+    scroll-margin-top: calc(var(--ml-nav-h) + 1rem);
+    padding-bottom: 1.35rem;
+    margin-bottom: 1.35rem;
+    border-bottom: 1px dashed $ml-line;
+    &:last-child {
+      border-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+  .terms-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.25rem;
+    margin-bottom: 0.7rem;
+  }
+  .terms-icon {
+    width: 2.3rem;
+    height: 2.3rem;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.8rem;
+    background: rgba($ml-leaf, 0.15);
+    color: $ml-green;
+    font-size: 1.05rem;
+  }
+  p,
+  ul {
+    color: $ml-muted;
+    margin-bottom: 0.6rem;
+    padding-left: 3rem;
+  }
+  ul {
+    padding-left: 4.1rem;
+  }
+  li {
+    margin-bottom: 0.3rem;
+  }
+  li::marker {
+    color: $ml-leaf;
+  }
+  &.is-compact {
+    .terms-title {
+      font-size: 1.05rem;
+    }
+    .terms-icon {
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.95rem;
+    }
+    p,
+    ul {
+      font-size: 0.9rem;
+      padding-left: 2.7rem;
+    }
+    ul {
+      padding-left: 3.8rem;
+    }
+  }
+}
+
+.terms-foot {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 1rem;
+  background: $ml-sand;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.terms-modal .ml-modal-body {
+  max-height: min(62vh, 560px);
+  overflow-y: auto;
+  border-top: 1px solid $ml-line;
+  border-bottom: 1px solid $ml-line;
+}
+
+.terms-check {
+  margin-top: 0.25rem;
+  .form-check-label {
+    line-height: 1.5;
+  }
+}
+
+.btn-inline-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: $ml-green;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  &:hover {
+    color: $ml-forest;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .terms-content {
+    p,
+    ul,
+    &.is-compact p,
+    &.is-compact ul {
+      padding-left: 0;
+    }
+    ul,
+    &.is-compact ul {
+      padding-left: 1.2rem;
+    }
+  }
+}
+
 // ------------------------------------------------------------------ shop
 .filter-panel {
   position: sticky;
@@ -1169,6 +1342,52 @@
 }
 
 // about / contact
+.team-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--ml-radius-lg);
+  color: rgba(#fff, 0.78);
+  background:
+    radial-gradient(circle at 92% 12%, rgba($ml-lime, 0.22), transparent 42%),
+    linear-gradient(135deg, $ml-forest, $ml-forest-2);
+  .team-banner-mark {
+    display: inline-flex;
+    flex-shrink: 0;
+    border-radius: 18px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  }
+  .team-banner-text {
+    flex: 1 1 260px;
+    min-width: 0;
+  }
+  .team-banner-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $ml-lime;
+  }
+  .team-banner-name {
+    color: #fff;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin: 0.15rem 0 0.25rem;
+  }
+  .team-banner-chips {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .hero-chip {
+    background: rgba(#fff, 0.1);
+    color: #fff;
+    border: 1px solid rgba(#fff, 0.18);
+  }
+}
+
 .team-card {
   background: #fff;
   border: 1px solid $ml-line;
@@ -1176,11 +1395,25 @@
   padding: 1.5rem;
   text-align: center;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   .avatar {
     width: 72px;
     height: 72px;
     font-size: 1.4rem;
     margin-bottom: 0.8rem;
+  }
+  .team-tag {
+    margin-top: auto;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $ml-green;
+    background: rgba($ml-leaf, 0.14);
+    border-radius: 50rem;
+    padding: 0.25rem 0.7rem;
   }
 }
 

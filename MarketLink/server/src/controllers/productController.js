@@ -92,22 +92,39 @@ export async function getProduct(req, res) {
     .lean();
   if (!product) throw new AppError('Product not found', 404);
 
-  const [reviews, related] = await Promise.all([
+  const withRefs = (q) => q.populate('farmer', 'stallName slug').populate('category', 'name slug color');
+  const [reviews, sameCategory, fromFarmer] = await Promise.all([
     Review.find({ product: product._id, type: 'product', isRemoved: false })
       .populate('customer', 'name avatar')
       .sort({ createdAt: -1 })
       .limit(20)
       .lean(),
-    Product.find({ ...Product.publicFilter(), category: product.category?._id, _id: { $ne: product._id } })
-      .populate('farmer', 'stallName slug')
+    withRefs(Product.find({ ...Product.publicFilter(), category: product.category?._id, _id: { $ne: product._id } }))
+      .sort({ totalSold: -1 })
+      .limit(12)
+      .lean(),
+    Product.find({ ...Product.publicFilter(), farmer: product.farmer._id, _id: { $ne: product._id } })
       .populate('category', 'name slug color')
+      .select('name slug image price unit category status quantityAvailable')
       .sort({ totalSold: -1 })
       .limit(4)
       .lean(),
   ]);
 
+  // "You may also like": the same category from other stalls first, topped up with popular products
+  const otherStall = (p) => String(p.farmer?._id) !== String(product.farmer._id);
+  let related = [...sameCategory.filter(otherStall), ...sameCategory.filter((p) => !otherStall(p))].slice(0, 4);
+  if (related.length < 4) {
+    const skip = [product._id, ...related.map((p) => p._id), ...fromFarmer.map((p) => p._id)];
+    const more = await withRefs(Product.find({ ...Product.publicFilter(), status: 'available', _id: { $nin: skip } }))
+      .sort({ totalSold: -1 })
+      .limit(4 - related.length)
+      .lean();
+    related = related.concat(more);
+  }
+
   const isFavorite = Boolean(req.user?.favoriteProducts?.some((id) => String(id) === String(product._id)));
-  res.json({ product, reviews, related, isFavorite });
+  res.json({ product, reviews, related, fromFarmer, isFavorite });
 }
 
 // GET /api/products/price-range  (used by the price filter)

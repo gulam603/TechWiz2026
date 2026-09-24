@@ -3,6 +3,7 @@ import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import Modal from '../common/Modal';
 import { resetFilterOptions, useFilterOptions } from './FilterBar';
+import SearchSelect from '../common/SearchSelect';
 
 const EMPTY = {
   farmer: { stallName: '', contactPerson: '', phone: '', email: '', address: '', city: '', bio: '', categories: [], markets: [], status: 'active', password: '' },
@@ -107,16 +108,15 @@ export default function AdminAccountModal({ type = 'farmer', onClose, onCreated 
           </div>
           <div className="col-md-4">
             <label className="form-label" htmlFor="a-city">City</label>
-            <select id="a-city" name="city" className="form-select" required={isFarmer} value={form.city} onChange={change}>
-              <option value="">Choose a city</option>
-              {options.cities
-                .filter((c) => c.isActive !== false)
-                .map((c) => (
-                  <option key={c._id} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-            </select>
+            <SearchSelect
+              id="a-city"
+              value={form.city}
+              onChange={(v) => setForm((f) => ({ ...f, city: v }))}
+              required={isFarmer}
+              ariaLabel="City"
+              placeholder="Choose a city"
+              options={options.cities.filter((c) => c.isActive !== false).map((c) => ({ value: c.name, label: c.name, hint: c.province }))}
+            />
           </div>
           {isFarmer && (
             <>

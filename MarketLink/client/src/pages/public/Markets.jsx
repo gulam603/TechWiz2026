@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { toQuery } from '../../api/client';
 import MarketCard from '../../components/cards/MarketCard';
 import MapView from '../../components/map/MapView';
@@ -10,9 +9,11 @@ import { PageHero } from '../../components/common/PageHeader';
 import { getCurrentPosition } from '../../components/map/DirectionsMap';
 import { DAY_NAMES, DAY_SHORT, time12 } from '../../utils/format';
 import { useToast } from '../../context/ToastContext';
+import SearchSelect from '../../components/common/SearchSelect';
+import useSeo from '../../hooks/useSeo';
 
 export default function Markets() {
-  useDocumentTitle('Farmers markets');
+  useSeo({ title: 'Farmers markets', description: 'Find farmers markets near you: opening days and times, location on the map and the farmers selling at each market.' });
   const [filters, setFilters] = useState({ search: '', city: '', category: '', day: '' });
   const { data: catData } = useFetch('/categories');
   const [location, setLocation] = useState(null);
@@ -47,32 +48,13 @@ export default function Markets() {
               </div>
             </div>
             <div className="col-4 col-lg-2">
-              <select className="form-select" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} aria-label="City">
-                <option value="">All cities</option>
-                {(data?.cities || []).map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
+              <SearchSelect value={filters.city} onChange={(v) => setFilters({ ...filters, city: v })} ariaLabel="City" emptyLabel="All cities" options={(data?.cities || []).map((c) => ({ value: c, label: c }))} />
             </div>
             <div className="col-4 col-lg-2">
-              <select className="form-select" value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })} aria-label="Category">
-                <option value="">All produce</option>
-                {(catData?.categories || []).map((c) => (
-                  <option key={c._id} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              <SearchSelect value={filters.category} onChange={(v) => setFilters({ ...filters, category: v })} ariaLabel="Category" emptyLabel="All produce" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
             </div>
             <div className="col-4 col-lg-2">
-              <select className="form-select" value={filters.day} onChange={(e) => setFilters({ ...filters, day: e.target.value })} aria-label="Market day">
-                <option value="">Any day</option>
-                {DAY_NAMES.map((d, i) => (
-                  <option key={d} value={i}>
-                    {d}
-                  </option>
-                ))}
-              </select>
+              <SearchSelect value={filters.day} onChange={(v) => setFilters({ ...filters, day: v })} ariaLabel="Market day" emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
             </div>
             <div className="col-12 col-xl-3 d-flex gap-2 justify-content-end">
               <button type="button" className={`btn text-nowrap flex-shrink-0 ${location ? 'btn-forest' : 'btn-white'}`} onClick={location ? () => setLocation(null) : nearMe} disabled={locating}>

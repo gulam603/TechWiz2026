@@ -3,7 +3,6 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useFetch from '../../hooks/useFetch';
 import LocationPicker from '../../components/map/LocationPicker';
 import DayDots from '../../components/common/DayDots';
@@ -11,6 +10,8 @@ import { PASSWORD_HINT, passwordOk } from './Register';
 import { time12 } from '../../utils/format';
 import TermsCheckbox from '../../components/legal/TermsCheckbox';
 import PasswordInput from '../../components/common/PasswordInput';
+import SearchSelect from '../../components/common/SearchSelect';
+import useSeo from '../../hooks/useSeo';
 
 const STEPS = ['Stall & account', 'Farm details', 'Markets & location'];
 const PRACTICES = ['Pesticide-free', 'Organic practices', 'Family farm', 'Free-range', 'Grass-fed', 'Hydroponic', 'Heirloom seeds', 'Picked daily', 'Small batch'];
@@ -55,7 +56,7 @@ function validate(step, f) {
 }
 
 export default function RegisterFarmer() {
-  useDocumentTitle('Register your stall');
+  useSeo({ title: 'Sell with MarketLink', description: 'Register your farm stall on MarketLink: list your weekly stock, take pre-orders and set your pickup times.', canonicalPath: '/register/farmer' });
   const { registerFarmer, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -170,14 +171,7 @@ export default function RegisterFarmer() {
             </div>
             <div className="col-md-4">
               <label className="form-label" htmlFor="f-city">City *</label>
-              <select id="f-city" name="city" className="form-select" value={form.city} onChange={change}>
-                <option value="">Choose a city</option>
-                {cities.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+              <SearchSelect id="f-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel="City" placeholder="Choose a city" options={cities.map((c) => ({ value: c, label: c }))} />
             </div>
             <div className="col-12">
               <label className="form-label" htmlFor="f-bio">About your farm</label>

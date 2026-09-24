@@ -60,6 +60,57 @@ export async function registerCustomer(req, res) {
   res.status(201).json(await startSession(req, res, user));
 }
 
+// A readable one-time password for accounts created at checkout, e.g. "Mango4827kq"
+function generatePassword() {
+  const words = ['Mango', 'Tomato', 'Basket', 'Carrot', 'Harvest', 'Honey', 'Market', 'Garden', 'Orchard', 'Spinach'];
+  const letters = 'abcdefghjkmnpqrstuvwxyz';
+  const pickFrom = (chars, n) => Array.from({ length: n }, () => chars[crypto.randomInt(chars.length)]).join('');
+  return `${words[crypto.randomInt(words.length)]}${crypto.randomInt(1000, 10000)}${pickFrom(letters, 3)}`;
+}
+
+/**
+ * POST /api/auth/quick-account  { firstName, lastName, email, phone, address, city?, acceptTerms }
+ * Checkout without an account: creates a customer account, e-mails a generated password and
+ * signs the customer in, so the pre-order can be placed straight away.
+ */
+export async function quickAccount(req, res) {
+  requireFields(req.body, ['firstName', 'lastName', 'email', 'phone', 'address']);
+  const terms = requireTerms(req.body);
+  const email = String(req.body.email).toLowerCase().trim();
+  if (await User.exists({ email })) {
+    throw new AppError('An account with this e-mail already exists. Please log in to continue with your order.', 409, { exists: true });
+  }
+  const name = `${String(req.body.firstName).trim()} ${String(req.body.lastName).trim()}`.slice(0, 80);
+  const password = generatePassword();
+  const city = req.body.city ? await resolveCity(req.body.city) : undefined;
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone: req.body.phone,
+    address: req.body.address,
+    city,
+    ...terms,
+    role: ROLES.CUSTOMER,
+    status: USER_STATUS.ACTIVE,
+  });
+  const mail = await sendMail({
+    to: user.email,
+    subject: 'Your account and password',
+    message: `Hi ${req.body.firstName},\nWelcome to MarketLink! We created an account for you so you can place your pre-order and follow it.\n\nYour login\nE-mail: ${user.email}\nPassword: ${password}\n\nFor your safety, change this password in Profile & family after you log in.`,
+    link: '/login',
+    linkLabel: 'Log in to MarketLink',
+  });
+  await notifyMany([user._id], {
+    type: 'account',
+    title: 'Welcome to MarketLink',
+    message: 'Your account was created at checkout. We e-mailed your password; you can change it in Profile & family.',
+    link: '/account/profile',
+  });
+  const session = await startSession(req, res, user);
+  res.status(201).json({ ...session, passwordSent: Boolean(mail), ...(mailMode() === 'console' ? { mailNote: 'E-mail is in console mode: the password was printed in the server terminal.' } : {}) });
+}
+
 // POST /api/auth/register-farmer  (farmer / stall sign up, needs admin approval)
 export async function registerFarmer(req, res) {
   requireFields(req.body, ['stallName', 'contactPerson', 'phone', 'email', 'address', 'password']);
@@ -124,17 +175,9 @@ async function verifyCredentials(email, password) {
   return user;
 }
 
-// POST /api/auth/login  (customers and farmers)
+// POST /api/auth/login  (one login for customers, farmers and administrators; the role decides where they go)
 export async function login(req, res) {
   const user = await verifyCredentials(req.body.email, req.body.password);
-  if (user.role === ROLES.ADMIN) throw new AppError('Administrators must use the admin login page', 403);
-  res.json(await startSession(req, res, user));
-}
-
-// POST /api/auth/admin/login  (separate admin portal)
-export async function adminLogin(req, res) {
-  const user = await verifyCredentials(req.body.email, req.body.password);
-  if (user.role !== ROLES.ADMIN) throw new AppError('This login is for administrators only', 403);
   res.json(await startSession(req, res, user));
 }
 

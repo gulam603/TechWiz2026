@@ -274,18 +274,19 @@ createCollection(
   [[{ orderNumber: 1 }, { unique: true }], [{ customer: 1, createdAt: -1 }], [{ farmer: 1, status: 1, pickupDate: 1 }], [{ market: 1 }]]
 );
 
-// reviews: ratings for a product or a farmer, only after a completed order
+// reviews: ratings for a product or a farmer; verified = tied to the customer's completed order
 createCollection(
   'reviews',
   {
     bsonType: 'object',
-    required: ['type', 'farmer', 'customer', 'order', 'rating'],
+    required: ['type', 'farmer', 'customer', 'rating'],
     properties: {
       type: { enum: ['product', 'farmer'] },
       product: objectId,
       farmer: objectId,
       customer: objectId,
       order: objectId,
+      verified: bool,
       rating: int(1, 5),
       comment: str(1000),
       response: { bsonType: 'object', properties: { text: str(1000), at: date } },

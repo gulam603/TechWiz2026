@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Logo from '../common/Logo';
+import SocialLinks from '../common/SocialLinks';
 import { CONTACT, TEAM_NAME } from '../../config';
 
 export default function Footer() {
@@ -20,6 +21,7 @@ export default function Footer() {
                 <i className="bi bi-geo-alt" /> Pickup only
               </span>
             </div>
+            <SocialLinks className="mt-3" />
           </div>
           <div className="col-6 col-lg-2">
             <h6>Shop</h6>
@@ -34,7 +36,7 @@ export default function Footer() {
             <h6>For farmers</h6>
             <ul className="list-unstyled d-grid gap-2 small">
               <li><Link to="/register/farmer">Register your stall</Link></li>
-              <li><Link to="/login">Farmer login</Link></li>
+              <li><Link to="/login">Log in</Link></li>
               <li><Link to="/about">How it works</Link></li>
             </ul>
           </div>
@@ -53,8 +55,7 @@ export default function Footer() {
             © {new Date().getFullYear()} MarketLink · eGreen Basket · Built by <Link to="/about">{TEAM_NAME}</Link>
           </span>
           <span>
-            Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> · Photos: Open Images (CC BY 2.0) · Illustrations: Microsoft Fluent (MIT) · <Link to="/terms">Terms</Link> ·{' '}
-            <Link to="/admin/login">Admin</Link>
+            Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> · Photos: Open Images (CC BY 2.0) · Illustrations: Microsoft Fluent (MIT) · <Link to="/terms">Terms</Link>
           </span>
         </div>
       </div>

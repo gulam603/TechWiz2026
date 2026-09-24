@@ -1,11 +1,11 @@
 [
   {
-    "_id": "6ab4fa3085d8c96df8b65161",
-    "generatedBy": "6ab4fa2985d8c96df8b64c7f",
+    "_id": "6ab523e5d6dd911eb52d86d7",
+    "generatedBy": "6ab523e2d6dd911eb52d81eb",
     "reportType": "orders_summary",
     "title": "Orders summary",
     "from": "2026-08-25T19:00:00.000Z",
-    "to": "2026-09-24T10:23:44.707Z",
+    "to": "2026-09-24T13:21:41.923Z",
     "data": {
       "totals": {
         "orders": 220,
@@ -166,17 +166,17 @@
         },
         {
           "date": "2026-09-23",
-          "orders": 1,
+          "orders": 0,
           "revenue": 0
         },
         {
           "date": "2026-09-24",
-          "orders": 7,
+          "orders": 8,
           "revenue": 0
         }
       ]
     },
-    "generatedAt": "2026-09-24T10:23:44.866Z",
+    "generatedAt": "2026-09-24T13:21:41.933Z",
     "__v": 0
   }
 ]

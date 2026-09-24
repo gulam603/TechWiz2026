@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { toQuery } from '../../api/client';
 import ProductCard from '../../components/cards/ProductCard';
 import Pagination from '../../components/common/Pagination';
@@ -11,6 +10,9 @@ import { CardSkeletons } from '../../components/common/Loader';
 import { PageHero } from '../../components/common/PageHeader';
 import { DAY_LETTER, DAY_NAMES } from '../../utils/format';
 import { CURRENCY } from '../../config';
+import SearchSelect from '../../components/common/SearchSelect';
+import useSeo from '../../hooks/useSeo';
+import { clip } from '../../utils/seo';
 
 const SORTS = [
   { value: 'popular', label: 'Most popular' },
@@ -62,20 +64,14 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
       </div>
 
       <div className="filter-title">Location</div>
-      <select className="form-select mb-2" value={params.get('city') || ''} onChange={(e) => set({ city: e.target.value, market: '' })} aria-label="City">
-        <option value="">All cities</option>
-        {cities.map((c) => (
-          <option key={c}>{c}</option>
-        ))}
-      </select>
-      <select className="form-select" value={params.get('market') || ''} onChange={(e) => set({ market: e.target.value })} aria-label="Market">
-        <option value="">All markets</option>
-        {markets.filter((m) => !params.get('city') || m.city === params.get('city')).map((m) => (
-          <option key={m._id} value={m._id}>
-            {m.name}
-          </option>
-        ))}
-      </select>
+      <SearchSelect className="mb-2" value={params.get('city') || ''} onChange={(v) => set({ city: v, market: '' })} ariaLabel="City" emptyLabel="All cities" options={cities.map((c) => ({ value: c, label: c }))} />
+      <SearchSelect
+        value={params.get('market') || ''}
+        onChange={(v) => set({ market: v })}
+        ariaLabel="Market"
+        emptyLabel="All markets"
+        options={markets.filter((m) => !params.get('city') || m.city === params.get('city')).map((m) => ({ value: m._id, label: m.name, hint: m.city }))}
+      />
 
       <div className="filter-title">Market day</div>
       <div className="day-picker">
@@ -127,12 +123,7 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
       {practices.length > 0 && (
         <>
           <div className="filter-title">Farming practice</div>
-          <select className="form-select" value={params.get('practice') || ''} onChange={(e) => set({ practice: e.target.value })} aria-label="Farming practice">
-            <option value="">Any practice</option>
-            {practices.map((p) => (
-              <option key={p}>{p}</option>
-            ))}
-          </select>
+          <SearchSelect value={params.get('practice') || ''} onChange={(v) => set({ practice: v })} ariaLabel="Farming practice" emptyLabel="Any practice" options={practices.map((p) => ({ value: p, label: p }))} />
         </>
       )}
 
@@ -154,10 +145,15 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
 }
 
 export default function Products() {
-  useDocumentTitle('Shop fresh produce');
   const [params, setParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
   const { data: catData } = useFetch('/categories');
+  const seoCategory = (catData?.categories || []).find((c) => c.slug === params.get('category'));
+  useSeo(
+    seoCategory
+      ? { title: `${seoCategory.name} from local farmers`, description: clip(seoCategory.description || `Fresh ${seoCategory.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`), canonicalPath: `/products?category=${seoCategory.slug}` }
+      : { title: 'Shop fresh produce', description: "Browse this week's vegetables, fruit, dairy, honey, baked goods and more from local farmers. Filter by market, day, city and price, then pre-order for pickup.", canonicalPath: '/products' }
+  );
   const { data: marketData } = useFetch('/markets');
   const { data: practiceData } = useFetch('/practices');
 
@@ -229,7 +225,7 @@ export default function Products() {
                 <CardSkeletons count={9} cols="col-6 col-md-4" />
               ) : (
                 data?.products.map((p) => (
-                  <div key={p._id} className="col-6 col-md-4">
+                  <div key={p._id} className="col-6 col-md-4 col-xl-3">
                     <ProductCard product={p} />
                   </div>
                 ))

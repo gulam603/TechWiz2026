@@ -47,6 +47,9 @@ Each product category has its own pastel tile colour (stored on the category).
 
 ## 3. Layout
 
+On laptops and desktops (≥ 992 px) the root font size is 15 px and section spacing, page headers and the home hero are tighter, so more fits on one screen; shop grids show four products per row. Scrollbars are thin and green across the site.
+
+
 - Bootstrap breakpoints: sm 576, md 768, **lg 992**, xl 1200, xxl 1400 px.
 - Containers are widened for laptops (lg 1140, xl 1240, xxl 1320 px) with 1.5 rem side padding.
 - Radius: 0.8 rem (inputs), 1.25 rem (cards, `--ml-radius`), 1.75 rem (hero panels, `--ml-radius-lg`).
@@ -75,6 +78,12 @@ Each product category has its own pastel tile colour (stored on the category).
 | Password field | one eye button inside the field to show or hide the password; the browser's own reveal button is hidden |
 | Product gallery | main photo with arrows and a "1 / 3" counter, thumbnails below, swipe on phones, credit line follows the photo |
 | Report link | small muted "Report" link with a flag icon under reviews, listings and stall pages; opens a reason dialog |
+| Basket sidebar | slides in from the right over a dimmed page; farmer groups, small quantity steppers, cream footer with the total, Checkout and View full basket |
+| Quick view | "Quick view" pill appears on the product photo on hover (always visible on touch screens); dialog with gallery, price, stock, farmer and add to basket |
+| Photo zoom | the product photo is magnified 2× under the mouse; a full-screen viewer opens on click (arrows, Escape) |
+| Dropdown with search | looks like a normal select; opens a small menu with a search box, highlighted option and a tick on the chosen value |
+| Review badges | green "Verified purchase" pill with a check, grey "Unverified" pill |
+| Social links | round icon buttons (Facebook, Instagram, X, YouTube, WhatsApp, LinkedIn) in the footer and on the Contact page |
 | Panels and tables | white panels with 1 px line border; tables scroll sideways on small screens instead of squeezing names |
 | Modal / drawer | backdrop blur, Escape to close; the mobile drawer is portalled to `<body>` so it never sits inside the sticky header |
 | Toasts | bottom centre, above the tab bar on phones |

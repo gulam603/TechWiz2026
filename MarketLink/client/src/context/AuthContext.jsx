@@ -46,8 +46,13 @@ export function AuthProvider({ children }) {
       isFarmer: user?.role === 'farmer',
       isAdmin: user?.role === 'admin',
       login: async (email, password) => applySession(await api.post('/auth/login', { email, password })),
-      adminLogin: async (email, password) => applySession(await api.post('/auth/admin/login', { email, password })),
       register: async (form) => applySession(await api.post('/auth/register', form)),
+      // Checkout without an account: creates one and e-mails a generated password
+      quickAccount: async (form) => {
+        const res = await api.post('/auth/quick-account', form);
+        applySession(res);
+        return res;
+      },
       registerFarmer: async (form) => applySession(await api.post('/auth/register-farmer', form)),
       logout: async () => {
         await api.post('/auth/logout').catch(() => {});

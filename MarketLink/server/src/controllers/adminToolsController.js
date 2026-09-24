@@ -558,11 +558,13 @@ const TABLES = {
         if (rating >= 1 && rating <= 5) q.rating = rating;
         if (f.removed === 'yes') q.isRemoved = true;
         if (f.removed === 'no') q.isRemoved = false;
+        if (f.verified === 'yes') q.verified = true;
+        if (f.verified === 'no') q.verified = { $ne: true };
         if (isValidId(f.farmer)) q.farmer = f.farmer;
         return { ...q, ...dateRange('createdAt', f.from, f.to) };
       },
       search: async (text) => ({ $or: [{ comment: searchRegex(text) }, { customer: { $in: await userIdsMatching(text, ROLES.CUSTOMER) } }] }),
-      sortable: { rating: 'rating', createdAt: 'createdAt', type: 'type' },
+      sortable: { rating: 'rating', createdAt: 'createdAt', type: 'type', verified: 'verified' },
       query: (q) => q.populate('customer', 'name avatar').populate('product', 'name slug').populate('farmer', 'stallName slug'),
     }),
 

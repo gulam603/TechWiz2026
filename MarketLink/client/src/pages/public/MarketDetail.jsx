@@ -1,6 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import DirectionsMap from '../../components/map/DirectionsMap';
 import DayDots from '../../components/common/DayDots';
 import FavButton from '../../components/common/FavButton';
@@ -9,11 +8,24 @@ import RatingStars from '../../components/common/RatingStars';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { DAY_NAMES, DAY_SHORT, time12 } from '../../utils/format';
+import useSeo from '../../hooks/useSeo';
+import { clip, marketLd } from '../../utils/seo';
 
 export default function MarketDetail() {
   const { slug } = useParams();
   const { data, loading, error } = useFetch(`/markets/${slug}`);
-  useDocumentTitle(data?.market?.name);
+  const m = data?.market;
+  useSeo(
+    m
+      ? {
+          title: `${m.name} – farmers market${m.city ? ` in ${m.city}` : ''}`,
+          description: clip(m.description || `${m.name}, ${m.address}. See the farmers, opening days and pre-order on MarketLink.`),
+          image: m.image,
+          jsonLd: marketLd(m),
+          canonicalPath: `/markets/${m.slug}`,
+        }
+      : { title: 'Market' }
+  );
 
   if (loading && !data) return <PageLoader />;
   if (error)

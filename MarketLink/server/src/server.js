@@ -2,7 +2,7 @@ import env from './config/env.js';
 import { connectDB } from './config/db.js';
 import { createApp } from './app.js';
 import { startScheduler } from './services/scheduler.js';
-import { runMigrations } from './services/migrations.js';
+import { runMigrations, syncValidators } from './services/migrations.js';
 import { verifyMail } from './services/mailer.js';
 
 async function start() {
@@ -13,6 +13,7 @@ async function start() {
     console.error('    Check MONGO_URI in server/.env and make sure MongoDB is running.');
     process.exit(1);
   }
+  await syncValidators().catch((err) => console.error('[db] Could not update the database validators:', err.message));
   await runMigrations().catch((err) => console.error('[db] Start-up data fix failed:', err.message));
   const app = createApp();
   app.listen(env.port, () => {

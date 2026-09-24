@@ -73,9 +73,14 @@ export function mailErrorHint(err) {
 export async function verifyMail() {
   const mode = mailMode();
   if (mode === 'console') {
-    console.log('[mail] Console mode: e-mails are printed here. Set SMTP_* in server/.env to send real e-mails.');
+    if (env.smtp.missingHost) {
+      console.warn(`[mail] SMTP_USER and SMTP_PASS are set, but SMTP_HOST is empty and the server for "${env.smtp.user.split('@')[1]}" is not known.\n       Set SMTP_HOST (and SMTP_PORT) in server/.env. Until then e-mails are printed here.`);
+    } else {
+      console.log('[mail] Console mode: e-mails are printed here. Set SMTP_* in server/.env to send real e-mails.');
+    }
     return { ok: true, mode };
   }
+  if (env.smtp.autoHost) console.log(`[mail] SMTP_HOST is empty, so ${env.smtp.host}:${env.smtp.port} is used for ${env.smtp.user}.`);
   try {
     const transporter = await getTransporter();
     await transporter.verify();

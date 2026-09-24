@@ -12,6 +12,8 @@ sends guests to the right login page and blocks other roles.
 | Navbar | `components/layout/Navbar.jsx` | logo, main links, global search, basket, notification bell, account menu; turns a shadow on while scrolling |
 | Mobile drawer | `components/layout/MobileMenu.jsx` | phones/tablets: slide-in menu with its own scroll, backdrop, Escape to close, closes after navigation |
 | Bottom tab bar | `components/layout/MobileTabBar.jsx` | phones/tablets: 5 role-aware tabs (guest/customer: Home, Shop, Map, Basket, Account; farmer: Stall, Orders, Stock, Pickup, Profile; admin: Dashboard, Farmers, Orders, Markets, Reports) |
+| Basket sidebar | `components/cart/CartDrawer.jsx` | basket on the right: lines per farmer, quantities, total, Checkout and View full basket; opens from the basket icon and after adding from a product page or quick view |
+| Dropdown with search | `components/common/SearchSelect.jsx` | replaces long `<select>` lists (cities, markets, categories, farmers, customers, all filter bars): search box, arrow keys, Enter, Escape |
 | AI assistant | `components/chat/ChatWidget.jsx` | floating chat "Basket" with memory, saved history and Clear chat (not in the admin area) |
 | Footer | `components/layout/Footer.jsx` | links, team contact (Aptech Learning Centre, F.B. Area, Karachi), "Built by Team Omniverse", credits, Terms |
 | App shell | `components/layout/AppShell.jsx` | shared back-office layout of the customer, farmer and admin areas: flat forest sidebar with sections and counters, collapse to icons (remembered), drawer on phones, top bar with page title, quick actions, notification bell and account menu; no public navbar |
@@ -33,18 +35,18 @@ sends guests to the right login page and blocks other roles.
 | `/about` | About us | problem, solution, live numbers, values, "Who built MarketLink" – Team Omniverse banner and team cards |
 | `/terms` | Terms & Conditions | 12 sections (accounts, pre-orders, cancellations, payment, farmers, reviews, AI assistant, privacy …) with a table of contents |
 | `/contact` | Contact us | static team contact, Google Map, contact form (goes to the admin inbox) |
-| `/cart` | Basket | items grouped by farmer (one pickup per farmer), quantities, totals |
+| `/cart` | Basket | items grouped by farmer (one pickup per farmer), quantities, totals; the basket icon opens the same basket as a sidebar on the right |
 | `/login`, `/register` | Customer / farmer login, customer sign-up | floating produce banner; sign-up asks name, contact number, e-mail, address and a required "I agree to the Terms & Conditions" (terms open in a dialog) |
 | `/register/farmer` | Farmer sign-up wizard | 3 steps: stall & account → farm details (address, city dropdown, bio, categories, practices) → markets, map pin, Terms & Conditions |
 | `/forgot-password`, `/reset-password/:token` | Password reset | one-time link valid for 30 minutes |
-| `/admin/login` | Admin login | separate portal for administrators |
+| `/admin/login` | (old link) | redirects to `/login`: one login page for customers, farmers and administrators |
 | `*` | Not found | friendly 404 with links back |
 
 ## Customer pages (role: customer)
 
 | Route | Page | Content |
 | --- | --- | --- |
-| `/checkout` | Checkout | pickup date and time slot per farmer (inside the farmer's windows, respecting capacity, cut-off and closed dates), notes, place pre-order (pay at pickup) |
+| `/checkout` | Checkout (guests too) | guests first give first name, last name, e-mail, number and address (account created, password e-mailed); then pickup date and time slot per farmer (inside the farmer's windows, respecting capacity, cut-off and closed dates), notes, place pre-order (pay at pickup) |
 | `/checkout/success` | Order placed | order numbers and pickup summary |
 | `/account` | Dashboard | greeting, ready-for-pickup alert, active and completed counts, upcoming pickups, latest updates, favourite farmers, products picked for you |
 | `/account/orders` | My orders | Active / History / All tabs, reorder |
@@ -68,7 +70,7 @@ sends guests to the right login page and blocks other roles.
 | `/farmer/notifications` | Notifications | new orders, approvals, reviews, low-stock and sold-out alerts |
 | `/farmer/sales` | Sales report | period presets or custom dates, KPIs vs previous period, insights, revenue per day, categories, pickup days and times, markets, products and customers grids, print |
 
-## Admin pages (role: admin, separate login, own layout)
+## Admin pages (role: admin, same login page, own layout)
 
 Every admin table is a DataTables grid (search, sort, paging, CSV / Excel / Print) with filter controls.
 

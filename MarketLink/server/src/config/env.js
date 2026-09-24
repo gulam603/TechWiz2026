@@ -14,18 +14,64 @@ process.env.TZ = process.env.TZ || 'Asia/Karachi';
 // Gmail shows app passwords in groups of four ("abcd efgh ijkl mnop"); the spaces are not part of it
 const appPassword = (pass) => (/^[a-z]{4}( [a-z]{4}){3}$/i.test(pass.trim()) ? pass.replace(/\s+/g, '') : pass);
 
+// SMTP servers of the common free e-mail providers, used when SMTP_HOST is left empty
+const KNOWN_SMTP_HOSTS = {
+  'gmail.com': 'smtp.gmail.com',
+  'googlemail.com': 'smtp.gmail.com',
+  'outlook.com': 'smtp-mail.outlook.com',
+  'hotmail.com': 'smtp-mail.outlook.com',
+  'live.com': 'smtp-mail.outlook.com',
+  'msn.com': 'smtp-mail.outlook.com',
+  'yahoo.com': 'smtp.mail.yahoo.com',
+  'ymail.com': 'smtp.mail.yahoo.com',
+  'icloud.com': 'smtp.mail.me.com',
+  'me.com': 'smtp.mail.me.com',
+  'zoho.com': 'smtp.zoho.com',
+  'aol.com': 'smtp.aol.com',
+  'gmx.com': 'mail.gmx.com',
+  'yandex.com': 'smtp.yandex.com',
+};
+
+/**
+ * Sender address. MAIL_FROM or SMTP_FROM, in any of these forms:
+ *   MarketLink <shop@gmail.com>   "MarketLink" <shop@gmail.com>   Support shop@gmail.com   shop@gmail.com
+ */
+function senderAddress(raw, user) {
+  let text = String(raw || '').trim();
+  if (/^(["']).*\1$/.test(text)) text = text.slice(1, -1).trim(); // the whole value in quotes
+  if (!text) return user.includes('@') ? `MarketLink <${user}>` : 'MarketLink <no-reply@marketlink.local>';
+  if (/<[^>]+@[^>]+>/.test(text)) return text;
+  const email = (text.match(/[^\s<>"']+@[^\s<>"']+/) || [])[0];
+  if (!email) return user.includes('@') ? `${text} <${user}>` : text;
+  const name = text.replace(email, '').replace(/["'<>]/g, '').trim() || 'MarketLink';
+  return `"${name}" <${email}>`;
+}
+
 function smtpConfig() {
-  const port = Number(process.env.SMTP_PORT) || 587;
   const user = (process.env.SMTP_USER || '').trim();
+  const pass = appPassword(process.env.SMTP_PASS || '');
+  const service = (process.env.SMTP_SERVICE || '').trim();
+  let host = (process.env.SMTP_HOST || '').trim();
+  // SMTP_HOST empty but a login is filled in: use the provider's server (e.g. a Gmail address -> smtp.gmail.com)
+  let autoHost = false;
+  const domain = user.split('@')[1]?.toLowerCase();
+  if (!host && !service && user && pass && KNOWN_SMTP_HOSTS[domain]) {
+    host = KNOWN_SMTP_HOSTS[domain];
+    autoHost = true;
+  }
+  const port = Number(process.env.SMTP_PORT) || 587;
   const secure = process.env.SMTP_SECURE ? ['true', '1', 'yes'].includes(process.env.SMTP_SECURE.toLowerCase()) : port === 465;
   return {
-    host: (process.env.SMTP_HOST || '').trim(),
-    service: (process.env.SMTP_SERVICE || '').trim(),
+    host,
+    autoHost,
+    // login filled in, but no server we can guess (e.g. a company domain): explained at start-up
+    missingHost: !host && !service && Boolean(user && pass),
+    service,
     port,
     secure,
     user,
-    pass: appPassword(process.env.SMTP_PASS || ''),
-    from: process.env.MAIL_FROM || (user.includes('@') ? `MarketLink <${user}>` : 'MarketLink <no-reply@marketlink.local>'),
+    pass,
+    from: senderAddress(process.env.MAIL_FROM || process.env.SMTP_FROM, user),
   };
 }
 

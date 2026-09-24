@@ -4,6 +4,7 @@ import Footer from './Footer';
 import AnnouncementBar from './AnnouncementBar';
 import ChatWidget from '../chat/ChatWidget';
 import MobileTabBar from './MobileTabBar';
+import CartDrawer from '../cart/CartDrawer';
 import { useAuth } from '../../context/AuthContext';
 import useScrollReveal from '../../hooks/useScrollReveal';
 
@@ -25,6 +26,7 @@ export default function PublicLayout({ footer = true }) {
       {footer && !isAdmin && <Footer />}
       {!isAdmin && <ChatWidget key={user?._id || 'guest'} />}
       <MobileTabBar />
+      <CartDrawer />
     </>
   );
 }

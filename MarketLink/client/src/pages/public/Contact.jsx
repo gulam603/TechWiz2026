@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { PageHero } from '../../components/common/PageHeader';
 import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { CONTACT } from '../../config';
+import SocialLinks from '../../components/common/SocialLinks';
+import useSeo from '../../hooks/useSeo';
 
 export default function Contact() {
-  useDocumentTitle('Contact us');
+  useSeo({ title: 'Contact us', description: 'Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.' });
   const { user } = useAuth();
   const { toast } = useToast();
   const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', subject: '', message: '' });
@@ -58,6 +59,10 @@ export default function Contact() {
                   <span>{CONTACT.hours}</span>
                 </li>
               </ul>
+              <div className="mt-3 pt-3 border-top border-light border-opacity-25">
+                <span className="small fw-semi d-block mb-2">Follow MarketLink</span>
+                <SocialLinks />
+              </div>
             </div>
             <div className="map-frame" style={{ height: 300 }}>
               <iframe

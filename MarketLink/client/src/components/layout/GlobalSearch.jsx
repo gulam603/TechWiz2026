@@ -89,8 +89,11 @@ export default function GlobalSearch({ className = '', placeholder = 'Search pro
             </Link>
           ))}
           {total > 0 && (
-            <button type="button" className="ml-dropdown-item justify-content-center fw-semi" onClick={submit}>
-              See all product results
+            <button type="button" className="search-see-all" onClick={submit}>
+              <span>
+                See all products for <strong>“{q.trim()}”</strong>
+              </span>
+              <i className="bi bi-arrow-right" aria-hidden="true" />
             </button>
           )}
         </div>

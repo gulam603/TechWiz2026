@@ -10,6 +10,7 @@ import { PageLoader } from '../../components/common/Loader';
 import { timeAgo } from '../../utils/format';
 import Avatar from '../../components/common/Avatar';
 import ReportButton from '../../components/reviews/ReportButton';
+import VerifiedBadge from '../../components/reviews/VerifiedBadge';
 
 function ReplyBox({ review, onSaved }) {
   const { toast } = useToast();
@@ -89,6 +90,7 @@ export default function FarmerReviews() {
                 <Avatar name={r.customer?.name} src={r.customer?.avatar} className="avatar-sm" />
                 <strong className="small">{r.customer?.name}</strong>
                 <RatingStars value={r.rating} />
+                <VerifiedBadge verified={r.verified} />
                 <span className="chip chip-soft">{r.type === 'product' ? r.product?.name : 'Stall review'}</span>
                 <span className="fs-7 text-muted-2 ms-auto">{timeAgo(r.createdAt)}</span>
               </div>

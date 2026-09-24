@@ -64,7 +64,7 @@ export default function AdminLayout() {
       title={titleFromNav(ADMIN_NAV, pathname, { '/admin/orders/': 'Order details', '/admin/customers/': 'Customer details' })}
       badges={badges}
       menuLinks={MENU}
-      logoutTo="/admin/login"
+      logoutTo="/login"
       outletContext={{ openModal: setModal, changed, refreshBadges }}
       actions={
         <>

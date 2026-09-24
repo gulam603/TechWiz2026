@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../api/client';
+import SearchSelect from '../common/SearchSelect';
 
 let cache = null;
 let pending = null;
@@ -51,14 +52,7 @@ export default function FilterBar({ fields, value, onChange }) {
           {f.type === 'date' || f.type === 'number' ? (
             <input type={f.type} className="form-control form-control-sm" value={value[f.name] ?? ''} min={f.type === 'number' ? 0 : undefined} placeholder={f.placeholder} onChange={(e) => set(f.name, e.target.value)} />
           ) : (
-            <select className="form-select form-select-sm" value={value[f.name] ?? ''} onChange={(e) => set(f.name, e.target.value)}>
-              <option value="">{f.all || 'All'}</option>
-              {listFor(f.options, options).map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+            <SearchSelect size="sm" value={value[f.name] ?? ''} onChange={(v) => set(f.name, v)} options={listFor(f.options, options)} emptyLabel={f.all || 'All'} ariaLabel={f.label} />
           )}
         </label>
       ))}

@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { PageHero } from '../../components/common/PageHeader';
 import TermsContent from '../../components/legal/TermsContent';
 import { TERMS_SECTIONS, TERMS_UPDATED } from '../../components/legal/terms';
+import useSeo from '../../hooks/useSeo';
 
 function jump(e, id) {
   e.preventDefault();
@@ -10,7 +10,7 @@ function jump(e, id) {
 }
 
 export default function Terms() {
-  useDocumentTitle('Terms & Conditions');
+  useSeo({ title: 'Terms & Conditions', description: 'The terms for using MarketLink as a customer or farmer, and how your personal data is handled.' });
   return (
     <>
       <PageHero

@@ -142,7 +142,7 @@ erDiagram
 | `categories` | name, slug, description, color, icon, sortOrder, isActive |
 | `products` | farmer, category, name, slug (readable URL `/products/sindhri-mangoes`), description, price, unit, quantityAvailable, templateQuantity, lowStockThreshold (alert level) + lowStockAlertedAt / soldOutAlertedAt, status (available / sold_out / unavailable), image, imageCredit, gallery (up to 4 extra photos with credits), markets/days (copied for fast filters), rating, totalSold, moderation flags |
 | `orders` | orderNumber, customer, farmer, market, items (product, name, price, unit, quantity – price frozen at order time), totalAmount, pickupDate, pickupSlot, pickupAt, cutoffAt, placedBy (customer / admin), status + statusHistory |
-| `reviews` | customer, order, type (product / farmer), product or farmer, rating 1–5, comment, response (farmer reply), isRemoved (moderation) |
+| `reviews` | customer, order (for buyers), verified (true = tied to the customer's completed order), type (product / farmer), product or farmer, rating 1–5, comment, response (farmer reply), isRemoved (moderation) |
 | `notifications` | user, type (order, restock, stock, announcement, review, account, moderation, system), title, message, link, read |
 | `announcements` | title, message, audience, isActive, createdBy (site banner + in-app notification) |
 | `reports` | reportType (platform_overview, orders_summary, revenue_by_market, top_farmers, sales_by_category, customer_activity, inventory_status, city_overview, reviews_moderation), from/to, data, generatedBy, generatedAt |
@@ -164,7 +164,8 @@ Validators and indexes for every collection are in `database/marketlink-schema.m
 | `orders.js` | order numbers, "can the customer still modify?" rule (placed/accepted and before cut-off), status history, route-friendly pickup details |
 | `notify.js` + `mailer.js` | in-app notifications and e-mails (console, Ethereal test inbox or real SMTP such as Gmail); branded HTML with the logo and an action button, SMTP check at start-up with clear error hints, `npm run mail:test` |
 | `describe.js` | "Write with AI" product descriptions and "Generate with AI" farm descriptions: Claude (when `ANTHROPIC_API_KEY` is set) or a built-in writer with a produce knowledge base |
-| `migrations.js` | small start-up data fixes (e.g. readable URLs for products created before slugs existed) |
+| `migrations.js` | small start-up data fixes (readable URLs for older products, `verified` on older reviews) and `syncValidators()`: extends the allowed values (enums) and relaxes required fields of MongoDB validators created by an older schema script, so new values never fail with “Document failed validation” |
+| `seo.js` | per-page `<title>`, description, canonical, Open Graph / X tags and JSON-LD written into index.html by the server (404 for unknown products, farmers, markets); `/sitemap.xml` and `/robots.txt` |
 | `reports.js` | platform-wide admin reports saved to the `reports` collection (printable, CSV / Excel export in the UI); the newer reports return columns + rows + an optional chart so the UI renders them generically |
 | `assistant.js` | rule-based AI assistant with conversation memory (see below) |
 | `scheduler.js` | runs hourly; at the start of a new week re-applies the stock template for farmers with auto-apply |

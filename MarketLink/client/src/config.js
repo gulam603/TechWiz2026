@@ -30,6 +30,16 @@ export const CONTACT = {
   longitude: 67.0682,
 };
 
+// Social media pages (footer, Contact page and search engines). Replace with the team's own pages.
+export const SOCIAL = [
+  { name: 'Facebook', icon: 'bi-facebook', url: 'https://www.facebook.com/marketlinkpk' },
+  { name: 'Instagram', icon: 'bi-instagram', url: 'https://www.instagram.com/marketlinkpk' },
+  { name: 'X (Twitter)', icon: 'bi-twitter-x', url: 'https://x.com/marketlinkpk' },
+  { name: 'YouTube', icon: 'bi-youtube', url: 'https://www.youtube.com/@marketlinkpk' },
+  { name: 'WhatsApp', icon: 'bi-whatsapp', url: 'https://wa.me/922134567890' },
+  { name: 'LinkedIn', icon: 'bi-linkedin', url: 'https://www.linkedin.com/company/marketlinkpk' },
+];
+
 // The team that created MarketLink (About page and footer)
 export const TEAM_NAME = 'Team Omniverse';
 export const TEAM_PLACE = 'Aptech Learning Centre, F.B. Area, Karachi';

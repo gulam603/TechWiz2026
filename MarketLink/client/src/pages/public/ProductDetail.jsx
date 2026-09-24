@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import ProductGallery from '../../components/common/ProductGallery';
+import ProduceImage from '../../components/common/ProduceImage';
 import RatingStars from '../../components/common/RatingStars';
 import QuantityStepper from '../../components/common/QuantityStepper';
 import FavButton from '../../components/common/FavButton';
@@ -18,18 +18,37 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { DAY_SHORT, money, time12 } from '../../utils/format';
 import { productPath } from '../../utils/links';
+import useSeo from '../../hooks/useSeo';
+import { clip, productLd } from '../../utils/seo';
 
 export default function ProductDetail() {
   const { id } = useParams();
   const location = useLocation();
   const { data, loading, error, reload } = useFetch(`/products/${id}`);
-  const [qty, setQty] = useState(1);
+  // The quantity starts at 1 again when another product is opened
+  const [qtyFor, setQtyFor] = useState({ id: null, qty: 1 });
   const cart = useCart();
   const { user } = useAuth();
   const { toast } = useToast();
-  useDocumentTitle(data?.product?.name);
+  const p = data?.product;
+  useSeo(
+    p
+      ? {
+          title: `${p.name} – Rs ${p.price} per ${p.unit} from ${p.farmer?.stallName}`,
+          description: clip(p.description || `${p.name} (${p.category?.name}) from ${p.farmer?.stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.`),
+          image: p.image,
+          type: 'product',
+          jsonLd: productLd(p),
+          canonicalPath: `/products/${p.slug}`,
+        }
+      : { title: 'Product' }
+  );
 
-  if (loading && !data) return <PageLoader />;
+  // While another product is loading, the previous one is still in `data`: wait for the new one
+  // (otherwise the old product would be shown, or its address restored, after clicking a related product)
+  const shown = data?.product;
+  const isCurrent = shown && (shown.slug === String(id).toLowerCase() || shown._id === id);
+  if ((loading && !isCurrent) || (!data && !error)) return <PageLoader />;
   if (error)
     return (
       <div className="container py-5">
@@ -38,14 +57,16 @@ export default function ProductDetail() {
     );
 
   const { product, reviews, related } = data;
-  // Old links use the id; show the readable name in the address bar instead
-  if (product.slug && id !== product.slug) {
+  // Old links use the id (or other capitals); show the readable name in the address bar instead
+  if (product.slug && id !== product.slug && isCurrent) {
     return <Navigate to={productPath(product) + location.search + location.hash} replace />;
   }
   const farmer = product.farmer;
   const soldOut = product.status !== 'available' || product.quantityAvailable <= 0;
   const stockPct = Math.min(100, Math.round((product.quantityAvailable / Math.max(product.templateQuantity || product.quantityAvailable, 1)) * 100));
   const inCart = cart.items.find((i) => i.productId === product._id);
+  const qty = qtyFor.id === product._id ? qtyFor.qty : 1;
+  const setQty = (n) => setQtyFor({ id: product._id, qty: n });
 
   function addToCart() {
     if (user && user.role !== 'customer') {
@@ -54,6 +75,7 @@ export default function ProductDetail() {
     }
     cart.add(product, qty);
     toast(`${qty} × ${product.name} added to your basket`);
+    cart.openDrawer();
   }
 
   // Group the farmer's pickup windows by market
@@ -75,17 +97,17 @@ export default function ProductDetail() {
       </nav>
 
       <div className="row g-4 g-lg-5">
-        <div className="col-lg-6">
-          <ProductGallery product={product}>
+        <div className="col-lg-5">
+          <ProductGallery key={product._id} product={product}>
             <div className="position-absolute pd-fav">
               <FavButton type="products" id={product._id} />
             </div>
           </ProductGallery>
         </div>
 
-        <div className="col-lg-6">
+        <div className="col-lg-7">
           <span className="chip chip-soft mb-2">{product.category?.name}</span>
-          <h1 className="display-font mb-2" style={{ fontSize: 'clamp(2rem,4vw,3rem)' }}>
+          <h1 className="display-font mb-2 pd-title">
             {product.name}
           </h1>
           <div className="d-flex align-items-center gap-3 mb-3 flex-wrap">
@@ -166,30 +188,63 @@ export default function ProductDetail() {
 
       <section className="section pb-0">
         <div className="row g-4">
-          <div className="col-lg-7">
+          <div className="col-lg-8">
             <div className="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-3">
               <h2 className="h3 mb-0">Customer reviews</h2>
               <WriteReviewButton type="product" id={product._id} name={product.name} onDone={reload} />
             </div>
             <div className="soft-panel">
-              {reviews.length === 0 ? <p className="text-muted-2 mb-0">No reviews yet. Reviews can be written after a completed pickup.</p> : reviews.map((r) => <ReviewItem key={r._id} review={r} farmerName={farmer.stallName} />)}
+              {reviews.length === 0 ? <p className="text-muted-2 mb-0">No reviews yet. Bought it? Share how it was.</p> : reviews.map((r) => <ReviewItem key={r._id} review={r} farmerName={farmer.stallName} />)}
             </div>
             <div className="text-end mt-2">
               <ReportButton targetType="product" targetId={product._id} label="Report this listing" />
             </div>
           </div>
-          <div className="col-lg-5">
-            <h2 className="h3 mb-3">You may also like</h2>
-            <div className="row g-3">
-              {related.map((p) => (
-                <div key={p._id} className="col-6">
-                  <ProductCard product={p} />
-                </div>
+          <div className="col-lg-4">
+            <h2 className="h3 mb-3">From the same stall</h2>
+            <div className="d-grid gap-2">
+              {(data.fromFarmer || []).map((p) => (
+                <Link key={p._id} to={productPath(p)} className="mini-product">
+                  <ProduceImage src={p.image} alt="" color={p.category?.color} />
+                  <span className="min-w-0 flex-grow-1">
+                    <strong className="d-block small text-truncate">{p.name}</strong>
+                    <span className="fs-7 text-muted-2">{p.category?.name}</span>
+                  </span>
+                  <span className="small fw-bold text-nowrap">
+                    {money(p.price)}
+                    <span className="fs-7 text-muted-2 fw-normal">/{p.unit}</span>
+                  </span>
+                </Link>
               ))}
+              {!(data.fromFarmer || []).length && <p className="small text-muted-2 mb-0">This is the only product of this stall right now.</p>}
+              <Link to={`/farmers/${farmer.slug}`} className="link-arrow small mt-1">
+                Visit {farmer.stallName} <i className="bi bi-arrow-right" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
+
+      {related.length > 0 && (
+        <section className="section pb-0">
+          <div className="section-head">
+            <div>
+              <span className="eyebrow">{product.category?.name}</span>
+              <h2 className="section-title">You may also like</h2>
+            </div>
+            <Link to={`/products?category=${product.category?.slug}`} className="link-arrow">
+              More {product.category?.name?.toLowerCase()} <i className="bi bi-arrow-right" />
+            </Link>
+          </div>
+          <div className="row g-3">
+            {related.map((p) => (
+              <div key={p._id} className="col-6 col-md-4 col-xl-3">
+                <ProductCard product={p} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

@@ -13,6 +13,7 @@ import { PageLoader } from '../../components/common/Loader';
 import { ApprovalBanner } from './Dashboard';
 import { money } from '../../utils/format';
 import { CURRENCY } from '../../config';
+import SearchSelect from '../../components/common/SearchSelect';
 
 const EMPTY = { name: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '' };
 
@@ -160,14 +161,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
           </div>
           <div className="col-md-5">
             <label className="form-label" htmlFor="pf-cat">Category</label>
-            <select id="pf-cat" name="category" className="form-select" required value={form.category} onChange={change}>
-              <option value="">Choose…</option>
-              {categories.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+            <SearchSelect id="pf-cat" value={form.category} onChange={(v) => setForm((f) => ({ ...f, category: v }))} required ariaLabel="Category" options={categories.map((c) => ({ value: c._id, label: c.name }))} />
           </div>
           <div className="col-6 col-md-3">
             <label className="form-label" htmlFor="pf-price">Price ({CURRENCY})</label>
@@ -175,11 +169,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
           </div>
           <div className="col-6 col-md-3">
             <label className="form-label" htmlFor="pf-unit">Unit</label>
-            <select id="pf-unit" name="unit" className="form-select" value={form.unit} onChange={change}>
-              {units.map((u) => (
-                <option key={u}>{u}</option>
-              ))}
-            </select>
+            <SearchSelect id="pf-unit" value={form.unit} onChange={(v) => setForm((f) => ({ ...f, unit: v }))} ariaLabel="Unit" options={units.map((u) => ({ value: u, label: u }))} />
           </div>
           <div className="col-6 col-md-3">
             <label className="form-label" htmlFor="pf-qty">Available now</label>

@@ -13,6 +13,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import { PageLoader } from '../../components/common/Loader';
 import { ImageInput } from '../farmer/Products';
 import { DAY_LETTER, DAY_NAMES, time12 } from '../../utils/format';
+import SearchSelect from '../../components/common/SearchSelect';
 
 const EMPTY = { name: '', description: '', address: '', city: '', categories: [], latitude: '', longitude: '', operatingDays: [], openTime: '07:00', closeTime: '13:00', mapProvider: 'openstreetmap', mapLink: '', isActive: true };
 
@@ -58,16 +59,15 @@ function MarketForm({ market, onClose, onSaved }) {
           </div>
           <div className="col-md-5">
             <label className="form-label" htmlFor="m-city">City</label>
-            <select id="m-city" name="city" className="form-select" required value={form.city} onChange={change}>
-              <option value="">Choose a city</option>
-              {options.cities
-                .filter((c) => c.isActive !== false || c.name === form.city)
-                .map((c) => (
-                  <option key={c._id} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-            </select>
+            <SearchSelect
+              id="m-city"
+              value={form.city}
+              onChange={(v) => setForm((f) => ({ ...f, city: v }))}
+              required
+              ariaLabel="City"
+              placeholder="Choose a city"
+              options={options.cities.filter((c) => c.isActive !== false || c.name === form.city).map((c) => ({ value: c.name, label: c.name, hint: c.province }))}
+            />
           </div>
           <div className="col-12">
             <label className="form-label" htmlFor="m-address">Address</label>

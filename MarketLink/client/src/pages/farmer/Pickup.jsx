@@ -8,6 +8,7 @@ import LocationPicker from '../../components/map/LocationPicker';
 import DayDots from '../../components/common/DayDots';
 import { PageLoader } from '../../components/common/Loader';
 import { DAY_NAMES, formatDateKey, time12, toDateKey } from '../../utils/format';
+import SearchSelect from '../../components/common/SearchSelect';
 
 /** Markets the farmer sells at, weekly pickup windows, slot settings, cut-off and stall map pin. */
 export default function FarmerPickup() {
@@ -123,13 +124,7 @@ function PickupEditor({ farmer, allMarkets }) {
         {windows.map((w, i) => (
           <div key={i}>
             <div className="window-row">
-              <select className="form-select form-select-sm" value={w.market} onChange={(e) => updateWindow(i, { market: e.target.value })} aria-label="Market">
-                {markets.map((id) => (
-                  <option key={id} value={id}>
-                    {marketById[id]?.name || 'Market'}
-                  </option>
-                ))}
-              </select>
+              <SearchSelect size="sm" value={w.market} onChange={(v) => updateWindow(i, { market: v })} ariaLabel="Market" options={markets.map((id) => ({ value: id, label: marketById[id]?.name || 'Market' }))} />
               <select className="form-select form-select-sm" value={w.day} onChange={(e) => updateWindow(i, { day: Number(e.target.value) })} aria-label="Day">
                 {DAY_NAMES.map((d, idx) => (
                   <option key={d} value={idx}>

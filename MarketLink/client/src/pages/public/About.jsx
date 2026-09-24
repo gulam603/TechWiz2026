@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useFetch from '../../hooks/useFetch';
 import { PageHero } from '../../components/common/PageHeader';
 import { TEAM, TEAM_NAME, TEAM_PLACE } from '../../config';
 import { initials } from '../../utils/format';
 import { LogoMark } from '../../components/common/Logo';
 import CountUp from '../../components/common/CountUp';
+import useSeo from '../../hooks/useSeo';
 
 const VALUES = [
   { img: '/illustrations/leafy-greens.webp', color: '#e4f3d8', title: 'Fewer wasted trips', text: 'Customers see live stock and prices before leaving home, so nobody arrives to an empty stall.' },
@@ -15,7 +15,7 @@ const VALUES = [
 ];
 
 export default function About() {
-  useDocumentTitle('About us');
+  useSeo({ title: 'About MarketLink', description: 'MarketLink brings local farmers markets online so families can reserve fresh food before market day and farmers waste less. Built by Team Omniverse.' });
   const { data } = useFetch('/stats');
   return (
     <>

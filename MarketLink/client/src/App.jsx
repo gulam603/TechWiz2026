@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import PublicLayout from './components/layout/PublicLayout';
 import DashboardLayout from './components/layout/DashboardLayout';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -27,7 +27,6 @@ const NotFound = lazy(() => import('./pages/public/NotFound'));
 const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
 const RegisterFarmer = lazy(() => import('./pages/auth/RegisterFarmer'));
-const AdminLogin = lazy(() => import('./pages/auth/AdminLogin'));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
 
@@ -86,13 +85,14 @@ export default function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="register/farmer" element={<RegisterFarmer />} />
-            <Route path="admin/login" element={<AdminLogin />} />
+            {/* One login page for every role; old admin-login links still work */}
+            <Route path="admin/login" element={<Navigate to="/login" replace />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password/:token" element={<ResetPassword />} />
 
-            {/* Customer area */}
+            {/* Checkout works for guests too: they fill in their details and get an account */}
+            <Route path="checkout" element={<Checkout />} />
             <Route element={<ProtectedRoute roles={['customer']} />}>
-              <Route path="checkout" element={<Checkout />} />
               <Route path="checkout/success" element={<CheckoutSuccess />} />
             </Route>
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import useFetch from '../../hooks/useFetch';
@@ -8,6 +8,7 @@ import QuantityStepper from '../common/QuantityStepper';
 import ProduceImage from '../common/ProduceImage';
 import PickupPicker from '../order/PickupPicker';
 import { money } from '../../utils/format';
+import SearchSelect from '../common/SearchSelect';
 
 /**
  * "Place order" for administrators (e.g. a customer who phones in): choose the customer,
@@ -18,7 +19,6 @@ export default function AdminOrderModal({ onClose, onPlaced }) {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { data: opts } = useFetch('/admin/order-options');
-  const [customerQuery, setCustomerQuery] = useState('');
   const [customerId, setCustomerId] = useState('');
   const [farmerId, setFarmerId] = useState('');
   const [qty, setQty] = useState({});
@@ -28,11 +28,7 @@ export default function AdminOrderModal({ onClose, onPlaced }) {
   const [error, setError] = useState('');
   const { data: prodData, loading: prodLoading } = useFetch(farmerId ? `/products?farmer=${farmerId}&limit=60&sort=name` : null);
 
-  const customers = useMemo(() => {
-    const q = customerQuery.trim().toLowerCase();
-    const list = opts?.customers || [];
-    return q ? list.filter((c) => `${c.name} ${c.email} ${c.phone} ${c.city}`.toLowerCase().includes(q)) : list;
-  }, [opts, customerQuery]);
+  const customers = opts?.customers || [];
   const products = (prodData?.products || []).filter((p) => p.status === 'available' && p.quantityAvailable > 0);
   const chosen = products.filter((p) => qty[p._id] > 0);
   const total = chosen.reduce((s, p) => s + p.price * qty[p._id], 0);
@@ -95,22 +91,16 @@ export default function AdminOrderModal({ onClose, onPlaced }) {
         <div className="order-step-title">
           <span>1</span> Customer
         </div>
-        <div className="row g-2">
-          <div className="col-md-5">
-            <input className="form-control form-control-sm" placeholder="Search name, e-mail or phone" value={customerQuery} onChange={(e) => setCustomerQuery(e.target.value)} aria-label="Search customers" />
-          </div>
-          <div className="col-md-7">
-            <select className="form-select form-select-sm" value={customerId} onChange={(e) => setCustomerId(e.target.value)} aria-label="Customer">
-              <option value="">Choose a customer ({customers.length})</option>
-              {customers.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {c.name} · {c.email}
-                  {c.city ? ` · ${c.city}` : ''}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <SearchSelect
+          id="ao-customer"
+          size="sm"
+          value={customerId}
+          onChange={setCustomerId}
+          ariaLabel="Customer"
+          placeholder={`Choose a customer (${customers.length})`}
+          searchPlaceholder="Name, e-mail, phone or city"
+          options={customers.map((c) => ({ value: c._id, label: c.name, hint: [c.email, c.phone, c.city].filter(Boolean).join(' · ') }))}
+        />
         {customer && (
           <div className="fs-7 text-muted-2 mt-1">
             <i className="bi bi-telephone" /> {customer.phone}
@@ -122,16 +112,16 @@ export default function AdminOrderModal({ onClose, onPlaced }) {
         <div className="order-step-title">
           <span>2</span> Farmer / stall
         </div>
-        <select className="form-select form-select-sm" value={farmerId} onChange={(e) => chooseFarmer(e.target.value)} aria-label="Farmer">
-          <option value="">Choose a farmer</option>
-          {(opts?.farmers || []).map((f) => (
-            <option key={f._id} value={f._id} disabled={!f.hasPickup}>
-              {f.stallName}
-              {f.city ? ` · ${f.city}` : ''}
-              {f.hasPickup ? '' : ' (no pickup times yet)'}
-            </option>
-          ))}
-        </select>
+        <SearchSelect
+          id="ao-farmer"
+          size="sm"
+          value={farmerId}
+          onChange={chooseFarmer}
+          ariaLabel="Farmer"
+          placeholder="Choose a farmer"
+          searchPlaceholder="Stall name or city"
+          options={(opts?.farmers || []).map((f) => ({ value: f._id, label: f.stallName, hint: f.hasPickup ? f.city : `${f.city ? `${f.city} · ` : ''}no pickup times yet`, disabled: !f.hasPickup }))}
+        />
       </div>
 
       {farmerId && (

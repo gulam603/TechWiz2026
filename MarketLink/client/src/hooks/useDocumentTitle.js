@@ -1,8 +1,6 @@
-import { useEffect } from 'react';
-import { APP_NAME } from '../config';
+import useSeo from './useSeo';
 
+/** Title for pages that are not meant for search engines (accounts, dashboards, basket, sign-in steps). */
 export default function useDocumentTitle(title) {
-  useEffect(() => {
-    document.title = title ? `${title} · ${APP_NAME}` : `${APP_NAME} – Fresh from local farmers markets`;
-  }, [title]);
+  useSeo({ title, noindex: true });
 }

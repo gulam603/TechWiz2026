@@ -24,6 +24,11 @@ export function errorHandler(err, req, res, next) {
     status = 409;
     const field = Object.keys(err.keyValue || err.keyPattern || {})[0] || (String(err.message).match(/index: (\w+?)_/) || [])[1] || '';
     message = field === 'email' || /email/.test(err.message) ? 'An account with this e-mail already exists' : `This ${field || 'value'} is already in use`;
+  } else if (err?.code === 121) {
+    // MongoDB JSON-schema validator (database/marketlink-schema.mongodb.js) rejected the document
+    status = 400;
+    message = 'The database rejected this change (Document failed validation). Restart the server so it can update the database rules, or run database/marketlink-schema.mongodb.js again.';
+    console.error('[db] Document failed validation:', JSON.stringify(err.errInfo?.details || {}).slice(0, 600));
   } else if (err instanceof multer.MulterError) {
     status = 400;
     message = err.code === 'LIMIT_FILE_SIZE' ? 'Image must be smaller than 2 MB' : err.message;

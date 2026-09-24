@@ -13,6 +13,18 @@ export default function CheckoutSuccess() {
         <h1 className="display-font">Your pre-order is in!</h1>
         <p className="text-muted-2">We've told the farmer and sent a confirmation to your e-mail. You'll get an alert when it's ready for pickup.</p>
       </div>
+      {state.newAccount && (
+        <div className="account-created mb-4">
+          <i className="bi bi-envelope-check-fill" aria-hidden="true" />
+          <div>
+            <strong className="d-block">Check your inbox</strong>
+            <span className="small">
+              Your MarketLink password was sent to <strong>{state.newAccount.email}</strong>. Use it to log in next time and change it in{' '}
+              <Link to="/account/profile">Profile &amp; family</Link>.
+            </span>
+          </div>
+        </div>
+      )}
       <div className="d-grid gap-3 mb-4">
         {state.orders.map((o) => (
           <div key={o._id} className="order-card d-flex flex-wrap align-items-center gap-3">

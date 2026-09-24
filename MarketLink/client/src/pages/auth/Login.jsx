@@ -3,16 +3,26 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import PasswordInput from '../../components/common/PasswordInput';
+import useSeo from '../../hooks/useSeo';
 
 const DEMO = [
   { label: 'Customer', email: 'customer@marketlink.com', password: 'Customer@123' },
   { label: 'Farmer', email: 'farmer@marketlink.com', password: 'Farmer@123' },
+  { label: 'Admin', email: 'admin@marketlink.com', password: 'Admin@123' },
 ];
 
+// After logging in, go back to the page that asked for it only when it belongs to this role's area
+function allowedReturn(from, user) {
+  if (!from || from === '/login') return null;
+  if (from.startsWith('/admin')) return user.role === 'admin' ? from : null;
+  if (from.startsWith('/farmer')) return user.role === 'farmer' ? from : null;
+  if (from.startsWith('/account') || from.startsWith('/checkout')) return user.role === 'customer' ? from : null;
+  return from;
+}
+
 export default function Login() {
-  useDocumentTitle('Log in');
+  useSeo({ title: 'Log in', description: 'Log in to MarketLink as a customer, farmer or administrator.' });
   const { login, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -30,11 +40,10 @@ export default function Login() {
     try {
       const user = await login(form.email, form.password);
       toast(`Welcome back, ${user.name.split(' ')[0]}!`);
-      const from = location.state?.from;
-      navigate(from && !(user.role !== 'customer' && from.startsWith('/checkout')) ? from : homeFor(user), { replace: true });
+      // stay "busy" until the page changes, so this page does not redirect to the dashboard first
+      navigate(allowedReturn(location.state?.from, user) || homeFor(user), { replace: true });
     } catch (err) {
       setError(err.message);
-    } finally {
       setBusy(false);
     }
   }
@@ -42,7 +51,7 @@ export default function Login() {
   return (
     <AuthLayout title="Your market," highlight="one tap away." text="Log in to pre-order fresh produce, track pickups and manage your favourite farmers — or run your stall if you're a farmer.">
       <h1 className="mb-1">Welcome back</h1>
-      <p className="text-muted-2 mb-4">Customers and farmers log in here.</p>
+      <p className="text-muted-2 mb-4">One login for customers, farmers and the MarketLink team.</p>
       <form onSubmit={submit} noValidate>
         {error && <div className="alert alert-danger small py-2">{error}</div>}
         <div className="mb-3">
@@ -76,9 +85,6 @@ export default function Login() {
       </div>
       <p className="mt-4 small text-center">
         New here? <Link to="/register">Create a customer account</Link> · <Link to="/register/farmer">Register your stall</Link>
-      </p>
-      <p className="small text-center text-muted-2">
-        Administrator? <Link to="/admin/login">Use the admin portal</Link>
       </p>
     </AuthLayout>
   );

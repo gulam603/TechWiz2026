@@ -3,16 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="MarketLink connects local farmers markets with customers: browse weekly stock, pre-order and pick up fresh produce." />
     <meta name="theme-color" content="#173B2C" />
+    <meta name="application-name" content="MarketLink" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <!-- The server replaces this block with the tags of each page (server/src/services/seo.js) -->
+    <!--seo:start-->
+    <title>MarketLink – Fresh from local farmers markets</title>
+    <meta name="description" content="MarketLink connects local farmers markets with customers: see what each farmer has in stock this week, pre-order fresh produce and pick it up at the market. Pay at the stall." />
+    <meta property="og:site_name" content="MarketLink" />
+    <meta property="og:type" content="website" />
     <meta property="og:title" content="MarketLink – Fresh from local farmers markets" />
     <meta property="og:image" content="/brand/icon-512.png" />
-    <title>MarketLink – Fresh from local farmers markets</title>
+    <meta name="twitter:card" content="summary_large_image" />
+    <!--seo:end-->
   </head>
   <body>
+    <noscript>MarketLink needs JavaScript to show local farmers markets, products and pre-orders. Please turn JavaScript on.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -11,6 +11,7 @@ import { productPath } from '../../utils/links';
 const FILTERS = [
   { name: 'removed', label: 'Visibility', options: [{ value: 'no', label: 'Visible' }, { value: 'yes', label: 'Removed' }] },
   { name: 'type', label: 'About', options: [{ value: 'product', label: 'Products' }, { value: 'farmer', label: 'Farmers' }] },
+  { name: 'verified', label: 'Purchase', options: [{ value: 'yes', label: 'Verified purchase' }, { value: 'no', label: 'Unverified' }] },
   { name: 'rating', label: 'Rating', options: [5, 4, 3, 2, 1].map((n) => ({ value: String(n), label: `${n} star${n > 1 ? 's' : ''}` })) },
   { name: 'farmer', label: 'Farmer', options: 'farmers' },
   { name: 'from', label: 'From', type: 'date' },
@@ -22,6 +23,14 @@ const stars = (n) => `<span class="text-nowrap text-warning" title="${n} of 5">$
 const COLUMNS = [
   { data: 'customer.name', title: 'Customer', orderable: false, responsivePriority: 1, render: display((v, r) => person(v || 'Customer', '', r.customer?.avatar)) },
   { data: 'rating', title: 'Rating', render: display((v) => stars(v)) },
+  {
+    data: 'verified',
+    title: 'Purchase',
+    render: display(
+      (v) => (v ? '<span class="review-badge is-verified"><i class="bi bi-patch-check-fill"></i> Verified</span>' : '<span class="review-badge"><i class="bi bi-question-circle"></i> Unverified</span>'),
+      (v) => (v ? 'Verified' : 'Unverified')
+    ),
+  },
   {
     data: 'type',
     title: 'About',
@@ -36,7 +45,7 @@ const COLUMNS = [
 export default function AdminReviews() {
   useDocumentTitle('Reviews');
   const { toast } = useToast();
-  const [filters, setFilters] = useState({ removed: '', type: '', rating: '', farmer: '', from: '', to: '' });
+  const [filters, setFilters] = useState({ removed: '', type: '', verified: '', rating: '', farmer: '', from: '', to: '' });
   const [reloadKey, setReloadKey] = useState(0);
 
   async function moderate(review, act) {
@@ -54,7 +63,7 @@ export default function AdminReviews() {
       <DashHeader title="Reviews" subtitle="Remove reviews that are abusive, spam or break the guidelines. Ratings are recalculated automatically." />
       <div className="table-card">
         <FilterBar fields={FILTERS} value={filters} onChange={setFilters} />
-        <DataGrid table="reviews" columns={COLUMNS} filters={filters} order={[[5, 'desc']]} exportName="MarketLink reviews" reloadKey={reloadKey} searchPlaceholder="Comment or customer…" onAction={(name, r) => moderate(r, name)} />
+        <DataGrid table="reviews" columns={COLUMNS} filters={filters} order={[[6, 'desc']]} exportName="MarketLink reviews" reloadKey={reloadKey} searchPlaceholder="Comment or customer…" onAction={(name, r) => moderate(r, name)} />
       </div>
     </>
   );

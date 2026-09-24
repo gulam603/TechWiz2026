@@ -29,13 +29,20 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
 - Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
 - Readable product URLs: `/products/sindhri-mangoes`
-- Product details: price, unit, quantity available, farmer, reviews and a **photo gallery** (thumbnails, arrows, swipe)
+- Product details: price, unit, quantity available, farmer, reviews and a **photo gallery** (thumbnails, arrows, swipe,
+  **zoom** under the mouse and a full-screen viewer); “From the same stall” and “You may also like” suggestions
+- **Quick view** on every product card: details, photos and “add to basket” in a dialog without leaving the shop
+- **Basket sidebar**: the basket opens on the right (change quantities, remove, total) with *Checkout* and *View full basket*
+- **Checkout without an account**: first name, last name, e-mail, number and address — an account is created,
+  a generated password is e-mailed and the pre-order continues straight away
+- **Dropdowns with search** for cities, markets, categories, farmers, customers and every table filter
 - Cart grouped by farmer → choose a pickup **date and time slot** inside the farmer’s windows → place pre-order (no online payment)
 - Order status: placed → accepted → ready for pickup → completed (or declined / cancelled)
 - View, **modify** (items + slot) and **cancel** orders before the farmer’s cut-off time; order history and **reorder**
 - Favourite farmers and products (with **restock alerts**) and saved markets; favourite farmers on the dashboard
-- Reviews and ratings for farmers and products after a completed order — from the product page, the stall page
-  or **My reviews** (to-review list grouped by pickup); **Report** a review, listing or stall to the admin
+- Reviews and ratings for farmers and products — from the product page, the stall page or **My reviews**
+  (to-review list grouped by pickup). Reviews from buyers show **Verified purchase**; customers who did not buy
+  can still write one review, shown as **Unverified**. **Report** a review, listing or stall to the admin
 - Account area with the same sidebar layout as the admin area (collapsible, drawer on phones)
 - In-app notifications + e-mail for order confirmation and “ready for pickup”, including route-friendly pickup details (market, address, time slot and a Google Maps directions link)
 - Optional **family sharing**: linked household members can see each other’s pre-orders
@@ -65,7 +72,7 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
 - Read and reply to customer reviews
 
-**Admin** (separate login at `/admin/login`, own back-office layout without the shop navbar)
+**Admin** (same login page as everyone at `/login` — the role decides where you land; own back-office layout without the shop navbar)
 - Collapsible sidebar (Reports as the last item), compact dashboard: KPIs, orders/revenue chart, “needs attention”, recent orders, top farmers
 - **DataTables** on every admin table (server-side paging, search, sorting, CSV / Excel / Print) with filters
   (status, city, market, farmer, category, date ranges, amounts …)
@@ -82,6 +89,12 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
   activity, inventory & low stock, cities overview, reviews & moderation (saved, printable, CSV / Excel export)
 - Master data: product categories; publish announcements (site banner + in-app notification)
 - Contact-us inbox
+
+**SEO:** every public page has its own title, description, canonical link, Open Graph / X preview tags and
+schema.org structured data (Product with price, stock and rating; LocalBusiness for farmers; Place with opening hours
+for markets; Organization + site search). The server writes these into the HTML before any JavaScript runs,
+answers 404 for unknown products, and serves `/sitemap.xml` (all products, farmers, markets and categories) and
+`/robots.txt` (accounts, dashboards and the basket are kept out of search results).
 
 **Other:** role-based access control (API + UI), responsive / mobile-friendly UI (laptop layout, slide-in mobile menu,
 app-style bottom navigation bar on phones), Bootstrap icons instead of emoji, About Us and Contact Us
@@ -178,7 +191,7 @@ npm start          # then open http://localhost:5000
 | `CLIENT_URL` | React dev URL allowed by CORS (default `http://localhost:5173`) |
 | `CURRENCY` | currency symbol used in e-mails / assistant (default `Rs`) |
 | `TZ` | time zone of the markets, used for pickup slots and cut-off times (default `Asia/Karachi`) |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `APP_URL` | e-mail settings (Nodemailer). Empty `SMTP_HOST` → e-mails are printed to the server console; `SMTP_HOST=ethereal` → free Ethereal test inbox; `smtp.gmail.com` + port 587 + a Gmail **app password** → real e-mails (see section 6). `APP_URL` is used for the buttons in e-mails |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` (or `SMTP_FROM`), `APP_URL` | e-mail settings (Nodemailer). All empty → e-mails are printed to the server console; `SMTP_USER` + `SMTP_PASS` with an empty `SMTP_HOST` → the server is picked from the address (Gmail → `smtp.gmail.com`); `SMTP_HOST=ethereal` → free Ethereal test inbox; `smtp.gmail.com` + port 587 + a Gmail **app password** → real e-mails (see section 6). `APP_URL` is used for the buttons in e-mails |
 | `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | optional: “Write with AI” product descriptions by Claude (without a key a built-in writer is used) |
 
 The front-end currency symbol can be changed with `VITE_CURRENCY` in `client/.env` (default `Rs`).
@@ -191,7 +204,7 @@ Created by `npm run seed`:
 
 | Role | E-mail | Password | Login page |
 | --- | --- | --- | --- |
-| Administrator | admin@marketlink.com | Admin@123 | `/admin/login` |
+| Administrator | admin@marketlink.com | Admin@123 | `/login` (one login page for every role) |
 | Farmer (approved) — Malir Green Fields | farmer@marketlink.com | Farmer@123 | `/login` |
 | Farmer (pending approval) — Sunny Acres Poultry | pending.farmer@marketlink.com | Farmer@123 | `/login` |
 | Farmer (suspended) — Old Town Goat Dairy | suspended.farmer@marketlink.com | Farmer@123 | login is blocked |
@@ -245,8 +258,10 @@ MongoDB collections: `users`, `farmers`, `markets`, `cities`, `categories`, `pro
   1. turn on 2-Step Verification for the Gmail account;
   2. Google Account → Security → **App passwords** → create one called “MarketLink”;
   3. in `server/.env` set `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`, `SMTP_USER=your@gmail.com`,
-     `SMTP_PASS=` the 16-letter app password (spaces are fine) and leave `MAIL_FROM` empty;
-  4. check it: `npm run mail:test -- you@example.com`.
+     `SMTP_PASS=` the 16-letter app password (spaces are fine) and leave `MAIL_FROM` empty
+     (with a Gmail address `SMTP_HOST` may also stay empty — `smtp.gmail.com` is used automatically);
+  4. **restart the server** (`.env` is read only at start-up) and check it: `npm run mail:test -- you@example.com`.
+     The start-up log shows `[mail] SMTP ready …` when the login works.
   The server also checks the SMTP login when it starts and prints a clear hint if something is wrong.
   Other providers (Outlook, Zoho, Brevo, Mailtrap …) work the same way with their host, port and login.
 

@@ -8,7 +8,12 @@ import { sendMail } from './mailer.js';
 export async function notify(user, { type = 'system', title, message, link }, { email = false } = {}) {
   const userDoc = user?.email ? user : await User.findById(user).select('email name');
   if (!userDoc) return;
-  await Notification.create({ user: userDoc._id, type, title, message, link });
+  // A notification must never break the action that caused it (placing an order, adjusting stock...)
+  try {
+    await Notification.create({ user: userDoc._id, type, title, message, link });
+  } catch (err) {
+    console.error(`[notify] Could not save the "${title}" notification: ${err.message}`);
+  }
   if (email) {
     const linkLabel = type === 'order' ? 'View the order' : type === 'account' ? 'Open my account' : 'Open MarketLink';
     await sendMail({ to: userDoc.email, subject: title, message: userDoc.name ? `Hi ${userDoc.name},\n${message}` : message, link, linkLabel });
@@ -19,6 +24,11 @@ export async function notify(user, { type = 'system', title, message, link }, { 
 export async function notifyMany(userIds, { type = 'system', title, message, link }) {
   const unique = [...new Set(userIds.map(String))];
   if (!unique.length) return 0;
-  await Notification.insertMany(unique.map((user) => ({ user, type, title, message, link })));
+  try {
+    await Notification.insertMany(unique.map((user) => ({ user, type, title, message, link })));
+  } catch (err) {
+    console.error(`[notify] Could not save the "${title}" notifications: ${err.message}`);
+    return 0;
+  }
   return unique.length;
 }

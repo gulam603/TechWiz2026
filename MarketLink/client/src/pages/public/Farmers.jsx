@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { toQuery } from '../../api/client';
 import FarmerCard from '../../components/cards/FarmerCard';
 import MapView from '../../components/map/MapView';
@@ -9,9 +8,11 @@ import EmptyState from '../../components/common/EmptyState';
 import { CardSkeletons } from '../../components/common/Loader';
 import { PageHero } from '../../components/common/PageHeader';
 import { DAY_NAMES, DAY_SHORT } from '../../utils/format';
+import SearchSelect from '../../components/common/SearchSelect';
+import useSeo from '../../hooks/useSeo';
 
 export default function Farmers() {
-  useDocumentTitle('Local farmers');
+  useSeo({ title: 'Local farmers', description: 'Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.' });
   const [filters, setFilters] = useState({ search: '', city: '', market: '', day: '', category: '', rating: '', practice: '', sort: 'rating', page: 1 });
   const { data: practiceData } = useFetch('/practices');
   const [view, setView] = useState('grid');
@@ -35,42 +36,16 @@ export default function Farmers() {
               </div>
             </div>
             <div className="col-6 col-md-3">
-              <select className="form-select" value={filters.city} onChange={(e) => set({ city: e.target.value, market: '' })} aria-label="City">
-                <option value="">All cities</option>
-                {(marketData?.cities || []).map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
-              </select>
+              <SearchSelect value={filters.city} onChange={(v) => set({ city: v, market: '' })} ariaLabel="City" emptyLabel="All cities" options={(marketData?.cities || []).map((c) => ({ value: c, label: c }))} />
             </div>
             <div className="col-6 col-md-3">
-              <select className="form-select" value={filters.market} onChange={(e) => set({ market: e.target.value })} aria-label="Market">
-                <option value="">All markets</option>
-                {markets.map((m) => (
-                  <option key={m._id} value={m._id}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
+              <SearchSelect value={filters.market} onChange={(v) => set({ market: v })} ariaLabel="Market" emptyLabel="All markets" options={markets.map((m) => ({ value: m._id, label: m.name, hint: m.city }))} />
             </div>
             <div className="col-6 col-md-3">
-              <select className="form-select" value={filters.category} onChange={(e) => set({ category: e.target.value })} aria-label="Category">
-                <option value="">All categories</option>
-                {(catData?.categories || []).map((c) => (
-                  <option key={c._id} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              <SearchSelect value={filters.category} onChange={(v) => set({ category: v })} ariaLabel="Category" emptyLabel="All categories" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
             </div>
             <div className="col-6 col-md-3">
-              <select className="form-select" value={filters.day} onChange={(e) => set({ day: e.target.value })} aria-label="Market day">
-                <option value="">Any day</option>
-                {DAY_NAMES.map((d, i) => (
-                  <option key={d} value={i}>
-                    {d}
-                  </option>
-                ))}
-              </select>
+              <SearchSelect value={filters.day} onChange={(v) => set({ day: v })} ariaLabel="Market day" emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
             </div>
             <div className="col-6 col-md-3">
               <select className="form-select" value={filters.rating} onChange={(e) => set({ rating: e.target.value })} aria-label="Rating">
@@ -80,12 +55,7 @@ export default function Farmers() {
               </select>
             </div>
             <div className="col-6 col-md-3">
-              <select className="form-select" value={filters.practice} onChange={(e) => set({ practice: e.target.value })} aria-label="Farming practice">
-                <option value="">Any practice</option>
-                {(practiceData?.practices || []).map((p) => (
-                  <option key={p}>{p}</option>
-                ))}
-              </select>
+              <SearchSelect value={filters.practice} onChange={(v) => set({ practice: v })} ariaLabel="Farming practice" emptyLabel="Any practice" options={(practiceData?.practices || []).map((p) => ({ value: p, label: p }))} />
             </div>
             <div className="col-12 col-md-6 col-xl-3 d-flex gap-2">
               <select className="form-select" value={filters.sort} onChange={(e) => set({ sort: e.target.value })} aria-label="Sort">

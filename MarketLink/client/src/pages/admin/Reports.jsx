@@ -10,6 +10,7 @@ import { BarList, ChartCard, ColumnChart, TrendChart } from '../../components/ch
 import DataGrid from '../../components/admin/DataGrid';
 import { display, esc, moneyCell } from '../../utils/cells';
 import { formatDate, formatDateKey, money, moneyCompact, ORDER_STATUS_META, toDateKey } from '../../utils/format';
+import SearchSelect from '../../components/common/SearchSelect';
 
 /** Turns the report into rows for the table view and CSV export. */
 function reportTable(report) {
@@ -279,13 +280,13 @@ export default function AdminReports() {
         <div className="row g-3 align-items-end">
           <div className="col-md-4">
             <label className="form-label" htmlFor="rp-type">Report type</label>
-            <select id="rp-type" className="form-select" value={form.reportType} onChange={(e) => setForm({ ...form, reportType: e.target.value })}>
-              {data.types.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
+            <SearchSelect
+              id="rp-type"
+              value={form.reportType}
+              onChange={(v) => setForm({ ...form, reportType: v })}
+              ariaLabel="Report type"
+              options={data.types.map((t) => ({ value: t.value, label: t.label }))}
+            />
           </div>
           <div className="col-6 col-md-3">
             <label className="form-label" htmlFor="rp-from">From</label>

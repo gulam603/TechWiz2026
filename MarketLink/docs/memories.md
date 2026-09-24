@@ -29,7 +29,10 @@ the code so the same problems are not solved twice.
 | Customer, farmer and admin areas share one `AppShell` | the team asked for the same sidebar everywhere; one component keeps collapse, drawer and counters identical |
 | Every stock change is logged in `stockmovements` | farmers can see where stock went (pre-orders, cancellations, template, stall sales, waste) and the log explains the numbers |
 | Reviews with blocked words are saved hidden and queued, not rejected | customers are not told which word triggered it, and an admin can still publish a false positive |
-| Reviews stay tied to a completed order | only real buyers can review, once per product and stall |
+| Buyers' reviews are "Verified purchase", others "Unverified" | the team asked for both; buyers review each completed order, everyone else once per product / stall |
+| One login page for every role | the team asked for a single portal; the role decides where the user lands |
+| Checkout without an account e-mails a generated password | the team asked for it; the customer is told to change it in Profile |
+| Server-side SEO tags on top of a React app | crawlers and link previews read the first HTML; the client hook keeps tags right while browsing |
 
 ## Conventions
 
@@ -92,6 +95,14 @@ the code so the same problems are not solved twice.
   cleared when the farmer restocks above the level.
 - A CSS grid track grows to the min-content of `text-truncate` children; use a flex column for lists of
   truncating rows on phones.
+
+- FerretDB (used while building) accepts some things real MongoDB rejects; round 5 tests also run against
+  MongoDB 8. Databases prepared with an older `marketlink-schema.mongodb.js` rejected the new notification
+  type `stock` ("Document failed validation") — `syncValidators()` now updates them at start-up.
+- `html { scroll-behavior: smooth }` makes `window.scrollTo` animate, so scripted full-page screenshots must
+  scroll with `behavior: 'instant'` or scroll-reveal content stays hidden.
+- React Router keeps the previous page's data while the next product loads: compare the loaded product with
+  the URL before redirecting to the readable URL (this caused "You may also like" links to jump back).
 
 ## Useful commands
 

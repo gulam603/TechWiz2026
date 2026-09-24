@@ -27,6 +27,7 @@ import { addDays, combineDateTime, isoWeekKey, startOfDay, toDateKey } from '../
 import { round2, slugify } from '../utils/helpers.js';
 import { generateSlots, getAvailability } from '../services/slots.js';
 import { uniqueSlug } from '../utils/slug.js';
+import { syncValidators } from '../services/migrations.js';
 import { refreshRatings } from '../services/ratings.js';
 import { buildReport, REPORT_TITLES } from '../services/reports.js';
 import * as data from './data.js';
@@ -76,6 +77,7 @@ async function clearDatabase() {
 
 async function main() {
   await connectDB();
+  await syncValidators().catch((err) => console.error('[seed] Could not update the database validators:', err.message));
   console.log('[seed] Clearing existing data...');
   await clearDatabase();
 
@@ -353,6 +355,7 @@ async function main() {
       farmer: order.farmer,
       customer: order.customer,
       order: order._id,
+      verified: true,
       rating: farmerRating,
       comment: pickOne(data.reviewComments[farmerRating]),
       response: random() < 0.4 ? { text: pickOne(data.farmerResponses), at: new Date(at.getTime() + 5 * 3600 * 1000) } : undefined,
@@ -368,6 +371,7 @@ async function main() {
         farmer: order.farmer,
         customer: order.customer,
         order: order._id,
+        verified: true,
         rating,
         comment: pickOne(data.reviewComments[rating]),
         createdAt: at,
@@ -375,10 +379,36 @@ async function main() {
       });
     }
   }
+  // A few reviews from customers who never bought the item: shown as "Unverified"
+  const bought = new Set(completedOrders.flatMap((o) => o.items.map((i) => `${o.customer}:${i.product}`)));
+  const boughtFrom = new Set(completedOrders.map((o) => `${o.customer}:${o.farmer}`));
+  const allCustomers = Object.values(customerByKey);
+  const unverifiedNotes = {
+    5: ['My neighbour shared some with us, lovely quality.', 'Tried it at a friend\'s house, will order myself next week.'],
+    4: ['Looked very fresh at the stall when I passed by.', 'Heard good things from other families in our building.'],
+    3: ['Seemed a bit pricey when I checked at the market.', 'Saw it at the stall, the selection was small that day.'],
+  };
+  let unverified = 0;
+  for (const product of Object.values(productsByFarmer).flat().slice(0, 40)) {
+    if (unverified >= 6 || random() > 0.3) continue;
+    const customer = allCustomers.find((c) => !bought.has(`${c._id}:${product._id}`));
+    if (!customer) continue;
+    const rating = [5, 4, 4, 3][randInt(0, 3)];
+    const at = new Date(Date.now() - randInt(2, 20) * 24 * 3600 * 1000);
+    reviewDocs.push({ type: 'product', product: product._id, farmer: product.farmer, customer: customer._id, verified: false, rating, comment: pickOne(unverifiedNotes[rating]), createdAt: at, updatedAt: at });
+    unverified += 1;
+  }
+  for (const { farmer } of Object.values(farmerByKey).slice(0, 4)) {
+    const customer = allCustomers.find((c) => !boughtFrom.has(`${c._id}:${farmer._id}`));
+    if (!customer) continue;
+    const at = new Date(Date.now() - randInt(2, 20) * 24 * 3600 * 1000);
+    reviewDocs.push({ type: 'farmer', farmer: farmer._id, customer: customer._id, verified: false, rating: 4, comment: pickOne(unverifiedNotes[4]), createdAt: at, updatedAt: at });
+    unverified += 1;
+  }
   await Review.insertMany(reviewDocs, { timestamps: false });
   for (const product of Object.values(productsByFarmer).flat()) await refreshRatings({ productId: product._id });
   for (const { farmer } of Object.values(farmerByKey)) await refreshRatings({ farmerId: farmer._id });
-  console.log(`[seed] ${reviewDocs.length} reviews`);
+  console.log(`[seed] ${reviewDocs.length} reviews (${unverified} unverified)`);
 
   // ---------------------------------------------------------------- announcements, messages, notifications, report
   for (const a of data.announcements) await Announcement.create({ ...a, createdBy: admin._id });
@@ -458,7 +488,7 @@ async function main() {
   if (someReview) flagged.push({ targetType: 'review', review: someReview._id, product: someReview.product, farmer: someReview.farmer, reason: 'misleading', note: 'This review talks about a different stall.', reporter: bilal._id });
   const heldOrder = await Order.findOne({ customer: customerByKey.usman._id, status: ORDER_STATUS.COMPLETED });
   if (heldOrder) {
-    const held = await Review.create({ type: 'farmer', farmer: heldOrder.farmer, customer: customerByKey.usman._id, order: heldOrder._id, rating: 1, comment: 'Total bakwas, the stall was closed when I came.', isRemoved: true, removedReason: 'Held for moderation' });
+    const held = await Review.create({ type: 'farmer', farmer: heldOrder.farmer, customer: customerByKey.usman._id, order: heldOrder._id, verified: true, rating: 1, comment: 'Total bakwas, the stall was closed when I came.', isRemoved: true, removedReason: 'Held for moderation' });
     flagged.push({ targetType: 'review', review: held._id, farmer: heldOrder.farmer, reason: 'auto_language', note: 'Contains "bakwas"' });
   }
   const listing = allProducts.find((p) => p.name === 'Green Olives in Brine');
@@ -472,7 +502,7 @@ async function main() {
 
   console.log('\n[seed] Done! Demo accounts:');
   console.table([
-    { role: 'Admin', email: data.admin.email, password: data.PASSWORDS.admin, login: '/admin/login' },
+    { role: 'Admin', email: data.admin.email, password: data.PASSWORDS.admin, login: '/login' },
     { role: 'Farmer (approved)', email: 'farmer@marketlink.com', password: data.PASSWORDS.farmer, login: '/login' },
     { role: 'Farmer (pending)', email: 'pending.farmer@marketlink.com', password: data.PASSWORDS.farmer, login: '/login' },
     { role: 'Customer', email: 'customer@marketlink.com', password: data.PASSWORDS.customer, login: '/login' },

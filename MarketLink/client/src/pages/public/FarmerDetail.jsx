@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import ProductCard from '../../components/cards/ProductCard';
 import ReviewItem from '../../components/cards/ReviewItem';
 import DirectionsMap from '../../components/map/DirectionsMap';
@@ -14,13 +13,27 @@ import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { coverFor, DAY_SHORT, formatDateKey, time12 } from '../../utils/format';
 import { isIllustration } from '../../utils/images';
+import useSeo from '../../hooks/useSeo';
+import { clip, farmerLd } from '../../utils/seo';
 
 export default function FarmerDetail() {
   const { slug } = useParams();
   const { data, loading, error, reload } = useFetch(`/farmers/${slug}`);
   const [cat, setCat] = useState('');
   const [allReviews, setAllReviews] = useState(false);
-  useDocumentTitle(data?.farmer?.stallName);
+  const f = data?.farmer;
+  useSeo(
+    f
+      ? {
+          title: `${f.stallName} – local farmer${f.city ? ` in ${f.city}` : ''}`,
+          description: clip(f.bio || `${f.stallName} sells fresh produce on MarketLink. See this week's stock, pickup times and reviews.`),
+          image: f.coverImage || f.logo,
+          type: 'profile',
+          jsonLd: farmerLd(f),
+          canonicalPath: `/farmers/${f.slug}`,
+        }
+      : { title: 'Farmer' }
+  );
 
   const categories = useMemo(() => {
     const map = new Map();

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import ProductCard from '../../components/cards/ProductCard';
 import FarmerCard from '../../components/cards/FarmerCard';
 import MapView from '../../components/map/MapView';
@@ -12,6 +11,7 @@ import CountUp from '../../components/common/CountUp';
 import { DAY_NAMES, nextOccurrence, time12 } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 import Avatar from '../../components/common/Avatar';
+import useSeo from '../../hooks/useSeo';
 
 const STEPS = [
   { icon: 'bi-search', title: 'Discover', text: 'See which farmers are at each market this week, what they have in stock and at what price.' },
@@ -64,7 +64,7 @@ function useNextMarket(markets) {
 }
 
 export default function Home() {
-  useDocumentTitle();
+  useSeo({});
   const { user } = useAuth();
   const stats = useFetch('/stats');
   const cats = useFetch('/categories');

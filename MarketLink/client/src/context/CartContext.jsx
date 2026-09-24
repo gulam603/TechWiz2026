@@ -19,6 +19,9 @@ function loadCart() {
  */
 export function CartProvider({ children }) {
   const [items, setItems] = useState(loadCart);
+  const [drawerOpen, setDrawerOpen] = useState(false); // basket sidebar on the right
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
   useEffect(() => {
     try {
@@ -87,8 +90,11 @@ export function CartProvider({ children }) {
       removeFarmer,
       clear,
       has: (productId) => items.some((i) => i.productId === String(productId)),
+      drawerOpen,
+      openDrawer,
+      closeDrawer,
     };
-  }, [items, add, update, remove, removeFarmer, clear]);
+  }, [items, add, update, remove, removeFarmer, clear, drawerOpen, openDrawer, closeDrawer]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

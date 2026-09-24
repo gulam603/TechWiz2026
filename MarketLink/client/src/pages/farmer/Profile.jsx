@@ -11,6 +11,7 @@ import { ImageInput } from './Products';
 import { PasswordForm } from '../customer/Profile';
 import ProfilePhoto from '../../components/common/ProfilePhoto';
 import { ApprovalBanner } from './Dashboard';
+import SearchSelect from '../../components/common/SearchSelect';
 
 export default function FarmerProfile() {
   useDocumentTitle('Stall profile');
@@ -126,14 +127,7 @@ function ProfileEditor({ data, setData }) {
               </div>
               <div className="col-md-4">
                 <label className="form-label" htmlFor="s-city">City</label>
-                <select id="s-city" name="city" className="form-select" value={form.city} onChange={change}>
-                  <option value="">Choose a city</option>
-                  {(cityData?.cities || []).map((c) => (
-                    <option key={c._id} value={c.name}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
+                <SearchSelect id="s-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel="City" placeholder="Choose a city" options={(cityData?.cities || []).map((c) => ({ value: c.name, label: c.name, hint: c.province }))} />
               </div>
               <div className="col-12">
                 <div className="d-flex align-items-end justify-content-between gap-2 mb-1">

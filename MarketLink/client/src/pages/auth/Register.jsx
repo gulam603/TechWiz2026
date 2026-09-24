@@ -3,15 +3,15 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import TermsCheckbox from '../../components/legal/TermsCheckbox';
 import PasswordInput from '../../components/common/PasswordInput';
+import useSeo from '../../hooks/useSeo';
 
 export const PASSWORD_HINT = 'At least 8 characters with letters and numbers';
 export const passwordOk = (p) => /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/.test(p);
 
 export default function Register() {
-  useDocumentTitle('Create account');
+  useSeo({ title: 'Create an account', description: 'Create a free MarketLink account to pre-order from local farmers, save favourites and get restock alerts.' });
   const { register, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();

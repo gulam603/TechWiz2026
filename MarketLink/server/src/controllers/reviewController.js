@@ -24,63 +24,105 @@ export async function listReviews(req, res) {
   res.json({ reviews, total, page, pages: Math.ceil(total / limit) });
 }
 
-// POST /api/reviews  { orderId, type: 'product'|'farmer', productId?, rating, comment }
-// Only possible after the order was completed, once per product / farmer per order.
+// Latest completed order of this customer with the product (or from the farmer) that has no review for it yet.
+async function purchaseOf(customerId, { productId, farmerId }) {
+  const filter = { customer: customerId, status: ORDER_STATUS.COMPLETED };
+  if (productId) filter['items.product'] = productId;
+  else filter.farmer = farmerId;
+  const [orders, reviewed] = await Promise.all([
+    Order.find(filter).sort({ completedAt: -1, createdAt: -1 }).select('_id farmer items orderNumber').limit(50).lean(),
+    Review.find({ customer: customerId, type: productId ? 'product' : 'farmer', ...(productId ? { product: productId } : { farmer: farmerId }), order: { $exists: true } }).select('order').lean(),
+  ]);
+  const done = new Set(reviewed.map((r) => String(r.order)));
+  return orders.find((o) => !done.has(String(o._id))) || null;
+}
+
+/**
+ * POST /api/reviews  { type: 'product'|'farmer', productId? | farmerId?, orderId?, rating, comment }
+ * One review per customer per product / stall. When the customer bought it (a completed order)
+ * the review is a "Verified purchase"; otherwise it is saved as "Unverified".
+ */
 export async function createReview(req, res) {
-  const orderId = assertId(req.body.orderId, 'order');
   const type = req.body.type === 'farmer' ? 'farmer' : 'product';
   const rating = Number(req.body.rating);
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new AppError('Please choose a rating from 1 to 5 stars', 400);
 
-  const order = await Order.findOne({ _id: orderId, customer: req.user._id });
-  if (!order) throw new AppError('Order not found', 404);
-  if (order.status !== ORDER_STATUS.COMPLETED) throw new AppError('You can review an order after it has been completed', 400);
-
+  let order = null;
   let productId;
-  if (type === 'product') {
+  let farmerId;
+  if (req.body.orderId) {
+    // From the order page: the order must be the customer's and completed
+    order = await Order.findOne({ _id: assertId(req.body.orderId, 'order'), customer: req.user._id }).lean();
+    if (!order) throw new AppError('Order not found', 404);
+    if (order.status !== ORDER_STATUS.COMPLETED) throw new AppError('You can review an order after it has been completed', 400);
+    farmerId = order.farmer;
+    if (type === 'product') {
+      productId = assertId(req.body.productId, 'product');
+      if (!order.items.some((i) => String(i.product) === productId)) throw new AppError('This product is not part of the order', 400);
+    }
+  } else if (type === 'product') {
     productId = assertId(req.body.productId, 'product');
-    if (!order.items.some((i) => String(i.product) === productId)) throw new AppError('This product is not part of the order', 400);
+    const product = await Product.findOne({ _id: productId, isRemoved: false }).select('farmer').lean();
+    if (!product) throw new AppError('Product not found', 404);
+    farmerId = product.farmer;
+    order = await purchaseOf(req.user._id, { productId });
+  } else {
+    farmerId = assertId(req.body.farmerId, 'farmer');
+    if (!(await Farmer.exists({ _id: farmerId }))) throw new AppError('Farmer not found', 404);
+    order = await purchaseOf(req.user._id, { farmerId });
   }
-  const duplicate = await Review.exists({ order: order._id, customer: req.user._id, type, ...(productId ? { product: productId } : {}) });
-  if (duplicate) throw new AppError('You have already reviewed this', 409);
 
   const comment = req.body.comment ? String(req.body.comment).trim().slice(0, 1000) : undefined;
+  const verified = Boolean(order);
+  const target = { customer: req.user._id, type, ...(type === 'product' ? { product: productId } : { farmer: farmerId }) };
+  if (verified) {
+    // Buyers can review each completed order once
+    if (await Review.exists({ ...target, order: order._id })) throw new AppError('You have already reviewed this', 409);
+  } else if (await Review.exists(target)) {
+    // Without a purchase: one review per product / stall
+    throw new AppError('You have already reviewed this', 409);
+  }
   // Content moderation: reviews with offensive words are held until an admin checks them
   const word = needsModeration(comment);
   const review = await Review.create({
     type,
     product: productId,
-    farmer: order.farmer,
+    farmer: farmerId,
     customer: req.user._id,
-    order: order._id,
+    order: order?._id,
+    verified,
     rating,
     comment,
     ...(word ? { isRemoved: true, removedReason: 'Held for moderation' } : {}),
   });
+  // A verified review replaces an earlier unverified one of the same customer
+  if (verified) await Review.deleteMany({ ...target, verified: { $ne: true }, _id: { $ne: review._id } });
   if (word) {
-    await ContentFlag.create({ targetType: 'review', review: review._id, farmer: order.farmer, product: productId, reason: 'auto_language', note: `Contains "${word}"` });
+    await ContentFlag.create({ targetType: 'review', review: review._id, farmer: farmerId, product: productId, reason: 'auto_language', note: `Contains "${word}"` });
     const admins = await User.find({ role: ROLES.ADMIN }).select('_id').lean();
     for (const a of admins) await notify(a._id, { type: 'moderation', title: 'Review held for moderation', message: `A review by ${req.user.name} contains "${word}" and is waiting for a check.`, link: '/admin/moderation' });
     return res.status(201).json({ review, held: true, message: 'Thanks! Your review will appear after a quick check by our team.' });
   }
-  await refreshRatings({ productId, farmerId: order.farmer });
+  await refreshRatings({ productId, farmerId });
 
-  const farmer = await Farmer.findById(order.farmer).select('user');
-  const item = productId ? order.items.find((i) => String(i.product) === productId) : null;
-  await notify(farmer.user, {
-    type: 'review',
-    title: `New ${rating}-star review`,
-    message: `${req.user.name} reviewed ${item ? item.name : 'your stall'}: "${(review.comment || '').slice(0, 80)}"`,
-    link: '/farmer/reviews',
-  });
-  res.status(201).json({ review });
+  const farmer = await Farmer.findById(farmerId).select('user').lean();
+  const productName = productId ? order?.items?.find((i) => String(i.product) === String(productId))?.name || (await Product.findById(productId).select('name').lean())?.name : null;
+  if (farmer) {
+    await notify(farmer.user, {
+      type: 'review',
+      title: `New ${rating}-star review${verified ? '' : ' (unverified)'}`,
+      message: `${req.user.name} reviewed ${productName || 'your stall'}: "${(review.comment || '').slice(0, 80)}"`,
+      link: '/farmer/reviews',
+    });
+  }
+  res.status(201).json({ review, message: verified ? 'Thanks for your review! It shows as a verified purchase.' : 'Thanks for your review! It shows as unverified because you have not bought this on MarketLink yet.' });
 }
 
 // Latest completed order of this customer for which the product / farmer has not been reviewed yet.
 async function reviewableOrders(customerId) {
   const [orders, reviews] = await Promise.all([
     Order.find({ customer: customerId, status: ORDER_STATUS.COMPLETED }).populate('farmer', 'stallName slug logo').sort({ completedAt: -1, createdAt: -1 }).lean(),
-    Review.find({ customer: customerId }).select('type product farmer').lean(),
+    Review.find({ customer: customerId, verified: true }).select('type product farmer').lean(),
   ]);
   const reviewedProducts = new Set(reviews.filter((r) => r.type === 'product').map((r) => String(r.product)));
   const reviewedFarmers = new Set(reviews.filter((r) => r.type === 'farmer').map((r) => String(r.farmer)));
@@ -116,18 +158,22 @@ export async function myReviews(req, res) {
   res.json({ pending, written });
 }
 
-// GET /api/reviews/eligible?product=ID | ?farmer=ID  (can the signed-in customer review it now?)
+// GET /api/reviews/eligible?product=ID | ?farmer=ID
+// -> { canReview, verified, orderId?, orderNumber? } or { canReview: false, reason }
 export async function reviewEligibility(req, res) {
   if (req.user.role !== ROLES.CUSTOMER) return res.json({ canReview: false, reason: 'Only customers can write reviews.' });
-  const pending = await reviewableOrders(req.user._id);
-  const hit = isValidId(req.query.product)
-    ? pending.find((p) => p.type === 'product' && String(p.product._id) === String(req.query.product))
-    : pending.find((p) => p.type === 'farmer' && String(p.farmer?._id || p.farmer) === String(req.query.farmer));
-  if (hit) return res.json({ canReview: true, orderId: hit.orderId, orderNumber: hit.orderNumber });
-  const reviewed = isValidId(req.query.product)
-    ? await Review.exists({ customer: req.user._id, type: 'product', product: req.query.product })
-    : await Review.exists({ customer: req.user._id, type: 'farmer', farmer: req.query.farmer });
-  res.json({ canReview: false, reason: reviewed ? 'You have already reviewed this. Thank you!' : 'You can write a review after picking up an order.' });
+  const productId = isValidId(req.query.product) ? req.query.product : null;
+  const farmerId = !productId && isValidId(req.query.farmer) ? req.query.farmer : null;
+  if (!productId && !farmerId) throw new AppError('Choose a product or a farmer', 400);
+  const target = { customer: req.user._id, ...(productId ? { type: 'product', product: productId } : { type: 'farmer', farmer: farmerId }) };
+  const thanks = { canReview: false, reason: 'You have already reviewed this. Thank you!' };
+  // On product and stall pages each customer writes one review; a buyer's review is verified.
+  // (After more pickups, the order page and "My reviews" still offer a review per order.)
+  if (await Review.exists({ ...target, verified: true })) return res.json(thanks);
+  const order = await purchaseOf(req.user._id, productId ? { productId } : { farmerId });
+  if (order) return res.json({ canReview: true, verified: true, orderId: order._id, orderNumber: order.orderNumber });
+  if (await Review.exists(target)) return res.json(thanks);
+  res.json({ canReview: true, verified: false });
 }
 
 // GET /api/customer/badges  (sidebar counters)

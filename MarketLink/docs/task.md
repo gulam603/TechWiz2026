@@ -32,6 +32,11 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Favourite farmers from the stall page, farmer cards and the product page; favourite farmers on the dashboard
 - [x] Product photo gallery (up to 5 photos, thumbnails, arrows, swipe, keyboard, credit per photo)
 - [x] Own account area with the same sidebar layout as the admin area
+- [x] Checkout without an account: details form, account created automatically, password e-mailed
+- [x] Basket sidebar (right side) with a link to the full basket page; quick view dialog on product cards
+- [x] Photo zoom and full-screen viewer on the product page; "From the same stall" and "You may also like"
+- [x] Verified purchase / Unverified badges on reviews (reviews without a purchase are allowed once)
+- [x] Search inside dropdowns (cities, markets, categories, farmers, customers, filters)
 
 ## 2. Farmer features
 
@@ -57,7 +62,7 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 
 ## 3. Admin features
 
-- [x] Separate secure login and dashboard (totals: farmers, customers, markets, orders)
+- [x] Secure login (the same login page for every role) and admin dashboard (totals: farmers, customers, markets, orders)
 - [x] Approve / suspend farmers; activate / deactivate customers
 - [x] Markets: add, edit, remove (name, address, days, timings, coordinates, map link)
 - [x] Remove inappropriate product listings and reviews
@@ -77,6 +82,10 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Role-based access control (API and UI)
 - [x] Responsive: laptop layout, mobile drawer menu, mobile bottom tab bar; every account page checked at 360, 390 and 768 px
 - [x] One show/hide eye button in password fields (browser's own reveal button hidden); flat sidebar colour
+- [x] SEO: per-page titles, descriptions, canonical links, Open Graph / X tags, JSON-LD, sitemap.xml, robots.txt, 404 for unknown pages
+- [x] Compact desktop layout (more content per screen), custom scrollbars, social media links
+- [x] Database validators kept in step with the code automatically (fixes "Document failed validation" on older databases)
+- [x] SMTP: server picked from the address when SMTP_HOST is empty (Gmail), SMTP_FROM accepted
 - [x] E-mail and in-app notifications for confirmations and ready-for-pickup (Nodemailer SMTP, e.g. Gmail app password; branded HTML e-mails)
 - [x] About Us and Contact Us (static contact + Google Map)
 - [x] No emoji in the interface – Bootstrap icons everywhere
@@ -89,6 +98,8 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] API suites: 69 + 23 checks, 32 extra SRS checks, 33 admin-tools checks, 31 round-4 checks (inventory, alerts, sales, reviews, moderation, reports)
 - [x] Round-4 browser test: 111 checks (password eye, shells, reviews, gallery, report, inventory, sales, gallery upload, AI bio, moderation, reports, mobile at 360 / 390 / 768)
 - [x] Low-stock and sold-out e-mails delivered through a local SMTP server
+- [x] Every API suite also run against a real MongoDB 8 server (not only FerretDB), including a database with the old validators
+- [x] Round-5 checks: 45 browser checks + 25 API checks (single login, dropdown search, compact layout, categories row, search bar, map popup, quick view, basket sidebar, zoom, related products, verified reviews, checkout without an account, e-mailed password, SEO tags, sitemap, robots, phones)
 - [x] Admin browser test: shell, collapse, place order, CSV export, add farmer, customer history, analytics, cities, mobile drawer, pending-farmer lock, Write with AI
 - [x] SMTP delivery tested with a local SMTP server (login, order, approval and reset e-mails)
 - [x] Browser flows: customer → farmer → admin, filters, maps, closed dates, sign-up wizard, password reset

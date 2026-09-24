@@ -8,6 +8,7 @@ import { PageLoader } from '../../components/common/Loader';
 import ProduceImage from '../../components/common/ProduceImage';
 import RatingStars from '../../components/common/RatingStars';
 import ReviewModal from '../../components/reviews/ReviewModal';
+import VerifiedBadge from '../../components/reviews/VerifiedBadge';
 import { formatDate, timeAgo } from '../../utils/format';
 import { productPath } from '../../utils/links';
 
@@ -128,7 +129,10 @@ export default function MyReviews() {
                       </strong>
                       <span className="fs-7 text-muted-2 flex-shrink-0">{timeAgo(r.createdAt)}</span>
                     </div>
-                    <RatingStars value={r.rating} />
+                    <div className="d-flex align-items-center gap-2 flex-wrap">
+                      <RatingStars value={r.rating} />
+                      <VerifiedBadge verified={r.verified} />
+                    </div>
                     {r.comment && <p className="small mb-0 mt-2">{r.comment}</p>}
                     {r.isRemoved && (
                       <p className="fs-7 text-warning-emphasis mb-0 mt-2">

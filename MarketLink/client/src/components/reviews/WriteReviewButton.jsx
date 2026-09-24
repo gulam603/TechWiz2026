@@ -4,7 +4,7 @@ import useFetch from '../../hooks/useFetch';
 import { useAuth } from '../../context/AuthContext';
 import ReviewModal from './ReviewModal';
 
-/** "Write a review" on product and farmer pages: open when the customer has a completed order to review. */
+/** "Write a review" on product and farmer pages. Buyers write verified reviews, everyone else unverified ones. */
 export default function WriteReviewButton({ type, id, name, onDone }) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function WriteReviewButton({ type, id, name, onDone }) {
       </button>
       {open && (
         <ReviewModal
-          target={{ type, orderId: data.orderId, orderNumber: data.orderNumber, productId: type === 'product' ? id : undefined, name }}
+          target={{ type, orderId: data.orderId, orderNumber: data.orderNumber, productId: type === 'product' ? id : undefined, farmerId: type === 'farmer' ? id : undefined, name }}
           onClose={() => setOpen(false)}
           onDone={(res) => {
             setOpen(false);

@@ -55,7 +55,7 @@ function UserMenu() {
 
 export default function Navbar() {
   const { user } = useAuth();
-  const { count } = useCart();
+  const { count, openDrawer } = useCart();
   const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
   // The drawer remembers the page it was opened on, so it closes by itself after any navigation.
@@ -94,14 +94,14 @@ export default function Navbar() {
             <i className={`bi ${searchOpen ? 'bi-x-lg' : 'bi-search'}`} />
           </button>
           {showCart && (
-            <Link to="/cart" className="nav-icon-btn" aria-label={`Basket (${count} items)`}>
+            <button type="button" className="nav-icon-btn" onClick={openDrawer} aria-label={`Basket (${count} items)`} aria-haspopup="dialog">
               <i className="bi bi-basket2" />
               {count > 0 && (
                 <span key={count} className="count">
                   {count > 99 ? '99+' : count}
                 </span>
               )}
-            </Link>
+            </button>
           )}
           {user && <NotificationBell allLink={`${homeFor(user)}/notifications`} />}
           {user ? (
@@ -123,8 +123,8 @@ export default function Navbar() {
       </nav>
 
       {searchOpen && (
-        <div className="container pb-3">
-          <GlobalSearch autoFocus />
+        <div className="container nav-search-row">
+          <GlobalSearch className="nav-search" autoFocus />
         </div>
       )}
 

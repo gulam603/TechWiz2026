@@ -1,15 +1,16 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
-import useDocumentTitle from '../../hooks/useDocumentTitle';
 import MapView from '../../components/map/MapView';
 import { getCurrentPosition } from '../../components/map/DirectionsMap';
 import { DAY_LETTER, DAY_NAMES, DAY_SHORT, distanceKm, time12 } from '../../utils/format';
 import { useToast } from '../../context/ToastContext';
+import SearchSelect from '../../components/common/SearchSelect';
+import useSeo from '../../hooks/useSeo';
 
 /** Full-screen map of every market and farmer stall with search, day filter and "near me". */
 export default function MapExplore() {
-  useDocumentTitle('Market map');
+  useSeo({ title: 'Market map', description: 'All farmers markets and farmer stalls on one map, with directions and opening days.' });
   const { data } = useFetch('/map');
   const { toast } = useToast();
   const [layer, setLayer] = useState('all');
@@ -82,12 +83,7 @@ export default function MapExplore() {
         <div className="explore-panel">
           <div className="p-3 border-bottom">
             <h1 className="h4 mb-3">Explore the map</h1>
-            <select className="form-select form-select-sm mb-2" value={activeCity} onChange={(e) => setCity(e.target.value)} aria-label="City" disabled={Boolean(me)}>
-              <option value="">All cities</option>
-              {cities.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
+            <SearchSelect size="sm" className="mb-2" value={activeCity} onChange={setCity} ariaLabel="City" emptyLabel="All cities" disabled={Boolean(me)} options={cities.map((c) => ({ value: c, label: c }))} />
             <div className="search-pill mb-2">
               <i className="bi bi-search" />
               <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search markets or stalls" aria-label="Search map" />

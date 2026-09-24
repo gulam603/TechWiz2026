@@ -10,6 +10,7 @@ import env from './config/env.js';
 import routes from './routes/index.js';
 import { errorHandler, notFound } from './middleware/error.js';
 import { CLIENT_DIST, UPLOAD_ROOT } from './utils/paths.js';
+import { robots, sendPage, sitemap } from './services/seo.js';
 
 /** Removes keys that start with "$" or contain "." (blocks NoSQL operator injection). */
 function sanitize(value) {
@@ -69,6 +70,10 @@ export function createApp() {
   app.use('/api', routes);
   app.use('/api', notFound);
 
+  // SEO: search engines read these two files
+  app.get('/robots.txt', robots);
+  app.get('/sitemap.xml', (req, res, next) => sitemap(req, res).catch(next));
+
   // In production the Express server also serves the built React app.
   if (fs.existsSync(CLIENT_DIST)) {
     app.use(
@@ -80,7 +85,8 @@ export function createApp() {
         },
       })
     );
-    app.get(/^\/(?!api|uploads).*/, (req, res) => res.sendFile(path.join(CLIENT_DIST, 'index.html')));
+    // Every other URL is a page of the React app: index.html with the page's own title, description and structured data
+    app.get(/^\/(?!api|uploads).*/, (req, res, next) => sendPage(req, res).catch(next));
   }
 
   app.use(notFound);

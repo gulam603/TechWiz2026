@@ -7,6 +7,7 @@ import AppShell, { titleFromNav } from './AppShell';
 import AnnouncementBar from './AnnouncementBar';
 import MobileTabBar from './MobileTabBar';
 import ChatWidget from '../chat/ChatWidget';
+import CartDrawer from '../cart/CartDrawer';
 import { visibleItems } from './navConfig';
 
 // Sidebars of the customer and farmer areas (same look as the admin area).
@@ -58,7 +59,7 @@ const MENUS = {
 /** Customer and farmer areas: the shared back-office shell with role counters, quick actions and the chat. */
 export default function DashboardLayout({ role }) {
   const { user, farmer } = useAuth();
-  const { count } = useCart();
+  const { count, openDrawer } = useCart();
   const { pathname } = useLocation();
   const nav = visibleItems(NAVS[role], user).filter((item, i, list) => !item.section || (list[i + 1] && !list[i + 1].section));
   const [badges, setBadges] = useState({});
@@ -79,10 +80,10 @@ export default function DashboardLayout({ role }) {
         <Link to="/products" className="btn btn-sm btn-primary">
           <i className="bi bi-shop" aria-hidden="true" /> <span className="d-none d-lg-inline">Shop</span>
         </Link>
-        <Link to="/cart" className="nav-icon-btn" aria-label={`Basket, ${count} items`} title="Basket">
+        <button type="button" className="nav-icon-btn" onClick={openDrawer} aria-label={`Basket, ${count} items`} title="Basket" aria-haspopup="dialog">
           <i className="bi bi-basket2" />
           {count > 0 && <span key={count} className="count">{count > 99 ? '99+' : count}</span>}
-        </Link>
+        </button>
       </>
     ) : approved ? (
       <>
@@ -115,6 +116,7 @@ export default function DashboardLayout({ role }) {
         <>
           <ChatWidget key={user?._id || 'guest'} />
           <MobileTabBar />
+          {role === 'customer' && <CartDrawer />}
         </>
       }
     />

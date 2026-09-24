@@ -1,16 +1,16 @@
 [
   {
-    "_id": "6ab4fa2985d8c96df8b64c91",
+    "_id": "6ab523e3d6dd911eb52d81fd",
     "name": "Clifton Seaview Farmers Market",
     "slug": "clifton-seaview-farmers-market",
     "description": "A breezy weekend market near the sea front with the widest choice of vegetables, bakery and flowers in the city.",
     "address": "Block 2, Clifton (near Boat Basin), Karachi",
     "city": "Karachi",
     "categories": [
-      "6ab4fa2985d8c96df8b64c80",
-      "6ab4fa2985d8c96df8b64c82",
-      "6ab4fa2985d8c96df8b64c83",
-      "6ab4fa2985d8c96df8b64c87"
+      "6ab523e3d6dd911eb52d81ec",
+      "6ab523e3d6dd911eb52d81ee",
+      "6ab523e3d6dd911eb52d81ef",
+      "6ab523e3d6dd911eb52d81f3"
     ],
     "latitude": 24.8195,
     "longitude": 67.0306,
@@ -24,21 +24,21 @@
     "closeTime": "13:00",
     "image": "/uploads/seed/basket.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.823Z",
-    "updatedAt": "2026-09-24T10:23:39.731Z",
+    "createdAt": "2026-09-24T13:21:39.114Z",
+    "updatedAt": "2026-09-24T13:21:40.406Z",
     "__v": 1
   },
   {
-    "_id": "6ab4fa2985d8c96df8b64c92",
+    "_id": "6ab523e3d6dd911eb52d81fe",
     "name": "DHA Phase 6 Weekend Market",
     "slug": "dha-phase-6-weekend-market",
     "description": "Friday and Sunday market in Bukhari Commercial, loved for dairy, honey and ready-to-eat bakes.",
     "address": "Bukhari Commercial, DHA Phase 6, Karachi",
     "city": "Karachi",
     "categories": [
-      "6ab4fa2985d8c96df8b64c80",
-      "6ab4fa2985d8c96df8b64c82",
-      "6ab4fa2985d8c96df8b64c85"
+      "6ab523e3d6dd911eb52d81ec",
+      "6ab523e3d6dd911eb52d81ee",
+      "6ab523e3d6dd911eb52d81f1"
     ],
     "latitude": 24.7934,
     "longitude": 67.066,
@@ -52,20 +52,20 @@
     "closeTime": "14:00",
     "image": "/uploads/seed/tent.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.826Z",
-    "updatedAt": "2026-09-24T10:23:39.734Z",
+    "createdAt": "2026-09-24T13:21:39.116Z",
+    "updatedAt": "2026-09-24T13:21:40.407Z",
     "__v": 1
   },
   {
-    "_id": "6ab4fa2985d8c96df8b64c93",
+    "_id": "6ab523e3d6dd911eb52d81ff",
     "name": "Gulshan Sunday Kisan Bazaar",
     "slug": "gulshan-sunday-kisan-bazaar",
     "description": "A big, lively bazaar where farmers from Gadap and Malir bring fruit and vegetables straight from the field.",
     "address": "Block 13-D, Gulshan-e-Iqbal (near Maskan Chowrangi), Karachi",
     "city": "Karachi",
     "categories": [
-      "6ab4fa2985d8c96df8b64c81",
-      "6ab4fa2985d8c96df8b64c85"
+      "6ab523e3d6dd911eb52d81ed",
+      "6ab523e3d6dd911eb52d81f1"
     ],
     "latitude": 24.9206,
     "longitude": 67.0935,
@@ -79,21 +79,21 @@
     "closeTime": "15:00",
     "image": "/uploads/seed/cart.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.827Z",
-    "updatedAt": "2026-09-24T10:23:39.739Z",
+    "createdAt": "2026-09-24T13:21:39.118Z",
+    "updatedAt": "2026-09-24T13:21:40.409Z",
     "__v": 1
   },
   {
-    "_id": "6ab4fa2985d8c96df8b64c94",
+    "_id": "6ab523e3d6dd911eb52d8200",
     "name": "North Nazimabad Evening Green Market",
     "slug": "north-nazimabad-evening-green-market",
     "description": "An evening market for after-work shopping: herbs, greens, grains and pulses.",
     "address": "Block H, North Nazimabad (Hyderi), Karachi",
     "city": "Karachi",
     "categories": [
-      "6ab4fa2985d8c96df8b64c84",
-      "6ab4fa2985d8c96df8b64c80",
-      "6ab4fa2985d8c96df8b64c86"
+      "6ab523e3d6dd911eb52d81f0",
+      "6ab523e3d6dd911eb52d81ec",
+      "6ab523e3d6dd911eb52d81f2"
     ],
     "latitude": 24.9387,
     "longitude": 67.0433,
@@ -107,21 +107,21 @@
     "closeTime": "21:00",
     "image": "/uploads/seed/hut.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.829Z",
-    "updatedAt": "2026-09-24T10:23:39.741Z",
+    "createdAt": "2026-09-24T13:21:39.119Z",
+    "updatedAt": "2026-09-24T13:21:40.410Z",
     "__v": 1
   },
   {
-    "_id": "6ab4fa2985d8c96df8b64c95",
+    "_id": "6ab523e3d6dd911eb52d8201",
     "name": "Bahadurabad Fresh Friday Market",
     "slug": "bahadurabad-fresh-friday-market",
     "description": "Compact neighbourhood market around the Bahadurabad roundabout with fruit, flowers and bakery.",
     "address": "Bahadurabad Chowrangi, Bahadur Yar Jang Society, Karachi",
     "city": "Karachi",
     "categories": [
-      "6ab4fa2985d8c96df8b64c81",
-      "6ab4fa2985d8c96df8b64c83",
-      "6ab4fa2985d8c96df8b64c87"
+      "6ab523e3d6dd911eb52d81ed",
+      "6ab523e3d6dd911eb52d81ef",
+      "6ab523e3d6dd911eb52d81f3"
     ],
     "latitude": 24.8822,
     "longitude": 67.0697,
@@ -135,21 +135,21 @@
     "closeTime": "21:00",
     "image": "/uploads/seed/store.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.831Z",
-    "updatedAt": "2026-09-24T10:23:39.743Z",
+    "createdAt": "2026-09-24T13:21:39.120Z",
+    "updatedAt": "2026-09-24T13:21:40.411Z",
     "__v": 1
   },
   {
-    "_id": "6ab4fa2985d8c96df8b64c96",
+    "_id": "6ab523e3d6dd911eb52d8202",
     "name": "Saddar Heritage Farmers Market",
     "slug": "saddar-heritage-farmers-market",
     "description": "Early-morning market near the historic Empress Market for grains, pulses and herbs.",
     "address": "Near Empress Market, Saddar, Karachi",
     "city": "Karachi",
     "categories": [
-      "6ab4fa2985d8c96df8b64c84",
-      "6ab4fa2985d8c96df8b64c80",
-      "6ab4fa2985d8c96df8b64c86"
+      "6ab523e3d6dd911eb52d81f0",
+      "6ab523e3d6dd911eb52d81ec",
+      "6ab523e3d6dd911eb52d81f2"
     ],
     "latitude": 24.8595,
     "longitude": 67.0298,
@@ -164,20 +164,20 @@
     "closeTime": "12:00",
     "image": "/uploads/seed/sunrise.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.833Z",
-    "updatedAt": "2026-09-24T10:23:39.747Z",
+    "createdAt": "2026-09-24T13:21:39.121Z",
+    "updatedAt": "2026-09-24T13:21:40.413Z",
     "__v": 1
   },
   {
-    "_id": "6ab4fa2985d8c96df8b64c97",
+    "_id": "6ab523e3d6dd911eb52d8203",
     "name": "Model Town Kisan Market",
     "slug": "model-town-kisan-market",
     "description": "Lahore's favourite Sunday and Thursday market for winter vegetables, strawberries and citrus.",
     "address": "Model Town Link Road, Lahore",
     "city": "Lahore",
     "categories": [
-      "6ab4fa2985d8c96df8b64c81",
-      "6ab4fa2985d8c96df8b64c80"
+      "6ab523e3d6dd911eb52d81ed",
+      "6ab523e3d6dd911eb52d81ec"
     ],
     "latitude": 31.484,
     "longitude": 74.324,
@@ -191,19 +191,19 @@
     "closeTime": "13:00",
     "image": "/uploads/seed/camping.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.834Z",
-    "updatedAt": "2026-09-24T10:23:39.752Z",
+    "createdAt": "2026-09-24T13:21:39.123Z",
+    "updatedAt": "2026-09-24T13:21:40.415Z",
     "__v": 1
   },
   {
-    "_id": "6ab4fa2985d8c96df8b64c98",
+    "_id": "6ab523e3d6dd911eb52d8204",
     "name": "F-9 Park Weekend Market",
     "slug": "f-9-park-weekend-market",
     "description": "Weekend market at the edge of F-9 Park with fruit from the Margalla and Murree hills.",
     "address": "Fatima Jinnah Park (F-9), Islamabad",
     "city": "Islamabad",
     "categories": [
-      "6ab4fa2985d8c96df8b64c81"
+      "6ab523e3d6dd911eb52d81ed"
     ],
     "latitude": 33.7016,
     "longitude": 73.026,
@@ -217,8 +217,8 @@
     "closeTime": "14:00",
     "image": "/uploads/seed/tent.webp",
     "isActive": true,
-    "createdAt": "2026-09-24T10:23:37.836Z",
-    "updatedAt": "2026-09-24T10:23:39.755Z",
+    "createdAt": "2026-09-24T13:21:39.124Z",
+    "updatedAt": "2026-09-24T13:21:40.416Z",
     "__v": 1
   }
 ]

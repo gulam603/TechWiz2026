@@ -4,6 +4,7 @@ import { timeAgo } from '../../utils/format';
 import { productPath } from '../../utils/links';
 import Avatar from '../common/Avatar';
 import ReportButton from '../reviews/ReportButton';
+import VerifiedBadge from '../reviews/VerifiedBadge';
 import { useAuth } from '../../context/AuthContext';
 
 export default function ReviewItem({ review, showProduct = false, farmerName, reportable = true }) {
@@ -14,7 +15,7 @@ export default function ReviewItem({ review, showProduct = false, farmerName, re
       <div className="d-flex align-items-center gap-2 mb-1">
         <Avatar name={review.customer?.name || 'Customer'} src={review.customer?.avatar} className="avatar-sm" />
         <div className="flex-grow-1">
-          <strong className="small">{review.customer?.name || 'Customer'}</strong>
+          <strong className="small">{review.customer?.name || 'Customer'}</strong> <VerifiedBadge verified={review.verified} />
           <div className="fs-7 text-muted-2">{timeAgo(review.createdAt)}</div>
         </div>
         <RatingStars value={review.rating} />

@@ -44,10 +44,10 @@ const categoryIcon = imageUpload('categories');
 const avatarImage = imageUpload('avatars');
 
 // ---------- Auth ----------
+router.post('/auth/quick-account', formLimiter, auth.quickAccount); // checkout without an account
 router.post('/auth/register', formLimiter, auth.registerCustomer);
 router.post('/auth/register-farmer', formLimiter, auth.registerFarmer);
 router.post('/auth/login', authLimiter, auth.login);
-router.post('/auth/admin/login', authLimiter, auth.adminLogin);
 router.post('/auth/logout', auth.logout);
 router.post('/auth/forgot-password', formLimiter, auth.forgotPassword);
 router.post('/auth/reset-password', authLimiter, auth.resetPassword);

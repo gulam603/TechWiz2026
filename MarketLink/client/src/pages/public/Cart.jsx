@@ -26,10 +26,6 @@ export default function Cart() {
       </div>
     );
 
-  function checkout() {
-    if (!user) navigate('/login', { state: { from: '/checkout' } });
-    else navigate('/checkout');
-  }
 
   return (
     <>
@@ -99,9 +95,16 @@ export default function Cart() {
               {user && user.role !== 'customer' ? (
                 <div className="alert alert-warning small mb-0">Only customer accounts can place pre-orders.</div>
               ) : (
-                <button type="button" className="btn btn-primary btn-lg w-100" onClick={checkout}>
-                  {user ? 'Choose pickup & checkout' : 'Log in to checkout'} <i className="bi bi-arrow-right" />
-                </button>
+                <>
+                  <button type="button" className="btn btn-primary btn-lg w-100" onClick={() => navigate('/checkout')}>
+                    {user ? 'Choose pickup & checkout' : 'Checkout'} <i className="bi bi-arrow-right" />
+                  </button>
+                  {!user && (
+                    <p className="small text-muted-2 text-center mt-2 mb-0">
+                      No account needed · <Link to="/login" state={{ from: '/checkout' }}>Log in</Link> if you have one
+                    </p>
+                  )}
+                </>
               )}
             </div>
           </div>

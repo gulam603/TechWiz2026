@@ -55,6 +55,24 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
   const [busy, setBusy] = useState(false);
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const [writing, setWriting] = useState(false);
+  const [variant, setVariant] = useState(0);
+
+  // "Write with AI": a description from the product name, category, unit and the farm's practices
+  async function writeDescription() {
+    if (form.name.trim().length < 2) return toast('Type the product name first', 'error');
+    setWriting(true);
+    try {
+      const res = await api.post('/farmer/products/describe', { name: form.name, category: form.category, unit: form.unit, variant });
+      setForm((f) => ({ ...f, description: res.description }));
+      setVariant((v) => v + 1);
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      setWriting(false);
+    }
+    return undefined;
+  }
 
   async function submit(e) {
     e.preventDefault();
@@ -112,8 +130,13 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
             <input id="pf-tpl" name="templateQuantity" type="number" min="0" className="form-control" value={form.templateQuantity} onChange={change} placeholder="same as stock" />
           </div>
           <div className="col-12">
-            <label className="form-label" htmlFor="pf-desc">Description</label>
-            <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} />
+            <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+              <label className="form-label mb-0" htmlFor="pf-desc">Description</label>
+              <button type="button" className="btn btn-sm btn-ai" onClick={writeDescription} disabled={writing}>
+                {writing ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" />} {variant ? 'Try another' : 'Write with AI'}
+              </button>
+            </div>
+            <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} placeholder="Type the product name, then press Write with AI" />
           </div>
           <div className="col-12">
             <ImageInput label="Product image" current={product?.image} file={file} onFile={setFile} />

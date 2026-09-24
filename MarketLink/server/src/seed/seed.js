@@ -9,6 +9,7 @@ import {
   Announcement,
   AssistantChat,
   Category,
+  City,
   ContactMessage,
   Farmer,
   Market,
@@ -62,7 +63,7 @@ function orderNumber(date) {
 }
 
 async function clearDatabase() {
-  const models = [Announcement, AssistantChat, Category, ContactMessage, Farmer, Market, Notification, Order, Product, Report, Review, User];
+  const models = [Announcement, AssistantChat, Category, City, ContactMessage, Farmer, Market, Notification, Order, Product, Report, Review, User];
   for (const Model of models) {
     await Model.deleteMany({});
     await Model.init(); // make sure indexes exist
@@ -81,6 +82,9 @@ async function main() {
   const categoryByKey = {};
   for (const c of data.categories) {
     categoryByKey[c.key] = await Category.create({ ...c, slug: slugify(c.name) });
+  }
+  for (const [i, c] of data.cities.entries()) {
+    await City.create({ ...c, slug: slugify(c.name), sortOrder: i });
   }
   const marketByKey = {};
   for (const m of data.markets) {
@@ -156,6 +160,13 @@ async function main() {
     await farmer.save();
   }
   console.log(`[seed] ${data.farmers.length} farmers, ${Object.values(productsByFarmer).flat().length} products`);
+
+  // What is sold at each market = the categories of the approved farmers who sell there
+  for (const market of Object.values(marketByKey)) {
+    const sellers = Object.values(farmerByKey).filter(({ farmer }) => farmer.isActive && farmer.markets.some((id) => String(id) === String(market._id)));
+    market.categories = [...new Set(sellers.flatMap(({ farmer }) => farmer.categories.map(String)))];
+    await market.save();
+  }
 
   // ---------------------------------------------------------------- customers
   const customerByKey = {};

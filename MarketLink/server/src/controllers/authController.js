@@ -13,6 +13,7 @@ import { clearAuthCookie, setAuthCookie, signToken } from '../middleware/auth.js
 import { fileUrl } from '../middleware/upload.js';
 import { UPLOAD_ROOT } from '../utils/paths.js';
 import { notifyMany } from '../services/notify.js';
+import { resolveCity } from './adminToolsController.js';
 
 const PASSWORD_RULE = /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/;
 
@@ -64,7 +65,8 @@ export async function registerFarmer(req, res) {
   requireFields(req.body, ['stallName', 'contactPerson', 'phone', 'email', 'address', 'password']);
   checkPassword(req.body.password);
   const terms = requireTerms(req.body);
-  const { stallName, contactPerson, phone, email, address, city, password } = req.body;
+  const { stallName, contactPerson, phone, email, address, password } = req.body;
+  const city = await resolveCity(req.body.city); // must be one of the cities in the dropdown
   // Optional details: bio, practices, what they grow, markets and map pin (validated before creating anything)
   const details = await readFarmDetails(req.body);
 

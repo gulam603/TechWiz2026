@@ -1,0 +1,185 @@
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { api } from '../../api/client';
+import useFetch from '../../hooks/useFetch';
+import { useToast } from '../../context/ToastContext';
+import Modal from '../common/Modal';
+import QuantityStepper from '../common/QuantityStepper';
+import ProduceImage from '../common/ProduceImage';
+import PickupPicker from '../order/PickupPicker';
+import { money } from '../../utils/format';
+
+/**
+ * "Place order" for administrators (e.g. a customer who phones in): choose the customer,
+ * the farmer, the items and a pickup slot. The server runs the same stock and slot checks
+ * as the customer checkout and notifies both sides.
+ */
+export default function AdminOrderModal({ onClose, onPlaced }) {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const { data: opts } = useFetch('/admin/order-options');
+  const [customerQuery, setCustomerQuery] = useState('');
+  const [customerId, setCustomerId] = useState('');
+  const [farmerId, setFarmerId] = useState('');
+  const [qty, setQty] = useState({});
+  const [pickup, setPickup] = useState({ pickupDate: '', marketId: '', slotStart: '' });
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const { data: prodData, loading: prodLoading } = useFetch(farmerId ? `/products?farmer=${farmerId}&limit=60&sort=name` : null);
+
+  const customers = useMemo(() => {
+    const q = customerQuery.trim().toLowerCase();
+    const list = opts?.customers || [];
+    return q ? list.filter((c) => `${c.name} ${c.email} ${c.phone} ${c.city}`.toLowerCase().includes(q)) : list;
+  }, [opts, customerQuery]);
+  const products = (prodData?.products || []).filter((p) => p.status === 'available' && p.quantityAvailable > 0);
+  const chosen = products.filter((p) => qty[p._id] > 0);
+  const total = chosen.reduce((s, p) => s + p.price * qty[p._id], 0);
+  const customer = opts?.customers.find((c) => c._id === customerId);
+  const ready = customerId && farmerId && chosen.length > 0 && pickup.slotStart;
+
+  function chooseFarmer(id) {
+    setFarmerId(id);
+    setQty({});
+    setPickup({ pickupDate: '', marketId: '', slotStart: '' });
+  }
+
+  async function submit() {
+    setError('');
+    setBusy(true);
+    try {
+      const res = await api.post('/admin/orders', {
+        customerId,
+        groups: [{ farmerId, marketId: pickup.marketId, pickupDate: pickup.pickupDate, slotStart: pickup.slotStart, items: chosen.map((p) => ({ productId: p._id, quantity: qty[p._id] })), note }],
+      });
+      const order = res.orders[0];
+      toast(`Pre-order ${order.orderNumber} placed for ${customer?.name}`);
+      onPlaced?.(order);
+      navigate(`/admin/orders/${order._id}`);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title="Place an order for a customer"
+      size="modal-lg admin-order-modal"
+      footer={
+        <>
+          <span className="me-auto align-self-center small">
+            {chosen.length > 0 ? (
+              <>
+                {chosen.length} item{chosen.length > 1 ? 's' : ''} · <strong>{money(total)}</strong> <span className="text-muted-2">(paid at pickup)</span>
+              </>
+            ) : (
+              <span className="text-muted-2">Choose a customer, a farmer and at least one item</span>
+            )}
+          </span>
+          <button type="button" className="btn btn-white" onClick={onClose}>
+            Cancel
+          </button>
+          <button type="button" className="btn btn-primary" disabled={!ready || busy} onClick={submit}>
+            {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-bag-check" />} Place order
+          </button>
+        </>
+      }
+    >
+      {error && <div className="alert alert-danger small py-2">{error}</div>}
+      <div className="order-step">
+        <div className="order-step-title">
+          <span>1</span> Customer
+        </div>
+        <div className="row g-2">
+          <div className="col-md-5">
+            <input className="form-control form-control-sm" placeholder="Search name, e-mail or phone" value={customerQuery} onChange={(e) => setCustomerQuery(e.target.value)} aria-label="Search customers" />
+          </div>
+          <div className="col-md-7">
+            <select className="form-select form-select-sm" value={customerId} onChange={(e) => setCustomerId(e.target.value)} aria-label="Customer">
+              <option value="">Choose a customer ({customers.length})</option>
+              {customers.map((c) => (
+                <option key={c._id} value={c._id}>
+                  {c.name} · {c.email}
+                  {c.city ? ` · ${c.city}` : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        {customer && (
+          <div className="fs-7 text-muted-2 mt-1">
+            <i className="bi bi-telephone" /> {customer.phone}
+          </div>
+        )}
+      </div>
+
+      <div className="order-step">
+        <div className="order-step-title">
+          <span>2</span> Farmer / stall
+        </div>
+        <select className="form-select form-select-sm" value={farmerId} onChange={(e) => chooseFarmer(e.target.value)} aria-label="Farmer">
+          <option value="">Choose a farmer</option>
+          {(opts?.farmers || []).map((f) => (
+            <option key={f._id} value={f._id} disabled={!f.hasPickup}>
+              {f.stallName}
+              {f.city ? ` · ${f.city}` : ''}
+              {f.hasPickup ? '' : ' (no pickup times yet)'}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {farmerId && (
+        <div className="order-step">
+          <div className="order-step-title">
+            <span>3</span> Items
+          </div>
+          {prodLoading && !prodData ? (
+            <div className="skeleton" style={{ height: 120 }} />
+          ) : products.length === 0 ? (
+            <p className="small text-muted-2 mb-0">This farmer has nothing in stock right now.</p>
+          ) : (
+            <div className="order-items">
+              {products.map((p) => (
+                <div key={p._id} className={`order-item ${qty[p._id] > 0 ? 'is-chosen' : ''}`}>
+                  <ProduceImage src={p.image} alt="" color={p.category?.color} className="order-item-img" />
+                  <div className="order-item-text">
+                    <strong>{p.name}</strong>
+                    <span>
+                      {money(p.price)} / {p.unit} · {p.quantityAvailable} left
+                    </span>
+                  </div>
+                  {qty[p._id] > 0 ? (
+                    <QuantityStepper size="sm" value={qty[p._id]} min={0} max={p.quantityAvailable} onChange={(n) => setQty({ ...qty, [p._id]: n })} label={`${p.name} quantity`} />
+                  ) : (
+                    <button type="button" className="btn btn-sm btn-soft" onClick={() => setQty({ ...qty, [p._id]: 1 })}>
+                      <i className="bi bi-plus-lg" /> Add
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {farmerId && chosen.length > 0 && (
+        <div className="order-step">
+          <div className="order-step-title">
+            <span>4</span> Pickup
+          </div>
+          <PickupPicker farmerId={farmerId} value={pickup} onChange={setPickup} />
+          <label className="form-label mt-2 small" htmlFor="order-note">
+            Note for the farmer (optional)
+          </label>
+          <input id="order-note" className="form-control form-control-sm" maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. Ordered by phone" />
+        </div>
+      )}
+    </Modal>
+  );
+}

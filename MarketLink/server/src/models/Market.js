@@ -6,7 +6,9 @@ const marketSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true, lowercase: true },
     description: { type: String, trim: true, maxlength: 1000 },
     address: { type: String, required: [true, 'Address is required'], trim: true },
-    city: { type: String, trim: true, default: '' },
+    city: { type: String, trim: true, default: '' }, // name of a city from the cities collection
+    // What is sold at this market (chosen from the product categories)
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     latitude: { type: Number, required: true, min: -90, max: 90 },
     longitude: { type: Number, required: true, min: -180, max: 180 },
     mapProvider: { type: String, enum: ['openstreetmap', 'google'], default: 'openstreetmap' },
@@ -21,5 +23,6 @@ const marketSchema = new mongoose.Schema(
 );
 
 marketSchema.index({ isActive: 1, city: 1 });
+marketSchema.index({ categories: 1 });
 
 export default mongoose.model('Market', marketSchema);

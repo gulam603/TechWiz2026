@@ -1,28 +1,49 @@
 import { useState } from 'react';
-import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
-import { api, toQuery } from '../../api/client';
+import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
-import RatingStars from '../../components/common/RatingStars';
-import Pagination from '../../components/common/Pagination';
-import { PageLoader } from '../../components/common/Loader';
-import { formatDate } from '../../utils/format';
+import DataGrid from '../../components/admin/DataGrid';
+import FilterBar from '../../components/admin/FilterBar';
+import { action, badge, dateCell, display, esc, link, person } from '../../utils/cells';
+import { productPath } from '../../utils/links';
+
+const FILTERS = [
+  { name: 'removed', label: 'Visibility', options: [{ value: 'no', label: 'Visible' }, { value: 'yes', label: 'Removed' }] },
+  { name: 'type', label: 'About', options: [{ value: 'product', label: 'Products' }, { value: 'farmer', label: 'Farmers' }] },
+  { name: 'rating', label: 'Rating', options: [5, 4, 3, 2, 1].map((n) => ({ value: String(n), label: `${n} star${n > 1 ? 's' : ''}` })) },
+  { name: 'farmer', label: 'Farmer', options: 'farmers' },
+  { name: 'from', label: 'From', type: 'date' },
+  { name: 'to', label: 'To', type: 'date' },
+];
+
+const stars = (n) => `<span class="text-nowrap text-warning" title="${n} of 5">${'<i class="bi bi-star-fill"></i>'.repeat(n)}${'<i class="bi bi-star"></i>'.repeat(5 - n)}</span>`;
+
+const COLUMNS = [
+  { data: 'customer.name', title: 'Customer', orderable: false, responsivePriority: 1, render: display((v, r) => person(v || 'Customer', '', r.customer?.avatar)) },
+  { data: 'rating', title: 'Rating', render: display((v) => stars(v)) },
+  {
+    data: 'type',
+    title: 'About',
+    render: display((v, r) => (v === 'product' && r.product ? `${link(productPath(r.product), r.product.name, 'small fw-semi')}<div class="fs-7 text-muted-2">${esc(r.farmer?.stallName || '')}</div>` : `<span class="small fw-semi">${esc(r.farmer?.stallName || '')}</span><div class="fs-7 text-muted-2">Farmer review</div>`), (v, r) => (v === 'product' ? r.product?.name : r.farmer?.stallName)),
+  },
+  { data: 'comment', title: 'Comment', orderable: false, className: 'dt-comment', render: display((v, r) => `<span class="small">${esc(v || '–')}</span>${r.response?.text ? `<div class="fs-7 text-muted-2 mt-1"><i class="bi bi-reply"></i> ${esc(r.response.text)}</div>` : ''}`) },
+  { data: 'isRemoved', title: 'Status', orderable: false, render: display((v) => (v ? badge('removed', 'Removed') : badge('active', 'Visible')), (v) => (v ? 'Removed' : 'Visible')) },
+  { data: 'createdAt', title: 'Date', render: display((v) => dateCell(v)) },
+  { data: null, title: 'Actions', orderable: false, className: 'text-end no-export', responsivePriority: 2, render: (v, type, r) => (r.isRemoved ? action('restore', 'Restore', 'btn-soft') : action('remove', 'Remove', 'btn-outline-danger')) },
+];
 
 export default function AdminReviews() {
-  useDocumentTitle('Moderate reviews');
+  useDocumentTitle('Reviews');
   const { toast } = useToast();
-  const [state, setState] = useState('active');
-  const [rating, setRating] = useState('');
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
-  const { data, loading, reload } = useFetch(`/admin/reviews${toQuery({ state, rating, search, page })}`);
+  const [filters, setFilters] = useState({ removed: '', type: '', rating: '', farmer: '', from: '', to: '' });
+  const [reloadKey, setReloadKey] = useState(0);
 
-  async function moderate(review, action) {
+  async function moderate(review, act) {
     try {
-      await api.patch(`/admin/reviews/${review._id}/moderate`, { action, reason: 'Violates review guidelines' });
-      toast(action === 'remove' ? 'Review removed' : 'Review restored');
-      reload();
+      await api.patch(`/admin/reviews/${review._id}/moderate`, { action: act, reason: 'Violates review guidelines' });
+      toast(act === 'remove' ? 'Review removed' : 'Review restored');
+      setReloadKey((k) => k + 1);
     } catch (err) {
       toast(err.message, 'error');
     }
@@ -30,90 +51,11 @@ export default function AdminReviews() {
 
   return (
     <>
-      <DashHeader title="Reviews" subtitle="Remove reviews that are abusive, spam or break the platform guidelines. Ratings are recalculated automatically." />
+      <DashHeader title="Reviews" subtitle="Remove reviews that are abusive, spam or break the guidelines. Ratings are recalculated automatically." />
       <div className="table-card">
-        <div className="table-toolbar">
-          <div className="tabs-pill">
-            {[
-              ['active', 'Visible'],
-              ['removed', 'Removed'],
-            ].map(([v, l]) => (
-              <button
-                key={v}
-                type="button"
-                className={state === v ? 'active' : ''}
-                onClick={() => {
-                  setState(v);
-                  setPage(1);
-                }}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-          <div className="d-flex gap-2">
-            <select className="form-select form-select-sm" value={rating} onChange={(e) => setRating(e.target.value)} aria-label="Rating filter">
-              <option value="">All ratings</option>
-              {[1, 2, 3, 4, 5].map((n) => (
-                <option key={n} value={n}>
-                  {n} star{n > 1 ? 's' : ''}
-                </option>
-              ))}
-            </select>
-            <div className="search-pill" style={{ maxWidth: 240 }}>
-              <i className="bi bi-search" />
-              <input placeholder="Search comments" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Search comments" />
-            </div>
-          </div>
-        </div>
-        {loading && !data ? (
-          <PageLoader />
-        ) : (
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Review</th>
-                  <th>About</th>
-                  <th>Customer</th>
-                  <th>Date</th>
-                  <th className="text-end">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.reviews.map((r) => (
-                  <tr key={r._id}>
-                    <td style={{ maxWidth: 360 }}>
-                      <RatingStars value={r.rating} />
-                      <div className="small">{r.comment || <em className="text-muted-2">No comment</em>}</div>
-                      {r.isRemoved && <div className="fs-7 text-danger">Removed: {r.removedReason}</div>}
-                    </td>
-                    <td className="small">
-                      {r.type === 'product' ? r.product?.name : 'Stall'}
-                      <div className="fs-7 text-muted-2">{r.farmer?.stallName}</div>
-                    </td>
-                    <td className="small">{r.customer?.name}</td>
-                    <td className="small text-nowrap">{formatDate(r.createdAt)}</td>
-                    <td className="text-end">
-                      {r.isRemoved ? (
-                        <button type="button" className="btn btn-sm btn-soft" onClick={() => moderate(r, 'restore')}>
-                          Restore
-                        </button>
-                      ) : (
-                        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => moderate(r, 'remove')}>
-                          Remove
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {data.reviews.length === 0 && <p className="text-center text-muted-2 py-4 mb-0">No reviews found.</p>}
-          </div>
-        )}
+        <FilterBar fields={FILTERS} value={filters} onChange={setFilters} />
+        <DataGrid table="reviews" columns={COLUMNS} filters={filters} order={[[5, 'desc']]} exportName="MarketLink reviews" reloadKey={reloadKey} searchPlaceholder="Comment or customer…" onAction={(name, r) => moderate(r, name)} />
       </div>
-      <Pagination page={page} pages={data?.pages} onChange={setPage} />
     </>
   );
 }

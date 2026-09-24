@@ -21,10 +21,13 @@ async function loadFarmerForOrder(farmerId) {
   return farmer;
 }
 
-// POST /api/orders
-// body: { groups: [{ farmerId, marketId, pickupDate, slotStart, items: [{ productId, quantity }], note }] }
-export async function placeOrders(req, res) {
-  const groups = Array.isArray(req.body.groups) ? req.body.groups : [];
+/**
+ * Creates one pre-order per farmer group for `customer`. Used by the checkout (by: 'customer')
+ * and by administrators placing an order for a customer (by: 'admin').
+ * groups: [{ farmerId, marketId, pickupDate, slotStart, items: [{ productId, quantity }], note }]
+ */
+export async function createPreOrders(customer, rawGroups, { by = 'customer' } = {}) {
+  const groups = Array.isArray(rawGroups) ? rawGroups : [];
   if (!groups.length) throw new AppError('Your cart is empty', 400);
   if (groups.length > 10) throw new AppError('Too many farmers in one checkout', 400);
 
@@ -48,7 +51,8 @@ export async function placeOrders(req, res) {
       try {
         const order = await Order.create({
           orderNumber: await generateOrderNumber(),
-          customer: req.user._id,
+          customer: customer._id,
+          placedBy: by === 'admin' ? 'admin' : 'customer',
           farmer: farmer._id,
           market: pickup.market,
           items,
@@ -59,7 +63,7 @@ export async function placeOrders(req, res) {
           cutoffAt: pickup.cutoffAt,
           customerNote: group.note ? String(group.note).slice(0, 500) : undefined,
           status: ORDER_STATUS.PLACED,
-          statusHistory: [{ status: ORDER_STATUS.PLACED, by: 'customer' }],
+          statusHistory: [{ status: ORDER_STATUS.PLACED, by, note: by === 'admin' ? 'Placed by an administrator' : undefined }],
         });
         created.push({ order, farmer });
       } catch (err) {
@@ -79,11 +83,11 @@ export async function placeOrders(req, res) {
   for (const { order, farmer } of created) {
     const market = await Market.findById(order.market).select('name address latitude longitude').lean();
     await notify(
-      req.user,
+      customer,
       {
         type: 'order',
         title: `Pre-order ${order.orderNumber} placed`,
-        message: `Your pre-order with ${farmer.stallName} has been placed. Total: ${env.currency} ${order.totalAmount} (pay at pickup).\n${pickupDetails(order, market)}`,
+        message: `${by === 'admin' ? 'MarketLink placed this pre-order for you' : 'Your pre-order has been placed'} with ${farmer.stallName}. Total: ${env.currency} ${order.totalAmount} (pay at pickup).\n${pickupDetails(order, market)}`,
         link: `/account/orders/${order._id}`,
       },
       { email: true }
@@ -93,14 +97,19 @@ export async function placeOrders(req, res) {
       {
         type: 'order',
         title: `New pre-order ${order.orderNumber}`,
-        message: `${req.user.name} placed a pre-order for ${order.pickupDate} ${order.pickupSlot.start}-${order.pickupSlot.end}.`,
+        message: `${customer.name} placed a pre-order${by === 'admin' ? ' (entered by an administrator)' : ''} for ${order.pickupDate} ${order.pickupSlot.start}-${order.pickupSlot.end}.`,
         link: `/farmer/orders?focus=${order._id}`,
       },
       { email: true }
     );
   }
 
-  res.status(201).json({ orders: created.map(({ order }) => order) });
+  return created.map(({ order }) => order);
+}
+
+// POST /api/orders  (customer checkout)
+export async function placeOrders(req, res) {
+  res.status(201).json({ orders: await createPreOrders(req.user, req.body.groups) });
 }
 
 function statusFilter(value) {

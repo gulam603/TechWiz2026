@@ -4,7 +4,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import Logo from '../common/Logo';
 import GlobalSearch from './GlobalSearch';
 import { useAuth } from '../../context/AuthContext';
-import { LINKS, MENUS } from './navConfig';
+import { LINKS, MENUS, visibleItems } from './navConfig';
 import Avatar from '../common/Avatar';
 
 /**
@@ -78,7 +78,7 @@ export default function MobileMenu({ open, onClose }) {
             <>
               <p className="mobile-menu-section">My account</p>
               <nav className="mobile-menu-links" aria-label="Account">
-                {(MENUS[user.role] || []).map((m) => (
+                {visibleItems(MENUS[user.role] || [], user).map((m) => (
                   <NavLink key={m.to} to={m.to} end onClick={onClose}>
                     <i className={`bi ${m.icon}`} /> {m.label}
                   </NavLink>

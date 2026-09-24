@@ -53,6 +53,8 @@ createCollection(
       savedMarkets: { bsonType: 'array', items: objectId },
       household: objectId,
       lastLoginAt: date,
+      termsAcceptedAt: date,
+      termsVersion: str(20),
       createdAt: date,
       updatedAt: date,
     },
@@ -108,6 +110,27 @@ createCollection(
   [[{ user: 1 }, { unique: true }], [{ slug: 1 }, { unique: true }], [{ isActive: 1 }], [{ markets: 1 }], [{ operatingDays: 1 }]]
 );
 
+// cities: the city dropdowns (markets, farmers, filters) come from this table
+createCollection(
+  'cities',
+  {
+    bsonType: 'object',
+    required: ['name', 'slug'],
+    properties: {
+      name: str(60),
+      slug: str(),
+      province: str(60),
+      latitude: num(-90, 90),
+      longitude: num(-180, 180),
+      isActive: bool,
+      sortOrder: num(),
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [[{ name: 1 }, { unique: true }], [{ slug: 1 }, { unique: true }]]
+);
+
 // markets: farmers markets / pickup points shown on the map
 createCollection(
   'markets',
@@ -120,6 +143,7 @@ createCollection(
       description: str(1000),
       address: str(),
       city: str(),
+      categories: { bsonType: 'array', items: objectId, description: 'what is sold at the market' },
       latitude: num(-90, 90),
       longitude: num(-180, 180),
       mapProvider: { enum: ['openstreetmap', 'google'] },
@@ -133,7 +157,7 @@ createCollection(
       updatedAt: date,
     },
   },
-  [[{ slug: 1 }, { unique: true }], [{ isActive: 1, city: 1 }]]
+  [[{ slug: 1 }, { unique: true }], [{ isActive: 1, city: 1 }], [{ categories: 1 }]]
 );
 
 // categories: master data managed by the admin
@@ -231,6 +255,7 @@ createCollection(
         items: { bsonType: 'object', properties: { status: str(), at: date, by: str(), note: str() } },
       },
       customerNote: str(500),
+      placedBy: { enum: ['customer', 'admin'] },
       farmerNote: str(500),
       paymentMethod: { enum: ['pay_at_pickup'] },
       completedAt: date,

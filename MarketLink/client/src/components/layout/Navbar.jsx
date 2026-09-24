@@ -7,7 +7,7 @@ import { homeFor, useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import useClickOutside from '../../hooks/useClickOutside';
 import MobileMenu from './MobileMenu';
-import { LINKS, MENUS } from './navConfig';
+import { LINKS, MENUS, visibleItems } from './navConfig';
 import Avatar from '../common/Avatar';
 
 function UserMenu() {
@@ -38,7 +38,7 @@ function UserMenu() {
             <span className="chip chip-soft mt-1 text-capitalize">{user.role}</span>
           </div>
           <hr className="my-1" />
-          {(MENUS[user.role] || []).map((m) => (
+          {visibleItems(MENUS[user.role] || [], user).map((m) => (
             <Link key={m.to} to={m.to} className="ml-dropdown-item" onClick={() => setOpen(false)}>
               <i className={`bi ${m.icon}`} /> {m.label}
             </Link>

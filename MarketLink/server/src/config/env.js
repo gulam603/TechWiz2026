@@ -41,6 +41,11 @@ const env = {
   // Address of the website, used for the buttons in e-mails (e.g. https://marketlink.onrender.com)
   appUrl: (process.env.APP_URL || `http://localhost:${Number(process.env.PORT) || 5000}`).replace(/\/+$/, ''),
   smtp: smtpConfig(),
+  // Optional: "Write with AI" product descriptions by Claude (a built-in writer is used without a key)
+  anthropic: {
+    apiKey: (process.env.ANTHROPIC_API_KEY || '').trim(),
+    model: (process.env.ANTHROPIC_MODEL || 'claude-opus-5-5').trim(),
+  },
 };
 
 env.isProd = env.nodeEnv === 'production';

@@ -21,6 +21,8 @@ import { notify, notifyMany } from '../services/notify.js';
 import { syncFarmerProducts } from '../services/stock.js';
 import { refreshRatings } from '../services/ratings.js';
 import { buildReport, REPORT_TITLES } from '../services/reports.js';
+import { resolveCity } from './adminToolsController.js';
+import { toList } from './helpers/farmDetails.js';
 
 // ---------------------------------------------------------------- dashboard
 
@@ -64,6 +66,16 @@ export async function adminDashboard(req, res) {
     recentOrders,
     pendingFarmers: pending.filter((f) => f.user),
   });
+}
+
+// GET /api/admin/badges  (small counters for the admin sidebar)
+export async function adminBadges(req, res) {
+  const [pendingFarmers, newMessages, openOrders] = await Promise.all([
+    User.countDocuments({ role: ROLES.FARMER, status: USER_STATUS.PENDING }),
+    ContactMessage.countDocuments({ status: 'new' }),
+    Order.countDocuments({ status: { $in: [ORDER_STATUS.PLACED, ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY] } }),
+  ]);
+  res.json({ pendingFarmers, newMessages, openOrders });
 }
 
 // ---------------------------------------------------------------- farmers
@@ -159,8 +171,15 @@ export async function setCustomerStatus(req, res) {
 
 // ---------------------------------------------------------------- markets
 
-function readMarketBody(body, partial) {
-  const data = pick(body, ['name', 'description', 'address', 'city', 'mapProvider', 'mapLink', 'openTime', 'closeTime']);
+async function readMarketBody(body, partial) {
+  const data = pick(body, ['name', 'description', 'address', 'mapProvider', 'mapLink', 'openTime', 'closeTime']);
+  // City comes from the cities table (dropdown); categories = what is sold at the market
+  if (body.city !== undefined) data.city = await resolveCity(body.city);
+  if (body.categories !== undefined) {
+    const ids = toList(body.categories, 30).filter(isValidId);
+    const found = await Category.find({ _id: { $in: ids } }).select('_id').lean();
+    data.categories = found.map((c) => c._id);
+  }
   if (!partial) requireFields({ ...body }, ['name', 'address', 'latitude', 'longitude']);
   for (const key of ['latitude', 'longitude']) {
     if (body[key] !== undefined && body[key] !== '') {
@@ -182,14 +201,14 @@ function readMarketBody(body, partial) {
 export async function adminMarkets(req, res) {
   const filter = {};
   if (req.query.search) filter.name = containsRegex(req.query.search);
-  const markets = await Market.find(filter).sort({ name: 1 }).lean();
+  const markets = await Market.find(filter).populate('categories', 'name color').sort({ name: 1 }).lean();
   const counts = await Promise.all(markets.map((m) => Farmer.countDocuments({ markets: m._id })));
   res.json({ markets: markets.map((m, i) => ({ ...m, farmerCount: counts[i] })) });
 }
 
 // POST /api/admin/markets  (multipart: image)
 export async function createMarket(req, res) {
-  const data = readMarketBody(req.body, false);
+  const data = await readMarketBody(req.body, false);
   const market = await Market.create({ ...data, slug: await uniqueSlug(Market, data.name), image: fileUrl('markets', req.file) });
   res.status(201).json({ market });
 }
@@ -198,7 +217,7 @@ export async function createMarket(req, res) {
 export async function updateMarket(req, res) {
   const market = await Market.findById(assertId(req.params.id, 'market'));
   if (!market) throw new AppError('Market not found', 404);
-  const data = readMarketBody(req.body, true);
+  const data = await readMarketBody(req.body, true);
   if (data.name && data.name !== market.name) market.slug = await uniqueSlug(Market, data.name, market._id);
   Object.assign(market, data);
   if (req.file) market.image = fileUrl('markets', req.file);

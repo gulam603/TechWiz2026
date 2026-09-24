@@ -23,6 +23,10 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] AI assistant: items across markets, market timings, farmer availability, pickup windows, product details
 - [x] AI assistant memory (follow-up questions, name, city), saved chat history and Clear chat
 - [x] Reviews and ratings for products and farmers after completion; read reviews before ordering
+- [x] Readable product URLs (`/products/sindhri-mangoes`)
+- [x] Terms & Conditions page and required checkbox on both sign-up forms
+- [x] Profile photo upload (all roles)
+- [x] More filters: rating and farming practice (shop, farmers), produce category and city (markets)
 
 ## 2. Farmer features
 
@@ -36,6 +40,9 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Order cut-off hours, slot length, slot capacity, closed dates
 - [x] Insights: total orders, pending orders, revenue summary, best sellers, sales history
 - [x] Read and reply to reviews
+- [x] Selling features (stock, pre-orders, pickup, reviews) hidden and blocked until admin approval
+- [x] "Write with AI" product descriptions (Claude with an API key, built-in writer otherwise)
+- [x] City chosen from the cities table
 
 ## 3. Admin features
 
@@ -45,12 +52,17 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Remove inappropriate product listings and reviews
 - [x] Reports: orders, revenue across markets, most active farmers (CSV export, print)
 - [x] Product categories and platform announcements
+- [x] Own admin layout (no public navbar), collapsible sidebar, Reports last, compact revamped dashboard
+- [x] DataTables on every admin table with server-side processing, filters and CSV / Excel / Print export
+- [x] Admin creates farmer and customer accounts (invite e-mail) and places orders for customers
+- [x] Customer order history and customer × farmer purchase analytics with charts
+- [x] Cities table (admin CRUD) used by city dropdowns; market categories dropdown
 
 ## 4. Other requirements
 
 - [x] Role-based access control (API and UI)
 - [x] Responsive: laptop layout, mobile drawer menu, mobile bottom tab bar
-- [x] E-mail and in-app notifications for confirmations and ready-for-pickup
+- [x] E-mail and in-app notifications for confirmations and ready-for-pickup (Nodemailer SMTP, e.g. Gmail app password; branded HTML e-mails)
 - [x] About Us and Contact Us (static contact + Google Map)
 - [x] No emoji in the interface – Bootstrap icons everywhere
 - [x] Real product photos (Open Images, CC BY 2.0) with photographer credits
@@ -59,14 +71,17 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 ## 5. Quality checks (last full run)
 
 - [x] ESLint (client and server) – no errors
-- [x] API suites: 68 + 23 checks, plus 32 extra SRS checks
+- [x] API suites: 69 + 23 checks, 32 extra SRS checks, 33 admin-tools checks
+- [x] Admin browser test: shell, collapse, place order, CSV export, add farmer, customer history, analytics, cities, mobile drawer, pending-farmer lock, Write with AI
+- [x] SMTP delivery tested with a local SMTP server (login, order, approval and reset e-mails)
 - [x] Browser flows: customer → farmer → admin, filters, maps, closed dates, sign-up wizard, password reset
 - [x] Assistant memory and chat history (guest and signed-in)
 - [x] No horizontal scrolling at 360, 390, 768, 1024 px; no React warnings in development mode
 
 ## 6. Submission items for the team (SRS 1.9)
 
-- [ ] Put the team's real names and roles on the About page (`client/src/config.js` → `TEAM`)
+- [ ] Add each member's name on the About page (`client/src/config.js` → `TEAM`; the team name Team Omniverse is already shown)
+- [ ] Put real SMTP details (e.g. a Gmail app password) in `server/.env` and run `npm run mail:test`
 - [ ] Project report written by the team: problem definition, design specifications, flowcharts and data-flow diagrams, database design, test data (no source code; the SRS does not allow fully AI-made documentation)
 - [ ] Installation steps and user credentials in the report (see README sections 3 and 4)
 - [ ] ReadMe.doc with the assumptions (start from README section 9)

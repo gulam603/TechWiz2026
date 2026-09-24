@@ -25,6 +25,9 @@ export async function listFarmers(req, res) {
   else if (req.query.city) filter.markets = { $in: await marketIdsInCity(req.query.city) }; // location filter
   const day = toNumber(req.query.day);
   if (day !== undefined && day >= 0 && day <= 6) filter.operatingDays = day;
+  const rating = toNumber(req.query.rating);
+  if (rating >= 1 && rating <= 5) filter.ratingAvg = { $gte: rating };
+  if (req.query.practice) filter.tags = containsRegex(req.query.practice);
 
   if (req.query.category) {
     const category = await resolveCategory(req.query.category);

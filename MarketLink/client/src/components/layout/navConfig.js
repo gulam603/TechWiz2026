@@ -17,9 +17,10 @@ export const MENUS = {
   ],
   farmer: [
     { to: '/farmer', icon: 'bi-graph-up', label: 'Dashboard & insights' },
-    { to: '/farmer/orders', icon: 'bi-receipt', label: 'Pre-orders' },
-    { to: '/farmer/products', icon: 'bi-basket', label: 'Weekly stock' },
-    { to: '/farmer/pickup', icon: 'bi-geo-alt', label: 'Markets & pickup' },
+    { to: '/farmer/orders', icon: 'bi-receipt', label: 'Pre-orders', approved: true },
+    { to: '/farmer/products', icon: 'bi-basket', label: 'Weekly stock', approved: true },
+    { to: '/farmer/pickup', icon: 'bi-geo-alt', label: 'Markets & pickup', approved: true },
+    { to: '/farmer/profile', icon: 'bi-shop-window', label: 'Stall profile' },
   ],
   admin: [
     { to: '/admin', icon: 'bi-speedometer2', label: 'Admin dashboard' },
@@ -27,3 +28,10 @@ export const MENUS = {
     { to: '/admin/reports', icon: 'bi-file-earmark-bar-graph', label: 'Reports' },
   ],
 };
+
+/**
+ * Farmers waiting for approval (or suspended) only see their dashboard, stall profile and
+ * notifications; selling features (stock, pre-orders, pickup, reviews) are hidden until approved.
+ */
+export const canSell = (user) => user?.role !== 'farmer' || user.status === 'active';
+export const visibleItems = (items, user) => (canSell(user) ? items : items.filter((i) => !i.approved));

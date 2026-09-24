@@ -175,12 +175,14 @@ export default function RegisterFarmer() {
             </div>
             <div className="col-md-4">
               <label className="form-label" htmlFor="f-city">City *</label>
-              <input id="f-city" name="city" className="form-control" value={form.city} onChange={change} list="city-options" placeholder="e.g. Karachi" />
-              <datalist id="city-options">
+              <select id="f-city" name="city" className="form-select" value={form.city} onChange={change}>
+                <option value="">Choose a city</option>
                 {cities.map((c) => (
-                  <option key={c} value={c} />
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
                 ))}
-              </datalist>
+              </select>
             </div>
             <div className="col-12">
               <label className="form-label" htmlFor="f-bio">About your farm</label>

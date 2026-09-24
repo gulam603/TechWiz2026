@@ -21,10 +21,10 @@ const SORTS = [
   { value: 'name', label: 'Name A–Z' },
 ];
 
-const FILTER_KEYS = ['search', 'category', 'city', 'market', 'day', 'minPrice', 'maxPrice', 'inStock', 'sort', 'page'];
+const FILTER_KEYS = ['search', 'category', 'city', 'market', 'day', 'minPrice', 'maxPrice', 'rating', 'practice', 'inStock', 'sort', 'page'];
 
 // Rendered with key={params.toString()} so the text boxes reset when the URL filters change.
-function Filters({ params, set, categories, markets, cities, onDone }) {
+function Filters({ params, set, categories, markets, cities, practices = [], onDone }) {
   const [minPrice, setMinPrice] = useState(params.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(params.get('maxPrice') || '');
   const [search, setSearch] = useState(params.get('search') || '');
@@ -111,6 +111,31 @@ function Filters({ params, set, categories, markets, cities, onDone }) {
         </button>
       </form>
 
+      <div className="filter-title">Rating</div>
+      <div className="d-flex gap-1 flex-wrap" role="group" aria-label="Minimum rating">
+        {[
+          ['', 'Any'],
+          ['4', '4+'],
+          ['3', '3+'],
+        ].map(([v, l]) => (
+          <button key={l} type="button" className={`filter-chip ${(params.get('rating') || '') === v ? 'active' : ''}`} aria-pressed={(params.get('rating') || '') === v} onClick={() => set({ rating: v })}>
+            {v && <i className="bi bi-star-fill text-warning" />} {l}
+          </button>
+        ))}
+      </div>
+
+      {practices.length > 0 && (
+        <>
+          <div className="filter-title">Farming practice</div>
+          <select className="form-select" value={params.get('practice') || ''} onChange={(e) => set({ practice: e.target.value })} aria-label="Farming practice">
+            <option value="">Any practice</option>
+            {practices.map((p) => (
+              <option key={p}>{p}</option>
+            ))}
+          </select>
+        </>
+      )}
+
       <div className="form-check form-switch mt-3">
         <input
           className="form-check-input"
@@ -134,6 +159,7 @@ export default function Products() {
   const [showFilters, setShowFilters] = useState(false);
   const { data: catData } = useFetch('/categories');
   const { data: marketData } = useFetch('/markets');
+  const { data: practiceData } = useFetch('/practices');
 
   const query = {};
   for (const key of FILTER_KEYS) if (params.get(key)) query[key] = params.get(key);
@@ -165,7 +191,7 @@ export default function Products() {
       <div className="container pb-5">
         <div className="row g-4">
           <div className="col-lg-3 d-none d-lg-block">
-            <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} />
+            <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} practices={practiceData?.practices} />
           </div>
           <div className="col-lg-9">
             <div className="results-bar">
@@ -234,7 +260,7 @@ export default function Products() {
               <button type="button" className="btn-close" onClick={() => setShowFilters(false)} aria-label="Close" />
             </div>
             <div className="offcanvas-body">
-              <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} onDone={() => setShowFilters(false)} />
+              <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} practices={practiceData?.practices} onDone={() => setShowFilters(false)} />
             </div>
           </div>
           <div className="offcanvas-backdrop fade show" onClick={() => setShowFilters(false)} />

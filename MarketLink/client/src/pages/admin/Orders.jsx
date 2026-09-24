@@ -1,97 +1,65 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import useFetch from '../../hooks/useFetch';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
-import { toQuery } from '../../api/client';
 import { DashHeader } from '../../components/common/PageHeader';
-import StatusBadge from '../../components/common/StatusBadge';
-import Pagination from '../../components/common/Pagination';
-import { PageLoader } from '../../components/common/Loader';
-import { formatDate, formatDateKey, money, ORDER_STATUS_META } from '../../utils/format';
+import DataGrid from '../../components/admin/DataGrid';
+import FilterBar from '../../components/admin/FilterBar';
+import { badge, dateCell, dayCell, display, esc, link, moneyCell, muted, person } from '../../utils/cells';
+import { ORDER_STATUS_META, time12 } from '../../utils/format';
+
+const FILTERS = [
+  { name: 'status', label: 'Status', options: [{ value: 'open', label: 'Open (placed, accepted, ready)' }, ...Object.entries(ORDER_STATUS_META).map(([value, m]) => ({ value, label: m.label }))] },
+  { name: 'city', label: 'City', options: 'cities' },
+  { name: 'market', label: 'Market', options: 'markets' },
+  { name: 'farmer', label: 'Farmer', options: 'farmers' },
+  { name: 'placedBy', label: 'Placed by', options: [{ value: 'customer', label: 'Customer (checkout)' }, { value: 'admin', label: 'Admin' }] },
+  { name: 'pickupFrom', label: 'Pickup from', type: 'date' },
+  { name: 'pickupTo', label: 'Pickup to', type: 'date' },
+  { name: 'from', label: 'Placed from', type: 'date' },
+  { name: 'to', label: 'Placed to', type: 'date' },
+  { name: 'minTotal', label: 'Min total', type: 'number', placeholder: 'Rs' },
+  { name: 'maxTotal', label: 'Max total', type: 'number', placeholder: 'Rs' },
+];
+
+const COLUMNS = [
+  {
+    data: 'orderNumber',
+    title: 'Order',
+    responsivePriority: 1,
+    className: 'dt-nowrap',
+    render: display((v, o) => `${link(`/admin/orders/${o._id}`, v, 'fw-semi text-nowrap')}${o.placedBy === 'admin' ? ' <span class="chip chip-soft ms-1" title="Placed by an admin">admin</span>' : ''}`),
+  },
+  { data: 'customer.name', title: 'Customer', orderable: false, responsivePriority: 4, render: display((v, o) => person(v, o.customer?.email, o.customer?.avatar)) },
+  { data: 'farmer.stallName', title: 'Farmer', orderable: false, responsivePriority: 6, className: 'dt-market', render: display((v) => `<span class="small">${esc(v)}</span>`) },
+  { data: 'market.name', title: 'Market', orderable: false, responsivePriority: 7, className: 'dt-market', render: display((v, o) => `<span class="small">${esc(v)}</span><div>${muted(o.market?.city || '')}</div>`) },
+  { data: 'pickupDate', title: 'Pickup', responsivePriority: 5, className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(`${time12(o.pickupSlot?.start)} – ${time12(o.pickupSlot?.end)}`)}</div>`) },
+  { data: 'items', title: 'Items', orderable: false, responsivePriority: 9, className: 'text-end', render: (v, type) => (type === 'display' || type === 'export' ? v.reduce((s, i) => s + i.quantity, 0) : v.length) },
+  { data: 'totalAmount', title: 'Total', responsivePriority: 3, className: 'text-end', render: display(moneyCell) },
+  { data: 'status', title: 'Status', responsivePriority: 2, className: 'dt-nowrap', render: display((v) => badge(v)) },
+  { data: 'createdAt', title: 'Placed', responsivePriority: 8, className: 'dt-nowrap', render: display((v) => dateCell(v, true)) },
+];
 
 export default function AdminOrders() {
   useDocumentTitle('All orders');
-  const [status, setStatus] = useState('');
-  const [market, setMarket] = useState('');
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
-  const { data, loading } = useFetch(`/admin/orders${toQuery({ status, market, search, page })}`);
-  const { data: marketData } = useFetch('/admin/markets');
+  const { openModal, changed } = useOutletContext();
+  const [params] = useSearchParams();
+  const [filters, setFilters] = useState({ status: params.get('status') || '', city: '', market: '', farmer: '', placedBy: '', pickupFrom: '', pickupTo: '', from: '', to: '', minTotal: '', maxTotal: '' });
 
   return (
     <>
-      <DashHeader title="All orders" subtitle={`${data?.total ?? '…'} pre-orders across every market`} />
+      <DashHeader
+        title="Orders"
+        subtitle="Every pre-order on MarketLink. Filter, search, sort and export, or place an order for a customer."
+        actions={
+          <button type="button" className="btn btn-primary btn-sm" onClick={() => openModal('order')}>
+            <i className="bi bi-bag-plus" /> Place order
+          </button>
+        }
+      />
       <div className="table-card">
-        <div className="table-toolbar">
-          <div className="d-flex gap-2 flex-wrap">
-            <select className="form-select form-select-sm w-auto" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} aria-label="Status">
-              <option value="">All statuses</option>
-              {Object.entries(ORDER_STATUS_META).map(([v, m]) => (
-                <option key={v} value={v}>
-                  {m.label}
-                </option>
-              ))}
-            </select>
-            <select className="form-select form-select-sm w-auto" value={market} onChange={(e) => { setMarket(e.target.value); setPage(1); }} aria-label="Market">
-              <option value="">All markets</option>
-              {(marketData?.markets || []).map((m) => (
-                <option key={m._id} value={m._id}>
-                  {m.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="search-pill" style={{ maxWidth: 240 }}>
-            <i className="bi bi-search" />
-            <input placeholder="Order number" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Search order number" />
-          </div>
-        </div>
-        {loading && !data ? (
-          <PageLoader />
-        ) : (
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Order</th>
-                  <th>Customer</th>
-                  <th>Farmer</th>
-                  <th>Pickup</th>
-                  <th>Status</th>
-                  <th className="text-end">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.orders.map((o) => (
-                  <tr key={o._id}>
-                    <td>
-                      <Link to={`/admin/orders/${o._id}`} className="fw-semi text-nowrap">
-                        {o.orderNumber}
-                      </Link>
-                      <div className="fs-7 text-muted-2">{formatDate(o.createdAt)}</div>
-                    </td>
-                    <td className="small">
-                      {o.customer?.name}
-                      <div className="fs-7 text-muted-2">{o.customer?.email}</div>
-                    </td>
-                    <td className="small td-min-sm">{o.farmer?.stallName}</td>
-                    <td className="small td-min">
-                      {formatDateKey(o.pickupDate)} {o.pickupSlot.start}
-                      <div className="fs-7 text-muted-2">{o.market?.name}</div>
-                    </td>
-                    <td>
-                      <StatusBadge status={o.status} />
-                    </td>
-                    <td className="text-end fw-semi">{money(o.totalAmount)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {data.orders.length === 0 && <p className="text-center text-muted-2 py-4 mb-0">No orders found.</p>}
-          </div>
-        )}
+        <FilterBar fields={FILTERS} value={filters} onChange={setFilters} />
+        <DataGrid table="orders" columns={COLUMNS} filters={filters} order={[[8, 'desc']]} exportName="MarketLink orders" reloadKey={changed} searchPlaceholder="Order number, customer or farmer…" />
       </div>
-      <Pagination page={page} pages={data?.pages} onChange={setPage} />
     </>
   );
 }

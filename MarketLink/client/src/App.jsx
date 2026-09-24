@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import PublicLayout from './components/layout/PublicLayout';
 import DashboardLayout from './components/layout/DashboardLayout';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import ApprovedFarmerRoute from './components/common/ApprovedFarmerRoute';
 import ScrollToTop from './components/common/ScrollToTop';
 import { PageLoader } from './components/common/Loader';
 
@@ -55,6 +56,10 @@ const AdminAnnouncements = lazy(() => import('./pages/admin/Announcements'));
 const AdminReports = lazy(() => import('./pages/admin/Reports'));
 const AdminOrders = lazy(() => import('./pages/admin/Orders'));
 const AdminMessages = lazy(() => import('./pages/admin/Messages'));
+const AdminCities = lazy(() => import('./pages/admin/Cities'));
+const AdminCustomerDetail = lazy(() => import('./pages/admin/CustomerDetail'));
+const AdminPurchases = lazy(() => import('./pages/admin/Purchases'));
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
 
 export default function App() {
   return (
@@ -99,32 +104,16 @@ export default function App() {
             <Route element={<ProtectedRoute roles={['farmer']} />}>
               <Route path="farmer" element={<DashboardLayout role="farmer" />}>
                 <Route index element={<FarmerDashboard />} />
-                <Route path="orders" element={<FarmerOrders />} />
-                <Route path="products" element={<FarmerProducts />} />
-                <Route path="pickup" element={<FarmerPickup />} />
                 <Route path="profile" element={<FarmerProfile />} />
-                <Route path="reviews" element={<FarmerReviews />} />
                 <Route path="notifications" element={<Notifications />} />
-                <Route path="orders/:id" element={<OrderDetail />} />
-              </Route>
-            </Route>
-
-            {/* Admin area */}
-            <Route element={<ProtectedRoute roles={['admin']} />}>
-              <Route path="admin" element={<DashboardLayout role="admin" />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="farmers" element={<AdminFarmers />} />
-                <Route path="customers" element={<AdminCustomers />} />
-                <Route path="markets" element={<AdminMarkets />} />
-                <Route path="products" element={<AdminProducts />} />
-                <Route path="reviews" element={<AdminReviews />} />
-                <Route path="categories" element={<AdminCategories />} />
-                <Route path="announcements" element={<AdminAnnouncements />} />
-                <Route path="reports" element={<AdminReports />} />
-                <Route path="orders" element={<AdminOrders />} />
-                <Route path="orders/:id" element={<OrderDetail />} />
-                <Route path="messages" element={<AdminMessages />} />
-                <Route path="notifications" element={<Notifications />} />
+                {/* Selling features open only after admin approval */}
+                <Route element={<ApprovedFarmerRoute />}>
+                  <Route path="orders" element={<FarmerOrders />} />
+                  <Route path="products" element={<FarmerProducts />} />
+                  <Route path="pickup" element={<FarmerPickup />} />
+                  <Route path="reviews" element={<FarmerReviews />} />
+                  <Route path="orders/:id" element={<OrderDetail />} />
+                </Route>
               </Route>
             </Route>
 
@@ -132,6 +121,29 @@ export default function App() {
           </Route>
           <Route path="map" element={<PublicLayout footer={false} />}>
             <Route index element={<MapExplore />} />
+          </Route>
+
+          {/* Admin area: its own layout without the public navbar, footer and chat */}
+          <Route path="admin" element={<ProtectedRoute roles={['admin']} />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="orders/:id" element={<OrderDetail />} />
+              <Route path="farmers" element={<AdminFarmers />} />
+              <Route path="customers" element={<AdminCustomers />} />
+              <Route path="customers/:id" element={<AdminCustomerDetail />} />
+              <Route path="markets" element={<AdminMarkets />} />
+              <Route path="cities" element={<AdminCities />} />
+              <Route path="categories" element={<AdminCategories />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="reviews" element={<AdminReviews />} />
+              <Route path="announcements" element={<AdminAnnouncements />} />
+              <Route path="messages" element={<AdminMessages />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="purchases" element={<AdminPurchases />} />
+              <Route path="reports" element={<AdminReports />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Route>
         </Routes>
       </Suspense>

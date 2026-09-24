@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { api, toFormData } from '../../api/client';
+import { resetFilterOptions, useFilterOptions } from '../../components/admin/FilterBar';
 import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import Modal, { ConfirmModal } from '../../components/common/Modal';
@@ -13,12 +14,13 @@ import { PageLoader } from '../../components/common/Loader';
 import { ImageInput } from '../farmer/Products';
 import { DAY_LETTER, DAY_NAMES, time12 } from '../../utils/format';
 
-const EMPTY = { name: '', description: '', address: '', city: '', latitude: '', longitude: '', operatingDays: [], openTime: '07:00', closeTime: '13:00', mapProvider: 'openstreetmap', mapLink: '', isActive: true };
+const EMPTY = { name: '', description: '', address: '', city: '', categories: [], latitude: '', longitude: '', operatingDays: [], openTime: '07:00', closeTime: '13:00', mapProvider: 'openstreetmap', mapLink: '', isActive: true };
 
 // Rendered with a `key`, so the form starts fresh for every market.
 function MarketForm({ market, onClose, onSaved }) {
   const { toast } = useToast();
-  const [form, setForm] = useState(() => (market ? { ...EMPTY, ...market, mapLink: market.mapLink || '', description: market.description || '', city: market.city || '' } : EMPTY));
+  const [form, setForm] = useState(() => (market ? { ...EMPTY, ...market, mapLink: market.mapLink || '', description: market.description || '', city: market.city || '', categories: (market.categories || []).map((c) => c._id || c) } : EMPTY));
+  const options = useFilterOptions();
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
 
@@ -30,12 +32,13 @@ function MarketForm({ market, onClose, onSaved }) {
     if (form.latitude === '' || form.longitude === '') return toast('Please set the market location on the map', 'error');
     setBusy(true);
     try {
-      const body = { ...form, operatingDays: form.operatingDays.join(',') };
+      const body = { ...form, operatingDays: form.operatingDays.join(','), categories: form.categories.join(',') };
       ['_id', 'slug', 'createdAt', 'updatedAt', '__v', 'image', 'farmerCount'].forEach((k) => delete body[k]);
       const fd = toFormData(body, { image: file });
       if (market) await api.upload('PUT', `/admin/markets/${market._id}`, fd);
       else await api.upload('POST', '/admin/markets', fd);
       toast(market ? 'Market updated' : 'Market added');
+      resetFilterOptions();
       onSaved();
     } catch (err) {
       toast(err.message, 'error');
@@ -55,7 +58,16 @@ function MarketForm({ market, onClose, onSaved }) {
           </div>
           <div className="col-md-5">
             <label className="form-label" htmlFor="m-city">City</label>
-            <input id="m-city" name="city" className="form-control" value={form.city} onChange={change} />
+            <select id="m-city" name="city" className="form-select" required value={form.city} onChange={change}>
+              <option value="">Choose a city</option>
+              {options.cities
+                .filter((c) => c.isActive !== false || c.name === form.city)
+                .map((c) => (
+                  <option key={c._id} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+            </select>
           </div>
           <div className="col-12">
             <label className="form-label" htmlFor="m-address">Address</label>
@@ -64,6 +76,19 @@ function MarketForm({ market, onClose, onSaved }) {
           <div className="col-12">
             <label className="form-label" htmlFor="m-desc">Description</label>
             <textarea id="m-desc" name="description" rows={2} className="form-control" value={form.description} onChange={change} />
+          </div>
+          <div className="col-12">
+            <span className="form-label d-block">What is sold here (categories)</span>
+            <div className="pick-chips">
+              {options.categories.map((c) => {
+                const on = form.categories.includes(c._id);
+                return (
+                  <button type="button" key={c._id} className={`filter-chip ${on ? 'active' : ''}`} aria-pressed={on} onClick={() => setForm({ ...form, categories: on ? form.categories.filter((x) => x !== c._id) : [...form.categories, c._id] })}>
+                    {c.name}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           <div className="col-md-6">
             <span className="form-label d-block">Operating days</span>
@@ -176,7 +201,8 @@ export default function AdminMarkets() {
                 <th>Market</th>
                 <th>Days</th>
                 <th>Hours</th>
-                <th>Coordinates</th>
+                <th>City</th>
+                <th>Sells</th>
                 <th className="text-end">Farmers</th>
                 <th>Status</th>
                 <th className="text-end">Actions</th>
@@ -204,9 +230,8 @@ export default function AdminMarkets() {
                   <td className="small text-nowrap">
                     {time12(m.openTime)} – {time12(m.closeTime)}
                   </td>
-                  <td className="fs-7 text-muted-2 text-nowrap">
-                    {m.latitude.toFixed(4)}, {m.longitude.toFixed(4)}
-                  </td>
+                  <td className="small text-nowrap">{m.city || '–'}</td>
+                  <td className="fs-7 text-muted-2 td-min">{m.categories?.map((c) => c.name).join(', ') || '–'}</td>
                   <td className="text-end">{m.farmerCount}</td>
                   <td>
                     <StatusBadge status={m.isActive ? 'active' : 'inactive'} label={m.isActive ? 'Active' : 'Hidden'} />

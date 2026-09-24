@@ -20,7 +20,7 @@ export function ApprovalBanner({ status }) {
         <strong>{pending ? 'Your stall is waiting for admin approval' : 'Your stall is suspended'}</strong>
         <div className="small text-muted-2">
           {pending
-            ? 'Meanwhile, complete your stall profile, markets, pickup windows and map pin. You can list products as soon as an admin approves you.'
+            ? 'Meanwhile, complete your stall profile (logo, bio, markets and map pin). Weekly stock, pre-orders and pickup times open as soon as an admin approves you.'
             : 'Your products are hidden from customers. Please contact the MarketLink team for details.'}
         </div>
       </div>
@@ -28,7 +28,86 @@ export function ApprovalBanner({ status }) {
   );
 }
 
+/** Farmers see their approval status until an admin approves them, then their insights. */
 export default function FarmerDashboard() {
+  const { user } = useAuth();
+  return user?.status === 'active' ? <FarmerInsights /> : <FarmerWaiting status={user?.status} />;
+}
+
+function FarmerWaiting({ status }) {
+  useDocumentTitle('Approval status');
+  const { data } = useFetch('/farmer/me');
+  const f = data?.farmer;
+  const checks = f
+    ? [
+        { done: Boolean(f.bio), label: 'Tell customers about your farm', hint: 'About your farm' },
+        { done: Boolean(f.logo) && !f.logo.includes('/illustrations/'), label: 'Upload your stall logo', hint: 'Logo' },
+        { done: f.categories?.length > 0, label: 'Choose what you grow or sell', hint: 'Categories' },
+        { done: f.markets?.length > 0, label: 'Pick the markets where you sell', hint: 'Markets' },
+        { done: f.latitude != null, label: 'Drop a map pin for your farm or stall', hint: 'Map pin' },
+      ]
+    : [];
+  const done = checks.filter((c) => c.done).length;
+  const suspended = status === 'suspended';
+
+  return (
+    <>
+      <DashHeader title={f?.stallName || 'My stall'} subtitle={suspended ? 'Your stall is suspended.' : 'Your registration is being reviewed by the MarketLink team.'} />
+      <ApprovalBanner status={status} />
+      <div className="row g-3">
+        <div className="col-lg-7">
+          <div className="panel">
+            <div className="panel-head">
+              <h5>
+                <i className="bi bi-signpost-split" /> What happens next
+              </h5>
+            </div>
+            <ol className="approval-steps">
+              <li className="done">
+                <strong>Registration received</strong>
+                <span>Your account and stall were created.</span>
+              </li>
+              <li className={suspended ? 'blocked' : 'current'}>
+                <strong>{suspended ? 'Suspended by the admin' : 'Admin review'}</strong>
+                <span>{suspended ? 'Contact the MarketLink team to re-activate your stall.' : 'An admin checks your details. You get an e-mail when you are approved.'}</span>
+              </li>
+              <li>
+                <strong>Start selling</strong>
+                <span>Add your weekly stock, pickup windows and accept pre-orders.</span>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <div className="col-lg-5">
+          <div className="panel">
+            <div className="panel-head">
+              <h5>
+                <i className="bi bi-list-check" /> Stall profile
+              </h5>
+              {checks.length > 0 && (
+                <span className="chip chip-soft">
+                  {done}/{checks.length} done
+                </span>
+              )}
+            </div>
+            <ul className="profile-checks">
+              {checks.map((c) => (
+                <li key={c.label} className={c.done ? 'done' : ''}>
+                  <i className={`bi ${c.done ? 'bi-check-circle-fill' : 'bi-circle'}`} aria-hidden="true" /> {c.label}
+                </li>
+              ))}
+            </ul>
+            <Link to="/farmer/profile" className="btn btn-primary btn-sm">
+              <i className="bi bi-pencil" /> Complete stall profile
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function FarmerInsights() {
   useDocumentTitle('Farmer dashboard');
   const { farmer } = useAuth();
   const [days, setDays] = useState(30);
@@ -57,7 +136,7 @@ export default function FarmerDashboard() {
 
       <div className="row g-3 mb-4">
         <div className="col-6 col-xl">
-          <KpiCard variant="accent" icon="bi-cash-stack" label="Revenue (last 30 days)" value={moneyCompact(kpis.revenueMonth)} sub={`${money(kpis.revenueWeek)} this week`} />
+          <KpiCard variant="accent" icon="bi-cash-stack" label="Revenue (30 days)" value={moneyCompact(kpis.revenueMonth)} sub={`${money(kpis.revenueWeek)} this week`} />
         </div>
         <div className="col-6 col-xl">
           <KpiCard icon="bi-receipt" label="Total orders" value={kpis.totalOrders} sub={`${kpis.completedOrders} completed`} />
@@ -66,7 +145,7 @@ export default function FarmerDashboard() {
           <KpiCard variant="warn" icon="bi-hourglass-split" label="Pending orders" value={kpis.pendingOrders} sub={`${kpis.activeOrders} open in total`} />
         </div>
         <div className="col-6 col-xl">
-          <KpiCard variant="info" icon="bi-graph-up" label="Average order" value={money(Math.round(kpis.averageOrder))} sub={`${money(kpis.revenueTotal)} all-time revenue`} />
+          <KpiCard variant="info" icon="bi-graph-up" label="Average order" value={money(Math.round(kpis.averageOrder))} sub={`${money(kpis.revenueTotal)} in total`} />
         </div>
         <div className="col-12 col-xl">
           <KpiCard icon="bi-star" label="Rating" value={kpis.ratingCount ? `${kpis.rating} / 5` : '–'} sub={`${kpis.ratingCount} reviews`} />

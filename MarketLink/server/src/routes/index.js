@@ -5,6 +5,7 @@ import { imageUpload } from '../middleware/upload.js';
 import { ROLES } from '../utils/constants.js';
 
 import * as auth from '../controllers/authController.js';
+import * as tools from '../controllers/adminToolsController.js';
 import * as pub from '../controllers/publicController.js';
 import * as markets from '../controllers/marketController.js';
 import * as farmers from '../controllers/farmerController.js';
@@ -55,6 +56,8 @@ router.delete('/auth/avatar', protect, auth.removeAvatar);
 // ---------- Public catalogue (optionalAuth adds favourite flags when logged in) ----------
 router.get('/stats', pub.publicStats);
 router.get('/categories', pub.listCategories);
+router.get('/cities', tools.listCities);
+router.get('/practices', pub.listPractices);
 router.get('/search', pub.globalSearch);
 router.get('/map', pub.mapData);
 router.get('/testimonials', pub.testimonials);
@@ -107,10 +110,11 @@ const farmerOnly = [protect, authorize(ROLES.FARMER), loadFarmer];
 const approvedFarmer = [...farmerOnly, requireApprovedFarmer];
 router.get('/farmer/me', ...farmerOnly, farm.getMyFarm);
 router.put('/farmer/profile', ...farmerOnly, farmerImages.fields([{ name: 'logo', maxCount: 1 }, { name: 'coverImage', maxCount: 1 }]), farm.updateFarmProfile);
-router.put('/farmer/pickup', ...farmerOnly, farm.updatePickupSettings);
+router.put('/farmer/pickup', ...approvedFarmer, farm.updatePickupSettings);
 router.get('/farmer/insights', ...farmerOnly, farm.farmerInsights);
 
 router.get('/farmer/products', ...farmerOnly, farm.myProducts);
+router.post('/farmer/products/describe', ...approvedFarmer, tools.writeDescription); // "Write with AI"
 router.post('/farmer/products', ...approvedFarmer, productImage.single('image'), farm.createProduct);
 router.put('/farmer/products/:id', ...approvedFarmer, productImage.single('image'), farm.updateProduct);
 router.patch('/farmer/products/:id/status', ...approvedFarmer, farm.setProductStatus);
@@ -126,6 +130,20 @@ router.post('/farmer/reviews/:id/respond', ...farmerOnly, farm.respondToReview);
 // ---------- Admin ----------
 const adminOnly = [protect, authorize(ROLES.ADMIN)];
 router.get('/admin/dashboard', ...adminOnly, admin.adminDashboard);
+router.get('/admin/badges', ...adminOnly, admin.adminBadges);
+router.get('/admin/filter-options', ...adminOnly, tools.filterOptions);
+router.post('/admin/tables/:name', ...adminOnly, tools.dataTable); // DataTables server-side processing
+router.post('/admin/products/describe', ...adminOnly, tools.writeDescription);
+router.post('/admin/farmers', ...adminOnly, tools.createFarmerAccount);
+router.post('/admin/customers', ...adminOnly, tools.createCustomerAccount);
+router.get('/admin/customers/:id/overview', ...adminOnly, tools.customerOverview);
+router.get('/admin/order-options', ...adminOnly, tools.orderOptions);
+router.post('/admin/orders', ...adminOnly, tools.adminPlaceOrder);
+router.get('/admin/analytics/purchases', ...adminOnly, tools.purchaseAnalytics);
+router.get('/admin/cities', ...adminOnly, tools.adminCities);
+router.post('/admin/cities', ...adminOnly, tools.createCity);
+router.put('/admin/cities/:id', ...adminOnly, tools.updateCity);
+router.delete('/admin/cities/:id', ...adminOnly, tools.deleteCity);
 router.get('/admin/farmers', ...adminOnly, admin.adminFarmers);
 router.patch('/admin/farmers/:id/status', ...adminOnly, admin.setFarmerStatus);
 router.get('/admin/customers', ...adminOnly, admin.adminCustomers);

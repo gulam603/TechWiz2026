@@ -1313,11 +1313,40 @@
   }
 }
 
+.order-card-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+}
+.order-card-main {
+  min-width: 0;
+}
+.order-card-total {
+  text-align: right;
+  white-space: nowrap;
+}
+.order-card-link {
+  white-space: nowrap;
+}
+@include media-breakpoint-down(md) {
+  .order-card-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .order-card-total {
+    grid-column: 1 / 2;
+    text-align: left;
+  }
+  .order-card-link {
+    justify-self: end;
+  }
+}
+
 .order-card {
   background: #fff;
   border: 1px solid $ml-line;
-  border-radius: 1.3rem;
-  padding: 1.1rem 1.25rem;
+  border-radius: 1.1rem;
+  padding: 0.8rem 1rem;
   transition: box-shadow 0.2s, border-color 0.2s;
   &:hover {
     box-shadow: $box-shadow;
@@ -1328,6 +1357,7 @@
   }
   .thumbs {
     display: flex;
+    width: 104px; // room for 3 thumbnails, so every card lines up
     img {
       width: 38px;
       height: 38px;

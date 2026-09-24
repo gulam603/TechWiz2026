@@ -10,7 +10,8 @@ Bootstrap 5 (`client/src/styles`).
 | `_base.scss` | CSS custom properties, typography, buttons, utilities, motion keyframes, scroll reveal |
 | `_components.scss` | navbar, drawer, tab bar, cards, produce tiles, chips, badges, modal, toasts, chat |
 | `_pages.scss` | home hero, auth banner, product / farmer / market pages, cart, checkout, map |
-| `_dashboard.scss` | dashboard layout, sidebar, KPI cards, panels, tables |
+| `_dashboard.scss` | dashboard layout, collapsible sidebar, compact KPI cards, panels, tables, profile photo, family banner |
+| `_admin.scss` | admin shell (sidebar, top bar, drawer), filter bar, DataTables theme, admin modals, analytics heat map, pending-farmer screens |
 
 ## 1. Colour
 
@@ -50,6 +51,9 @@ Each product category has its own pastel tile colour (stored on the category).
 - Containers are widened for laptops (lg 1140, xl 1240, xxl 1320 px) with 1.5 rem side padding.
 - Radius: 0.8 rem (inputs), 1.25 rem (cards, `--ml-radius`), 1.75 rem (hero panels, `--ml-radius-lg`).
 - Navbar height `--ml-nav-h: 72px`; mobile tab bar height `--ml-tabbar-h: 64px` (+ safe area).
+- Admin area: 248 px dark sidebar (74 px when collapsed), 60 px top bar, content up to 1680 px wide.
+- Dashboards are compact so the key numbers and charts fit on one laptop screen: headings
+  1.4–1.85 rem, KPI cards with the icon on the left (about 80 px high), panels with 1 rem padding.
 - Below 992 px: the hamburger drawer and bottom tab bar replace the desktop navbar links; the page
   gets bottom padding so content is never hidden behind the tab bar.
 
@@ -62,13 +66,23 @@ Each product category has its own pastel tile colour (stored on the category).
 | Product card | produce tile (4:3) + category, name, farmer, rating, price per unit, add button; lifts on hover |
 | Produce tile | real photos fill the tile (`img.photo`, object-fit cover); 3D illustrations float on a pastel tile |
 | Status badges | orders (placed, accepted, ready, completed, declined, cancelled), accounts (active, pending, suspended, inactive), products (available, sold out, unavailable, removed) |
-| KPI cards | icon, label, big value, sub-text; first card is the dark "lead" card |
+| KPI cards | icon on the left, label, value, sub-text (labels never wrap); first card is the dark "lead" card |
+| Admin shell | forest sidebar with section labels, lime active marker and counters (pending farmers, new messages, open orders); icon-only collapsed mode with tooltips |
+| DataTables grid | rounded table, cream header, pill search box, CSV / Excel / Print buttons, forest pagination, responsive child rows on phones |
+| Filter bar | small uppercase labels over compact selects, date and number inputs; "Clear n filters" link |
+| Avatar | round photo (profile upload) or initials; sizes sm / default / lg / xl |
+| Write with AI | pill button with a lime gradient and the `bi-stars` icon next to the description field |
 | Panels and tables | white panels with 1 px line border; tables scroll sideways on small screens instead of squeezing names |
 | Modal / drawer | backdrop blur, Escape to close; the mobile drawer is portalled to `<body>` so it never sits inside the sticky header |
 | Toasts | bottom centre, above the tab bar on phones |
 | Chat widget | forest header, lime "Remembers" strip showing the assistant's memory, product cards, suggestion chips, Clear chat confirmation |
 
-## 5. Icons and imagery
+## 5. Logo, icons and imagery
+
+- **Logo:** designed in Canva (design "MarketLink logo", basket with a leaf and handle in a rounded
+  frame) and rebuilt as SVG so it stays sharp: `client/public/brand/marketlink-mark.svg`, favicons,
+  `marketlink-logo.png` / `marketlink-logo-white.png` and the e-mail header logo. Wordmark:
+  bold "Market" in forest `#0d3017` + italic "Link" in leaf green `#268d3a` (lime on dark).
 
 - **Icons:** Bootstrap Icons only. The interface uses no emoji; wherever a symbol is needed
   (stars, location pins, warnings, success states) a Bootstrap icon is used. The assistant sends

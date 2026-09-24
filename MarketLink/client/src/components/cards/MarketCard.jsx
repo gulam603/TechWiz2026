@@ -24,6 +24,12 @@ export default function MarketCard({ market }) {
           <i className="bi bi-geo-alt" />
           <span>{market.address}</span>
         </div>
+        {market.categories?.length > 0 && (
+          <div className="meta-line mb-1">
+            <i className="bi bi-basket" />
+            <span className="text-truncate">{market.categories.map((c) => c.name).join(' · ')}</span>
+          </div>
+        )}
         <div className="meta-line mb-3">
           <i className="bi bi-clock" />
           <span>

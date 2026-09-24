@@ -22,6 +22,7 @@ export default function FarmerProfile() {
 function ProfileEditor({ data, setData }) {
   const { user, refresh } = useAuth();
   const { data: catData } = useFetch('/categories');
+  const { data: cityData } = useFetch('/cities');
   const { toast } = useToast();
   const [form, setForm] = useState(() => {
     const f = data.farmer;
@@ -99,7 +100,14 @@ function ProfileEditor({ data, setData }) {
               </div>
               <div className="col-md-4">
                 <label className="form-label" htmlFor="s-city">City</label>
-                <input id="s-city" name="city" className="form-control" value={form.city} onChange={change} />
+                <select id="s-city" name="city" className="form-select" value={form.city} onChange={change}>
+                  <option value="">Choose a city</option>
+                  {(cityData?.cities || []).map((c) => (
+                    <option key={c._id} value={c.name}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="col-12">
                 <label className="form-label" htmlFor="s-bio">About your farm</label>

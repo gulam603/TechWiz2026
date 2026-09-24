@@ -9,6 +9,19 @@ export const PASSWORDS = {
   customer: 'Customer@123',
 };
 
+// Cities in the city dropdowns (cities collection). Latitude/longitude = city centre.
+export const cities = [
+  { name: 'Karachi', province: 'Sindh', latitude: 24.8607, longitude: 67.0011 },
+  { name: 'Lahore', province: 'Punjab', latitude: 31.5204, longitude: 74.3587 },
+  { name: 'Islamabad', province: 'Islamabad Capital Territory', latitude: 33.6844, longitude: 73.0479 },
+  { name: 'Rawalpindi', province: 'Punjab', latitude: 33.5651, longitude: 73.0169 },
+  { name: 'Hyderabad', province: 'Sindh', latitude: 25.396, longitude: 68.3578 },
+  { name: 'Faisalabad', province: 'Punjab', latitude: 31.4504, longitude: 73.135 },
+  { name: 'Multan', province: 'Punjab', latitude: 30.1575, longitude: 71.5249 },
+  { name: 'Peshawar', province: 'Khyber Pakhtunkhwa', latitude: 34.0151, longitude: 71.5249 },
+  { name: 'Quetta', province: 'Balochistan', latitude: 30.1798, longitude: 66.975 },
+];
+
 export const admin = { name: 'MarketLink Admin', email: 'admin@marketlink.com', phone: '+92 300 0000000', address: 'MarketLink HQ, F.B. Area, Karachi', city: 'Karachi' };
 
 export const categories = [

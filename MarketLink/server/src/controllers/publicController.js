@@ -15,6 +15,13 @@ export async function publicStats(req, res) {
   res.json({ markets, farmers, products, customers, ordersCompleted });
 }
 
+// GET /api/practices  (farming practices used by approved farmers, for the filter dropdowns)
+export async function listPractices(req, res) {
+  const tags = await Farmer.distinct('tags', { isActive: true });
+  const unique = [...new Map(tags.filter(Boolean).map((t) => [t.toLowerCase(), t])).values()];
+  res.json({ practices: unique.sort((a, b) => a.localeCompare(b)) });
+}
+
 // GET /api/categories
 export async function listCategories(req, res) {
   const categories = await Category.find({ isActive: true }).sort({ sortOrder: 1, name: 1 }).lean();

@@ -20,6 +20,12 @@ the code so the same problems are not solved twice.
 | Assistant memory is a small object returned with every answer | follow-up questions work for guests (memory kept in the browser) and signed-in users (saved in `assistantchats`) |
 | Real product photos from Open Images (CC BY 2.0) | Unsplash/Pexels were not reachable from the build machine; Open Images photos come with author and licence data, so every photographer is credited |
 | One Express server serves the API and the built React app | simplest deployment (one Render service) |
+| Admin area has its own layout (`AdminLayout`) | the admin works in a back-office tool, not the shop; no navbar, footer or chat |
+| DataTables 3 (datatables.net) with server-side processing | the "JavaScript table solution" the team asked for; server-side paging keeps large tables fast |
+| Tables are requested with `POST /api/admin/tables/:name` (JSON body) | Express 5's default query parser does not turn `order[0][column]` into objects; a JSON body keeps DataTables' request intact |
+| Cities are a collection, market/farmer `city` stores the city name | dropdowns and filters use one list; renaming a city in the admin updates markets, farmers and customers |
+| "Write with AI" uses Claude only when `ANTHROPIC_API_KEY` is set | works offline and for free with the built-in writer; the key makes the text richer |
+| Admin-created accounts get an invite link instead of a password by e-mail | passwords are never sent in e-mails |
 
 ## Conventions
 
@@ -33,6 +39,10 @@ the code so the same problems are not solved twice.
 - No emoji anywhere in the UI or in text the server sends; use Bootstrap Icons. The assistant uses
   `{{icon:name}}` tokens that the chat widget renders.
 - Keep the SRS words in the UI: pre-order, pickup, stall, market day, weekly stock.
+- Product links use `productPath(p)` (`utils/links.js`) so URLs show the product name.
+- DataTables cells are HTML strings built with `utils/cells.js` (everything escaped with `esc`).
+  Links use `data-href` and buttons `data-action`; `DataGrid` routes clicks through React Router /
+  `onAction(action, row)`. Columns meant for export use `display(fn, plain)` so CSV/Excel get plain text.
 
 ## Lessons learned (gotchas)
 
@@ -59,6 +69,18 @@ the code so the same problems are not solved twice.
   synchronously inside effects; derive state instead (e.g. the drawer stores the path it was
   opened on and closes itself after navigation).
 - **Seeding deletes data:** `npm run seed` clears every MarketLink collection first.
+- **Stacked panels:** `.panel` only stretches to 100 % height when it is alone in its column
+  (`:only-child`); stacked panels with `height: 100%` overflowed into the footer on the profile page.
+- **`DataTable.use()` and the hooks linter:** the React hooks rule treats any `.use()` call as the
+  React `use` hook; assign it to another name first (`const registerLibrary = DataTable.use`).
+- **DataTables and React context:** cells are rendered by DataTables, not React, so they cannot use
+  `<Link>` or hooks – use `data-href` / `data-action` instead.
+- **Gmail SMTP:** needs 2-Step Verification and an App Password; the 16 letters may be pasted with
+  spaces (they are removed). Error 535 = wrong login; the server prints a hint at start-up.
+- **Testing e-mail without the internet:** a local SMTP server (Python `aiosmtpd`) receives the
+  messages; `npm run mail:test -- you@example.com` checks any settings.
+- **AI descriptions:** the main word of a product name is usually the last one ("Mango Chutney" is a
+  chutney), so the built-in writer picks the keyword found last in the name.
 
 ## Useful commands
 
@@ -69,6 +91,7 @@ npm run dev                # API on :5000 + React on :5173
 npm run build && npm start # production build served by Express on :5000
 npm run export-data        # database/sample-data/*.json from the current database
 npm run lint               # ESLint for server and client
+npm run mail:test -- you@example.com   # send a test e-mail with the SMTP settings
 ```
 
 Demo logins for every role are in `README.md` (section 4). E-mails are printed in the server
@@ -76,5 +99,5 @@ terminal unless `SMTP_HOST` is set (`ethereal` gives a free test inbox).
 
 ## Still open
 
-See `docs/task.md` section 6: team names on the About page, the team's own project report,
-ReadMe.doc, the demo video, hosting and the AI-tools acknowledgement.
+See `docs/task.md` section 6: member names on the About page, real SMTP details, the team's own
+project report, ReadMe.doc, the demo video, hosting and the AI-tools acknowledgement.

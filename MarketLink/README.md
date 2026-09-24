@@ -5,11 +5,12 @@ stock, prices and pickup windows; customers find nearby markets on a map, browse
 products, pre-order for a pickup slot, and pay the farmer in person at pickup. Administrators
 approve farmers, manage markets and categories, moderate content and generate reports.
 
-Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
+Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
+**TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 
 | Layer | Technology |
 | --- | --- |
-| Frontend | React 19 (Vite), React Router, Bootstrap 5 (custom SCSS theme), Bootstrap Icons, Recharts |
+| Frontend | React 19 (Vite), React Router, Bootstrap 5 (custom SCSS theme), Bootstrap Icons, Recharts, DataTables 3 (datatables.net, Bootstrap 5 styling, Responsive + Buttons) |
 | Maps | OpenStreetMap tiles (automatic CARTO fallback) with Leaflet / React-Leaflet, OSRM driving routes, Google Maps links & embed |
 | Backend | Node.js 20+, Express 5 REST API, JWT auth in an httpOnly cookie, Multer uploads, Nodemailer |
 | Database | MongoDB (Mongoose ODM) — local MongoDB or MongoDB Atlas |
@@ -19,13 +20,15 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 ## 1. Features (mapped to the SRS)
 
 **Customer**
-- Register (name, contact number, e-mail, address) and log in to a personal dashboard
+- Register (name, contact number, e-mail, address, **Terms & Conditions** checkbox) and log in to a personal dashboard
+- **Profile photo** upload, profile details, password and family sharing on one page
 - **Forgot password**: a one-time reset link (valid 30 minutes) is e-mailed to customers and farmers
-- Browse markets by location (“near me”), city and day; see the farmers at each market
+- Browse markets by location (“near me”), city (from the cities table), produce category and day; see the farmers at each market
 - Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
 - Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
-- Shop with search and filters: location (city), category, market, market day, price range, in stock; sorting
+- Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
+- Readable product URLs: `/products/sindhri-mangoes`
 - Product details: price, unit, quantity available, farmer, reviews
 - Cart grouped by farmer → choose a pickup **date and time slot** inside the farmer’s windows → place pre-order (no online payment)
 - Order status: placed → accepted → ready for pickup → completed (or declined / cancelled)
@@ -40,10 +43,12 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 **Farmer**
 - Register with a 3-step wizard — ① stall name, contact person, contact number, e-mail, password;
   ② farm address, city, “about your farm”, what they grow/sell (categories) and farming practices;
-  ③ markets they sell at, optional map pin, summary and acceptance of the market guidelines —
-  needs admin approval before listing
+  ③ markets they sell at, optional map pin, summary and acceptance of the Terms & Conditions —
+  needs admin approval before listing; until then only the approval status, stall profile and
+  notifications are shown (stock, pre-orders and pickup settings stay locked)
 - Stall profile: bio, categories grown/sold, farming practices, logo and cover photo, markets, operating days, pickup windows, **map pin (lat/lng)**
-- Products: add / edit / delete with name, category, price, unit, quantity, description, image
+- Products: add / edit / delete with name, category, price, unit, quantity, description, image;
+  **“Write with AI”** writes the description from the product name (Claude with an API key, a built-in writer otherwise)
 - **Recurring weekly stock template** (manual “apply now” or automatic every week) — reserved pre-orders are respected
 - Mark items sold out or temporarily unavailable
 - Pre-orders: accept / decline (with reason) / mark ready / complete; set slot length, slot capacity and order cut-off hours
@@ -51,14 +56,20 @@ Built for **TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
 - Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
 - Read and reply to customer reviews
 
-**Admin** (separate login at `/admin/login`)
-- Dashboard: total farmers, customers, markets, orders, revenue, charts, most active farmers, recent orders
-- Approve / suspend farmers; activate / deactivate customers
-- Add / edit / remove markets (address, days, timings, map coordinates, map link, image)
+**Admin** (separate login at `/admin/login`, own back-office layout without the shop navbar)
+- Collapsible sidebar (Reports as the last item), compact dashboard: KPIs, orders/revenue chart, “needs attention”, recent orders, top farmers
+- **DataTables** on every admin table (server-side paging, search, sorting, CSV / Excel / Print) with filters
+  (status, city, market, farmer, category, date ranges, amounts …)
+- Approve / suspend farmers; activate / deactivate customers; **create farmer and customer accounts** (invite e-mail)
+- **Place an order for a customer** from a dialog (same stock and pickup-slot checks as the checkout)
+- **Customer history**: everything a customer bought, from which farmer, how much, orders per month
+- **Customer purchases** analytics: who buys what from which farmer — charts, heat map, exportable tables
+- Add / edit / remove markets (city dropdown, what is sold there, days, timings, map coordinates, map link, image)
+- **Cities table** used by every city dropdown
 - Moderate product listings and reviews
 - Reports: platform overview, orders summary, revenue by market, most active farmers (saved, printable, CSV export)
 - Master data: product categories; publish announcements (site banner + in-app notification)
-- Contact-us inbox and all orders
+- Contact-us inbox
 
 **Other:** role-based access control (API + UI), responsive / mobile-friendly UI (laptop layout, slide-in mobile menu,
 app-style bottom navigation bar on phones), Bootstrap icons instead of emoji, About Us and Contact Us
@@ -155,7 +166,8 @@ npm start          # then open http://localhost:5000
 | `CLIENT_URL` | React dev URL allowed by CORS (default `http://localhost:5173`) |
 | `CURRENCY` | currency symbol used in e-mails / assistant (default `Rs`) |
 | `TZ` | time zone of the markets, used for pickup slots and cut-off times (default `Asia/Karachi`) |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | optional e-mail settings. Empty `SMTP_HOST` → e-mails are printed to the server console; `SMTP_HOST=ethereal` → free Ethereal test inbox (a link to view each e-mail is printed); a real host (e.g. `smtp.gmail.com` + app password) → real e-mails |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM`, `APP_URL` | e-mail settings (Nodemailer). Empty `SMTP_HOST` → e-mails are printed to the server console; `SMTP_HOST=ethereal` → free Ethereal test inbox; `smtp.gmail.com` + port 587 + a Gmail **app password** → real e-mails (see section 6). `APP_URL` is used for the buttons in e-mails |
+| `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | optional: “Write with AI” product descriptions by Claude (without a key a built-in writer is used) |
 
 The front-end currency symbol can be changed with `VITE_CURRENCY` in `client/.env` (default `Rs`).
 
@@ -185,7 +197,7 @@ notifications, announcements, a saved report and a closed date for Bloom & Bough
 
 ## 5. Database
 
-MongoDB collections: `users`, `farmers`, `markets`, `categories`, `products`, `orders`, `reviews`,
+MongoDB collections: `users`, `farmers`, `markets`, `cities`, `categories`, `products`, `orders`, `reviews`,
 `notifications`, `announcements`, `reports`, `contactmessages`, `assistantchats`.
 
 - `database/marketlink-schema.mongodb.js` — the database definition: every collection with its
@@ -215,9 +227,16 @@ MongoDB collections: `users`, `farmers`, `markets`, `categories`, `products`, `o
   history is saved in the `assistantchats` collection, guests' history stays in the browser, and
   the chat's Clear chat button deletes both.
 - **E-mail:** Nodemailer — order confirmation, status updates (“ready for pickup” with directions),
-  farmer approval and password-reset e-mails. By default they are printed in the server terminal
-  (the reset link can be copied from there). Set `SMTP_HOST=ethereal` in `server/.env` for a free
-  test inbox, or real SMTP settings (e.g. Gmail app password) to deliver real e-mails.
+  farmer approval, invites for admin-created accounts and password-reset e-mails, in a branded HTML
+  layout with the MarketLink logo and an action button. By default they are printed in the server
+  terminal (the reset link can be copied from there). To send real e-mails with Gmail:
+  1. turn on 2-Step Verification for the Gmail account;
+  2. Google Account → Security → **App passwords** → create one called “MarketLink”;
+  3. in `server/.env` set `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`, `SMTP_USER=your@gmail.com`,
+     `SMTP_PASS=` the 16-letter app password (spaces are fine) and leave `MAIL_FROM` empty;
+  4. check it: `npm run mail:test -- you@example.com`.
+  The server also checks the SMTP login when it starts and prints a clear hint if something is wrong.
+  Other providers (Outlook, Zoho, Brevo, Mailtrap …) work the same way with their host, port and login.
 
 ---
 
@@ -260,6 +279,8 @@ atomic stock reservation so two customers can never buy the same last item.
   authors under **CC BY 2.0**. Every photographer is credited on the product page and in
   `server/uploads/photos/CREDITS.md`.
 - 3D produce illustrations (banners, categories, farmer logos): **Microsoft Fluent Emoji** (MIT licence).
+- Logo: designed in **Canva** by the team and rebuilt as SVG / PNG (`client/public/brand`).
+- Tables: **DataTables** (datatables.net, MIT licence).
 - Map data © OpenStreetMap contributors; routing by OSRM.
 - UI: Bootstrap 5, Bootstrap Icons, Fraunces and Plus Jakarta Sans fonts (SIL Open Font Licence).
 - AI tools used: **Claude Code (Anthropic)** was used as a coding assistant during development.

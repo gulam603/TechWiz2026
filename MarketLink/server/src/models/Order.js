@@ -46,6 +46,8 @@ const orderSchema = new Schema(
     status: { type: String, enum: Object.values(ORDER_STATUS), default: ORDER_STATUS.PLACED },
     statusHistory: [statusEntrySchema],
     customerNote: { type: String, trim: true, maxlength: 500 },
+    // Who entered the pre-order: the customer at checkout or an administrator for them
+    placedBy: { type: String, enum: ['customer', 'admin'], default: 'customer' },
     farmerNote: { type: String, trim: true, maxlength: 500 },
     paymentMethod: { type: String, default: 'pay_at_pickup' }, // no online payment by design
     completedAt: Date,

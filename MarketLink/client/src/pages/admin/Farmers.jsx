@@ -1,28 +1,66 @@
 import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import useFetch from '../../hooks/useFetch';
+import { Link, useOutletContext, useSearchParams } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
-import { api, toQuery } from '../../api/client';
+import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import StatusBadge from '../../components/common/StatusBadge';
-import Pagination from '../../components/common/Pagination';
 import Modal from '../../components/common/Modal';
 import DayDots from '../../components/common/DayDots';
-import { PageLoader } from '../../components/common/Loader';
+import DataGrid from '../../components/admin/DataGrid';
+import FilterBar from '../../components/admin/FilterBar';
+import { action, badge, dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { formatDate } from '../../utils/format';
+
+const FILTERS = [
+  { name: 'status', label: 'Status', options: [{ value: 'pending', label: 'Pending approval' }, { value: 'active', label: 'Approved' }, { value: 'suspended', label: 'Suspended' }] },
+  { name: 'city', label: 'City', options: 'cities' },
+  { name: 'market', label: 'Market', options: 'markets' },
+  { name: 'category', label: 'Grows / sells', options: 'categories' },
+  { name: 'from', label: 'Joined from', type: 'date' },
+  { name: 'to', label: 'Joined to', type: 'date' },
+];
+
+const COLUMNS = [
+  {
+    data: 'stallName',
+    title: 'Stall',
+    responsivePriority: 1,
+    render: display((v, f) => `<div class="d-flex align-items-center gap-2"><span class="thumb-sm"><img src="${esc(f.logo)}" alt=""></span><div class="min-w-0"><strong class="d-block small">${esc(v)}</strong>${muted(f.categories?.map((c) => c.name).join(', ') || '–')}</div></div>`),
+  },
+  { data: 'contactPerson', title: 'Contact', render: display((v, f) => `<span class="small">${esc(v)}</span><div>${muted(f.email)}</div>`) },
+  { data: 'city', title: 'City', render: display((v) => esc(v || '–')) },
+  { data: 'markets', title: 'Markets', orderable: false, render: display((v) => `<span class="small">${esc(v?.map((m) => m.name).join(', ') || '–')}</span>`, (v) => v?.map((m) => m.name).join(', ')) },
+  { data: 'productCount', title: 'Products', orderable: false, className: 'text-end' },
+  { data: 'orderCount', title: 'Orders', orderable: false, className: 'text-end' },
+  { data: 'revenue', title: 'Revenue', orderable: false, className: 'text-end', render: display(moneyCell) },
+  { data: 'ratingAvg', title: 'Rating', className: 'text-end', render: display((v, f) => (f.ratingCount ? `${esc(v)} <i class="bi bi-star-fill text-warning"></i>` : '–')) },
+  { data: 'user.status', title: 'Status', orderable: false, render: display((v) => badge(v, v === 'active' ? 'Approved' : undefined)) },
+  { data: 'createdAt', title: 'Joined', render: display((v) => dateCell(v)) },
+  {
+    data: null,
+    title: 'Actions',
+    orderable: false,
+    className: 'text-end text-nowrap no-export',
+    responsivePriority: 2,
+    render: (v, type, f) =>
+      [
+        action('view', 'View'),
+        f.user?.status !== 'active' ? action('approve', f.user?.status === 'pending' ? 'Approve' : 'Re-activate', 'btn-primary', 'bi-check-lg') : action('suspend', 'Suspend', 'btn-outline-danger'),
+      ].join(' '),
+  },
+];
 
 export default function AdminFarmers() {
   useDocumentTitle('Manage farmers');
   const { toast } = useToast();
-  const [params, setParams] = useSearchParams();
-  const status = params.get('status') || '';
-  const [search, setSearch] = useState('');
-  const [page, setPage] = useState(1);
+  const { openModal, changed } = useOutletContext();
+  const [params] = useSearchParams();
+  const [filters, setFilters] = useState({ status: params.get('status') || '', city: '', market: '', category: '', from: '', to: '' });
+  const [reloadKey, setReloadKey] = useState(0);
   const [viewing, setViewing] = useState(null);
   const [suspending, setSuspending] = useState(null);
   const [reason, setReason] = useState('');
-  const { data, loading, reload } = useFetch(`/admin/farmers${toQuery({ status, search, page })}`);
 
   async function setFarmerStatus(farmer, next, why) {
     try {
@@ -31,105 +69,33 @@ export default function AdminFarmers() {
       setSuspending(null);
       setViewing(null);
       setReason('');
-      reload();
+      setReloadKey((k) => k + 1);
     } catch (err) {
       toast(err.message, 'error');
     }
   }
 
+  function onAction(name, farmer) {
+    if (name === 'view') setViewing(farmer);
+    if (name === 'approve') setFarmerStatus(farmer, 'active');
+    if (name === 'suspend') setSuspending(farmer);
+  }
+
   return (
     <>
-      <DashHeader title="Farmers" subtitle="Approve new registrations before they can list products, or suspend stalls that break the guidelines." />
+      <DashHeader
+        title="Farmers"
+        subtitle="Approve new registrations, add stalls yourself, or suspend stalls that break the guidelines."
+        actions={
+          <button type="button" className="btn btn-primary btn-sm" onClick={() => openModal('farmer')}>
+            <i className="bi bi-person-plus" /> Add farmer
+          </button>
+        }
+      />
       <div className="table-card">
-        <div className="table-toolbar">
-          <div className="tabs-pill">
-            {[
-              ['', 'All'],
-              ['pending', 'Pending approval'],
-              ['active', 'Approved'],
-              ['suspended', 'Suspended'],
-            ].map(([v, l]) => (
-              <button
-                key={v}
-                type="button"
-                className={status === v ? 'active' : ''}
-                onClick={() => {
-                  setParams(v ? { status: v } : {});
-                  setPage(1);
-                }}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-          <div className="search-pill" style={{ maxWidth: 280 }}>
-            <i className="bi bi-search" />
-            <input placeholder="Search stall, contact or e-mail" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Search farmers" />
-          </div>
-        </div>
-        {loading && !data ? (
-          <PageLoader />
-        ) : (
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Stall</th>
-                  <th>Contact</th>
-                  <th>Markets</th>
-                  <th className="text-end">Products</th>
-                  <th className="text-end">Orders</th>
-                  <th>Status</th>
-                  <th className="text-end">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.farmers.map((f) => (
-                  <tr key={f._id}>
-                    <td className="td-min">
-                      <div className="d-flex align-items-center gap-2">
-                        <span className="thumb-sm">
-                          <img src={f.logo} alt="" />
-                        </span>
-                        <div>
-                          <strong className="d-block small">{f.stallName}</strong>
-                          <span className="fs-7 text-muted-2">Joined {formatDate(f.user?.createdAt)}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="small">
-                      {f.contactPerson}
-                      <div className="fs-7 text-muted-2">{f.email}</div>
-                    </td>
-                    <td className="small td-min">{f.markets.map((m) => m.name).join(', ') || '–'}</td>
-                    <td className="text-end">{f.productCount}</td>
-                    <td className="text-end">{f.orderCount}</td>
-                    <td>
-                      <StatusBadge status={f.user?.status} label={f.user?.status === 'active' ? 'Approved' : undefined} />
-                    </td>
-                    <td className="text-end text-nowrap">
-                      <button type="button" className="btn btn-sm btn-white" onClick={() => setViewing(f)}>
-                        View
-                      </button>{' '}
-                      {f.user?.status !== 'active' ? (
-                        <button type="button" className="btn btn-sm btn-primary" onClick={() => setFarmerStatus(f, 'active')}>
-                          <i className="bi bi-check-lg" /> {f.user?.status === 'pending' ? 'Approve' : 'Re-activate'}
-                        </button>
-                      ) : (
-                        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => setSuspending(f)}>
-                          Suspend
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {data.farmers.length === 0 && <p className="text-center text-muted-2 py-4 mb-0">No farmers found.</p>}
-          </div>
-        )}
+        <FilterBar fields={FILTERS} value={filters} onChange={setFilters} />
+        <DataGrid table="farmers" columns={COLUMNS} filters={filters} order={[[9, 'desc']]} exportName="MarketLink farmers" onAction={onAction} reloadKey={reloadKey + changed} searchPlaceholder="Search stall, contact, e-mail…" />
       </div>
-      <Pagination page={page} pages={data?.pages} onChange={setPage} />
 
       <Modal open={Boolean(viewing)} onClose={() => setViewing(null)} title={viewing?.stallName || ''} size="modal-lg">
         {viewing && (

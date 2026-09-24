@@ -24,6 +24,13 @@ const TABS = {
     { to: '/farmer/pickup', icon: 'bi-geo-alt', label: 'Pickup' },
     { to: '/farmer/profile', icon: 'bi-shop-window', label: 'Profile' },
   ],
+  // Waiting for approval: no selling features yet
+  farmerPending: [
+    { to: '/', icon: 'bi-house', label: 'Home', end: true },
+    { to: '/farmer', icon: 'bi-hourglass-split', label: 'Status', end: true },
+    { to: '/farmer/profile', icon: 'bi-shop-window', label: 'Profile' },
+    { to: '/farmer/notifications', icon: 'bi-bell', label: 'Alerts' },
+  ],
   admin: [
     { to: '/admin', icon: 'bi-speedometer2', label: 'Dashboard', end: true },
     { to: '/admin/farmers', icon: 'bi-shop', label: 'Farmers' },
@@ -37,7 +44,8 @@ const TABS = {
 export default function MobileTabBar() {
   const { user } = useAuth();
   const { count } = useCart();
-  const tabs = TABS[user?.role] || TABS.guest;
+  const role = user?.role === 'farmer' && user.status !== 'active' ? 'farmerPending' : user?.role;
+  const tabs = TABS[role] || TABS.guest;
   return (
     <nav className="mobile-tabbar d-lg-none" aria-label="Quick navigation">
       {tabs.map((t) => (

@@ -13,7 +13,8 @@ import { useToast } from '../../context/ToastContext';
 
 export default function Markets() {
   useDocumentTitle('Farmers markets');
-  const [filters, setFilters] = useState({ search: '', city: '', day: '' });
+  const [filters, setFilters] = useState({ search: '', city: '', category: '', day: '' });
+  const { data: catData } = useFetch('/categories');
   const [location, setLocation] = useState(null);
   const [view, setView] = useState('grid');
   const [locating, setLocating] = useState(false);
@@ -39,13 +40,13 @@ export default function Markets() {
       <div className="container pb-5">
         <div className="soft-panel mb-4">
           <div className="row g-2 align-items-center">
-            <div className="col-md-4">
+            <div className="col-12 col-lg-6 col-xl-3">
               <div className="search-pill">
                 <i className="bi bi-search" />
                 <input placeholder="Search market or area" value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} aria-label="Search markets" />
               </div>
             </div>
-            <div className="col-6 col-md-2">
+            <div className="col-4 col-lg-2">
               <select className="form-select" value={filters.city} onChange={(e) => setFilters({ ...filters, city: e.target.value })} aria-label="City">
                 <option value="">All cities</option>
                 {(data?.cities || []).map((c) => (
@@ -53,7 +54,17 @@ export default function Markets() {
                 ))}
               </select>
             </div>
-            <div className="col-6 col-md-2">
+            <div className="col-4 col-lg-2">
+              <select className="form-select" value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })} aria-label="Category">
+                <option value="">All produce</option>
+                {(catData?.categories || []).map((c) => (
+                  <option key={c._id} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-4 col-lg-2">
               <select className="form-select" value={filters.day} onChange={(e) => setFilters({ ...filters, day: e.target.value })} aria-label="Market day">
                 <option value="">Any day</option>
                 {DAY_NAMES.map((d, i) => (
@@ -63,11 +74,11 @@ export default function Markets() {
                 ))}
               </select>
             </div>
-            <div className="col-md-4 d-flex gap-2 justify-content-md-end">
-              <button type="button" className={`btn ${location ? 'btn-forest' : 'btn-white'}`} onClick={location ? () => setLocation(null) : nearMe} disabled={locating}>
+            <div className="col-12 col-xl-3 d-flex gap-2 justify-content-end">
+              <button type="button" className={`btn text-nowrap flex-shrink-0 ${location ? 'btn-forest' : 'btn-white'}`} onClick={location ? () => setLocation(null) : nearMe} disabled={locating}>
                 {locating ? <span className="spinner-border spinner-border-sm" /> : <i className={`bi ${location ? 'bi-check2-circle' : 'bi-crosshair'}`} />} Near me
               </button>
-              <div className="tabs-pill">
+              <div className="tabs-pill flex-nowrap flex-shrink-0">
                 <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')} aria-label="Grid view">
                   <i className="bi bi-grid" />
                 </button>
@@ -107,7 +118,7 @@ export default function Markets() {
             )}
           </div>
         )}
-        {data && markets.length === 0 && <EmptyState title="No markets found" message="Try a different day or city." />}
+        {data && markets.length === 0 && <EmptyState title="No markets found" message="Try a different day, city or produce type." />}
       </div>
     </>
   );

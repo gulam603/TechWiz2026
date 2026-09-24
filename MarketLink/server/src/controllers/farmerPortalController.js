@@ -9,6 +9,7 @@ import { applyWeeklyTemplate, notifyRestock, releaseItems, syncFarmerProducts } 
 import { notify } from '../services/notify.js';
 import { pickupDetails, pushStatus } from '../services/orders.js';
 import { readFarmDetails } from './helpers/farmDetails.js';
+import { resolveCity } from './adminToolsController.js';
 
 // ---------------------------------------------------------------- profile
 
@@ -29,6 +30,7 @@ export async function updateFarmProfile(req, res) {
   for (const key of ['stallName', 'contactPerson', 'phone', 'address']) {
     if (key in body && !String(body[key]).trim()) throw new AppError(`${key} cannot be empty`, 400);
   }
+  if ('city' in body) body.city = await resolveCity(body.city); // from the cities table
   if (body.stallName && body.stallName !== farmer.stallName) farmer.slug = await uniqueSlug(Farmer, body.stallName, farmer._id);
   Object.assign(farmer, body);
 

@@ -1,4 +1,4 @@
-import { Market, Farmer, Product } from '../models/index.js';
+import { Category, City, Market, Farmer, Product } from '../models/index.js';
 import AppError from '../utils/AppError.js';
 import { containsRegex, distanceKm, isValidId, toNumber } from '../utils/helpers.js';
 
@@ -6,7 +6,7 @@ import { containsRegex, distanceKm, isValidId, toNumber } from '../utils/helpers
 export async function findMarket(idOrSlug, { activeOnly = true } = {}) {
   const filter = isValidId(idOrSlug) ? { _id: idOrSlug } : { slug: String(idOrSlug).toLowerCase() };
   if (activeOnly) filter.isActive = true;
-  const market = await Market.findOne(filter).lean();
+  const market = await Market.findOne(filter).populate('categories', 'name slug color icon').lean();
   if (!market) throw new AppError('Market not found', 404);
   return market;
 }
@@ -19,8 +19,13 @@ export async function listMarkets(req, res) {
   if (city) filter.city = containsRegex(city);
   const dayNum = toNumber(day);
   if (dayNum !== undefined && dayNum >= 0 && dayNum <= 6) filter.operatingDays = dayNum;
+  // Category dropdown: markets where this kind of produce is sold (id or slug)
+  if (req.query.category) {
+    const category = isValidId(req.query.category) ? { _id: req.query.category } : await Category.findOne({ slug: String(req.query.category) }).select('_id').lean();
+    filter.categories = category?._id || null;
+  }
 
-  let markets = await Market.find(filter).sort({ name: 1 }).lean();
+  let markets = await Market.find(filter).populate('categories', 'name slug color icon').sort({ name: 1 }).lean();
 
   // Number of approved farmers at each market
   const farmers = await Farmer.find({ isActive: true, markets: { $in: markets.map((m) => m._id) } })
@@ -40,8 +45,9 @@ export async function listMarkets(req, res) {
     markets.sort((a, b) => a.distanceKm - b.distanceKm);
   }
 
-  const cities = await Market.distinct('city', { isActive: true });
-  res.json({ markets, cities: cities.filter(Boolean).sort() });
+  // City dropdown comes from the cities table
+  const cities = await City.find({ isActive: true }).sort({ sortOrder: 1, name: 1 }).select('name').lean();
+  res.json({ markets, cities: cities.map((c) => c.name) });
 }
 
 // GET /api/markets/:idOrSlug

@@ -12,7 +12,8 @@ import { DAY_NAMES, DAY_SHORT } from '../../utils/format';
 
 export default function Farmers() {
   useDocumentTitle('Local farmers');
-  const [filters, setFilters] = useState({ search: '', city: '', market: '', day: '', category: '', sort: 'rating', page: 1 });
+  const [filters, setFilters] = useState({ search: '', city: '', market: '', day: '', category: '', rating: '', practice: '', sort: 'rating', page: 1 });
+  const { data: practiceData } = useFetch('/practices');
   const [view, setView] = useState('grid');
   // The map shows every matching stall, the grid is paginated
   const { data, loading } = useFetch(`/farmers${toQuery({ ...filters, limit: view === 'map' ? 60 : 12, page: view === 'map' ? 1 : filters.page })}`);
@@ -27,13 +28,13 @@ export default function Farmers() {
       <div className="container pb-5">
         <div className="soft-panel mb-4">
           <div className="row g-2">
-            <div className="col-md-4 col-xl-3">
+            <div className="col-12 col-md-6 col-xl-3">
               <div className="search-pill">
                 <i className="bi bi-search" />
                 <input placeholder="Search farmer or speciality" value={filters.search} onChange={(e) => set({ search: e.target.value })} aria-label="Search farmers" />
               </div>
             </div>
-            <div className="col-6 col-md-4 col-xl-2">
+            <div className="col-6 col-md-3">
               <select className="form-select" value={filters.city} onChange={(e) => set({ city: e.target.value, market: '' })} aria-label="City">
                 <option value="">All cities</option>
                 {(marketData?.cities || []).map((c) => (
@@ -41,7 +42,7 @@ export default function Farmers() {
                 ))}
               </select>
             </div>
-            <div className="col-6 col-md-4 col-xl-2">
+            <div className="col-6 col-md-3">
               <select className="form-select" value={filters.market} onChange={(e) => set({ market: e.target.value })} aria-label="Market">
                 <option value="">All markets</option>
                 {markets.map((m) => (
@@ -51,7 +52,7 @@ export default function Farmers() {
                 ))}
               </select>
             </div>
-            <div className="col-6 col-md-4 col-xl-2">
+            <div className="col-6 col-md-3">
               <select className="form-select" value={filters.category} onChange={(e) => set({ category: e.target.value })} aria-label="Category">
                 <option value="">All categories</option>
                 {(catData?.categories || []).map((c) => (
@@ -61,7 +62,7 @@ export default function Farmers() {
                 ))}
               </select>
             </div>
-            <div className="col-6 col-md-4 col-xl-1">
+            <div className="col-6 col-md-3">
               <select className="form-select" value={filters.day} onChange={(e) => set({ day: e.target.value })} aria-label="Market day">
                 <option value="">Any day</option>
                 {DAY_NAMES.map((d, i) => (
@@ -71,7 +72,22 @@ export default function Farmers() {
                 ))}
               </select>
             </div>
-            <div className="col-md-4 col-xl-2 d-flex gap-2">
+            <div className="col-6 col-md-3">
+              <select className="form-select" value={filters.rating} onChange={(e) => set({ rating: e.target.value })} aria-label="Rating">
+                <option value="">Any rating</option>
+                <option value="4">4 stars and up</option>
+                <option value="3">3 stars and up</option>
+              </select>
+            </div>
+            <div className="col-6 col-md-3">
+              <select className="form-select" value={filters.practice} onChange={(e) => set({ practice: e.target.value })} aria-label="Farming practice">
+                <option value="">Any practice</option>
+                {(practiceData?.practices || []).map((p) => (
+                  <option key={p}>{p}</option>
+                ))}
+              </select>
+            </div>
+            <div className="col-12 col-md-6 col-xl-3 d-flex gap-2">
               <select className="form-select" value={filters.sort} onChange={(e) => set({ sort: e.target.value })} aria-label="Sort">
                 <option value="rating">Top rated</option>
                 <option value="name">Name A–Z</option>

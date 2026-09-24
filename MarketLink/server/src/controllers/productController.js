@@ -1,4 +1,4 @@
-import { Product, Review } from '../models/index.js';
+import { Farmer, Product, Review } from '../models/index.js';
 import { marketIdsInCity, resolveCategory } from './helpers/category.js';
 import AppError from '../utils/AppError.js';
 import { PRODUCT_STATUS } from '../utils/constants.js';
@@ -40,6 +40,15 @@ export async function buildProductFilter(query) {
     filter.price = {};
     if (minPrice !== undefined) filter.price.$gte = minPrice;
     if (maxPrice !== undefined) filter.price.$lte = maxPrice;
+  }
+  // Minimum rating (e.g. 4 = four stars and up)
+  const rating = toNumber(query.rating);
+  if (rating >= 1 && rating <= 5) filter.ratingAvg = { $gte: rating };
+  // Farming practice of the farmer (e.g. "Pesticide-free")
+  if (query.practice) {
+    const farmers = await Farmer.find({ isActive: true, tags: containsRegex(query.practice) }).select('_id').lean();
+    const ids = farmers.map((f) => String(f._id));
+    filter.farmer = filter.farmer ? (ids.includes(String(filter.farmer)) ? filter.farmer : null) : { $in: farmers.map((f) => f._id) };
   }
   if (toBool(query.inStock)) {
     filter.status = PRODUCT_STATUS.AVAILABLE;

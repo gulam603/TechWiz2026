@@ -42,3 +42,4 @@ $theme-colors: map-merge($theme-colors, $theme-colors-extra);
 @import './components';
 @import './pages';
 @import './dashboard';
+@import './admin';

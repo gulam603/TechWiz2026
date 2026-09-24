@@ -1,10 +1,59 @@
 // ------------------------------------------------------------------ dashboard layout
 .dash {
   display: grid;
-  grid-template-columns: 264px 1fr;
-  gap: 1.5rem;
-  padding: 1.5rem 0 3rem;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 1.25rem;
+  padding: 1.1rem 0 2.5rem;
   align-items: start;
+  transition: grid-template-columns 0.2s ease;
+  // Collapsed sidebar: icons only
+  &.is-collapsed {
+    grid-template-columns: 70px minmax(0, 1fr);
+    .dash-user {
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+      .who {
+        display: none;
+      }
+    }
+    .dash-section {
+      font-size: 0;
+      padding: 0;
+      margin: 0.4rem 0.5rem;
+      border-top: 1px solid $ml-line;
+    }
+    .dash-link,
+    .dash-collapse {
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .dash-link-label {
+      display: none;
+    }
+  }
+}
+
+.dash-collapse {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border: 0;
+  border-top: 1px solid $ml-line;
+  background: none;
+  color: $ml-muted;
+  font-size: 0.82rem;
+  font-weight: 600;
+  i {
+    width: 1.2rem;
+  }
+  &:hover {
+    color: $ml-forest;
+  }
 }
 
 .dash-sidebar {
@@ -12,15 +61,15 @@
   top: calc(var(--ml-nav-h) + 1rem);
   background: #fff;
   border: 1px solid $ml-line;
-  border-radius: 1.4rem;
-  padding: 1rem;
+  border-radius: 1.3rem;
+  padding: 0.8rem;
   .dash-user {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.5rem 0.5rem 1rem;
+    padding: 0.35rem 0.4rem 0.8rem;
     border-bottom: 1px solid $ml-line;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     .who {
       min-width: 0;
       strong {
@@ -37,14 +86,15 @@
     letter-spacing: 0.12em;
     font-weight: 800;
     color: $ml-muted;
-    padding: 0.8rem 0.75rem 0.35rem;
+    padding: 0.7rem 0.75rem 0.3rem;
   }
   .dash-link {
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    padding: 0.6rem 0.75rem;
-    border-radius: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.8rem;
+    white-space: nowrap;
     color: $ml-ink;
     font-weight: 600;
     font-size: 0.92rem;
@@ -80,10 +130,13 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.1rem;
   h1 {
-    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    font-size: clamp(1.4rem, 2.4vw, 1.85rem);
     margin: 0;
+  }
+  p {
+    font-size: 0.9rem;
   }
   p {
     color: $ml-muted;
@@ -122,41 +175,65 @@
 }
 
 .kpi-card {
+  container-type: inline-size; // lets the value shrink in narrow cards
   background: #fff;
   border: 1px solid $ml-line;
-  border-radius: 1.3rem;
-  padding: 1.15rem 1.2rem;
+  border-radius: 1.1rem;
+  padding: 0.8rem 0.95rem;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
+  // Compact: icon on the left, numbers on the right
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.75rem;
+  row-gap: 0.05rem;
+  align-content: center;
+  align-items: center;
   .kpi-icon {
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: 0.85rem;
+    grid-row: span 3;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     background: rgba($ml-green, 0.1);
     color: $ml-green;
-    margin-bottom: 0.4rem;
   }
   .kpi-label {
-    font-size: 0.8rem;
+    font-size: 0.74rem;
     color: $ml-muted;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .kpi-value {
-    font-size: 1.65rem;
+    font-size: 1.35rem;
     font-weight: 800;
     color: $ml-forest;
     letter-spacing: -0.03em;
     line-height: 1.1;
   }
   .kpi-sub {
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     color: $ml-muted;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .kpi-value {
+    white-space: nowrap;
+  }
+  @container (max-width: 200px) {
+    .kpi-value {
+      font-size: 1.12rem;
+    }
+    .kpi-icon {
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.9rem;
+    }
   }
   &.accent {
     background: $ml-forest;
@@ -190,8 +267,8 @@
 .panel {
   background: #fff;
   border: 1px solid $ml-line;
-  border-radius: 1.3rem;
-  padding: 1.25rem;
+  border-radius: 1.2rem;
+  padding: 1.05rem 1.1rem;
   // Equal heights for side-by-side panels; stacked panels keep their natural height
   // (a 100% height on stacked panels made them overflow the column and the footer)
   &:only-child {
@@ -202,7 +279,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     flex-wrap: wrap;
     h5 {
       margin: 0;

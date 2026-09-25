@@ -42,6 +42,17 @@ const GALLERY = JSON.parse(fs.readFileSync(new URL('./galleryCredits.json', impo
 // Product photos with the background removed (server/uploads/cutouts); the original photo stays in the gallery
 const CUTOUT_DIR = new URL('../../uploads/cutouts/', import.meta.url);
 const hasCutout = (file) => Boolean(file) && fs.existsSync(new URL(file, CUTOUT_DIR));
+// Close-ups that could not be cut out use a 3D illustration as their cut-out
+const CUTOUT_ILLUSTRATIONS = JSON.parse(fs.readFileSync(new URL('./cutoutIllustrations.json', import.meta.url), 'utf8'));
+const FLUENT_CREDIT = { author: 'Microsoft Fluent Emoji', source: 'https://github.com/microsoft/fluentui-emoji', license: 'MIT' };
+
+/** Credit for the main picture: the photographer (background removed) or the illustration set. */
+function mainImageCredit(photo) {
+  if (!photo) return undefined;
+  if (!hasCutout(photo.file)) return { author: photo.author, source: photo.source, license: photo.license };
+  if (CUTOUT_ILLUSTRATIONS[photo.file]) return FLUENT_CREDIT;
+  return { author: photo.author, source: photo.source, license: `${photo.license}, background removed` };
+}
 
 /** Search keywords for a seeded product, e.g. ['sindhri mangoes', 'fresh sindhri mangoes', 'fruits karachi']. */
 function seedKeywords(name, categoryName, city) {
@@ -165,7 +176,7 @@ async function main() {
         description: p.desc,
         keywords: seedKeywords(p.name, categoryByKey[p.cat].name, farmer.city),
         image: hasCutout(PHOTOS[p.name]?.file) ? `/uploads/cutouts/${PHOTOS[p.name].file}` : PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : `/uploads/seed/${p.img}.webp`,
-        imageCredit: PHOTOS[p.name] ? { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } : undefined,
+        imageCredit: mainImageCredit(PHOTOS[p.name]),
         gallery: [
           // With a cut-out main image, the full original photo is the first gallery picture
           ...(hasCutout(PHOTOS[p.name]?.file) ? [{ url: `/uploads/photos/${PHOTOS[p.name].file}`, credit: { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } }] : []),

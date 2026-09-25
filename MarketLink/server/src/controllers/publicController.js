@@ -2,6 +2,8 @@ import { Announcement, Category, ContactMessage, Farmer, Market, Order, Product,
 import { ORDER_STATUS, ROLES, USER_STATUS } from '../utils/constants.js';
 import { containsRegex, pick, requireFields, toNumber } from '../utils/helpers.js';
 import { notifyMany } from '../services/notify.js';
+import { inSeason } from '../models/Announcement.js';
+import { resolveCategory } from './helpers/category.js';
 
 // GET /api/stats  -> numbers shown on the home page
 export async function publicStats(req, res) {
@@ -31,26 +33,34 @@ export async function listCategories(req, res) {
   res.json({ categories: categories.map((c, i) => ({ ...c, productCount: counts[i] })) });
 }
 
-// GET /api/search?q=  -> quick search across products, farmers and markets
+// GET /api/search?q=&category=  -> quick search across products, farmers and markets
 export async function globalSearch(req, res) {
   const q = String(req.query.q || '').trim();
   if (q.length < 2) return res.json({ products: [], farmers: [], markets: [] });
   const regex = containsRegex(q);
+  // Category-wise search: only products of that category, and only farmers who sell it
+  const category = req.query.category ? await resolveCategory(String(req.query.category)) : null;
+  if (req.query.category && !category) return res.json({ products: [], farmers: [], markets: [] });
+  const productFilter = { ...Product.publicFilter(), $or: [{ name: regex }, { keywords: regex }], ...(category ? { category: category._id } : {}) };
+  const farmerFilter = { isActive: true, $or: [{ stallName: regex }, { tags: regex }] };
+  if (category) farmerFilter._id = { $in: await Product.distinct('farmer', { ...Product.publicFilter(), category: category._id }) };
   const [products, farmers, markets] = await Promise.all([
-    Product.find({ ...Product.publicFilter(), name: regex })
+    Product.find(productFilter)
       .select('name slug price unit image status quantityAvailable farmer category')
       .populate('farmer', 'stallName slug')
       .populate('category', 'name color')
       .limit(6)
       .lean(),
-    Farmer.find({ isActive: true, $or: [{ stallName: regex }, { tags: regex }] })
+    Farmer.find(farmerFilter)
       .select('stallName slug logo ratingAvg')
       .limit(4)
       .lean(),
-    Market.find({ isActive: true, $or: [{ name: regex }, { address: regex }, { city: regex }] })
-      .select('name slug address image')
-      .limit(4)
-      .lean(),
+    category
+      ? []
+      : Market.find({ isActive: true, $or: [{ name: regex }, { address: regex }, { city: regex }] })
+          .select('name slug address image')
+          .limit(4)
+          .lean(),
   ]);
   res.json({ products, farmers, markets });
 }
@@ -85,23 +95,50 @@ export async function activeAnnouncements(req, res) {
   const audiences = ['all'];
   if (req.user?.role === ROLES.CUSTOMER) audiences.push('customer');
   if (req.user?.role === ROLES.FARMER) audiences.push('farmer');
-  const announcements = await Announcement.find({ isActive: true, audience: { $in: audiences } })
-    .select('title message audience createdAt')
+  // Seasonal notices only show in their months (e.g. mangoes in summer, kinnow in winter)
+  const announcements = await Announcement.find({ isActive: true, audience: { $in: audiences }, ...inSeason() })
+    .select('title message audience months link createdAt')
     .sort({ createdAt: -1 })
     .limit(3)
     .lean();
   res.json({ announcements });
 }
 
-// GET /api/testimonials  -> recent 5-star reviews for the home page
+// GET /api/testimonials  -> recent good reviews for the home page, plus the overall rating summary
 export async function testimonials(req, res) {
-  const reviews = await Review.find({ isRemoved: false, rating: { $gte: 4 }, comment: { $exists: true, $ne: '' } })
-    .populate('customer', 'name avatar')
-    .populate('farmer', 'stallName slug')
-    .sort({ rating: -1, createdAt: -1 })
-    .limit(6)
-    .lean();
-  res.json({ reviews });
+  const visible = { isRemoved: false };
+  const [reviews, summary] = await Promise.all([
+    Review.find({ ...visible, rating: { $gte: 4 }, comment: { $exists: true, $ne: '' } })
+      .populate('customer', 'name avatar city')
+      .populate('farmer', 'stallName slug')
+      .populate('product', 'name slug image')
+      .sort({ verified: -1, rating: -1, createdAt: -1 })
+      .limit(9)
+      .lean(),
+    Review.aggregate([
+      { $match: visible },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+          avg: { $avg: '$rating' },
+          verified: { $sum: { $cond: ['$verified', 1, 0] } },
+          r5: { $sum: { $cond: [{ $eq: ['$rating', 5] }, 1, 0] } },
+          r4: { $sum: { $cond: [{ $eq: ['$rating', 4] }, 1, 0] } },
+          r3: { $sum: { $cond: [{ $eq: ['$rating', 3] }, 1, 0] } },
+          r2: { $sum: { $cond: [{ $eq: ['$rating', 2] }, 1, 0] } },
+          r1: { $sum: { $cond: [{ $eq: ['$rating', 1] }, 1, 0] } },
+        },
+      },
+    ]),
+  ]);
+  const s = summary[0];
+  res.json({
+    reviews: reviews.map(({ customer, ...r }) => ({ ...r, customer: customer ? { name: customer.name, avatar: customer.avatar, city: customer.city } : null })),
+    summary: s
+      ? { count: s.count, average: Math.round(s.avg * 10) / 10, verifiedShare: Math.round((s.verified / s.count) * 100), stars: { 5: s.r5, 4: s.r4, 3: s.r3, 2: s.r2, 1: s.r1 } }
+      : { count: 0, average: 0, verifiedShare: 0, stars: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } },
+  });
 }
 
 // POST /api/contact

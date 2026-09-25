@@ -19,8 +19,8 @@ const FILTERS = [
 
 const COLUMNS = [
   { data: 'name', title: 'Customer', responsivePriority: 1, render: display((v, c) => person(v, c.email, c.avatar)) },
-  { data: 'phone', title: 'Phone', orderable: false, render: display((v) => `<span class="text-nowrap small">${esc(v || '–')}</span>`) },
-  { data: 'city', title: 'City', render: display((v) => esc(v || '–')) },
+  { data: 'phone', title: 'Phone', orderable: false, render: display((v) => `<span class="text-nowrap small">${esc(v || '-')}</span>`) },
+  { data: 'city', title: 'City', render: display((v) => esc(v || '-')) },
   { data: 'orderCount', title: 'Orders', orderable: false, className: 'text-end' },
   { data: 'completed', title: 'Completed', orderable: false, className: 'text-end' },
   { data: 'spent', title: 'Spent', orderable: false, className: 'text-end', render: display(moneyCell) },

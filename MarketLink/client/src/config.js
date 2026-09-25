@@ -23,7 +23,7 @@ export const CONTACT = {
   email: 'hello@marketlink.pk',
   phone: '+92 21 3456 7890',
   address: 'Aptech Learning Centre, F.B. Area, Karachi',
-  hours: 'Mon – Sat, 9:00 am – 6:00 pm',
+  hours: 'Mon to Sat, 9:00 am to 6:00 pm',
   // Google Maps looks this place up by name, so the pin lands on the centre itself
   mapQuery: 'Aptech Learning Centre, Federal B Area, Karachi',
   latitude: 24.928,

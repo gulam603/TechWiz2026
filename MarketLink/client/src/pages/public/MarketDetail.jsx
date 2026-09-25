@@ -18,7 +18,7 @@ export default function MarketDetail() {
   useSeo(
     m
       ? {
-          title: `${m.name} – farmers market${m.city ? ` in ${m.city}` : ''}`,
+          title: `${m.name}, farmers market${m.city ? ` in ${m.city}` : ''}`,
           description: clip(m.description || `${m.name}, ${m.address}. See the farmers, opening days and pre-order on MarketLink.`),
           image: m.image,
           jsonLd: marketLd(m),
@@ -63,7 +63,7 @@ export default function MarketDetail() {
             <div>
               <div className="fs-7 text-uppercase ls-wide mb-1" style={{ color: 'rgba(255,255,255,.6)' }}>Hours</div>
               <strong>
-                {time12(market.openTime)} – {time12(market.closeTime)}
+                {time12(market.openTime)} to {time12(market.closeTime)}
               </strong>
             </div>
             <div>
@@ -115,7 +115,7 @@ export default function MarketDetail() {
                     <strong className="d-block">{f.stallName}</strong>
                     <RatingStars value={f.ratingAvg} count={f.ratingCount} />
                     <span className="d-block fs-7 text-muted-2 mt-1">
-                      {f.pickupWindows.map((w) => `${DAY_SHORT[w.day]} ${time12(w.start)}–${time12(w.end)}`).join(' · ') || `Sells on ${f.operatingDays.map((d) => DAY_NAMES[d]).join(', ')}`}
+                      {f.pickupWindows.map((w) => `${DAY_SHORT[w.day]} ${time12(w.start)} to ${time12(w.end)}`).join(' · ') || `Sells on ${f.operatingDays.map((d) => DAY_NAMES[d]).join(', ')}`}
                     </span>
                   </span>
                   <i className="bi bi-chevron-right" />

@@ -64,11 +64,8 @@ export default function MobileMenu({ open, onClose }) {
 
           <p className="mobile-menu-section">Explore</p>
           <nav className="mobile-menu-links" aria-label="Main">
-            <NavLink to="/" end onClick={onClose}>
-              <i className="bi bi-house" /> Home
-            </NavLink>
             {LINKS.map((l) => (
-              <NavLink key={l.to} to={l.to} onClick={onClose}>
+              <NavLink key={l.to} to={l.to} end={l.end} onClick={onClose}>
                 <i className={`bi ${l.icon}`} /> {l.label}
               </NavLink>
             ))}

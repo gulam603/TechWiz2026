@@ -15,7 +15,7 @@ const COLUMNS = [
   { data: 'markets', title: 'Markets', className: 'text-end' },
   { data: 'farmers', title: 'Farmers', className: 'text-end' },
   { data: 'customers', title: 'Customers', className: 'text-end' },
-  { data: 'latitude', title: 'Map centre', orderable: false, render: display((v, c) => (v != null ? `<span class="small text-nowrap">${esc(v)}, ${esc(c.longitude)}</span>` : '–'), (v, c) => (v != null ? `${v}, ${c.longitude}` : '')) },
+  { data: 'latitude', title: 'Map centre', orderable: false, render: display((v, c) => (v != null ? `<span class="small text-nowrap">${esc(v)}, ${esc(c.longitude)}</span>` : '-'), (v, c) => (v != null ? `${v}, ${c.longitude}` : '')) },
   { data: 'isActive', title: 'In dropdowns', render: display((v) => (v ? '<span class="chip chip-lime">Shown</span>' : '<span class="chip chip-soft">Hidden</span>'), (v) => (v ? 'Shown' : 'Hidden')) },
   {
     data: null,

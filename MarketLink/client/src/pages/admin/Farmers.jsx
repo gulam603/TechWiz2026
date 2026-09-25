@@ -26,15 +26,15 @@ const COLUMNS = [
     data: 'stallName',
     title: 'Stall',
     responsivePriority: 1,
-    render: display((v, f) => `<div class="d-flex align-items-center gap-2"><span class="thumb-sm"><img src="${esc(f.logo)}" alt=""></span><div class="min-w-0"><strong class="d-block small">${esc(v)}</strong>${muted(f.categories?.map((c) => c.name).join(', ') || '–')}</div></div>`),
+    render: display((v, f) => `<div class="d-flex align-items-center gap-2"><span class="thumb-sm"><img src="${esc(f.logo)}" alt=""></span><div class="min-w-0"><strong class="d-block small">${esc(v)}</strong>${muted(f.categories?.map((c) => c.name).join(', ') || '-')}</div></div>`),
   },
   { data: 'contactPerson', title: 'Contact', render: display((v, f) => `<span class="small">${esc(v)}</span><div>${muted(f.email)}</div>`) },
-  { data: 'city', title: 'City', render: display((v) => esc(v || '–')) },
-  { data: 'markets', title: 'Markets', orderable: false, render: display((v) => `<span class="small">${esc(v?.map((m) => m.name).join(', ') || '–')}</span>`, (v) => v?.map((m) => m.name).join(', ')) },
+  { data: 'city', title: 'City', render: display((v) => esc(v || '-')) },
+  { data: 'markets', title: 'Markets', orderable: false, render: display((v) => `<span class="small">${esc(v?.map((m) => m.name).join(', ') || '-')}</span>`, (v) => v?.map((m) => m.name).join(', ')) },
   { data: 'productCount', title: 'Products', orderable: false, className: 'text-end' },
   { data: 'orderCount', title: 'Orders', orderable: false, className: 'text-end' },
   { data: 'revenue', title: 'Revenue', orderable: false, className: 'text-end', render: display(moneyCell) },
-  { data: 'ratingAvg', title: 'Rating', className: 'text-end', render: display((v, f) => (f.ratingCount ? `${esc(v)} <i class="bi bi-star-fill text-warning"></i>` : '–')) },
+  { data: 'ratingAvg', title: 'Rating', className: 'text-end', render: display((v, f) => (f.ratingCount ? `${esc(v)} <i class="bi bi-star-fill text-warning"></i>` : '-')) },
   { data: 'user.status', title: 'Status', orderable: false, render: display((v) => badge(v, v === 'active' ? 'Approved' : undefined)) },
   { data: 'createdAt', title: 'Joined', render: display((v) => dateCell(v)) },
   {
@@ -106,18 +106,18 @@ export default function AdminFarmers() {
               <div className="info-row"><span>E-mail</span><span>{viewing.email}</span></div>
               <div className="info-row"><span>Address</span><span>{viewing.address}{viewing.city ? `, ${viewing.city}` : ''}</span></div>
               <div className="info-row"><span>Status</span><span><StatusBadge status={viewing.user?.status} /></span></div>
-              <div className="info-row"><span>Last login</span><span>{viewing.user?.lastLoginAt ? formatDate(viewing.user.lastLoginAt, { time: true }) : '–'}</span></div>
+              <div className="info-row"><span>Last login</span><span>{viewing.user?.lastLoginAt ? formatDate(viewing.user.lastLoginAt, { time: true }) : '-'}</span></div>
             </div>
             <div className="col-md-6">
               <p className="small">{viewing.bio || 'No description yet.'}</p>
               <div className="small mb-2">
-                <strong>Grows / sells:</strong> {viewing.categories?.map((c) => c.name).join(', ') || '–'}
+                <strong>Grows / sells:</strong> {viewing.categories?.map((c) => c.name).join(', ') || '-'}
               </div>
               <div className="small mb-2">
-                <strong>Practices:</strong> {viewing.tags?.join(', ') || '–'}
+                <strong>Practices:</strong> {viewing.tags?.join(', ') || '-'}
               </div>
               <div className="mb-2"><DayDots days={viewing.operatingDays} /></div>
-              <div className="small text-muted-2">Markets: {viewing.markets.map((m) => m.name).join(', ') || '–'}</div>
+              <div className="small text-muted-2">Markets: {viewing.markets.map((m) => m.name).join(', ') || '-'}</div>
               <div className="small text-muted-2">Map pin: {viewing.latitude ? `${viewing.latitude}, ${viewing.longitude}` : 'not set'}</div>
               {viewing.isActive && (
                 <Link to={`/farmers/${viewing.slug}`} className="btn btn-sm btn-white mt-3">

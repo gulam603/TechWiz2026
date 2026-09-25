@@ -13,6 +13,7 @@ import * as pub from '../controllers/publicController.js';
 import * as markets from '../controllers/marketController.js';
 import * as farmers from '../controllers/farmerController.js';
 import * as products from '../controllers/productController.js';
+import * as newsletter from '../controllers/newsletterController.js';
 import * as reviews from '../controllers/reviewController.js';
 import * as orders from '../controllers/orderController.js';
 import * as customer from '../controllers/customerController.js';
@@ -67,6 +68,8 @@ router.get('/map', pub.mapData);
 router.get('/testimonials', pub.testimonials);
 router.get('/announcements/active', optionalAuth, pub.activeAnnouncements);
 router.post('/contact', formLimiter, pub.submitContact);
+router.post('/newsletter', formLimiter, newsletter.subscribe);
+router.post('/newsletter/unsubscribe', formLimiter, newsletter.unsubscribe);
 
 router.get('/markets', markets.listMarkets);
 router.get('/markets/:idOrSlug', optionalAuth, markets.getMarket);
@@ -148,6 +151,7 @@ router.get('/admin/dashboard', ...adminOnly, admin.adminDashboard);
 router.get('/admin/badges', ...adminOnly, admin.adminBadges);
 router.get('/admin/filter-options', ...adminOnly, tools.filterOptions);
 router.post('/admin/tables/:name', ...adminOnly, tools.dataTable); // DataTables server-side processing
+router.delete('/admin/subscribers/:id', ...adminOnly, newsletter.deleteSubscriber);
 router.post('/admin/products/describe', ...adminOnly, tools.writeDescription);
 router.post('/admin/farmers', ...adminOnly, tools.createFarmerAccount);
 router.post('/admin/customers', ...adminOnly, tools.createCustomerAccount);

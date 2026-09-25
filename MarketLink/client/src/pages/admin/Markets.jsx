@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { api, toFormData } from '../../api/client';
@@ -8,14 +7,38 @@ import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import Modal, { ConfirmModal } from '../../components/common/Modal';
 import LocationPicker from '../../components/map/LocationPicker';
-import DayDots from '../../components/common/DayDots';
-import StatusBadge from '../../components/common/StatusBadge';
+import DataGrid from '../../components/admin/DataGrid';
+import { badge, dayDotsCell, display, esc, iconAction, muted, thumbCell } from '../../utils/cells';
 import { PageLoader } from '../../components/common/Loader';
 import { ImageInput } from '../farmer/Products';
 import { DAY_LETTER, DAY_NAMES, time12 } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
 
 const EMPTY = { name: '', description: '', address: '', city: '', categories: [], latitude: '', longitude: '', operatingDays: [], openTime: '07:00', closeTime: '13:00', mapProvider: 'openstreetmap', mapLink: '', isActive: true };
+
+const COLUMNS = [
+  {
+    data: 'name',
+    title: 'Market',
+    responsivePriority: 1,
+    className: 'td-min-lg',
+    render: display((v, m) => thumbCell(m.image, v, esc(m.address), { bg: '#173b2c', href: `/markets/${m.slug}`, cls: m.image?.includes('/seed/') ? '' : 'photo' })),
+  },
+  { data: 'operatingDays', title: 'Days', orderable: false, render: display((v) => dayDotsCell(v || []), (v) => (v || []).map((d) => DAY_NAMES[d]).join(', ')) },
+  { data: 'openTime', title: 'Hours', className: 'dt-nowrap', render: display((v, m) => `<span class="small">${esc(time12(v))} to ${esc(time12(m.closeTime))}</span>`, (v, m) => `${v}-${m.closeTime}`) },
+  { data: 'city', title: 'City', render: display((v) => `<span class="small text-nowrap">${esc(v || '-')}</span>`) },
+  { data: 'categories', title: 'Sells', orderable: false, className: 'td-min', render: display((v) => muted((v || []).map((c) => c.name).join(', ') || '-'), (v) => (v || []).map((c) => c.name).join(', ')) },
+  { data: 'farmerCount', title: 'Farmers', className: 'text-end' },
+  { data: 'isActive', title: 'Status', render: display((v) => badge(v ? 'active' : 'inactive', v ? 'Active' : 'Hidden'), (v) => (v ? 'Active' : 'Hidden')) },
+  {
+    data: null,
+    title: 'Actions',
+    orderable: false,
+    className: 'text-end text-nowrap no-export',
+    responsivePriority: 2,
+    render: (v, type, m) => `${iconAction('edit', `Edit ${m.name}`, 'bi-pencil')} ${iconAction('delete', `Remove ${m.name}`, 'bi-trash3')}`,
+  },
+];
 
 // Rendered with a `key`, so the form starts fresh for every market.
 function MarketForm({ market, onClose, onSaved }) {
@@ -194,69 +217,20 @@ export default function AdminMarkets() {
         }
       />
       <div className="table-card">
-        <div className="table-responsive">
-          <table className="table table-hover">
-            <thead>
-              <tr>
-                <th>Market</th>
-                <th>Days</th>
-                <th>Hours</th>
-                <th>City</th>
-                <th>Sells</th>
-                <th className="text-end">Farmers</th>
-                <th>Status</th>
-                <th className="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.markets.map((m) => (
-                <tr key={m._id}>
-                  <td className="td-min-lg">
-                    <div className="d-flex align-items-center gap-2">
-                      <span className="thumb-sm" style={{ background: '#173b2c' }}>
-                        <img src={m.image} alt="" className={m.image?.includes('/seed/') ? '' : 'photo'} />
-                      </span>
-                      <div>
-                        <Link to={`/markets/${m.slug}`} className="fw-semi small d-block">
-                          {m.name}
-                        </Link>
-                        <span className="fs-7 text-muted-2">{m.address}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <DayDots days={m.operatingDays} />
-                  </td>
-                  <td className="small text-nowrap">
-                    {time12(m.openTime)} – {time12(m.closeTime)}
-                  </td>
-                  <td className="small text-nowrap">{m.city || '–'}</td>
-                  <td className="fs-7 text-muted-2 td-min">{m.categories?.map((c) => c.name).join(', ') || '–'}</td>
-                  <td className="text-end">{m.farmerCount}</td>
-                  <td>
-                    <StatusBadge status={m.isActive ? 'active' : 'inactive'} label={m.isActive ? 'Active' : 'Hidden'} />
-                  </td>
-                  <td className="text-end text-nowrap">
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-white btn-icon"
-                      onClick={() => {
-                        setEditing(m);
-                        setOpen(true);
-                      }}
-                      aria-label={`Edit ${m.name}`}
-                    >
-                      <i className="bi bi-pencil" />
-                    </button>{' '}
-                    <button type="button" className="btn btn-sm btn-white btn-icon" onClick={() => setDeleting(m)} aria-label={`Remove ${m.name}`}>
-                      <i className="bi bi-trash3" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataGrid
+          data={data.markets}
+          columns={COLUMNS}
+          order={[[0, 'asc']]}
+          exportName="MarketLink markets"
+          searchPlaceholder="Market, address or city…"
+          onAction={(name, m) => {
+            if (name === 'edit') {
+              setEditing(m);
+              setOpen(true);
+            }
+            if (name === 'delete') setDeleting(m);
+          }}
+        />
       </div>
       {open && (
         <MarketForm

@@ -182,7 +182,7 @@ function ReportView({ report }) {
                         <td className="text-end">{r.completed}</td>
                         <td className="text-end">{r.itemsSold}</td>
                         <td className="text-end">{money(r.revenue)}</td>
-                        <td className="text-end">{r.reviews ? r.rating : '–'}</td>
+                        <td className="text-end">{r.reviews ? r.rating : '-'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -311,7 +311,7 @@ export default function AdminReports() {
               <span className="eyebrow">Report</span>
               <h2 className="h3 mb-0">{report.title}</h2>
               <div className="small text-muted-2">
-                {formatDate(report.from)} – {formatDate(report.to)} · generated {formatDate(report.generatedAt, { time: true })}
+                {formatDate(report.from)} to {formatDate(report.to)} · generated {formatDate(report.generatedAt, { time: true })}
                 {report.generatedBy?.name && ` by ${report.generatedBy.name}`}
               </div>
             </div>
@@ -348,7 +348,7 @@ export default function AdminReports() {
                 <tr key={r._id} className={report?._id === r._id ? 'table-active' : ''}>
                   <td className="fw-semi small">{r.title}</td>
                   <td className="small">
-                    {formatDate(r.from)} – {formatDate(r.to)}
+                    {formatDate(r.from)} to {formatDate(r.to)}
                   </td>
                   <td className="small">{formatDate(r.generatedAt, { time: true })}</td>
                   <td className="small">{r.generatedBy?.name}</td>

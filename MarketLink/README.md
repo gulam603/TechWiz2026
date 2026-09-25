@@ -27,7 +27,12 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
 - Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
+- **Home page**: banner carousel (welcome, what is in season now, pickup, farmers), search with a **category drop-down**,
+  next market day and live numbers, a **30-second video tour**, market photos, **customer reviews** with an average,
+  star bars and the share of verified purchases, and a **newsletter** sign-up (also in the footer, with an unsubscribe page)
+- **Loading skeletons**: on a slow connection the shape of the page appears straight away instead of a blank screen
 - Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
+- Product photos **without a background** on the product cards (the full photo is in the gallery)
 - Readable product URLs: `/products/sindhri-mangoes`
 - Product details: price, unit, quantity available, farmer, reviews and a **photo gallery** (thumbnails, arrows, swipe,
   **zoom** under the mouse and a full-screen viewer); “From the same stall” and “You may also like” suggestions
@@ -40,6 +45,7 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Order status: placed → accepted → ready for pickup → completed (or declined / cancelled)
 - View, **modify** (items + slot) and **cancel** orders before the farmer’s cut-off time; order history and **reorder**
 - Favourite farmers and products (with **restock alerts**) and saved markets; favourite farmers on the dashboard
+- **My orders** as a table (DataTables: search, sort, export) or as simple cards
 - Reviews and ratings for farmers and products — from the product page, the stall page or **My reviews**
   (to-review list grouped by pickup). Reviews from buyers show **Verified purchase**; customers who did not buy
   can still write one review, shown as **Unverified**. **Report** a review, listing or stall to the admin
@@ -70,7 +76,9 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Pre-orders: accept / decline (with reason) / mark ready / complete; set slot length, slot capacity and order cut-off hours
 - **Closed dates** (“not at the market this week”): customers cannot book pickups on those days and the farmer is warned about existing pre-orders on them
 - Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
-- Read and reply to customer reviews
+- Read and reply to customer reviews (Table or Cards view; reply and report from the table)
+- **Search engine (SEO) details per product**: title, description and keywords, “Fill in for me” and a Google preview
+- Weekly stock and pre-orders in **DataTables** (change stock, weekly template and status right in the table)
 
 **Admin** (same login page as everyone at `/login` — the role decides where you land; own back-office layout without the shop navbar)
 - Collapsible sidebar (Reports as the last item), compact dashboard: KPIs, orders/revenue chart, “needs attention”, recent orders, top farmers
@@ -87,10 +95,12 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
   word filter (publish, remove, restore, suspend the stall or dismiss)
 - Reports: platform overview, orders summary, revenue by market, most active farmers, sales by category, customer
   activity, inventory & low stock, cities overview, reviews & moderation (saved, printable, CSV / Excel export)
-- Master data: product categories; publish announcements (site banner + in-app notification)
+- Master data: product categories; publish announcements (site banner + in-app notification) **for a season**:
+  pick the months (or Winter / Spring / Summer / Autumn), so “Mango season is here!” only shows in summer
+- Markets, categories, announcements and **newsletter subscribers** in DataTables (CSV / Excel / Print)
 - Contact-us inbox
 
-**SEO:** every public page has its own title, description, canonical link, Open Graph / X preview tags and
+**SEO:** every public page has its own title, description, **keywords**, canonical link, Open Graph / X preview tags and
 schema.org structured data (Product with price, stock and rating; LocalBusiness for farmers; Place with opening hours
 for markets; Organization + site search). The server writes these into the HTML before any JavaScript runs,
 answers 404 for unknown products, and serves `/sitemap.xml` (all products, farmers, markets and categories) and

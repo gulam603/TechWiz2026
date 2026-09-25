@@ -25,7 +25,7 @@ export default function OrderCard({ order, to, footer, highlight = false }) {
                 <i className="bi bi-shop" /> {order.farmer.stallName} ·{' '}
               </>
             )}
-            <i className="bi bi-calendar-event" /> {formatDateKey(order.pickupDate)}, {time12(order.pickupSlot.start)} – {time12(order.pickupSlot.end)}
+            <i className="bi bi-calendar-event" /> {formatDateKey(order.pickupDate)}, {time12(order.pickupSlot.start)} to {time12(order.pickupSlot.end)}
             {order.market?.name && (
               <>
                 {' '}

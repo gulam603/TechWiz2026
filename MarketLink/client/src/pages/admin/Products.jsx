@@ -30,7 +30,7 @@ const COLUMNS = [
   { data: 'price', title: 'Price', className: 'text-end', render: display((v, p) => `${moneyCell(v)}<div>${muted(`per ${p.unit}`)}</div>`) },
   { data: 'quantityAvailable', title: 'Stock', className: 'text-end', render: display((v) => (v <= 5 ? `<span class="text-danger fw-semi">${esc(v)}</span>` : esc(v))) },
   { data: 'totalSold', title: 'Sold', className: 'text-end' },
-  { data: 'ratingAvg', title: 'Rating', className: 'text-end', render: display((v, p) => (p.ratingCount ? `${esc(v)} <i class="bi bi-star-fill text-warning"></i>` : '–')) },
+  { data: 'ratingAvg', title: 'Rating', className: 'text-end', render: display((v, p) => (p.ratingCount ? `${esc(v)} <i class="bi bi-star-fill text-warning"></i>` : '-')) },
   { data: 'status', title: 'Status', orderable: false, render: display((v, p) => (p.isRemoved ? badge('removed', 'Removed') : badge(v)), (v, p) => (p.isRemoved ? 'removed' : v)) },
   { data: 'createdAt', title: 'Listed', render: display((v) => dateCell(v)) },
   {

@@ -7,7 +7,9 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import Modal, { ConfirmModal } from '../../components/common/Modal';
-import StatusBadge from '../../components/common/StatusBadge';
+import DataGrid from '../../components/admin/DataGrid';
+import { display, esc, iconAction, numberInput, selectInput, thumbCell } from '../../utils/cells';
+import { imageKind } from '../../utils/images';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { ApprovalBanner } from './Dashboard';
@@ -15,7 +17,77 @@ import { money } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
 
-const EMPTY = { name: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '' };
+const EMPTY = { name: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', metaTitle: '', metaDescription: '', keywords: '' };
+
+const clipText = (text, n) => {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  return t.length > n ? `${t.slice(0, n - 1).replace(/\s+\S*$/, '')}…` : t;
+};
+
+/**
+ * Optional search engine (SEO) details: the title and text Google shows, and keywords that also help
+ * the MarketLink search. "Fill in for me" writes them from the product name, category and description.
+ */
+function SeoFields({ form, setForm, categoryName }) {
+  const change = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const words = form.keywords
+    .split(',')
+    .map((k) => k.trim())
+    .filter(Boolean);
+
+  function suggest() {
+    const name = form.name.trim();
+    const cat = (categoryName || '').toLowerCase();
+    setForm((f) => ({
+      ...f,
+      metaTitle: clipText(`${name}${cat ? `, fresh ${cat} from a local farmer` : ''}`, 60),
+      metaDescription: clipText(f.description || `Fresh ${name.toLowerCase()} from a local farmer. Pre-order on MarketLink and pay at the stall when you pick it up.`, 160),
+      keywords: [...new Set([name.toLowerCase(), `fresh ${name.toLowerCase()}`, cat, cat && `buy ${cat}`, 'local farmer'].filter(Boolean))].join(', '),
+    }));
+  }
+
+  return (
+    <details className="seo-fields" open={Boolean(form.metaTitle || form.metaDescription || form.keywords)}>
+      <summary>
+        <i className="bi bi-google" aria-hidden="true" /> Search engines (SEO) <span className="text-muted-2 fw-normal">· optional, helps people find this product on Google</span>
+      </summary>
+      <div className="row g-3 mt-1">
+        <div className="col-12 d-flex justify-content-between align-items-center gap-2 flex-wrap">
+          <span className="small text-muted-2">Leave empty to use the product name and description.</span>
+          <button type="button" className="btn btn-sm btn-soft" onClick={suggest} disabled={form.name.trim().length < 2}>
+            <i className="bi bi-magic" aria-hidden="true" /> Fill in for me
+          </button>
+        </div>
+        <div className="col-md-6">
+          <label className="form-label d-flex justify-content-between" htmlFor="pf-mtitle">
+            SEO title <span className="text-muted-2 fw-normal">{form.metaTitle.length}/70</span>
+          </label>
+          <input id="pf-mtitle" name="metaTitle" className="form-control" maxLength={70} value={form.metaTitle} onChange={change} placeholder={form.name ? `${form.name}, fresh from the farm` : 'e.g. Sindhri mangoes, fresh fruit'} />
+        </div>
+        <div className="col-md-6">
+          <label className="form-label" htmlFor="pf-keywords">Keywords</label>
+          <input id="pf-keywords" name="keywords" className="form-control" value={form.keywords} onChange={change} placeholder="mangoes, sindhri, fresh fruit" aria-describedby="pf-keywords-help" />
+          <div id="pf-keywords-help" className="form-text">
+            Separate with commas, up to 12. {words.length > 0 && <span className={words.length > 12 ? 'text-danger' : ''}>{words.length} added.</span>}
+          </div>
+        </div>
+        <div className="col-12">
+          <label className="form-label d-flex justify-content-between" htmlFor="pf-mdesc">
+            SEO description <span className="text-muted-2 fw-normal">{form.metaDescription.length}/170</span>
+          </label>
+          <textarea id="pf-mdesc" name="metaDescription" rows={2} className="form-control" maxLength={170} value={form.metaDescription} onChange={change} placeholder="One or two sentences shown under the title in Google." />
+        </div>
+        <div className="col-12">
+          <div className="seo-preview" aria-label="Google preview">
+            <span className="seo-preview-url">marketlink.pk › products › {(form.name || 'your-product').toLowerCase().replace(/[^a-z0-9]+/g, '-')}</span>
+            <strong className="seo-preview-title">{form.metaTitle || form.name || 'Product name'} · MarketLink</strong>
+            <span className="seo-preview-desc">{form.metaDescription || clipText(form.description, 160) || 'Your description appears here.'}</span>
+          </div>
+        </div>
+      </div>
+    </details>
+  );
+}
 
 export function ImageInput({ label = 'Image', current, file, onFile }) {
   // Temporary browser URL so the chosen image can be previewed before upload
@@ -105,6 +177,9 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
           quantityAvailable: product.quantityAvailable,
           templateQuantity: product.templateQuantity,
           description: product.description || '',
+          metaTitle: product.metaTitle || '',
+          metaDescription: product.metaDescription || '',
+          keywords: (product.keywords || []).join(', '),
         }
       : EMPTY
   );
@@ -188,6 +263,9 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
             </div>
             <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} placeholder="Type the product name, then press Write with AI" />
           </div>
+          <div className="col-12">
+            <SeoFields form={form} setForm={setForm} categoryName={categories.find((c) => c._id === form.category)?.name} />
+          </div>
           <div className="col-md-5">
             <ImageInput label="Main photo" current={product?.image} file={file} onFile={setFile} />
           </div>
@@ -214,28 +292,41 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
   );
 }
 
-// Parent passes key={value}, so the input resets whenever the saved value changes.
-function NumberCell({ value, onSave, label, disabled }) {
-  const [v, setV] = useState(value);
-  const commit = () => {
-    if (String(v) !== String(value) && v !== '' && Number(v) >= 0) onSave(Number(v));
-    else setV(value);
-  };
-  return (
-    <input
-      type="number"
-      min="0"
-      className="form-control form-control-sm"
-      style={{ width: 84 }}
-      value={v}
-      aria-label={label}
-      disabled={disabled}
-      onChange={(e) => setV(e.target.value)}
-      onBlur={commit}
-      onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
-    />
-  );
-}
+const STATUS_OPTIONS = [
+  ['available', 'Available'],
+  ['sold_out', 'Sold out'],
+  ['unavailable', 'Unavailable'],
+];
+
+/** Weekly stock table: stock, weekly template and status can be changed right in the table. */
+const stockColumns = (approved) => [
+  {
+    data: 'name',
+    title: 'Product',
+    responsivePriority: 1,
+    render: display(
+      (v, p) =>
+        thumbCell(p.image, v, `${esc(p.category?.name || '')}${p.gallery?.length ? ` · <i class="bi bi-images"></i> ${p.gallery.length + 1} photos` : ''}${p.isRemoved ? `<div class="fs-7 text-danger">Removed: ${esc(p.removedReason)}</div>` : ''}`, {
+          bg: p.category?.color,
+          cls: imageKind(p.image),
+        }),
+      (v, p) => `${v} ${p.category?.name || ''}`
+    ),
+  },
+  { data: 'price', title: 'Price', className: 'dt-nowrap', render: display((v, p) => `<span class="small fw-semi">${esc(money(v))}/${esc(p.unit)}</span>`) },
+  { data: 'quantityAvailable', title: 'In stock', responsivePriority: 3, render: display((v, p) => numberInput('quantityAvailable', v, `Stock of ${p.name}`, !approved)) },
+  { data: 'templateQuantity', title: 'Weekly template', render: display((v, p) => numberInput('templateQuantity', v, `Weekly template of ${p.name}`, !approved)) },
+  { data: 'status', title: 'Status', responsivePriority: 4, render: display((v, p) => selectInput('status', v, STATUS_OPTIONS, `Status of ${p.name}`, !approved), (v) => v.replace('_', ' ')) },
+  { data: 'totalSold', title: 'Sold', className: 'text-end' },
+  {
+    data: null,
+    title: 'Actions',
+    orderable: false,
+    className: 'text-end text-nowrap no-export',
+    responsivePriority: 2,
+    render: (v, type, p) => `${iconAction('edit', `Edit ${p.name}`, 'bi-pencil', 'btn-white', !approved)} ${iconAction('delete', `Delete ${p.name}`, 'bi-trash3', 'btn-white', !approved)}`,
+  },
+];
 
 export default function FarmerProducts() {
   useDocumentTitle('Weekly stock');
@@ -243,8 +334,7 @@ export default function FarmerProducts() {
   const { toast } = useToast();
   const [params, setParams] = useSearchParams();
   const status = params.get('status') || '';
-  const [search, setSearch] = useState('');
-  const { data, loading, reload, setData } = useFetch(`/farmer/products?status=${status}&search=${encodeURIComponent(search)}`);
+  const { data, loading, reload, setData } = useFetch(`/farmer/products?status=${status}`);
   const { data: catData } = useFetch('/categories');
   const [editing, setEditing] = useState(null);
   const [formOpen, setFormOpen] = useState(false);
@@ -274,6 +364,7 @@ export default function FarmerProducts() {
       toast('Saved');
     } catch (err) {
       toast(err.message, 'error');
+      setData((d) => ({ ...d, products: [...d.products] })); // show the saved value again
     }
   }
 
@@ -284,6 +375,7 @@ export default function FarmerProducts() {
       toast(`${product.name} marked as ${next.replace('_', ' ')}`);
     } catch (err) {
       toast(err.message, 'error');
+      setData((d) => ({ ...d, products: [...d.products] })); // show the saved status again
     }
   }
 
@@ -388,94 +480,32 @@ export default function FarmerProducts() {
               </button>
             ))}
           </div>
-          <div className="search-pill" style={{ maxWidth: 260 }}>
-            <i className="bi bi-search" />
-            <input placeholder="Search products" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Search products" />
-          </div>
         </div>
         {products.length === 0 ? (
           <div className="p-4">
             <EmptyState title="No products here" message={approved ? 'Add your first product to start taking pre-orders.' : 'You can add products once your stall is approved.'} />
           </div>
         ) : (
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Price</th>
-                  <th>In stock</th>
-                  <th>Weekly template</th>
-                  <th>Status</th>
-                  <th>Sold</th>
-                  <th className="text-end">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((p) => (
-                  <tr key={p._id}>
-                    <td>
-                      <div className="d-flex align-items-center gap-2">
-                        <span className="thumb-sm" style={{ background: p.category?.color }}>
-                          <img src={p.image} alt="" className={p.image?.includes('/seed/') ? '' : 'photo'} />
-                        </span>
-                        <div>
-                          <strong className="d-block small">{p.name}</strong>
-                          <span className="fs-7 text-muted-2">
-                            {p.category?.name}
-                            {p.gallery?.length > 0 && (
-                              <>
-                                {' '}
-                                · <i className="bi bi-images" aria-hidden="true" /> {p.gallery.length + 1} photos
-                              </>
-                            )}
-                          </span>
-                          {p.isRemoved && <div className="fs-7 text-danger">Removed: {p.removedReason}</div>}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="small fw-semi text-nowrap">
-                      {money(p.price)}/{p.unit}
-                    </td>
-                    <td>
-                      <NumberCell key={`q${p.quantityAvailable}`} value={p.quantityAvailable} label={`Stock of ${p.name}`} disabled={!approved} onSave={(n) => quickUpdate(p, { quantityAvailable: n })} />
-                    </td>
-                    <td>
-                      <NumberCell key={`t${p.templateQuantity}`} value={p.templateQuantity} label={`Weekly template of ${p.name}`} disabled={!approved} onSave={(n) => quickUpdate(p, { templateQuantity: n })} />
-                    </td>
-                    <td>
-                      <select className="form-select form-select-sm" style={{ width: 140 }} value={p.status} onChange={(e) => setStatus(p, e.target.value)} aria-label={`Status of ${p.name}`} disabled={!approved}>
-                        <option value="available">Available</option>
-                        <option value="sold_out">Sold out</option>
-                        <option value="unavailable">Unavailable</option>
-                      </select>
-                      <div className="mt-1 d-lg-none">
-                        <StatusBadge status={p.status} />
-                      </div>
-                    </td>
-                    <td className="small">{p.totalSold}</td>
-                    <td className="text-end text-nowrap">
-                      <button
-                        type="button"
-                        className="btn btn-sm btn-white btn-icon"
-                        onClick={() => {
-                          setEditing(p);
-                          setFormOpen(true);
-                        }}
-                        aria-label={`Edit ${p.name}`}
-                        disabled={!approved}
-                      >
-                        <i className="bi bi-pencil" />
-                      </button>{' '}
-                      <button type="button" className="btn btn-sm btn-white btn-icon" onClick={() => setDeleting(p)} aria-label={`Delete ${p.name}`} disabled={!approved}>
-                        <i className="bi bi-trash3" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataGrid
+            key={status}
+            data={products}
+            columns={stockColumns(approved)}
+            order={[]}
+            exportName="MarketLink weekly stock"
+            searchPlaceholder="Search products…"
+            emptyText="No products here"
+            onEdit={(field, p, value) => {
+              if (field === 'status') setStatus(p, value);
+              else if (value !== '' && Number(value) >= 0 && Number(value) !== p[field]) quickUpdate(p, { [field]: Number(value) });
+            }}
+            onAction={(name, p) => {
+              if (name === 'edit') {
+                setEditing(p);
+                setFormOpen(true);
+              }
+              if (name === 'delete') setDeleting(p);
+            }}
+          />
         )}
       </div>
 

@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { Category, City, ContactMessage, ContentFlag, Farmer, Market, Order, Product, Review, User } from '../models/index.js';
+import { Category, City, ContactMessage, ContentFlag, Farmer, Market, Order, Product, Review, Subscriber, User } from '../models/index.js';
 import AppError from '../utils/AppError.js';
 import { ORDER_STATUS, ROLES, USER_STATUS } from '../utils/constants.js';
 import { assertId, escapeRegex, isValidId, requireFields, round2, slugify, toNumber } from '../utils/helpers.js';
@@ -588,6 +588,17 @@ const TABLES = {
           .populate('farmer', 'stallName slug isActive')
           .populate('reporter', 'name email role')
           .populate('resolvedBy', 'name'),
+    }),
+
+  // Newsletter subscribers
+  subscribers: (req) =>
+    dataTableQuery({
+      req,
+      Model: Subscriber,
+      filter: (f) => ({ ...(['subscribed', 'unsubscribed'].includes(f.status) ? { status: f.status } : {}), ...(f.source ? { source: String(f.source) } : {}), ...dateRange('createdAt', f.from, f.to) }),
+      search: (text) => REGEX_FIELDS(['email', 'name'], text),
+      sortable: { email: 'email', name: 'name', createdAt: 'createdAt', status: 'status', source: 'source' },
+      query: (q) => q.select('-token'),
     }),
 
   // Contact form messages

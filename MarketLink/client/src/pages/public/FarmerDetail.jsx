@@ -25,7 +25,7 @@ export default function FarmerDetail() {
   useSeo(
     f
       ? {
-          title: `${f.stallName} – local farmer${f.city ? ` in ${f.city}` : ''}`,
+          title: `${f.stallName}, local farmer${f.city ? ` in ${f.city}` : ''}`,
           description: clip(f.bio || `${f.stallName} sells fresh produce on MarketLink. See this week's stock, pickup times and reviews.`),
           image: f.coverImage || f.logo,
           type: 'profile',
@@ -184,7 +184,7 @@ export default function FarmerDetail() {
                 <ul className="window-list">
                   {windows.map((w) => (
                     <li key={w._id}>
-                      <span className="day">{DAY_SHORT[w.day]}</span> {time12(w.start)} – {time12(w.end)}
+                      <span className="day">{DAY_SHORT[w.day]}</span> {time12(w.start)} to {time12(w.end)}
                     </li>
                   ))}
                 </ul>

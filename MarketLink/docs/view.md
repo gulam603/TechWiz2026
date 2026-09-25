@@ -8,14 +8,15 @@ sends guests to the right login page and blocks other roles.
 
 | Piece | File | What it does |
 | --- | --- | --- |
-| Announcement bar | `components/layout/AnnouncementBar.jsx` | active admin announcement, can be dismissed |
-| Navbar | `components/layout/Navbar.jsx` | logo, main links, global search, basket, notification bell, account menu; turns a shadow on while scrolling |
+| Announcement bar | `components/layout/AnnouncementBar.jsx` | the admin announcement for the current season (months chosen by the admin), optional "Shop now" link, can be dismissed |
+| Navbar | `components/layout/Navbar.jsx` | logo, main links (Home, Shop, Markets, Farmers, Map, About, Contact), search with a category drop-down, basket, notification bell, account menu; turns a shadow on while scrolling |
+| Loading skeletons | `components/common/Skeletons.jsx`, `client/index.html` | grey page shapes while the app, a page or its data loads (slow connections): a first skeleton inside `index.html`, a home-page and a general page skeleton while a page's code downloads, and placeholders inside each home section |
 | Mobile drawer | `components/layout/MobileMenu.jsx` | phones/tablets: slide-in menu with its own scroll, backdrop, Escape to close, closes after navigation |
 | Bottom tab bar | `components/layout/MobileTabBar.jsx` | phones/tablets: 5 role-aware tabs (guest/customer: Home, Shop, Map, Basket, Account; farmer: Stall, Orders, Stock, Pickup, Profile; admin: Dashboard, Farmers, Orders, Markets, Reports) |
 | Basket sidebar | `components/cart/CartDrawer.jsx` | basket on the right: lines per farmer, quantities, total, Checkout and View full basket; opens from the basket icon and after adding from a product page or quick view |
 | Dropdown with search | `components/common/SearchSelect.jsx` | replaces long `<select>` lists (cities, markets, categories, farmers, customers, all filter bars): search box, arrow keys, Enter, Escape |
 | AI assistant | `components/chat/ChatWidget.jsx` | floating chat "Basket" with memory, saved history and Clear chat (not in the admin area) |
-| Footer | `components/layout/Footer.jsx` | links, team contact (Aptech Learning Centre, F.B. Area, Karachi), "Built by Team Omniverse", credits, Terms |
+| Footer | `components/layout/Footer.jsx` | Shop, For farmers and Help & legal links (Terms & Conditions, Privacy), newsletter sign-up (not on the home page, which has its own), team contact (Aptech Learning Centre, F.B. Area, Karachi), "Built by Team Omniverse", credits |
 | App shell | `components/layout/AppShell.jsx` | shared back-office layout of the customer, farmer and admin areas: flat forest sidebar with sections and counters, collapse to icons (remembered), drawer on phones, top bar with page title, quick actions, notification bell and account menu; no public navbar |
 | Dashboard layout | `components/layout/DashboardLayout.jsx` | customer and farmer sidebars on the app shell (counters: ready orders, pickups to review, new pre-orders, low stock); pending farmers only see Dashboard, Stall profile and Notifications; keeps the chat and the bottom tab bar |
 | Admin layout | `components/admin/AdminLayout.jsx` | admin sidebar on the app shell (counters: open orders, pending farmers, open reports, new messages), top bar with Place order, Add farmer; no chat |
@@ -24,7 +25,7 @@ sends guests to the right login page and blocks other roles.
 
 | Route | Page | Content |
 | --- | --- | --- |
-| `/` | Home | hero with search and live stats (count-up), next market day, mini map, categories, popular products, how it works, markets near you (map), top-rated farmers, testimonials, farmer call-to-action |
+| `/` | Home | banner carousel (welcome, this season's harvest, pickup, farmers; autoplay with pause, dots, arrows, swipe), search card (category drop-down, popular categories, next market day, live numbers), categories row, popular products, video tour + 4 steps, markets near you (map), top-rated farmers, market photos, customer reviews (average, star bars, verified share, swipeable cards), newsletter, farmer call-to-action |
 | `/products` | Shop | search, filters (category, city, market, market day, price range, in stock), sorting, pagination |
 | `/products/:slug` | Product detail (readable URL, e.g. `/products/sindhri-mangoes`; old id links redirect) | real product photo with credit, price, unit, stock bar, quantity + add to basket, farmer card, pickup windows, reviews, related products |
 | `/markets` | Markets | search, city dropdown (cities table), produce category dropdown, day filter, "Near me" (distance sort), grid or map view |
@@ -33,7 +34,8 @@ sends guests to the right login page and blocks other roles.
 | `/farmers/:slug` | Farmer profile | stall name, location, operating days, what they grow, practices, weekly stock, pickup windows, closed dates, map with route, reviews |
 | `/map` | Explore map | full map of markets and stalls with a searchable list, day filter, "near me", routes |
 | `/about` | About us | problem, solution, live numbers, values, "Who built MarketLink" – Team Omniverse banner and team cards |
-| `/terms` | Terms & Conditions | 12 sections (accounts, pre-orders, cancellations, payment, farmers, reviews, AI assistant, privacy …) with a table of contents |
+| `/terms` | Terms & Conditions | 12 sections (accounts, pre-orders, cancellations, payment, farmers, reviews, AI assistant, privacy …) with a table of contents (a fold-out list on phones); linked from the footer, while the sign-up forms open the same text in a dialog |
+| `/unsubscribe?token=` | Unsubscribe | opened from the newsletter e-mail; stops the newsletter for that address |
 | `/contact` | Contact us | static team contact, Google Map, contact form (goes to the admin inbox) |
 | `/cart` | Basket | items grouped by farmer (one pickup per farmer), quantities, totals; the basket icon opens the same basket as a sidebar on the right |
 | `/login`, `/register` | Customer / farmer login, customer sign-up | floating produce banner; sign-up asks name, contact number, e-mail, address and a required "I agree to the Terms & Conditions" (terms open in a dialog) |
@@ -80,13 +82,14 @@ Every admin table is a DataTables grid (search, sort, paging, CSV / Excel / Prin
 | `/admin/orders`, `/admin/orders/:id` | Orders | all pre-orders; filters: status, city, market, farmer, placed by, pickup and placed date ranges, min/max total; Place order (modal) |
 | `/admin/farmers` | Farmers | approve, suspend or reactivate, details modal, Add farmer (modal); filters: status, city, market, category, joined dates |
 | `/admin/customers`, `/admin/customers/:id` | Customers + customer history | activate / deactivate, Add customer; History: profile, spend, purchases per farmer (products and quantities), orders per month, full order history grid |
-| `/admin/markets` | Markets | add, edit, remove markets (city dropdown, what is sold there, days, timings, coordinates, map link, image) |
+| `/admin/markets` | Markets | DataTable of markets; add, edit, remove markets (city dropdown, what is sold there, days, timings, coordinates, map link, image) |
 | `/admin/cities` | Cities | cities table: add, edit, hide or delete cities used by every city dropdown |
-| `/admin/categories` | Categories | master data |
+| `/admin/categories` | Categories | master data in a DataTable (icon, products, order, colour, status) |
 | `/admin/products` | Product listings | remove or restore listings; filters: listing status, category, farmer, city, low stock, price range |
 | `/admin/reviews` | Reviews | remove or restore reviews; filters: visibility, product/farmer, rating, farmer, dates |
 | `/admin/moderation` | Moderation | KPIs, Open / Resolved / Dismissed tabs, reports about reviews, listings and stalls plus reviews held by the word filter; publish, remove, restore, suspend stall, dismiss (with a note) |
-| `/admin/announcements` | Announcements | publish site banner + in-app notification |
+| `/admin/announcements` | Announcements | publish or edit a site banner + in-app notification; season presets or months, optional link; DataTable with Live / Waiting for its season / Hidden |
+| `/admin/newsletter` | Newsletter | subscribers in a DataTable (status, where they signed up, dates), remove, CSV / Excel export |
 | `/admin/messages` | Contact messages | inbox from the Contact page (open, mark read, reply by e-mail, delete) |
 | `/admin/notifications` | Notifications | system notices |
 | `/admin/purchases` | Customer purchases | which customer bought what from which farmer: KPIs, top customers, top farmers, amount per day, customer × farmer heat map, pairs table, most bought products; filters and export |

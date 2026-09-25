@@ -82,7 +82,7 @@ export default function Navbar() {
         <ul className="navbar-nav flex-row gap-1 mx-auto d-none d-lg-flex">
           {LINKS.map((l) => (
             <li key={l.to} className="nav-item">
-              <NavLink to={l.to} className="nav-link">
+              <NavLink to={l.to} end={l.end} className="nav-link">
                 {l.label}
               </NavLink>
             </li>
@@ -124,7 +124,7 @@ export default function Navbar() {
 
       {searchOpen && (
         <div className="container nav-search-row">
-          <GlobalSearch className="nav-search" autoFocus />
+          <GlobalSearch className="nav-search" autoFocus withCategory />
         </div>
       )}
 

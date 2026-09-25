@@ -68,7 +68,7 @@ function Matrix({ matrix }) {
               <th scope="row">{r.customer}</th>
               {r.cells.map((v, i) => (
                 <td key={matrix.farmers[i]} className="text-end" style={{ '--heat': v ? 0.12 + (v / max) * 0.7 : 0 }} title={`${r.customer} → ${matrix.farmers[i]}: ${money(v)}`}>
-                  {v ? moneyCompact(v) : '–'}
+                  {v ? moneyCompact(v) : '-'}
                 </td>
               ))}
             </tr>
@@ -112,7 +112,7 @@ export default function AdminPurchases() {
               <KpiCard variant="warn" icon="bi-shop" label="Farmers" value={data.totals.farmers} />
             </div>
             <div className="col-6 col-md-4 col-xl-2">
-              <KpiCard icon="bi-diagram-3" label="Buyer–farmer pairs" value={data.totals.pairs} />
+              <KpiCard icon="bi-diagram-3" label="Buyer and farmer pairs" value={data.totals.pairs} />
             </div>
           </div>
 

@@ -23,6 +23,7 @@ export const ADMIN_NAV = [
   { section: 'Communication' },
   { to: '/admin/announcements', icon: 'bi-megaphone', label: 'Announcements' },
   { to: '/admin/messages', icon: 'bi-envelope', label: 'Contact messages', badge: 'newMessages', badgeTone: 'warn' },
+  { to: '/admin/newsletter', icon: 'bi-envelope-paper-heart', label: 'Newsletter' },
   { to: '/admin/notifications', icon: 'bi-bell', label: 'Notifications' },
   { section: 'Insights' },
   { to: '/admin/purchases', icon: 'bi-diagram-3', label: 'Customer purchases' },

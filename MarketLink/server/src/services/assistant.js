@@ -149,7 +149,7 @@ async function productDetails(productId, focus, mode = 'full') {
   }
   if (mode === 'price') return reply(`**${product.name}** costs ${money(product.price)} per ${product.unit} at ${product.farmer.stallName}. You pay at pickup.`, card);
   return reply(
-    `**${product.name}** (${product.category?.name}) – ${money(product.price)} per ${product.unit} from **${product.farmer.stallName}**.\n${product.description || ''}\nStock: ${stock}.${product.ratingCount ? `\nRating: {{icon:star-fill}} ${product.ratingAvg} from ${product.ratingCount} review(s).` : ''}\nPickup: ${days.join('; ') || 'no pickup windows yet'} (order ${product.farmer.orderCutoffHours} h before your slot).`,
+    `**${product.name}** (${product.category?.name}): ${money(product.price)} per ${product.unit} from **${product.farmer.stallName}**.\n${product.description || ''}\nStock: ${stock}.${product.ratingCount ? `\nRating: {{icon:star-fill}} ${product.ratingAvg} from ${product.ratingCount} review(s).` : ''}\nPickup: ${days.join('; ') || 'no pickup windows yet'} (order ${product.farmer.orderCutoffHours} h before your slot).`,
     { cards: [productCard(product)], suggestions: ['Is it in stock?', `Pickup windows for ${product.farmer.stallName}`, 'How do I pay?'] }
   );
 }
@@ -226,7 +226,7 @@ async function respond(message, user, memory, focus) {
   if (city && /\b(i live|i am in|i'm in|im in|i stay|i am from|i'm from|rehta|rehti)\b/.test(text)) {
     const local = markets.filter((m) => m.city === city);
     focus.intent = 'markets_list';
-    return reply(`Got it, I'll remember that you're in ${city}. Markets in ${city}:\n${local.map((m) => `• **${m.name}** – ${fmtDays(m.operatingDays)}, ${m.openTime}-${m.closeTime}`).join('\n')}`, {
+    return reply(`Got it, I'll remember that you're in ${city}. Markets in ${city}:\n${local.map((m) => `• **${m.name}**: ${fmtDays(m.operatingDays)}, ${m.openTime}-${m.closeTime}`).join('\n')}`, {
       cards: local.slice(0, 6).map(marketCard),
     });
   }
@@ -287,7 +287,7 @@ async function respond(message, user, memory, focus) {
     if (!user || user.role !== ROLES.CUSTOMER) return reply('Please log in as a customer to see your orders. After logging in, open **My Orders** from your account menu.');
     const orders = await Order.find({ customer: user._id, status: { $in: OPEN_ORDER_STATUSES } }).populate('farmer', 'stallName').sort({ pickupAt: 1 }).limit(5).lean();
     if (!orders.length) return reply('You have no active pre-orders right now. Browse the shop to place one!');
-    const lines = orders.map((o) => `• **${o.orderNumber}** – ${o.farmer?.stallName}: *${o.status}*, pickup ${o.pickupDate} at ${o.pickupSlot.start}`);
+    const lines = orders.map((o) => `• **${o.orderNumber}**: ${o.farmer?.stallName}: *${o.status}*, pickup ${o.pickupDate} at ${o.pickupSlot.start}`);
     return reply(`Here are your active pre-orders:\n${lines.join('\n')}`, {
       cards: orders.map((o) => ({ kind: 'order', id: String(o._id), title: o.orderNumber, subtitle: `${o.status} · ${o.pickupDate} ${o.pickupSlot.start}`, link: `/account/orders/${o._id}` })),
     });
@@ -315,7 +315,7 @@ async function respond(message, user, memory, focus) {
     const list = (day !== null ? pool.filter((m) => m.operatingDays.includes(day)) : pool).slice(0, 6);
     if (!list.length) return reply(`No market${where ? ` in ${where}` : ''} is open on ${DAY_NAMES[day]}.`);
     const heading = `${day !== null ? `Markets open on ${DAY_NAMES[day]}` : 'Market timings'}${where ? ` in ${where}` : ''}`;
-    return reply(`${heading}:\n${list.map((m) => `• **${m.name}** – ${fmtDays(m.operatingDays)}, ${m.openTime}-${m.closeTime}`).join('\n')}`, {
+    return reply(`${heading}:\n${list.map((m) => `• **${m.name}**: ${fmtDays(m.operatingDays)}, ${m.openTime}-${m.closeTime}`).join('\n')}`, {
       cards: list.map(marketCard),
     });
   }
@@ -348,7 +348,7 @@ async function respond(message, user, memory, focus) {
     const found = await searchProducts(productWords, category?._id, farmer._id);
     if (found.length) {
       Object.assign(focus, { farmer, intent: 'farmer' });
-      return reply(`${farmer.stallName} has:\n${found.map((p) => `• **${p.name}** – ${money(p.price)}/${p.unit}${p.status === PRODUCT_STATUS.AVAILABLE ? ` (${p.quantityAvailable} left)` : ' (sold out)'}`).join('\n')}`, {
+      return reply(`${farmer.stallName} has:\n${found.map((p) => `• **${p.name}**: ${money(p.price)}/${p.unit}${p.status === PRODUCT_STATUS.AVAILABLE ? ` (${p.quantityAvailable} left)` : ' (sold out)'}`).join('\n')}`, {
         cards: found.map(productCard),
       });
     }
@@ -370,7 +370,7 @@ async function respond(message, user, memory, focus) {
     if (day !== null) list = list.filter((f) => f.operatingDays.includes(day));
     const where = [market ? `at ${market.name}` : '', day !== null ? `on ${DAY_NAMES[day]}` : ''].filter(Boolean).join(' ');
     if (!list.length) return reply(`I couldn't find farmers ${where}.`);
-    return reply(`Farmers ${where}:\n${list.slice(0, 6).map((f) => `• **${f.stallName}** – ${fmtDays(f.operatingDays)}`).join('\n')}`, { cards: list.slice(0, 6).map(farmerCard) });
+    return reply(`Farmers ${where}:\n${list.slice(0, 6).map((f) => `• **${f.stallName}**: ${fmtDays(f.operatingDays)}`).join('\n')}`, { cards: list.slice(0, 6).map(farmerCard) });
   }
 
   // --- product search ------------------------------------------------------
@@ -396,7 +396,7 @@ async function respond(message, user, memory, focus) {
 
   if (products.length) {
     focus.intent = 'products_list';
-    const lines = products.map((p) => `• **${p.name}** – ${money(p.price)}/${p.unit} from ${p.farmer?.stallName}${p.status === PRODUCT_STATUS.AVAILABLE ? ` (${p.quantityAvailable} left)` : ' (sold out)'}`);
+    const lines = products.map((p) => `• **${p.name}**: ${money(p.price)}/${p.unit} from ${p.farmer?.stallName}${p.status === PRODUCT_STATUS.AVAILABLE ? ` (${p.quantityAvailable} left)` : ' (sold out)'}`);
     return reply(`Here is what I found${category ? ` in ${category.name}` : ''}:\n${lines.join('\n')}`, { cards: products.map(productCard) });
   }
   if (market) return marketAnswer();

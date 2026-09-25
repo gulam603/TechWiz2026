@@ -39,6 +39,26 @@ export default function Terms() {
             </nav>
           </aside>
           <div className="col-lg-9">
+            <details className="terms-toc-mobile d-lg-none">
+              <summary>
+                <i className="bi bi-list-ul" aria-hidden="true" /> On this page
+              </summary>
+              <ol>
+                {TERMS_SECTIONS.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={`#terms-${s.id}`}
+                      onClick={(e) => {
+                        e.currentTarget.closest('details')?.removeAttribute('open');
+                        jump(e, s.id);
+                      }}
+                    >
+                      {s.title}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </details>
             <div className="terms-panel">
               <TermsContent />
               <div className="terms-foot">

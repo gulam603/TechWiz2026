@@ -20,7 +20,7 @@ export default function Cart() {
       <div className="container py-5">
         <EmptyState
           title="Your basket is empty"
-          message="Browse this week's harvest and add a few things — you'll choose a pickup slot at checkout."
+          message="Browse this week's harvest and add a few things. You'll choose a pickup slot at checkout."
           action={<Link to="/products" className="btn btn-primary">Start shopping</Link>}
         />
       </div>

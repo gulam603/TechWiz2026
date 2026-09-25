@@ -51,7 +51,7 @@ function PickupEditor({ farmer, allMarkets }) {
       const res = await api.put('/farmer/pickup', { markets, pickupWindows: windows, blockedDates: blocked, ...settings });
       setBlocked(res.farmer.blockedDates || []);
       toast('Pickup settings saved');
-      if (res.clashes) toast(`${res.clashes} open pre-order(s) fall on a closed date — please decline or contact those customers`, 'error');
+      if (res.clashes) toast(`${res.clashes} open pre-order(s) fall on a closed date. Please decline them or contact those customers`, 'error');
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -99,7 +99,7 @@ function PickupEditor({ farmer, allMarkets }) {
                   <span className="min-w-0">
                     <strong className="d-block small">{m.name}</strong>
                     <span className="fs-7 text-muted-2 d-block">
-                      {m.city} · {time12(m.openTime)}–{time12(m.closeTime)}
+                      {m.city} · {time12(m.openTime)} to {time12(m.closeTime)}
                     </span>
                     <DayDots days={m.operatingDays} />
                   </span>

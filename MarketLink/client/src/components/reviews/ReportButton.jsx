@@ -14,11 +14,16 @@ const REASONS = [
 ];
 
 /** "Report" link for a review, a product listing or a stall: sends it to the admin moderation queue. */
-export default function ReportButton({ targetType, targetId, label = 'Report', className = '' }) {
+export default function ReportButton({ targetType, targetId, label = 'Report', className = '', startOpen = false, onClose }) {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [open, setOpenState] = useState(startOpen);
+  // `startOpen` + `onClose`: opened from a table action, with no button of its own
+  const setOpen = (value) => {
+    setOpenState(value);
+    if (!value) onClose?.();
+  };
   const [reason, setReason] = useState('misleading');
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
@@ -45,9 +50,11 @@ export default function ReportButton({ targetType, targetId, label = 'Report', c
 
   return (
     <>
-      <button type="button" className={`btn-report ${className}`} onClick={start}>
-        <i className="bi bi-flag" aria-hidden="true" /> {label}
-      </button>
+      {!startOpen && (
+        <button type="button" className={`btn-report ${className}`} onClick={start}>
+          <i className="bi bi-flag" aria-hidden="true" /> {label}
+        </button>
+      )}
       {open && (
         <Modal
           open

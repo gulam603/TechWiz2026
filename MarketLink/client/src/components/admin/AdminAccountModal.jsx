@@ -48,7 +48,7 @@ export default function AdminAccountModal({ type = 'farmer', onClose, onCreated 
       if (!body.password) delete body.password;
       const res = await api.post(isFarmer ? '/admin/farmers' : '/admin/customers', body);
       resetFilterOptions();
-      toast(`${isFarmer ? form.stallName : form.name} created${res.inviteSent ? ' – invite e-mail sent' : ''}`);
+      toast(`${isFarmer ? form.stallName : form.name} created${res.inviteSent ? ', invite e-mail sent' : ''}`);
       onCreated?.(res);
     } catch (err) {
       setError(err.message);

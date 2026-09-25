@@ -36,7 +36,7 @@ const COLUMNS = [
     title: 'About',
     render: display((v, r) => (v === 'product' && r.product ? `${link(productPath(r.product), r.product.name, 'small fw-semi')}<div class="fs-7 text-muted-2">${esc(r.farmer?.stallName || '')}</div>` : `<span class="small fw-semi">${esc(r.farmer?.stallName || '')}</span><div class="fs-7 text-muted-2">Farmer review</div>`), (v, r) => (v === 'product' ? r.product?.name : r.farmer?.stallName)),
   },
-  { data: 'comment', title: 'Comment', orderable: false, className: 'dt-comment', render: display((v, r) => `<span class="small">${esc(v || '–')}</span>${r.response?.text ? `<div class="fs-7 text-muted-2 mt-1"><i class="bi bi-reply"></i> ${esc(r.response.text)}</div>` : ''}`) },
+  { data: 'comment', title: 'Comment', orderable: false, className: 'dt-comment', render: display((v, r) => `<span class="small">${esc(v || '-')}</span>${r.response?.text ? `<div class="fs-7 text-muted-2 mt-1"><i class="bi bi-reply"></i> ${esc(r.response.text)}</div>` : ''}`) },
   { data: 'isRemoved', title: 'Status', orderable: false, render: display((v) => (v ? badge('removed', 'Removed') : badge('active', 'Visible')), (v) => (v ? 'Removed' : 'Visible')) },
   { data: 'createdAt', title: 'Date', render: display((v) => dateCell(v)) },
   { data: null, title: 'Actions', orderable: false, className: 'text-end no-export', responsivePriority: 2, render: (v, type, r) => (r.isRemoved ? action('restore', 'Restore', 'btn-soft') : action('remove', 'Remove', 'btn-outline-danger')) },

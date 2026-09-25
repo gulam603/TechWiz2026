@@ -5,6 +5,19 @@ export const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export const DAY_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+/** "All year", "Sep to Nov", "Dec to Feb" or "Jan, Mar, Jul" for announcement months (1-12). */
+export function monthsLabel(months = []) {
+  const list = [...new Set(months)].sort((a, b) => a - b);
+  if (!list.length || list.length === 12) return 'All year';
+  if (list.length === 1) return MONTHS[list[0] - 1];
+  // Find a run of consecutive months, allowing it to wrap past December (e.g. Dec, Jan, Feb)
+  for (const start of list) {
+    const run = list.map((_, i) => ((start - 1 + i) % 12) + 1);
+    if (run.every((m) => list.includes(m))) return `${MONTHS[start - 1]} to ${MONTHS[run[run.length - 1] - 1]}`;
+  }
+  return list.map((m) => MONTHS[m - 1]).join(', ');
+}
+
 // A non-breaking space keeps "Rs 1,200" on one line inside tables and cards
 export function money(value) {
   const n = Number(value) || 0;

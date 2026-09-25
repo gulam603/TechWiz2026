@@ -148,7 +148,7 @@ function FarmerInsights() {
           <KpiCard variant="info" icon="bi-graph-up" label="Average order" value={money(Math.round(kpis.averageOrder))} sub={`${money(kpis.revenueTotal)} in total`} />
         </div>
         <div className="col-12 col-xl">
-          <KpiCard icon="bi-star" label="Rating" value={kpis.ratingCount ? `${kpis.rating} / 5` : '–'} sub={`${kpis.ratingCount} reviews`} />
+          <KpiCard icon="bi-star" label="Rating" value={kpis.ratingCount ? `${kpis.rating} / 5` : '-'} sub={`${kpis.ratingCount} reviews`} />
         </div>
       </div>
 

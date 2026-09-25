@@ -80,12 +80,12 @@ export default function AdminCustomerDetail() {
                 <StatusBadge status={customer.status} label={customer.status === 'inactive' ? 'Deactivated' : 'Active'} />
               </div>
             </div>
-            <div className="info-row"><span>Phone</span><span>{customer.phone || '–'}</span></div>
-            <div className="info-row"><span>Address</span><span>{customer.address || '–'}{customer.city ? `, ${customer.city}` : ''}</span></div>
+            <div className="info-row"><span>Phone</span><span>{customer.phone || '-'}</span></div>
+            <div className="info-row"><span>Address</span><span>{customer.address || '-'}{customer.city ? `, ${customer.city}` : ''}</span></div>
             <div className="info-row"><span>Joined</span><span>{formatDate(customer.createdAt)}</span></div>
-            <div className="info-row"><span>Last login</span><span>{customer.lastLoginAt ? formatDate(customer.lastLoginAt, { time: true }) : '–'}</span></div>
+            <div className="info-row"><span>Last login</span><span>{customer.lastLoginAt ? formatDate(customer.lastLoginAt, { time: true }) : '-'}</span></div>
             <div className="info-row"><span>Favourites</span><span>{customer.favorites.farmers} farmers · {customer.favorites.products} products</span></div>
-            <div className="info-row"><span>Household</span><span>{household.length ? household.map((h) => h.name).join(', ') : '–'}</span></div>
+            <div className="info-row"><span>Household</span><span>{household.length ? household.map((h) => h.name).join(', ') : '-'}</span></div>
           </div>
         </div>
         <div className="col-xl-8">
@@ -100,10 +100,10 @@ export default function AdminCustomerDetail() {
               <KpiCard variant="info" icon="bi-shop" label="Farmers bought from" value={stats.farmers} sub={stats.cancelled ? `${stats.cancelled} cancelled/declined` : 'no cancellations'} />
             </div>
             <div className="col-6 col-md-6">
-              <KpiCard icon="bi-calendar-check" label="First order" value={stats.firstOrder ? formatDate(stats.firstOrder) : '–'} />
+              <KpiCard icon="bi-calendar-check" label="First order" value={stats.firstOrder ? formatDate(stats.firstOrder) : '-'} />
             </div>
             <div className="col-12 col-md-6">
-              <KpiCard icon="bi-clock-history" label="Last order" value={stats.lastOrder ? formatDate(stats.lastOrder) : '–'} />
+              <KpiCard icon="bi-clock-history" label="Last order" value={stats.lastOrder ? formatDate(stats.lastOrder) : '-'} />
             </div>
           </div>
         </div>

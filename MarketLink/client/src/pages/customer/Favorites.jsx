@@ -67,7 +67,7 @@ export default function Favorites() {
             <MapView
               height={320}
               className="mb-4"
-              markers={data.markets.map((m) => ({ id: m._id, lat: m.latitude, lng: m.longitude, type: 'market', image: m.image, title: m.name, subtitle: `${time12(m.openTime)} – ${time12(m.closeTime)}`, link: `/markets/${m.slug}` }))}
+              markers={data.markets.map((m) => ({ id: m._id, lat: m.latitude, lng: m.longitude, type: 'market', image: m.image, title: m.name, subtitle: `${time12(m.openTime)} to ${time12(m.closeTime)}`, link: `/markets/${m.slug}` }))}
             />
             <div className="row g-3">
               {data.markets.map((m) => (

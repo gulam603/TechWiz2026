@@ -11,6 +11,82 @@ import { timeAgo } from '../../utils/format';
 import Avatar from '../../components/common/Avatar';
 import ReportButton from '../../components/reviews/ReportButton';
 import VerifiedBadge from '../../components/reviews/VerifiedBadge';
+import Modal from '../../components/common/Modal';
+import useViewMode from '../../hooks/useViewMode';
+import ViewToggle from '../../components/common/ViewToggle';
+import DataGrid from '../../components/admin/DataGrid';
+import { action, dateCell, display, esc } from '../../utils/cells';
+
+const stars = (n) => `<span class="rating" aria-label="Rated ${n} out of 5">${[1, 2, 3, 4, 5].map((i) => `<i class="bi ${n >= i ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}</span>`;
+
+const COLUMNS = [
+  { data: 'customer.name', title: 'Customer', responsivePriority: 1, render: display((v) => `<strong class="small">${esc(v || 'Customer')}</strong>`) },
+  {
+    data: 'rating',
+    title: 'Rating',
+    render: display((v, r) => `${stars(v)}<div class="mt-1">${r.verified ? '<span class="review-badge is-verified"><i class="bi bi-patch-check-fill"></i> Verified purchase</span>' : '<span class="review-badge"><i class="bi bi-question-circle"></i> Unverified</span>'}</div>`),
+  },
+  { data: 'type', title: 'About', render: display((v, r) => `<span class="chip chip-soft">${esc(v === 'product' ? r.product?.name || 'Product' : 'Stall review')}</span>`, (v, r) => (v === 'product' ? r.product?.name : 'Stall')) },
+  {
+    data: 'comment',
+    title: 'Review and your reply',
+    orderable: false,
+    className: 'dt-comment',
+    render: display((v, r) => `<span class="small">${esc(v || '-')}</span>${r.response?.text ? `<div class="farmer-reply mt-1 fs-7"><strong class="d-block text-success">Your reply</strong>${esc(r.response.text)}</div>` : ''}`),
+  },
+  { data: 'createdAt', title: 'Date', render: display((v) => dateCell(v)) },
+  {
+    data: null,
+    title: 'Actions',
+    orderable: false,
+    className: 'text-end no-export',
+    responsivePriority: 2,
+    render: (v, type, r) => `<div class="dt-actions">${action('reply', r.response?.text ? 'Edit reply' : 'Reply', 'btn-soft', 'bi-reply')}${action('report', 'Report', 'btn-white', 'bi-flag')}</div>`,
+  },
+];
+
+/** Reply to a review from the table view. */
+function ReplyModal({ review, onClose, onSaved }) {
+  const { toast } = useToast();
+  const [text, setText] = useState(review.response?.text || '');
+  const [busy, setBusy] = useState(false);
+  async function send(e) {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const res = await api.post(`/farmer/reviews/${review._id}/respond`, { text });
+      toast('Reply posted');
+      onSaved(res.review);
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title={`Reply to ${review.customer?.name || 'the customer'}`}
+      footer={
+        <>
+          <button type="button" className="btn btn-white" onClick={onClose}>
+            Cancel
+          </button>
+          <button type="submit" form="reply-form" className="btn btn-primary" disabled={busy}>
+            Post reply
+          </button>
+        </>
+      }
+    >
+      <form id="reply-form" onSubmit={send}>
+        {review.comment && <blockquote className="small text-muted-2 border-start ps-2">“{review.comment}”</blockquote>}
+        <label className="form-label" htmlFor="reply-text">Your reply</label>
+        <textarea id="reply-text" className="form-control" rows={3} value={text} onChange={(e) => setText(e.target.value)} maxLength={1000} required autoFocus placeholder="Write a friendly reply…" />
+      </form>
+    </Modal>
+  );
+}
 
 function ReplyBox({ review, onSaved }) {
   const { toast } = useToast();
@@ -56,13 +132,17 @@ export default function FarmerReviews() {
   useDocumentTitle('Reviews');
   const [filter, setFilter] = useState('all');
   const { data, loading, setData } = useFetch(`/farmer/reviews${filter === 'unanswered' ? '?unanswered=true' : ''}`);
+  const [view, setView] = useViewMode('farmer-reviews');
+  const [replying, setReplying] = useState(null);
+  const [reporting, setReporting] = useState(null);
+  const saved = (rev) => setData((d) => ({ ...d, reviews: d.reviews.map((x) => (x._id === rev._id ? { ...x, response: rev.response } : x)) }));
   if (loading && !data) return <PageLoader />;
   const reviews = data.reviews;
   const avg = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
 
   return (
     <>
-      <DashHeader title="Customer reviews" subtitle="See what customers say about your stall and products, and reply to them." />
+      <DashHeader title="Customer reviews" subtitle="See what customers say about your stall and products, and reply to them." actions={<ViewToggle value={view} onChange={setView} />} />
       <div className="d-flex align-items-center gap-3 flex-wrap mb-3">
         <div className="tabs-pill">
           {[
@@ -82,6 +162,21 @@ export default function FarmerReviews() {
       </div>
       {reviews.length === 0 ? (
         <EmptyState image="/illustrations/sunflower.webp" title="No reviews here" message="Reviews appear after customers collect their orders." />
+      ) : view === 'table' ? (
+        <div className="table-card">
+          <DataGrid
+            key={filter}
+            data={reviews}
+            columns={COLUMNS}
+            order={[[4, 'desc']]}
+            exportName="MarketLink reviews"
+            searchPlaceholder="Customer, product or text…"
+            onAction={(name, r) => {
+              if (name === 'reply') setReplying(r);
+              if (name === 'report') setReporting(r);
+            }}
+          />
+        </div>
       ) : (
         <div className="d-grid gap-2">
           {reviews.map((r) => (
@@ -102,13 +197,24 @@ export default function FarmerReviews() {
                 </div>
               )}
               <div className="d-flex align-items-center justify-content-between gap-2 flex-wrap">
-                <ReplyBox review={r} onSaved={(rev) => setData((d) => ({ ...d, reviews: d.reviews.map((x) => (x._id === rev._id ? { ...x, response: rev.response } : x)) }))} />
+                <ReplyBox review={r} onSaved={saved} />
                 <ReportButton targetType="review" targetId={r._id} label="Report review" className="mt-2" />
               </div>
             </div>
           ))}
         </div>
       )}
+      {replying && (
+        <ReplyModal
+          review={replying}
+          onClose={() => setReplying(null)}
+          onSaved={(rev) => {
+            saved(rev);
+            setReplying(null);
+          }}
+        />
+      )}
+      {reporting && <ReportButton key={reporting._id} targetType="review" targetId={reporting._id} startOpen onClose={() => setReporting(null)} />}
     </>
   );
 }

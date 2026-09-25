@@ -22,7 +22,7 @@ async function resolveCategoryId(value) {
 /** Builds the Mongo filter for the product catalogue from query string filters. */
 export async function buildProductFilter(query) {
   const filter = Product.publicFilter();
-  if (query.search) filter.$or = [{ name: containsRegex(query.search) }, { description: containsRegex(query.search) }];
+  if (query.search) filter.$or = [{ name: containsRegex(query.search) }, { description: containsRegex(query.search) }, { keywords: containsRegex(query.search) }];
 
   const categoryId = await resolveCategoryId(query.category);
   if (categoryId === null) return null; // unknown category -> no results

@@ -49,7 +49,7 @@ export default function PickupPicker({ farmerId, value, onChange, excludeOrder }
           {day.windows.map((w) => (
             <div key={w.market._id + w.start} className="mb-3">
               <div className="small text-muted-2 mb-2">
-                <i className="bi bi-geo-alt-fill text-success" /> <strong className="text-forest">{w.market.name}</strong> · {time12(w.start)} – {time12(w.end)}
+                <i className="bi bi-geo-alt-fill text-success" /> <strong className="text-forest">{w.market.name}</strong> · {time12(w.start)} to {time12(w.end)}
               </div>
               <div className="slot-grid">
                 {w.slots.map((s) => {

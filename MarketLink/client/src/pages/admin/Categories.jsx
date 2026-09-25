@@ -5,11 +5,28 @@ import { api, toFormData } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import Modal, { ConfirmModal } from '../../components/common/Modal';
-import StatusBadge from '../../components/common/StatusBadge';
+import DataGrid from '../../components/admin/DataGrid';
+import { badge, display, esc, iconAction, thumbCell } from '../../utils/cells';
 import { PageLoader } from '../../components/common/Loader';
 import { ImageInput } from '../farmer/Products';
 
 const EMPTY = { name: '', description: '', color: '#E4F3D8', sortOrder: 0, isActive: true };
+
+const COLUMNS = [
+  { data: 'name', title: 'Category', responsivePriority: 1, render: display((v, c) => thumbCell(c.icon, v, esc((c.description || '').length > 70 ? `${c.description.slice(0, 68)}…` : c.description || ''), { bg: c.color, href: `/products?category=${c.slug}` })) },
+  { data: 'productCount', title: 'Products', className: 'text-end' },
+  { data: 'sortOrder', title: 'Order', className: 'text-end' },
+  { data: 'color', title: 'Colour', orderable: false, render: display((v) => `<span class="d-inline-flex align-items-center gap-2 small"><span class="swatch" style="background:${esc(v)}"></span>${esc(v)}</span>`) },
+  { data: 'isActive', title: 'Status', render: display((v) => badge(v ? 'active' : 'inactive', v ? 'Active' : 'Hidden'), (v) => (v ? 'Active' : 'Hidden')) },
+  {
+    data: null,
+    title: 'Actions',
+    orderable: false,
+    className: 'text-end text-nowrap no-export',
+    responsivePriority: 2,
+    render: (v, type, c) => `${iconAction('edit', `Edit ${c.name}`, 'bi-pencil')} ${iconAction('delete', `Delete ${c.name}`, 'bi-trash3')}`,
+  },
+];
 
 // Rendered with a `key`, so the form starts fresh for every category.
 function CategoryForm({ category, onClose, onSaved }) {
@@ -119,41 +136,21 @@ export default function AdminCategories() {
           </button>
         }
       />
-      <div className="row g-3">
-        {data.categories.map((c) => (
-          <div key={c._id} className="col-sm-6 col-xl-4">
-            <div className="panel d-flex gap-3 align-items-center">
-              <span className="thumb-sm" style={{ background: c.color, width: 56, height: 56 }}>
-                {c.icon ? <img src={c.icon} alt="" /> : <i className="bi bi-tag" />}
-              </span>
-              <div className="flex-grow-1 min-w-0">
-                <strong className="d-block">{c.name}</strong>
-                <span className="fs-7 text-muted-2">
-                  {c.productCount} products · order {c.sortOrder}
-                </span>
-                <div className="mt-1">
-                  <StatusBadge status={c.isActive ? 'active' : 'inactive'} label={c.isActive ? 'Active' : 'Hidden'} />
-                </div>
-              </div>
-              <div className="d-flex flex-column gap-1">
-                <button
-                  type="button"
-                  className="btn btn-sm btn-white btn-icon"
-                  onClick={() => {
-                    setEditing(c);
-                    setOpen(true);
-                  }}
-                  aria-label={`Edit ${c.name}`}
-                >
-                  <i className="bi bi-pencil" />
-                </button>
-                <button type="button" className="btn btn-sm btn-white btn-icon" onClick={() => setDeleting(c)} aria-label={`Delete ${c.name}`}>
-                  <i className="bi bi-trash3" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="table-card">
+        <DataGrid
+          data={data.categories}
+          columns={COLUMNS}
+          order={[[2, 'asc']]}
+          exportName="MarketLink categories"
+          searchPlaceholder="Category name…"
+          onAction={(name, c) => {
+            if (name === 'edit') {
+              setEditing(c);
+              setOpen(true);
+            }
+            if (name === 'delete') setDeleting(c);
+          }}
+        />
       </div>
       {open && (
         <CategoryForm
@@ -166,7 +163,7 @@ export default function AdminCategories() {
           }}
         />
       )}
-      <ConfirmModal open={Boolean(deleting)} title={`Delete ${deleting?.name}?`} message="Categories that are used by products cannot be deleted — hide them instead." confirmLabel="Delete" danger onConfirm={remove} onClose={() => setDeleting(null)} />
+      <ConfirmModal open={Boolean(deleting)} title={`Delete ${deleting?.name}?`} message="Categories that are used by products cannot be deleted. Hide them instead." confirmLabel="Delete" danger onConfirm={remove} onClose={() => setDeleting(null)} />
     </>
   );
 }

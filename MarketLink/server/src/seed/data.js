@@ -507,11 +507,39 @@ export const farmerResponses = [
   'Thanks for supporting local farmers!',
 ];
 
+// Seasonal notices: each one shows only in its months (1 = January), so the banner always
+// matches what is actually being harvested. Empty months = all year.
 export const announcements = [
   {
-    title: 'Mango season is here!',
-    message: 'Sindhri and Chaunsa mangoes are now available from Gadap Orchard Co. Pre-order early — they sell out by Sunday noon!',
+    title: 'Winter harvest is here!',
+    message: 'Kinnow from Sargodha, sweet carrots, green peas and fresh greens are at the markets now. Pre-order for Friday pickup.',
     audience: 'all',
+    months: [12, 1, 2],
+    link: '/products?category=vegetables',
+    isActive: true,
+  },
+  {
+    title: 'Strawberry season is here!',
+    message: 'Sweet Lahore strawberries and the first spring greens are in. Boxes sell out quickly, so pre-order early.',
+    audience: 'all',
+    months: [3, 4],
+    link: '/products?category=fruits',
+    isActive: true,
+  },
+  {
+    title: 'Mango season is here!',
+    message: 'Sindhri and Chaunsa mangoes are now available from Gadap Orchard Co. Pre-order early: they sell out by Sunday noon!',
+    audience: 'all',
+    months: [5, 6, 7, 8],
+    link: '/products?category=fruits',
+    isActive: true,
+  },
+  {
+    title: 'Autumn harvest: apples and pears are in!',
+    message: 'New-season Swat apples, juicy pears and kiwis from Margalla Hills Farm are at the markets this week. Pre-order for pickup.',
+    audience: 'all',
+    months: [9, 10, 11],
+    link: '/products?category=fruits',
     isActive: true,
   },
   {
@@ -520,6 +548,16 @@ export const announcements = [
     audience: 'farmer',
     isActive: true,
   },
+];
+
+// Newsletter sign-ups (the weekly harvest e-mail)
+export const subscribers = [
+  { email: 'customer@marketlink.com', name: 'Ayesha Khan', source: 'home' },
+  { email: 'sara@marketlink.com', name: 'Sara Ali', source: 'footer' },
+  { email: 'mariam@example.com', name: 'Mariam Siddiqui', source: 'footer' },
+  { email: 'hamza@marketlink.com', name: 'Hamza Sheikh', source: 'checkout' },
+  { email: 'zainab.r@example.com', source: 'home' },
+  { email: 'ali.hassan@example.com', source: 'footer', status: 'unsubscribed', unsubscribedAt: new Date() },
 ];
 
 export const contactMessages = [

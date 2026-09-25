@@ -19,7 +19,7 @@ export default function About() {
   const { data } = useFetch('/stats');
   return (
     <>
-      <PageHero crumbs={[{ label: 'About' }]} title="Bringing the farmers market online — without losing its soul" subtitle="MarketLink (theme: eGreen Basket) is a platform that connects local farmers-market stalls with the families who shop there." />
+      <PageHero crumbs={[{ label: 'About' }]} title="Bringing the farmers market online, without losing its soul" subtitle="MarketLink (theme: eGreen Basket) is a platform that connects local farmers-market stalls with the families who shop there." />
       <div className="container pb-5">
         <div className="row g-4 align-items-stretch mb-5">
           <div className="col-lg-7">

@@ -243,7 +243,7 @@ export default function RegisterFarmer() {
                       <span className="flex-grow-1 min-w-0">
                         <strong className="d-block small">{m.name}</strong>
                         <span className="fs-7 text-muted-2">
-                          {m.city} · {time12(m.openTime)}–{time12(m.closeTime)}
+                          {m.city} · {time12(m.openTime)} to {time12(m.closeTime)}
                         </span>
                       </span>
                       <span className="d-none d-md-inline-flex">

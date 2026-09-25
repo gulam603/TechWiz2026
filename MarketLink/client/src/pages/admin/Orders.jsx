@@ -32,7 +32,7 @@ const COLUMNS = [
   { data: 'customer.name', title: 'Customer', orderable: false, responsivePriority: 4, render: display((v, o) => person(v, o.customer?.email, o.customer?.avatar)) },
   { data: 'farmer.stallName', title: 'Farmer', orderable: false, responsivePriority: 6, className: 'dt-market', render: display((v) => `<span class="small">${esc(v)}</span>`) },
   { data: 'market.name', title: 'Market', orderable: false, responsivePriority: 7, className: 'dt-market', render: display((v, o) => `<span class="small">${esc(v)}</span><div>${muted(o.market?.city || '')}</div>`) },
-  { data: 'pickupDate', title: 'Pickup', responsivePriority: 5, className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(`${time12(o.pickupSlot?.start)} – ${time12(o.pickupSlot?.end)}`)}</div>`) },
+  { data: 'pickupDate', title: 'Pickup', responsivePriority: 5, className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(`${time12(o.pickupSlot?.start)} to ${time12(o.pickupSlot?.end)}`)}</div>`) },
   { data: 'items', title: 'Items', orderable: false, responsivePriority: 9, className: 'text-end', render: (v, type) => (type === 'display' || type === 'export' ? v.reduce((s, i) => s + i.quantity, 0) : v.length) },
   { data: 'totalAmount', title: 'Total', responsivePriority: 3, className: 'text-end', render: display(moneyCell) },
   { data: 'status', title: 'Status', responsivePriority: 2, className: 'dt-nowrap', render: display((v) => badge(v)) },

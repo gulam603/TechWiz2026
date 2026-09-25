@@ -83,7 +83,7 @@ export default function Markets() {
               type: 'market',
               image: m.image,
               title: m.name,
-              subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)}–${time12(m.closeTime)}`,
+              subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)} to ${time12(m.closeTime)}`,
               link: `/markets/${m.slug}`,
             }))}
           />

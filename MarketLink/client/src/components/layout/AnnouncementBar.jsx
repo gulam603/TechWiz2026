@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { useAuth } from '../../context/AuthContext';
 
@@ -12,7 +13,7 @@ function readDismissed() {
   }
 }
 
-/** Shows the latest active admin announcement as a thin banner above the navbar. */
+/** Shows the latest active admin announcement (for the current season) as a thin banner above the navbar. */
 export default function AnnouncementBar() {
   const { user } = useAuth();
   const { data } = useFetch(`/announcements/active?r=${user?.role || 'guest'}`);
@@ -33,8 +34,13 @@ export default function AnnouncementBar() {
       <div className="container d-flex align-items-center gap-2 py-2">
         <i className="bi bi-megaphone-fill" />
         <span className="flex-grow-1 text-truncate">
-          <strong>{item.title}</strong> <span className="d-none d-md-inline">— {item.message}</span>
+          <strong>{item.title}</strong> <span className="d-none d-md-inline">{item.message}</span>
         </span>
+        {item.link && (
+          <Link to={item.link} className="announcement-link">
+            Shop now <i className="bi bi-arrow-right" aria-hidden="true" />
+          </Link>
+        )}
         <button type="button" className="btn-close" aria-label="Dismiss announcement" onClick={() => setDismissed((d) => [...d, item._id])} />
       </div>
     </div>

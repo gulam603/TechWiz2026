@@ -25,12 +25,16 @@ export default defineConfig({
     chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('recharts') || id.includes('d3-')) return 'charts';
-            if (id.includes('leaflet')) return 'maps';
-            return 'vendor';
-          }
+        // Only React itself is loaded up front. Charts, maps and DataTables are big, so they load
+        // with the pages that use them; a slow connection gets the home page much sooner.
+        // Higher priority groups pick their modules first (a group also takes its dependencies).
+        codeSplitting: {
+          groups: [
+            { name: 'vendor', test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler|cookie|set-cookie-parser|clsx)[\\/]/, priority: 40 },
+            { name: 'charts', test: /[\\/]node_modules[\\/](recharts|d3-[^\\/]+|victory-vendor|es-toolkit|decimal\.js-light|eventemitter3|react-redux|@reduxjs|redux|reselect|immer|use-sync-external-store|tiny-invariant)[\\/]/, priority: 30 },
+            { name: 'maps', test: /[\\/]node_modules[\\/](leaflet|react-leaflet|@react-leaflet)[\\/]/, priority: 20 },
+            { name: 'datatables', test: /[\\/]node_modules[\\/](datatables\.net[^\\/]*|jszip|jquery)[\\/]/, priority: 10 },
+          ],
         },
       },
     },

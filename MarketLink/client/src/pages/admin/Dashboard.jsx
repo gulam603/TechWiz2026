@@ -203,7 +203,7 @@ export default function AdminDashboard() {
                             {f.rating} <i className="bi bi-star-fill text-warning" />
                           </>
                         ) : (
-                          '–'
+                          '-'
                         )}
                       </td>
                     </tr>

@@ -8,6 +8,21 @@ import Pagination from '../../components/common/Pagination';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { useAuth } from '../../context/AuthContext';
+import useViewMode from '../../hooks/useViewMode';
+import ViewToggle from '../../components/common/ViewToggle';
+import DataGrid from '../../components/admin/DataGrid';
+import { badge, dayCell, display, esc, link, linkButton, moneyCell, muted } from '../../utils/cells';
+import { time12 } from '../../utils/format';
+
+const COLUMNS = [
+  { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/account/orders/${o._id}`, v)}${o.canModify ? '<div><span class="chip chip-soft">Editable</span></div>' : ''}`) },
+  { data: 'farmer.stallName', title: 'Farmer', render: display((v, o) => `<span class="small">${esc(v || '')}</span><div>${muted(o.market?.name || '')}</div>`) },
+  { data: 'pickupDate', title: 'Pickup', className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(`${time12(o.pickupSlot?.start)} to ${time12(o.pickupSlot?.end)}`)}</div>`) },
+  { data: 'items', title: 'Items', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc((v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join(' · '))}</span>`, (v) => (v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join('; ')) },
+  { data: 'totalAmount', title: 'Total', className: 'text-end', render: display((v) => moneyCell(v)) },
+  { data: 'status', title: 'Status', responsivePriority: 3, render: display((v) => badge(v)) },
+  { data: null, title: '', orderable: false, className: 'text-end no-export', responsivePriority: 2, render: (v, type, o) => linkButton(`/account/orders/${o._id}`, 'View', 'btn-white') },
+];
 
 const TABS = [
   { value: 'active', label: 'Active' },
@@ -20,12 +35,14 @@ export default function CustomerOrders() {
   const { user } = useAuth();
   const [tab, setTab] = useState('active');
   const [page, setPage] = useState(1);
-  const { data, loading } = useFetch(`/orders/my?status=${tab}&page=${page}&limit=10`);
+  const [view, setView] = useViewMode('customer-orders');
+  const table = view === 'table';
+  const { data, loading } = useFetch(`/orders/my?status=${tab}&page=${page}&limit=${table ? 50 : 10}`);
   const family = useFetch(user.household ? '/orders/family' : null);
 
   return (
     <>
-      <DashHeader title="My orders" subtitle="Track, modify or cancel pre-orders before the farmer's cut-off time, and reorder past favourites." />
+      <DashHeader title="My orders" subtitle="Track, modify or cancel pre-orders before the farmer's cut-off time, and reorder past favourites." actions={<ViewToggle value={view} onChange={setView} />} />
       <div className="tabs-pill mb-3" role="tablist">
         {TABS.map((t) => (
           <button
@@ -47,6 +64,10 @@ export default function CustomerOrders() {
         <PageLoader />
       ) : data.orders.length === 0 ? (
         <EmptyState title={tab === 'active' ? 'No active pre-orders' : 'No orders yet'} message="Browse this week's harvest and place your first pre-order." action={<Link to="/products" className="btn btn-primary">Start shopping</Link>} />
+      ) : table ? (
+        <div className="table-card">
+          <DataGrid key={tab} data={data.orders} columns={COLUMNS} order={[[2, 'desc']]} exportName="My MarketLink orders" searchPlaceholder="Order, farmer or item…" />
+        </div>
       ) : (
         <div className="d-grid gap-2">
           {data.orders.map((o) => (

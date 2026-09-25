@@ -11,18 +11,19 @@ import env from '../config/env.js';
  */
 
 const SITE = 'MarketLink';
-const DEFAULT_TITLE = 'MarketLink – Fresh from local farmers markets';
+const DEFAULT_TITLE = 'MarketLink | Fresh from local farmers markets';
+const DEFAULT_KEYWORDS = ['farmers market', 'fresh produce', 'local farmers', 'pre-order vegetables', 'fresh fruit', 'organic food', 'Karachi farmers market', 'Pakistan', 'pickup', 'MarketLink'];
 const DEFAULT_DESCRIPTION = 'MarketLink connects local farmers markets with customers: see what each farmer has in stock this week, pre-order fresh produce and pick it up at the market. Pay at the stall.';
 const DAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 // Pages that are only useful after logging in (or are personal) are kept out of search results
-const PRIVATE = /^\/(account|farmer(\/|$)|admin|checkout|cart|reset-password|forgot-password)/;
+const PRIVATE = /^\/(account|farmer(\/|$)|admin|checkout|cart|reset-password|forgot-password|unsubscribe)/;
 
 const STATIC_PAGES = {
   '/': { title: null, description: DEFAULT_DESCRIPTION },
-  '/products': { title: 'Shop fresh produce', description: 'Browse this week’s vegetables, fruit, dairy, honey, baked goods and more from local farmers. Filter by market, day, city and price, then pre-order for pickup.' },
-  '/markets': { title: 'Farmers markets', description: 'Find farmers markets near you: opening days and times, location on the map and the farmers selling at each market.' },
-  '/farmers': { title: 'Local farmers', description: 'Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.' },
+  '/products': { title: 'Shop fresh produce', description: 'Browse this week’s vegetables, fruit, dairy, honey, baked goods and more from local farmers. Filter by market, day, city and price, then pre-order for pickup.', keywords: ['buy fresh vegetables', 'buy fruit online', 'dairy', 'honey', 'bakery', 'farm produce'] },
+  '/markets': { title: 'Farmers markets', description: 'Find farmers markets near you: opening days and times, location on the map and the farmers selling at each market.', keywords: ['farmers markets near me', 'market timings', 'weekly bazaar'] },
+  '/farmers': { title: 'Local farmers', description: 'Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.', keywords: ['local growers', 'farm stalls', 'organic farms'] },
   '/map': { title: 'Market map', description: 'All farmers markets and farmer stalls on one map, with directions and opening days.' },
   '/about': { title: 'About MarketLink', description: 'MarketLink brings local farmers markets online so families can reserve fresh food before market day and farmers waste less. Built by Team Omniverse.' },
   '/contact': { title: 'Contact us', description: 'Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.' },
@@ -61,14 +62,16 @@ const absolute = (origin, url) => (!url ? `${origin}/brand/icon-512.png` : /^htt
 async function productMeta(slug, origin) {
   const product = await Product.findOne({ slug: slug.toLowerCase(), isRemoved: false, farmerActive: true })
     .populate('category', 'name')
-    .populate('farmer', 'stallName slug')
+    .populate('farmer', 'stallName slug city')
     .lean();
   if (!product) return null;
   const inStock = product.status === 'available' && product.quantityAvailable > 0;
   const url = `${origin}/products/${product.slug}`;
   return {
-    title: `${product.name} – Rs ${product.price} per ${product.unit} from ${product.farmer?.stallName}`,
-    description: clip(product.description || `${product.name} (${product.category?.name}) from ${product.farmer?.stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.`),
+    // The farmer's own SEO title, description and keywords win; otherwise they are built from the product
+    title: product.metaTitle || `${product.name}, Rs ${product.price} per ${product.unit} from ${product.farmer?.stallName}`,
+    description: clip(product.metaDescription || product.description || `${product.name} (${product.category?.name}) from ${product.farmer?.stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.`),
+    keywords: [...(product.keywords || []), product.name, product.category?.name, product.farmer?.stallName, product.farmer?.city && `${product.category?.name} in ${product.farmer.city}`],
     image: absolute(origin, product.image),
     type: 'product',
     jsonLd: {
@@ -78,6 +81,7 @@ async function productMeta(slug, origin) {
       description: product.description || undefined,
       image: [product.image, ...(product.gallery || []).map((g) => g.url)].filter(Boolean).map((u) => absolute(origin, u)),
       category: product.category?.name,
+      keywords: product.keywords?.length ? product.keywords.join(', ') : undefined,
       url,
       brand: { '@type': 'Brand', name: product.farmer?.stallName },
       offers: {
@@ -97,7 +101,8 @@ async function farmerMeta(slug, origin) {
   const farmer = await Farmer.findOne({ slug: slug.toLowerCase(), isActive: true }).lean();
   if (!farmer) return null;
   return {
-    title: `${farmer.stallName} – local farmer${farmer.city ? ` in ${farmer.city}` : ''}`,
+    title: `${farmer.stallName}, local farmer${farmer.city ? ` in ${farmer.city}` : ''}`,
+    keywords: [farmer.stallName, ...(farmer.tags || []), farmer.city && `farmer in ${farmer.city}`],
     description: clip(farmer.bio || `${farmer.stallName} sells fresh produce on MarketLink. See this week's stock, pickup times and reviews.`),
     image: absolute(origin, farmer.coverImage || farmer.logo),
     type: 'profile',
@@ -121,8 +126,9 @@ async function marketMeta(slug, origin) {
   if (!market) return null;
   const days = (market.operatingDays || []).map((d) => DAY[d]);
   return {
-    title: `${market.name} – farmers market${market.city ? ` in ${market.city}` : ''}`,
-    description: clip(market.description || `${market.name}, ${market.address}. Open ${days.join(', ')}, ${market.openTime}–${market.closeTime}. See the farmers and pre-order on MarketLink.`),
+    title: `${market.name}, farmers market${market.city ? ` in ${market.city}` : ''}`,
+    description: clip(market.description || `${market.name}, ${market.address}. Open ${days.join(', ')}, ${market.openTime} to ${market.closeTime}. See the farmers and pre-order on MarketLink.`),
+    keywords: [market.name, market.city && `farmers market ${market.city}`, 'weekly market'],
     image: absolute(origin, market.image),
     type: 'website',
     jsonLd: {
@@ -154,7 +160,7 @@ export async function pageMeta(req) {
     // A category page of the shop gets its own title
     if (pathname === '/products' && req.query.category) {
       const category = await Category.findOne({ slug: String(req.query.category).toLowerCase() }).select('name description').lean().catch(() => null);
-      if (category) meta = { title: `${category.name} from local farmers`, description: clip(category.description || `Fresh ${category.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`) };
+      if (category) meta = { title: `${category.name} from local farmers`, description: clip(category.description || `Fresh ${category.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`), keywords: [`fresh ${category.name.toLowerCase()}`, `buy ${category.name.toLowerCase()}`] };
     }
   } else {
     meta = { title: null, description: DEFAULT_DESCRIPTION, noindex: PRIVATE.test(pathname) };
@@ -195,6 +201,19 @@ function siteJsonLd(origin) {
   };
 }
 
+/** Page keywords first, then the site keywords (no duplicates, 20 at most). */
+export function keywordList(extra = []) {
+  const seen = new Set();
+  const out = [];
+  for (const k of [...(extra || []), ...DEFAULT_KEYWORDS]) {
+    const word = String(k || '').trim();
+    if (!word || seen.has(word.toLowerCase())) continue;
+    seen.add(word.toLowerCase());
+    out.push(word);
+  }
+  return out.slice(0, 20).join(', ');
+}
+
 const ldScript = (id, data) => `<script type="application/ld+json" id="${id}">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 
 function headTags(meta) {
@@ -204,6 +223,7 @@ function headTags(meta) {
   const tags = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}" />`,
+    `<meta name="keywords" content="${esc(keywordList(meta.keywords))}" />`,
     `<meta name="robots" content="${meta.noindex ? 'noindex, nofollow' : 'index, follow'}" />`,
     meta.noindex ? '' : `<link rel="canonical" href="${esc(meta.canonical)}" />`,
     `<meta property="og:site_name" content="${SITE}" />`,
@@ -232,7 +252,7 @@ export async function sendPage(req, res) {
 
 let sitemapCache = { at: 0, origin: '', xml: '' };
 
-/** GET /sitemap.xml  – every public page, product, farmer and market (cached for 10 minutes). */
+/** GET /sitemap.xml: every public page, product, farmer and market (cached for 10 minutes). */
 export async function sitemap(req, res) {
   const origin = siteOrigin(req);
   if (sitemapCache.xml && sitemapCache.origin === origin && Date.now() - sitemapCache.at < 10 * 60 * 1000) {

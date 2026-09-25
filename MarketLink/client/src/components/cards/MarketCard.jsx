@@ -33,7 +33,7 @@ export default function MarketCard({ market }) {
         <div className="meta-line mb-3">
           <i className="bi bi-clock" />
           <span>
-            {time12(market.openTime)} – {time12(market.closeTime)}
+            {time12(market.openTime)} to {time12(market.closeTime)}
           </span>
         </div>
         <div className="mt-auto d-flex align-items-center justify-content-between gap-2 flex-wrap">

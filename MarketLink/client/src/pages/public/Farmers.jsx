@@ -60,7 +60,7 @@ export default function Farmers() {
             <div className="col-12 col-md-6 col-xl-3 d-flex gap-2">
               <select className="form-select" value={filters.sort} onChange={(e) => set({ sort: e.target.value })} aria-label="Sort">
                 <option value="rating">Top rated</option>
-                <option value="name">Name A–Z</option>
+                <option value="name">Name A to Z</option>
                 <option value="newest">Newest</option>
               </select>
               <div className="tabs-pill flex-shrink-0">

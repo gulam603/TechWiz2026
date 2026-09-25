@@ -5,24 +5,94 @@ import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import { PageLoader } from '../../components/common/Loader';
-import { formatDate } from '../../utils/format';
+import { MONTHS, monthsLabel } from '../../utils/format';
+import DataGrid from '../../components/admin/DataGrid';
+import { action, badge, dateCell, display, esc, iconAction } from '../../utils/cells';
 
 const AUDIENCE = { all: 'Everyone', customer: 'Customers', farmer: 'Farmers' };
+
+// Harvest seasons in Pakistan, used as one-click presets for the month chips
+const SEASONS = [
+  { label: 'All year', months: [] },
+  { label: 'Winter', months: [12, 1, 2] },
+  { label: 'Spring', months: [3, 4] },
+  { label: 'Summer', months: [5, 6, 7, 8] },
+  { label: 'Autumn', months: [9, 10, 11] },
+];
+
+const EMPTY = { title: '', message: '', audience: 'all', months: [], link: '', notify: true };
+
+const sameMonths = (a, b) => a.length === b.length && a.every((m) => b.includes(m));
+
+function statusOf(a, month) {
+  if (!a.isActive) return ['cancelled', 'Hidden'];
+  return !a.months?.length || a.months.includes(month) ? ['completed', 'Live banner'] : ['placed', 'Waiting for its season'];
+}
+
+const columns = (month) => [
+  {
+    data: 'title',
+    title: 'Announcement',
+    responsivePriority: 1,
+    className: 'dt-comment',
+    render: display((v, a) => `<strong class="small d-block">${esc(v)}</strong><div class="fs-7 text-muted-2 dt-clip">${esc(a.message)}</div>${a.link ? `<div class="fs-7 mt-1"><i class="bi bi-link-45deg"></i> ${esc(a.link)}</div>` : ''}`),
+  },
+  { data: 'audience', title: 'Audience', responsivePriority: 5, render: display((v) => `<span class="chip chip-soft">${esc(AUDIENCE[v] || v)}</span>`, (v) => AUDIENCE[v] || v) },
+  { data: 'months', title: 'Season', orderable: false, responsivePriority: 4, render: display((v) => `<span class="small text-nowrap"><i class="bi bi-calendar3"></i> ${esc(monthsLabel(v || []))}</span>`, (v) => monthsLabel(v || [])) },
+  { data: 'isActive', title: 'Status', responsivePriority: 3, render: display((v, a) => badge(...statusOf(a, month)), (v, a) => statusOf(a, month)[1]) },
+  { data: 'createdAt', title: 'Created', responsivePriority: 6, render: display((v, a) => `${dateCell(v)}<div class="fs-7 text-muted-2">by ${esc(a.createdBy?.name || 'Admin')}</div>`) },
+  {
+    data: null,
+    title: 'Actions',
+    orderable: false,
+    className: 'text-end text-nowrap no-export',
+    responsivePriority: 2,
+    render: (v, type, a) => `${iconAction('edit', `Edit ${a.title}`, 'bi-pencil')} ${action('toggle', a.isActive ? 'Hide' : 'Show')} ${iconAction('delete', 'Delete announcement', 'bi-trash3')}`,
+  },
+];
 
 export default function AdminAnnouncements() {
   useDocumentTitle('Announcements');
   const { toast } = useToast();
   const { data, loading, reload } = useFetch('/admin/announcements');
-  const [form, setForm] = useState({ title: '', message: '', audience: 'all', notify: true });
+  const [form, setForm] = useState(EMPTY);
+  const [editing, setEditing] = useState(null);
   const [busy, setBusy] = useState(false);
+  const month = data?.month || new Date().getMonth() + 1;
 
-  async function publish(e) {
+  function toggleMonth(m) {
+    setForm((f) => {
+      const months = f.months.includes(m) ? f.months.filter((x) => x !== m) : [...f.months, m].sort((a, b) => a - b);
+      return { ...f, months: months.length === 12 ? [] : months };
+    });
+  }
+
+  function startEdit(a) {
+    setEditing(a._id);
+    setForm({ title: a.title, message: a.message, audience: a.audience, months: a.months || [], link: a.link || '', notify: false });
+    document.getElementById('an-title')?.focus();
+  }
+
+  function cancelEdit() {
+    setEditing(null);
+    setForm(EMPTY);
+  }
+
+  async function save(e) {
     e.preventDefault();
     setBusy(true);
     try {
-      const res = await api.post('/admin/announcements', form);
-      toast(`Published${res.delivered ? ` and sent to ${res.delivered} users` : ''}`);
-      setForm({ title: '', message: '', audience: 'all', notify: true });
+      if (editing) {
+        const { notify: _notify, ...body } = form;
+        await api.put(`/admin/announcements/${editing}`, body);
+        toast('Announcement updated');
+      } else {
+        const res = await api.post('/admin/announcements', form);
+        if (!res.inSeason) toast(`Saved. It will show in ${monthsLabel(res.announcement.months)}.`);
+        else toast(`Published${res.delivered ? ` and sent to ${res.delivered} users` : ''}`);
+      }
+      setEditing(null);
+      setForm(EMPTY);
       reload();
     } catch (err) {
       toast(err.message, 'error');
@@ -37,19 +107,23 @@ export default function AdminAnnouncements() {
   }
   async function remove(a) {
     await api.del(`/admin/announcements/${a._id}`);
+    if (editing === a._id) cancelEdit();
     toast('Announcement deleted');
     reload();
   }
 
   return (
     <>
-      <DashHeader title="Announcements" subtitle="Publish platform-wide notices. Active announcements show as a banner and can be sent as in-app notifications." />
+      <DashHeader
+        title="Announcements"
+        subtitle="Publish platform-wide notices. Pick the months a notice belongs to, so seasonal banners (mangoes in summer, kinnow in winter) show only in their season."
+      />
       <div className="row g-4">
         <div className="col-xl-5">
-          <form className="panel" onSubmit={publish}>
+          <form className="panel" onSubmit={save}>
             <div className="panel-head">
               <h5>
-                <i className="bi bi-megaphone" /> New announcement
+                <i className={`bi ${editing ? 'bi-pencil-square' : 'bi-megaphone'}`} /> {editing ? 'Edit announcement' : 'New announcement'}
               </h5>
             </div>
             <div className="d-grid gap-3">
@@ -71,46 +145,76 @@ export default function AdminAnnouncements() {
                   ))}
                 </select>
               </div>
-              <div className="form-check">
-                <input id="an-notify" type="checkbox" className="form-check-input" checked={form.notify} onChange={(e) => setForm({ ...form, notify: e.target.checked })} />
-                <label className="form-check-label small" htmlFor="an-notify">
-                  Also send as an in-app notification
-                </label>
+              <div>
+                <span className="form-label d-block">
+                  Season <span className="text-muted-2 fw-normal">· {monthsLabel(form.months)}</span>
+                </span>
+                <div className="season-presets" role="group" aria-label="Season presets">
+                  {SEASONS.map((s) => (
+                    <button
+                      type="button"
+                      key={s.label}
+                      className={`chip chip-btn ${sameMonths(form.months, s.months) ? 'active' : ''}`}
+                      aria-pressed={sameMonths(form.months, s.months)}
+                      onClick={() => setForm({ ...form, months: s.months })}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="month-picker" role="group" aria-label="Months">
+                  {MONTHS.map((label, i) => (
+                    <button type="button" key={label} className={form.months.includes(i + 1) ? 'active' : ''} aria-pressed={form.months.includes(i + 1)} onClick={() => toggleMonth(i + 1)}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <div className="form-text">No month selected means the notice shows all year.</div>
               </div>
+              <div>
+                <label className="form-label" htmlFor="an-link">
+                  Link <span className="text-muted-2 fw-normal">(optional)</span>
+                </label>
+                <input id="an-link" className="form-control" maxLength={200} placeholder="/products?category=fruits" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} />
+              </div>
+              {!editing && (
+                <div className="form-check">
+                  <input id="an-notify" type="checkbox" className="form-check-input" checked={form.notify} onChange={(e) => setForm({ ...form, notify: e.target.checked })} />
+                  <label className="form-check-label small" htmlFor="an-notify">
+                    Also send as an in-app notification (only when it is in season now)
+                  </label>
+                </div>
+              )}
             </div>
-            <button type="submit" className="btn btn-primary mt-3" disabled={busy}>
-              <i className="bi bi-send" /> Publish
-            </button>
+            <div className="d-flex gap-2 mt-3">
+              <button type="submit" className="btn btn-primary" disabled={busy}>
+                <i className={`bi ${editing ? 'bi-check2' : 'bi-send'}`} /> {editing ? 'Save changes' : 'Publish'}
+              </button>
+              {editing && (
+                <button type="button" className="btn btn-white" onClick={cancelEdit}>
+                  Cancel
+                </button>
+              )}
+            </div>
           </form>
         </div>
         <div className="col-xl-7">
           {loading && !data ? (
             <PageLoader />
           ) : (
-            <div className="d-grid gap-2">
-              {data.announcements.map((a) => (
-                <div key={a._id} className="panel">
-                  <div className="d-flex align-items-start gap-2">
-                    <div className="flex-grow-1">
-                      <div className="d-flex gap-2 align-items-center flex-wrap mb-1">
-                        <strong>{a.title}</strong>
-                        <span className="chip chip-soft">{AUDIENCE[a.audience]}</span>
-                        {a.isActive ? <span className="chip chip-lime">Live banner</span> : <span className="chip">Hidden</span>}
-                      </div>
-                      <p className="small mb-1">{a.message}</p>
-                      <span className="fs-7 text-muted-2">
-                        {formatDate(a.createdAt, { time: true })} · by {a.createdBy?.name}
-                      </span>
-                    </div>
-                    <button type="button" className="btn btn-sm btn-white" onClick={() => toggle(a)}>
-                      {a.isActive ? 'Hide' : 'Show'}
-                    </button>
-                    <button type="button" className="btn btn-sm btn-white btn-icon" onClick={() => remove(a)} aria-label="Delete announcement">
-                      <i className="bi bi-trash3" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div className="table-card">
+              <DataGrid
+                data={data.announcements}
+                columns={columns(month)}
+                order={[[4, 'desc']]}
+                exportName="MarketLink announcements"
+                searchPlaceholder="Title or message…"
+                onAction={(name, a) => {
+                  if (name === 'edit') startEdit(a);
+                  if (name === 'toggle') toggle(a);
+                  if (name === 'delete') remove(a);
+                }}
+              />
             </div>
           )}
         </div>

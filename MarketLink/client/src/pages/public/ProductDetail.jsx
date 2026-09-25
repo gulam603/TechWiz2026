@@ -34,8 +34,10 @@ export default function ProductDetail() {
   useSeo(
     p
       ? {
-          title: `${p.name} – Rs ${p.price} per ${p.unit} from ${p.farmer?.stallName}`,
-          description: clip(p.description || `${p.name} (${p.category?.name}) from ${p.farmer?.stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.`),
+          // The farmer's own SEO title, description and keywords win (set in the product form)
+          title: p.metaTitle || `${p.name}, Rs ${p.price} per ${p.unit} from ${p.farmer?.stallName}`,
+          description: clip(p.metaDescription || p.description || `${p.name} (${p.category?.name}) from ${p.farmer?.stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.`),
+          keywords: [...(p.keywords || []), p.name, p.category?.name, p.farmer?.stallName],
           image: p.image,
           type: 'product',
           jsonLd: productLd(p),
@@ -170,7 +172,7 @@ export default function ProductDetail() {
                   {windows.map((w) => (
                     <li key={w._id}>
                       <span className="day">{DAY_SHORT[w.day]}</span>
-                      {time12(w.start)} – {time12(w.end)}
+                      {time12(w.start)} to {time12(w.end)}
                     </li>
                   ))}
                 </ul>
@@ -179,7 +181,7 @@ export default function ProductDetail() {
             <div className="pay-note mt-2">
               <i className="bi bi-info-circle" />
               <span>
-                Orders close {farmer.orderCutoffHours} hours before your pickup slot. You pay the farmer at pickup — no online payment.
+                Orders close {farmer.orderCutoffHours} hours before your pickup slot. You pay the farmer at pickup, so there is no online payment.
               </span>
             </div>
           </div>

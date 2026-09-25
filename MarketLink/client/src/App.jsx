@@ -19,6 +19,7 @@ const MapExplore = lazy(() => import('./pages/public/MapExplore'));
 const About = lazy(() => import('./pages/public/About'));
 const Terms = lazy(() => import('./pages/public/Terms'));
 const Contact = lazy(() => import('./pages/public/Contact'));
+const Unsubscribe = lazy(() => import('./pages/public/Unsubscribe'));
 const Cart = lazy(() => import('./pages/public/Cart'));
 const Checkout = lazy(() => import('./pages/public/Checkout'));
 const CheckoutSuccess = lazy(() => import('./pages/public/CheckoutSuccess'));
@@ -62,6 +63,7 @@ const AdminCities = lazy(() => import('./pages/admin/Cities'));
 const AdminCustomerDetail = lazy(() => import('./pages/admin/CustomerDetail'));
 const AdminPurchases = lazy(() => import('./pages/admin/Purchases'));
 const AdminModeration = lazy(() => import('./pages/admin/Moderation'));
+const AdminNewsletter = lazy(() => import('./pages/admin/Newsletter'));
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
 
 export default function App() {
@@ -81,6 +83,7 @@ export default function App() {
             <Route path="about" element={<About />} />
             <Route path="terms" element={<Terms />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="unsubscribe" element={<Unsubscribe />} />
             <Route path="cart" element={<Cart />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
@@ -153,6 +156,7 @@ export default function App() {
               <Route path="moderation" element={<AdminModeration />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
               <Route path="messages" element={<AdminMessages />} />
+              <Route path="newsletter" element={<AdminNewsletter />} />
               <Route path="notifications" element={<Notifications />} />
               <Route path="purchases" element={<AdminPurchases />} />
               <Route path="reports" element={<AdminReports />} />

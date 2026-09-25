@@ -20,7 +20,7 @@ const SORTS = [
   { value: 'price_asc', label: 'Price: low to high' },
   { value: 'price_desc', label: 'Price: high to low' },
   { value: 'rating', label: 'Top rated' },
-  { value: 'name', label: 'Name A–Z' },
+  { value: 'name', label: 'Name A to Z' },
 ];
 
 const FILTER_KEYS = ['search', 'category', 'city', 'market', 'day', 'minPrice', 'maxPrice', 'rating', 'practice', 'inStock', 'sort', 'page'];
@@ -100,7 +100,7 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
         }}
       >
         <input type="number" min="0" className="form-control form-control-sm" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} aria-label="Minimum price" />
-        <span>–</span>
+        <span>to</span>
         <input type="number" min="0" className="form-control form-control-sm" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} aria-label="Maximum price" />
         <button type="submit" className="btn btn-soft btn-sm btn-icon" aria-label="Apply price">
           <i className="bi bi-arrow-right" />

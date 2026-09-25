@@ -94,13 +94,13 @@ export default function AuthLayout({ title, highlight, text, children, variant =
           <p className="mt-2 mb-3">{text}</p>
           <div className="d-flex flex-wrap gap-2">
             <span className="chip hero-chip">
-              <i className="bi bi-geo-alt" /> {stats?.markets ?? '–'} markets
+              <i className="bi bi-geo-alt" /> {stats?.markets ?? '-'} markets
             </span>
             <span className="chip hero-chip">
-              <i className="bi bi-shop" /> {stats?.farmers ?? '–'} local farmers
+              <i className="bi bi-shop" /> {stats?.farmers ?? '-'} local farmers
             </span>
             <span className="chip hero-chip">
-              <i className="bi bi-basket" /> {stats?.products ?? '–'} products this week
+              <i className="bi bi-basket" /> {stats?.products ?? '-'} products this week
             </span>
           </div>
         </div>

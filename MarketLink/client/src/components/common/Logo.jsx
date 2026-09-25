@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-/** MarketLink mark – designed in Canva (basket, leaf and handle in a rounded frame) and rebuilt as SVG. */
+/** MarketLink mark, designed in Canva (basket, leaf and handle in a rounded frame) and rebuilt as SVG. */
 export function LogoMark({ size = 38 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="logo-mark">

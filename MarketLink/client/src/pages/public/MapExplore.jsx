@@ -38,7 +38,7 @@ export default function MapExplore() {
         lng: m.longitude,
         image: m.image,
         title: m.name,
-        subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)}–${time12(m.closeTime)}`,
+        subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)} to ${time12(m.closeTime)}`,
         address: m.address,
         city: m.city,
         days: m.operatingDays,

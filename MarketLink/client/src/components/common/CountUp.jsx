@@ -29,6 +29,6 @@ export default function CountUp({ value, duration = 1200 }) {
     };
   }, [animate, value, duration]);
 
-  if (!Number.isFinite(value)) return <span>–</span>;
+  if (!Number.isFinite(value)) return <span>-</span>;
   return <span ref={ref}>{(animate ? shown : value).toLocaleString('en-US')}</span>;
 }

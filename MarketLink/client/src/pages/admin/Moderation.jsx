@@ -172,16 +172,16 @@ export default function AdminModeration() {
       <DashHeader title="Content moderation" subtitle="Reports about reviews, product listings and stalls, and reviews held by the word filter. Resolve each one to keep MarketLink friendly and honest." />
       <div className="row g-2 g-xl-3 mb-3 kpi-row">
         <div className="col-6 col-md-3">
-          <KpiCard variant="danger" icon="bi-flag" label="Open reports" value={sum?.open ?? '–'} sub={sum ? `${plural(sum.reviews, 'review')} · ${plural(sum.products, 'listing')} · ${plural(sum.farmers, 'stall')}` : ''} />
+          <KpiCard variant="danger" icon="bi-flag" label="Open reports" value={sum?.open ?? '-'} sub={sum ? `${plural(sum.reviews, 'review')} · ${plural(sum.products, 'listing')} · ${plural(sum.farmers, 'stall')}` : ''} />
         </div>
         <div className="col-6 col-md-3">
-          <KpiCard variant="warn" icon="bi-hourglass-split" label="Held by word filter" value={sum?.held ?? '–'} sub="reviews waiting for a check" />
+          <KpiCard variant="warn" icon="bi-hourglass-split" label="Held by word filter" value={sum?.held ?? '-'} sub="reviews waiting for a check" />
         </div>
         <div className="col-6 col-md-3">
-          <KpiCard icon="bi-check2-circle" label="Handled (30 days)" value={sum?.resolved30 ?? '–'} sub="resolved or dismissed" />
+          <KpiCard icon="bi-check2-circle" label="Handled (30 days)" value={sum?.resolved30 ?? '-'} sub="resolved or dismissed" />
         </div>
         <div className="col-6 col-md-3">
-          <KpiCard variant="info" icon="bi-eye-slash" label="Hidden content" value={sum ? sum.removedReviews + sum.removedProducts : '–'} sub={sum ? `${plural(sum.removedReviews, 'review')} · ${plural(sum.removedProducts, 'listing')}` : ''} />
+          <KpiCard variant="info" icon="bi-eye-slash" label="Hidden content" value={sum ? sum.removedReviews + sum.removedProducts : '-'} sub={sum ? `${plural(sum.removedReviews, 'review')} · ${plural(sum.removedProducts, 'listing')}` : ''} />
         </div>
       </div>
       <div className="table-card">

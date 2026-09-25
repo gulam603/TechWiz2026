@@ -11,6 +11,7 @@ import {
   Category,
   City,
   ContactMessage,
+  Subscriber,
   ContentFlag,
   Farmer,
   Market,
@@ -28,6 +29,7 @@ import { round2, slugify } from '../utils/helpers.js';
 import { generateSlots, getAvailability } from '../services/slots.js';
 import { uniqueSlug } from '../utils/slug.js';
 import { syncValidators } from '../services/migrations.js';
+import { currentMonth } from '../models/Announcement.js';
 import { refreshRatings } from '../services/ratings.js';
 import { buildReport, REPORT_TITLES } from '../services/reports.js';
 import * as data from './data.js';
@@ -37,6 +39,15 @@ import fs from 'node:fs';
 const PHOTOS = JSON.parse(fs.readFileSync(new URL('./photoCredits.json', import.meta.url), 'utf8'));
 // Extra photos for the product-page gallery (same source and licence)
 const GALLERY = JSON.parse(fs.readFileSync(new URL('./galleryCredits.json', import.meta.url), 'utf8'));
+// Product photos with the background removed (server/uploads/cutouts); the original photo stays in the gallery
+const CUTOUT_DIR = new URL('../../uploads/cutouts/', import.meta.url);
+const hasCutout = (file) => Boolean(file) && fs.existsSync(new URL(file, CUTOUT_DIR));
+
+/** Search keywords for a seeded product, e.g. ['sindhri mangoes', 'fresh sindhri mangoes', 'fruits karachi']. */
+function seedKeywords(name, categoryName, city) {
+  const n = name.toLowerCase().replace(/\s*\(.*?\)\s*/g, ' ').trim();
+  return [...new Set([n, `fresh ${n}`, `${categoryName.toLowerCase()} ${String(city || 'karachi').toLowerCase()}`, 'farm fresh'])];
+}
 
 // Small deterministic random generator so every seed produces the same demo data
 let state = 20260923;
@@ -68,7 +79,7 @@ function orderNumber(date) {
 }
 
 async function clearDatabase() {
-  const models = [Announcement, AssistantChat, Category, City, ContactMessage, ContentFlag, StockMovement, Farmer, Market, Notification, Order, Product, Report, Review, User];
+  const models = [Announcement, AssistantChat, Category, City, ContactMessage, ContentFlag, StockMovement, Farmer, Market, Notification, Order, Product, Report, Review, Subscriber, User];
   for (const Model of models) {
     await Model.deleteMany({});
     await Model.init(); // make sure indexes exist
@@ -152,9 +163,14 @@ async function main() {
         quantityAvailable: p.qty,
         templateQuantity: p.template ?? p.qty,
         description: p.desc,
-        image: PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : `/uploads/seed/${p.img}.webp`,
+        keywords: seedKeywords(p.name, categoryByKey[p.cat].name, farmer.city),
+        image: hasCutout(PHOTOS[p.name]?.file) ? `/uploads/cutouts/${PHOTOS[p.name].file}` : PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : `/uploads/seed/${p.img}.webp`,
         imageCredit: PHOTOS[p.name] ? { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } : undefined,
-        gallery: (GALLERY[p.name] || []).map((g) => ({ url: `/uploads/photos/gallery/${g.file}`, credit: { author: g.author, source: g.source, license: g.license } })),
+        gallery: [
+          // With a cut-out main image, the full original photo is the first gallery picture
+          ...(hasCutout(PHOTOS[p.name]?.file) ? [{ url: `/uploads/photos/${PHOTOS[p.name].file}`, credit: { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } }] : []),
+          ...(GALLERY[p.name] || []).map((g) => ({ url: `/uploads/photos/gallery/${g.file}`, credit: { author: g.author, source: g.source, license: g.license } })),
+        ],
         markets: farmer.markets,
         days: farmer.operatingDays,
         farmerActive: farmer.isActive,
@@ -412,13 +428,16 @@ async function main() {
 
   // ---------------------------------------------------------------- announcements, messages, notifications, report
   for (const a of data.announcements) await Announcement.create({ ...a, createdBy: admin._id });
+  const month = currentMonth();
+  const seasonal = data.announcements.find((a) => a.months?.includes(month)) || data.announcements[0];
   await ContactMessage.insertMany(data.contactMessages);
+  await Subscriber.insertMany(data.subscribers.map((sub, i) => ({ ...sub, createdAt: addDays(new Date(), -(i * 3 + 1)) })));
 
   const [placedOrder, acceptedOrder, readyOrder] = upcoming;
   const malirUser = farmerByKey.malir.user;
   await Notification.insertMany([
     { user: ayesha._id, type: 'system', title: 'Welcome to MarketLink!', message: 'Browse this week\'s harvest and pre-order for pickup at your favourite market.', link: '/products', read: true },
-    { user: ayesha._id, type: 'announcement', title: data.announcements[0].title, message: data.announcements[0].message, link: '/products?category=fruits' },
+    { user: ayesha._id, type: 'announcement', title: seasonal.title, message: seasonal.message, link: seasonal.link },
     { user: ayesha._id, type: 'order', title: `Pre-order ${placedOrder.orderNumber} placed`, message: 'Malir Green Fields received your pre-order.', link: `/account/orders/${placedOrder._id}` },
     { user: ayesha._id, type: 'order', title: `Pre-order ${acceptedOrder.orderNumber} accepted`, message: 'Karachi Artisan Bakehouse accepted your pre-order.', link: `/account/orders/${acceptedOrder._id}` },
     { user: ayesha._id, type: 'order', title: `Pre-order ${readyOrder.orderNumber} is ready for pickup`, message: 'Your order from Thatta Dairy Collective is packed and ready. Please pay at pickup.', link: `/account/orders/${readyOrder._id}` },

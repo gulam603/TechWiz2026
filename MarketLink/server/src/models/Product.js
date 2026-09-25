@@ -18,6 +18,13 @@ const productSchema = new Schema(
     lowStockAlertedAt: Date, // set when the alert was sent; cleared again after restocking
     soldOutAlertedAt: Date, // a second alert when the product sells out
     description: { type: String, trim: true, maxlength: 1500 },
+    // Search engine (SEO) details set by the farmer; empty values fall back to the name and description
+    metaTitle: { type: String, trim: true, maxlength: 70 },
+    metaDescription: { type: String, trim: true, maxlength: 170 },
+    keywords: {
+      type: [{ type: String, trim: true, lowercase: true, maxlength: 40 }],
+      default: [],
+    },
     image: String,
     // Extra photos for the gallery on the product page (the main photo is `image`)
     gallery: [
@@ -56,6 +63,7 @@ productSchema.index({ farmer: 1, isRemoved: 1 });
 productSchema.index({ category: 1, price: 1 });
 productSchema.index({ markets: 1 });
 productSchema.index({ days: 1 });
+productSchema.index({ keywords: 1 });
 
 // Selling out is automatic: when quantity hits zero the product shows as "sold out",
 // and when stock is added again it becomes available.

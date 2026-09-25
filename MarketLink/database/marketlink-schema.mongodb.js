@@ -208,6 +208,9 @@ createCollection(
       lowStockAlertedAt: date,
       soldOutAlertedAt: date,
       description: str(1500),
+      metaTitle: str(70), // SEO title (optional)
+      metaDescription: str(170), // SEO description (optional)
+      keywords: { bsonType: 'array', items: str(40) }, // SEO keywords, also used by the search
       image: str(),
       imageCredit: { bsonType: 'object', properties: { author: str(), source: str(), license: str() } },
       gallery: {
@@ -325,7 +328,17 @@ createCollection(
   {
     bsonType: 'object',
     required: ['title', 'message'],
-    properties: { title: str(120), message: str(1000), audience: { enum: ['all', 'customer', 'farmer'] }, isActive: bool, createdBy: objectId, createdAt: date, updatedAt: date },
+    properties: {
+      title: str(120),
+      message: str(1000),
+      audience: { enum: ['all', 'customer', 'farmer'] },
+      months: { bsonType: 'array', items: int(1, 12) }, // empty = all year; otherwise shown only in these months
+      link: str(200),
+      isActive: bool,
+      createdBy: objectId,
+      createdAt: date,
+      updatedAt: date,
+    },
   }
 );
 
@@ -347,6 +360,26 @@ createCollection(
       generatedAt: date,
     },
   }
+);
+
+// subscribers: newsletter sign-ups (weekly harvest e-mail); the token is used for the unsubscribe link
+createCollection(
+  'subscribers',
+  {
+    bsonType: 'object',
+    required: ['email'],
+    properties: {
+      email: str(120),
+      name: str(80),
+      source: { enum: ['home', 'footer', 'checkout', 'admin'] },
+      status: { enum: ['subscribed', 'unsubscribed'] },
+      token: str(),
+      unsubscribedAt: date,
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [[{ email: 1 }, { unique: true }], [{ token: 1 }]]
 );
 
 // contactmessages: messages sent from the Contact Us page

@@ -103,8 +103,22 @@ export async function updatePickupSettings(req, res) {
 
 // ---------------------------------------------------------------- products
 
+/** "fresh mangoes, sindhri" (or an array) -> ['fresh mangoes', 'sindhri']: unique, at most 12. */
+export function readKeywords(value) {
+  const list = (Array.isArray(value) ? value : String(value ?? '').split(','))
+    .map((k) => String(k).trim().toLowerCase().replace(/\s+/g, ' '))
+    .filter(Boolean);
+  const unique = [...new Set(list)];
+  if (unique.some((k) => k.length > 40)) throw new AppError('Each keyword can be 40 characters at most', 400);
+  if (unique.length > 12) throw new AppError('Please use 12 keywords at most', 400);
+  return unique;
+}
+
 function readProductBody(body, { partial = false } = {}) {
-  const data = pick(body, ['name', 'description', 'unit']);
+  const data = pick(body, ['name', 'description', 'unit', 'metaTitle', 'metaDescription']);
+  if (body.keywords !== undefined) data.keywords = readKeywords(body.keywords);
+  if (data.metaTitle && String(data.metaTitle).length > 70) throw new AppError('The SEO title can be 70 characters at most', 400);
+  if (data.metaDescription && String(data.metaDescription).length > 170) throw new AppError('The SEO description can be 170 characters at most', 400);
   if (data.unit && !UNITS.includes(data.unit)) throw new AppError('Invalid unit', 400);
   if (body.category !== undefined) data.category = assertId(body.category, 'category');
   for (const key of ['price', 'quantityAvailable', 'templateQuantity']) {

@@ -14,6 +14,7 @@ export function productLd(product) {
     description: product.description || undefined,
     image: [product.image, ...(product.gallery || []).map((g) => g.url)].filter(Boolean).map(abs),
     category: product.category?.name,
+    keywords: product.keywords?.length ? product.keywords.join(', ') : undefined,
     url,
     brand: { '@type': 'Brand', name: product.farmer?.stallName },
     offers: {

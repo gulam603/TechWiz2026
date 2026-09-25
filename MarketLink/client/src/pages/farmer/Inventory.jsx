@@ -51,7 +51,7 @@ const COLUMNS = [
     responsivePriority: 2,
     render: display((v, p) => `<strong class="${p.state === 'low' || p.state === 'out' ? 'text-danger' : ''}">${esc(v)}</strong> <span class="fs-7 text-muted-2">${esc(p.unit)}</span>`),
   },
-  { data: 'reserved', title: 'Reserved', className: 'text-end', render: display((v, p) => (v ? `${esc(v)} <span class="fs-7 text-muted-2">${esc(p.unit)}</span>` : '<span class="text-muted-2">–</span>')) },
+  { data: 'reserved', title: 'Reserved', className: 'text-end', render: display((v, p) => (v ? `${esc(v)} <span class="fs-7 text-muted-2">${esc(p.unit)}</span>` : '<span class="text-muted-2">-</span>')) },
   { data: 'lowStockThreshold', title: 'Alert at', className: 'text-end', render: display((v, p) => `${esc(v)} <span class="fs-7 text-muted-2">${esc(p.unit)}</span>`) },
   { data: 'state', title: 'Status', responsivePriority: 3, render: display((v) => stateBadge(v), (v) => STATE[v][0]) },
   { data: 'totalSold', title: 'Sold', className: 'text-end' },
@@ -73,7 +73,7 @@ const LOG_COLUMNS = [
   { data: 'change', title: 'Change', className: 'text-end', render: display((v, m) => `<strong class="${v > 0 ? 'text-success' : 'text-danger'}">${v > 0 ? '+' : ''}${esc(v)}</strong> <span class="fs-7 text-muted-2">${esc(m.unit || '')}</span>`) },
   { data: 'quantityAfter', title: 'Stock after', className: 'text-end' },
   { data: 'type', title: 'Type', render: display((v) => `<span class="chip chip-soft">${esc(TYPE_LABEL[v] || v)}</span>`, (v) => TYPE_LABEL[v] || v) },
-  { data: 'reason', title: 'Details', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc(v || '–')}</span>`) },
+  { data: 'reason', title: 'Details', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc(v || '-')}</span>`) },
   { data: 'by', title: 'By', render: display((v) => `<span class="small text-capitalize">${esc(v)}</span>`) },
 ];
 

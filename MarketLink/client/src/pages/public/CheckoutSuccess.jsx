@@ -31,7 +31,7 @@ export default function CheckoutSuccess() {
             <div className="flex-grow-1">
               <strong className="d-block">{o.orderNumber}</strong>
               <span className="small text-muted-2">
-                Pickup {formatDateKey(o.pickupDate)} · {time12(o.pickupSlot.start)} – {time12(o.pickupSlot.end)}
+                Pickup {formatDateKey(o.pickupDate)} · {time12(o.pickupSlot.start)} to {time12(o.pickupSlot.end)}
               </span>
             </div>
             <strong>{money(o.totalAmount)}</strong>

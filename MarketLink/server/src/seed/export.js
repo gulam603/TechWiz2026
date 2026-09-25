@@ -23,6 +23,8 @@ async function main() {
         delete d.resetPasswordExpires;
       });
     }
+    // Unsubscribe links are secret, so the tokens are not exported
+    if (Model.modelName === 'Subscriber') docs.forEach((d) => (d.token = '<secret>'));
     const file = path.join(outDir, `${Model.collection.collectionName}.json`);
     fs.writeFileSync(file, JSON.stringify(docs, null, 2));
     console.log(`[export] ${Model.collection.collectionName}: ${docs.length} documents`);

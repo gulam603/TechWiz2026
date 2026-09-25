@@ -62,7 +62,8 @@ export default function ProductCard({ product }) {
             <span className="unit">/ {product.unit}</span>
           </div>
           <button type="button" className="add-btn" onClick={addToCart} disabled={soldOut} aria-label={`Add ${product.name} to basket`} title="Add to basket">
-            <i className="bi bi-plus-lg" />
+            <i className="bi bi-basket2" aria-hidden="true" />
+            <span className="add-label">{soldOut ? 'Sold out' : 'Add'}</span>
           </button>
         </div>
       </div>

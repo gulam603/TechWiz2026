@@ -47,7 +47,7 @@ export default function FarmerSales() {
     <div className="sales-report">
       <DashHeader
         title="Sales report"
-        subtitle={data ? `${farmer?.stallName || 'My stall'} · ${formatDateKey(data.period.from, { withYear: true })} – ${formatDateKey(data.period.to, { withYear: true })}` : 'Sales insights for your stall'}
+        subtitle={data ? `${farmer?.stallName || 'My stall'} · ${formatDateKey(data.period.from, { withYear: true })} to ${formatDateKey(data.period.to, { withYear: true })}` : 'Sales insights for your stall'}
         actions={
           <button type="button" className="btn btn-white btn-sm d-print-none" onClick={() => window.print()}>
             <i className="bi bi-printer" /> Print report

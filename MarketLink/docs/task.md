@@ -37,6 +37,14 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Photo zoom and full-screen viewer on the product page; "From the same stall" and "You may also like"
 - [x] Verified purchase / Unverified badges on reviews (reviews without a purchase are allowed once)
 - [x] Search inside dropdowns (cities, markets, categories, farmers, customers, filters)
+- [x] Home page: banner carousel (4 slides, one changes with the season), search with a category drop-down, next market day, 30-second video tour, market photos, customer reviews with a rating summary, newsletter sign-up
+- [x] Loading skeletons: the page shape shows while the app, a page or its data loads (slow connections)
+- [x] Home link in the navbar and the phone menu
+- [x] Category-wise search (navbar and home page) and keyword search
+- [x] Product photos without a background (cut-outs) on cards; the full photo stays in the gallery
+- [x] Newsletter: subscribe (home page and footer), welcome e-mail, one-click unsubscribe page
+- [x] Terms & Conditions page linked from the footer (sign-up forms still open it in a dialog)
+- [x] "Table" or "Cards" view for My orders (DataTables)
 
 ## 2. Farmer features
 
@@ -58,6 +66,8 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Sales insights report: revenue vs previous period, best sellers, categories, markets, busiest days and pickup times, returning customers, printable
 - [x] Extra product photos (gallery) in the product form
 - [x] "Generate with AI" for the "About the farm" text
+- [x] Search engine (SEO) title, description and keywords for each product, with "Fill in for me" and a Google preview
+- [x] DataTables for weekly stock (edit stock, template and status in the table), pre-orders (Table / Cards) and reviews (Table / Cards, reply and report from the table)
 - [x] Same sidebar layout as the admin area (collapsible, mobile drawer)
 
 ## 3. Admin features
@@ -76,6 +86,9 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] "Generate with AI" farm description when the admin adds a farmer
 - [x] Content moderation queue: user reports and reviews held by the word filter; publish, remove, restore, suspend stall or dismiss
 - [x] Platform-wide reports: sales by category, customer activity, inventory & low stock, cities overview, reviews & moderation (DataTables with CSV / Excel / Print)
+- [x] Seasonal announcements: pick the months (or a season) for each notice; the banner shows only the notices of the current month, with an optional link
+- [x] Markets, categories, announcements and newsletter subscribers in DataTables (search, sort, CSV / Excel / Print)
+- [x] DataTables warning "Requested unknown parameter" fixed for every table (empty values allowed, warnings go to the console)
 
 ## 4. Other requirements
 
@@ -91,6 +104,10 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] No emoji in the interface – Bootstrap icons everywhere
 - [x] Real product photos (Open Images, CC BY 2.0) with photographer credits
 - [x] Non-functional: security headers, rate limits, bcrypt, NoSQL-injection protection, lazy-loaded pages, pagination, reduced-motion support
+- [x] Faster first load: React loads first; charts, maps and DataTables load only with the pages that use them (about 1 MB less JavaScript on the home page)
+- [x] Meta keywords on every page (site, category, product, farmer and market keywords)
+- [x] No em dashes in the interface text
+- [x] Responsive check of every page at 18 screen widths from 320 to 1920 px
 
 ## 5. Quality checks (last full run)
 

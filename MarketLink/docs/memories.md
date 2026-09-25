@@ -98,11 +98,24 @@ the code so the same problems are not solved twice.
 
 - FerretDB (used while building) accepts some things real MongoDB rejects; round 5 tests also run against
   MongoDB 8. Databases prepared with an older `marketlink-schema.mongodb.js` rejected the new notification
-  type `stock` ("Document failed validation") — `syncValidators()` now updates them at start-up.
+  type `stock` ("Document failed validation"): `syncValidators()` now updates them at start-up.
 - `html { scroll-behavior: smooth }` makes `window.scrollTo` animate, so scripted full-page screenshots must
   scroll with `behavior: 'instant'` or scroll-reveal content stays hidden.
 - React Router keeps the previous page's data while the next product loads: compare the loaded product with
   the URL before redirecting to the readable URL (this caused "You may also like" links to jump back).
+
+- Vite 8 bundles with rolldown: a code-splitting group also takes the dependencies of its modules, so
+  React ended up inside the charts chunk and every page downloaded charts and DataTables. The groups in
+  `vite.config.js` now have priorities (React first) and the home page loads about 1 MB less JavaScript.
+- DataTables Responsive reads raw cell data without the column renderer (`dt.cells(null, fn)`), so a
+  missing nested value such as `reporter.name` raised "Requested unknown parameter". `DataGrid` gives every
+  column `defaultContent: ''` and sends DataTables warnings to the console instead of an alert.
+- Announcements have `months`; `inSeason()` (models/Announcement.js) filters them by the current month in
+  the platform time zone. A notice created for another season is saved but not sent as a notification.
+- Background removal (rembg) works for single products but not for close-ups that fill the photo; those
+  products use the 3D illustration as their cut-out (listed in `server/uploads/cutouts/CREDITS.md`).
+- The footer has a second form (newsletter), so browser tests select `form:not(.nl-form)` and
+  `main input[type=email]` for the login form.
 
 ## Useful commands
 

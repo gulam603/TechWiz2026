@@ -98,7 +98,7 @@ const escapeHtml = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&am
 /** Absolute link for an e-mail button ("/account/orders/1" -> "https://site/account/orders/1"). */
 const absoluteUrl = (link) => (!link ? '' : /^https?:\/\//.test(link) ? link : `${env.appUrl}${link.startsWith('/') ? '' : '/'}${link}`);
 
-function layout({ title, message, button }) {
+function layout({ title, message, button, footer }) {
   const paragraphs = escapeHtml(message)
     .split(/\n{2,}|\n/)
     .map((line) =>
@@ -128,7 +128,7 @@ function layout({ title, message, button }) {
       </div>
       <div style="padding:14px 24px;background:#f1ebdd;color:#66756d;font-size:12px;line-height:1.5">
         Fresh from local farmers markets &middot; Pre-order, pick up, pay in person.<br>
-        You are receiving this e-mail because you have a MarketLink account.
+        ${footer || 'You are receiving this e-mail because you have a MarketLink account.'}
       </div>
     </div>
   </div>
@@ -139,17 +139,18 @@ function layout({ title, message, button }) {
  * Sends one e-mail and throws if it fails (used by the test command).
  * @param {{to: string, subject: string, message: string, link?: string, linkLabel?: string}} mail
  */
-export async function deliverMail({ to, subject, message, link, linkLabel = 'Open MarketLink' }) {
+export async function deliverMail({ to, subject, message, link, linkLabel = 'Open MarketLink', footerHtml, footerText, headers }) {
   const url = absoluteUrl(link);
   const button = url ? { url, label: linkLabel } : null;
-  const text = url ? `${message}\n\n${linkLabel}: ${url}` : message;
+  const text = `${url ? `${message}\n\n${linkLabel}: ${url}` : message}${footerText ? `\n\n${footerText}` : ''}`;
   const transporter = await getTransporter();
   const info = await transporter.sendMail({
     from: env.smtp.from,
     to,
     subject: `MarketLink: ${subject}`,
     text,
-    html: layout({ title: subject, message, button }),
+    html: layout({ title: subject, message, button, footer: footerHtml }),
+    headers,
     attachments: HAS_LOGO ? [{ filename: 'marketlink-logo.png', path: LOGO_PATH, cid: 'marketlink-logo' }] : [],
   });
   const mode = mailMode();

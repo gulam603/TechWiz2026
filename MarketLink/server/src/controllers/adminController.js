@@ -12,6 +12,7 @@ import {
   User,
 } from '../models/index.js';
 import { REPORT_TYPES } from '../models/Report.js';
+import { currentMonth } from '../models/Announcement.js';
 import AppError from '../utils/AppError.js';
 import { ORDER_STATUS, ROLES, USER_STATUS } from '../utils/constants.js';
 import { assertId, containsRegex, getPagination, isValidId, pick, requireFields, toBool, toNumber, toNumberList } from '../utils/helpers.js';
@@ -376,35 +377,53 @@ export async function deleteCategory(req, res) {
 // GET /api/admin/announcements
 export async function adminAnnouncements(req, res) {
   const announcements = await Announcement.find().populate('createdBy', 'name').sort({ createdAt: -1 }).lean();
-  res.json({ announcements });
+  res.json({ announcements, month: currentMonth() });
 }
 
-// POST /api/admin/announcements  { title, message, audience, notify }
+/** Months (1-12) and an optional on-site link from an announcement form. */
+function announcementExtras(body) {
+  const out = {};
+  if (body.months !== undefined) {
+    const months = [...new Set(toNumberList(body.months).filter((m) => Number.isInteger(m) && m >= 1 && m <= 12))].sort((a, b) => a - b);
+    out.months = months.length === 12 ? [] : months; // every month = all year
+  }
+  if (body.link !== undefined) {
+    const link = String(body.link || '').trim();
+    if (link && (!link.startsWith('/') || link.startsWith('//'))) throw new AppError('The link must be a page on this site, e.g. /products?category=fruits', 400);
+    out.link = link || undefined;
+  }
+  return out;
+}
+
+// POST /api/admin/announcements  { title, message, audience, months, link, notify }
 export async function createAnnouncement(req, res) {
   requireFields(req.body, ['title', 'message']);
   const announcement = await Announcement.create({
     ...pick(req.body, ['title', 'message', 'audience']),
+    ...announcementExtras(req.body),
     isActive: req.body.isActive === undefined ? true : toBool(req.body.isActive),
     createdBy: req.user._id,
   });
 
+  // A notice for another season is saved now and appears in its months; it is not sent today.
+  const inSeasonNow = !announcement.months.length || announcement.months.includes(currentMonth());
   let delivered = 0;
-  if (toBool(req.body.notify ?? true)) {
+  if (inSeasonNow && toBool(req.body.notify ?? true)) {
     const roles = announcement.audience === 'all' ? [ROLES.CUSTOMER, ROLES.FARMER] : [announcement.audience];
     const users = await User.find({ role: { $in: roles }, status: USER_STATUS.ACTIVE }).select('_id').lean();
     delivered = await notifyMany(
       users.map((u) => u._id),
-      { type: 'announcement', title: announcement.title, message: announcement.message }
+      { type: 'announcement', title: announcement.title, message: announcement.message, link: announcement.link }
     );
   }
-  res.status(201).json({ announcement, delivered });
+  res.status(201).json({ announcement, delivered, inSeason: inSeasonNow });
 }
 
 // PUT /api/admin/announcements/:id
 export async function updateAnnouncement(req, res) {
   const announcement = await Announcement.findById(assertId(req.params.id, 'announcement'));
   if (!announcement) throw new AppError('Announcement not found', 404);
-  Object.assign(announcement, pick(req.body, ['title', 'message', 'audience']));
+  Object.assign(announcement, pick(req.body, ['title', 'message', 'audience']), announcementExtras(req.body));
   if (req.body.isActive !== undefined) announcement.isActive = toBool(req.body.isActive);
   await announcement.save();
   res.json({ announcement });

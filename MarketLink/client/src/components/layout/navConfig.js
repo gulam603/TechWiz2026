@@ -1,5 +1,6 @@
 // Links shared by the desktop navbar, the mobile drawer and the account dropdown.
 export const LINKS = [
+  { to: '/', label: 'Home', icon: 'bi-house', end: true },
   { to: '/products', label: 'Shop', icon: 'bi-shop' },
   { to: '/markets', label: 'Markets', icon: 'bi-geo-alt' },
   { to: '/farmers', label: 'Farmers', icon: 'bi-people' },

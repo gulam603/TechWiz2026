@@ -49,7 +49,7 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout title="Your market," highlight="one tap away." text="Log in to pre-order fresh produce, track pickups and manage your favourite farmers — or run your stall if you're a farmer.">
+    <AuthLayout title="Your market," highlight="one tap away." text="Log in to pre-order fresh produce, track pickups and manage your favourite farmers, or run your stall if you're a farmer.">
       <h1 className="mb-1">Welcome back</h1>
       <p className="text-muted-2 mb-4">One login for customers, farmers and the MarketLink team.</p>
       <form onSubmit={submit} noValidate>

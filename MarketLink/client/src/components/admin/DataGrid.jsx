@@ -13,6 +13,8 @@ import 'datatables.net-buttons-bs5/css/buttons.bootstrap5.css';
 import { api } from '../../api/client';
 
 DT.Buttons.jszip(JSZip); // Excel export
+// A DataTables warning is for developers: log it in the console instead of an alert box
+DT.ext.errMode = (settings, techNote, message) => console.warn(message);
 // Tell the React component which DataTables build to use (named so the hooks linter does not mistake it for React's use())
 const registerLibrary = DataTable.use;
 registerLibrary(DT);
@@ -21,7 +23,7 @@ const LANGUAGE = {
   search: '',
   searchPlaceholder: 'Search…',
   lengthMenu: '_MENU_ per page',
-  info: 'Showing _START_–_END_ of _TOTAL_',
+  info: 'Showing _START_ to _END_ of _TOTAL_',
   infoEmpty: 'No rows',
   infoFiltered: '(filtered from _MAX_)',
   emptyTable: 'Nothing here yet',
@@ -38,8 +40,10 @@ const LANGUAGE = {
  * Cells are HTML strings (see utils/cells.js). Buttons with data-action call onAction(action, row);
  * links with data-href open inside the app. Export buttons: CSV, Excel and Print.
  */
-export default function DataGrid({ table, data, columns, filters, order = [[0, 'desc']], pageLength = 10, exportName = 'MarketLink', onAction, reloadKey = 0, searchPlaceholder, className = '' }) {
+export default function DataGrid({ table, data, columns, filters, order = [[0, 'desc']], pageLength = 10, exportName = 'MarketLink', onAction, onEdit, reloadKey = 0, searchPlaceholder, className = '', emptyText }) {
   const ref = useRef(null);
+  const wrap = useRef(null);
+  const onEditRef = useRef(onEdit);
   const filtersRef = useRef(filters);
   const navigate = useNavigate();
   const filterKey = JSON.stringify(filters || {});
@@ -47,7 +51,38 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
 
   useEffect(() => {
     filtersRef.current = filters;
+    onEditRef.current = onEdit;
   });
+
+  // Inline editing: inputs and selects in cells with data-edit="field" call onEdit(field, row, value).
+  // Number boxes save when they lose focus or on Enter.
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return undefined;
+    const rowOf = (node) => {
+      let tr = node.closest('tr');
+      if (tr?.classList.contains('child')) tr = tr.previousElementSibling;
+      return ref.current?.dt()?.row(tr).data();
+    };
+    const onChange = (e) => {
+      const input = e.target.closest?.('[data-edit]');
+      if (!input || !onEditRef.current) return;
+      const row = rowOf(input);
+      if (row) onEditRef.current(input.getAttribute('data-edit'), row, input.value, input);
+    };
+    const onKeyDown = (e) => {
+      if (e.key === 'Enter' && e.target.matches?.('input[data-edit]')) {
+        e.preventDefault();
+        e.target.blur();
+      }
+    };
+    el.addEventListener('change', onChange);
+    el.addEventListener('keydown', onKeyDown);
+    return () => {
+      el.removeEventListener('change', onChange);
+      el.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
 
   // Reload the server data when the filter controls or the reload key change
   useEffect(() => {
@@ -64,6 +99,10 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
       processing: true,
       responsive: true,
       autoWidth: false,
+      // Some cells read nested values that can be missing (e.g. "Reported by" for automatic flags
+      // has no reporter). DataTables Responsive reads raw cell data without the renderer, so every
+      // column falls back to an empty value instead of raising "Requested unknown parameter".
+      columnDefs: [{ targets: '_all', defaultContent: '' }],
       order,
       pageLength,
       lengthMenu: [
@@ -71,7 +110,7 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
         [10, 25, 50, 100, 'All'],
       ],
       searchDelay: 350,
-      language: { ...LANGUAGE, searchPlaceholder: searchPlaceholder || LANGUAGE.searchPlaceholder },
+      language: { ...LANGUAGE, searchPlaceholder: searchPlaceholder || LANGUAGE.searchPlaceholder, ...(emptyText ? { emptyTable: emptyText } : {}) },
       layout: {
         topStart: ['pageLength', { buttons: ['csv', 'excel', 'print'].map((type) => ({ extend: type === 'csv' ? 'csvHtml5' : type === 'excel' ? 'excelHtml5' : 'print', text: `<i class="bi ${type === 'csv' ? 'bi-filetype-csv' : type === 'excel' ? 'bi-file-earmark-excel' : 'bi-printer'}"></i> ${type === 'csv' ? 'CSV' : type === 'excel' ? 'Excel' : 'Print'}`, className: 'btn btn-sm btn-white', title: exportName, exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' } })) }],
         topEnd: 'search',
@@ -111,7 +150,7 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
   }
 
   return (
-    <div className={`data-grid ${className}`} onClick={handleClick}>
+    <div className={`data-grid ${className}`} onClick={handleClick} ref={wrap}>
       <DataTable ref={ref} className="table table-hover align-middle w-100" columns={columns} data={table ? undefined : data} options={options} />
     </div>
   );

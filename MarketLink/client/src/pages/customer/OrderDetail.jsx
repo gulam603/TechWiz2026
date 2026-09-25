@@ -311,7 +311,7 @@ export default function OrderDetail() {
             <div className="info-row">
               <span>Time slot</span>
               <span>
-                {time12(order.pickupSlot.start)} – {time12(order.pickupSlot.end)}
+                {time12(order.pickupSlot.start)} to {time12(order.pickupSlot.end)}
               </span>
             </div>
             <div className="info-row">

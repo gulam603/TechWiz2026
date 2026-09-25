@@ -12,6 +12,7 @@ import QuantityStepper from '../common/QuantityStepper';
 import FavButton from '../common/FavButton';
 import { DAY_SHORT, money } from '../../utils/format';
 import { productPath } from '../../utils/links';
+import { categoryName, listText, productName, t, unitName } from '../../i18n';
 
 /**
  * Product details in a dialog, opened by a product card's "Quick view" or "Add" button: photos,
@@ -37,17 +38,17 @@ export default function QuickViewModal({ product: summary, onClose, focusAdd = f
 
   function add() {
     if (user && user.role !== 'customer') {
-      toast('Only customer accounts can place pre-orders', 'error');
+      toast(t('Only customer accounts can place pre-orders'), 'error');
       return;
     }
     cart.add(product, qty);
-    toast(`${qty} × ${product.name} added to your basket`);
+    toast(t('{qty} × {name} added to your basket', { qty, name: productName(product) }));
     onClose();
     cart.openDrawer();
   }
 
   return (
-    <Modal open onClose={onClose} title={focusAdd ? 'Add to basket' : summary.name} size="modal-lg quickview-modal">
+    <Modal open onClose={onClose} title={focusAdd ? t('Add to basket') : productName(summary)} size="modal-lg quickview-modal">
       {error && <p className="text-danger small">{error.message}</p>}
       <div className="row g-4">
         <div className="col-md-6">
@@ -58,45 +59,45 @@ export default function QuickViewModal({ product: summary, onClose, focusAdd = f
           </ProductGallery>
         </div>
         <div className="col-md-6 d-flex flex-column">
-          <span className="chip chip-soft align-self-start mb-2">{product.category?.name}</span>
-          <h3 className="display-font mb-1">{product.name}</h3>
+          <span className="chip chip-soft align-self-start mb-2">{categoryName(product.category)}</span>
+          <h3 className="display-font mb-1">{productName(product)}</h3>
           <div className="d-flex align-items-center gap-2 flex-wrap mb-2">
             <RatingStars value={product.ratingAvg} count={product.ratingCount} />
-            <StatusBadge status={soldOut ? 'sold_out' : 'available'} label={soldOut ? 'Sold out' : `${product.quantityAvailable} ${product.unit} available`} />
+            <StatusBadge status={soldOut ? 'sold_out' : 'available'} label={soldOut ? t('Sold out') : t('{n} {unit} available', { n: product.quantityAvailable, unit: unitName(product.unit) })} />
           </div>
           <div className="price mb-2" style={{ fontSize: '1.6rem' }}>
-            {money(product.price)} <span className="unit">per {product.unit}</span>
+            {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span>
           </div>
           {product.description && <p className="small text-muted-2 quickview-desc">{product.description}</p>}
           {product.farmer?.slug && (
             <Link to={`/farmers/${product.farmer.slug}`} className="farmer-mini mb-3" onClick={onClose}>
               <span className="logo">{product.farmer.logo ? <img src={product.farmer.logo} alt="" /> : <i className="bi bi-shop" aria-hidden="true" />}</span>
               <span className="flex-grow-1 min-w-0">
-                <span className="fs-7 text-muted-2 d-block">Grown & sold by</span>
+                <span className="fs-7 text-muted-2 d-block">{t('Grown & sold by')}</span>
                 <strong className="d-block text-truncate small">{product.farmer.stallName}</strong>
-                {days.length > 0 && <span className="fs-7 text-muted-2">Pickup: {days.map((d) => DAY_SHORT[d]).join(', ')}</span>}
+                {days.length > 0 && <span className="fs-7 text-muted-2">{t('Pickup:')} {listText(days.map((d) => DAY_SHORT[d]))}</span>}
               </span>
             </Link>
           )}
           <div className={`qv-buy mt-auto ${focusAdd ? 'is-highlighted' : ''}`}>
             <div className="qv-buy-label">
-              <span>How many {product.unit ? `(${product.unit})` : ''}?</span>
+              <span>{product.unit ? t('How many ({unit})?', { unit: unitName(product.unit) }) : t('How many?')}</span>
               {!soldOut && <strong>{money(product.price * qty)}</strong>}
             </div>
             <div className="d-flex align-items-center gap-2 flex-wrap">
-              <QuantityStepper value={qty} onChange={setQty} max={Math.max(1, product.quantityAvailable)} label={`How many ${product.unit || ''}`.trim()} />
+              <QuantityStepper value={qty} onChange={setQty} max={Math.max(1, product.quantityAvailable)} label={t('How many?')} />
               <button type="button" ref={addRef} className="btn btn-primary flex-grow-1 qv-add" onClick={add} disabled={soldOut}>
-                <i className="bi bi-basket2" /> {soldOut ? 'Sold out' : 'Add to basket'}
+                <i className="bi bi-basket2" /> {soldOut ? t('Sold out') : t('Add to basket')}
               </button>
             </div>
             {inCart && (
               <div className="fs-7 mt-2 text-success fw-semi">
-                <i className="bi bi-check-circle" /> {inCart.quantity} already in your basket
+                <i className="bi bi-check-circle" /> {t('{n} already in your basket', { n: inCart.quantity })}
               </div>
             )}
           </div>
           <Link to={productPath(product)} className="link-arrow small mt-3" onClick={onClose}>
-            View full details and reviews <i className="bi bi-arrow-right" />
+            {t('View full details and reviews')} <i className="bi bi-arrow-right" />
           </Link>
         </div>
       </div>

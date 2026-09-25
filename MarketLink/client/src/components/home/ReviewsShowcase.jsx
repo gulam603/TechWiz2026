@@ -5,17 +5,18 @@ import Avatar from '../common/Avatar';
 import VerifiedBadge from '../reviews/VerifiedBadge';
 import { formatDate } from '../../utils/format';
 import { productPath } from '../../utils/links';
+import { t } from '../../i18n';
 
 function Bars({ stars, count }) {
   return (
-    <ul className="rs-bars" aria-label="How customers rate MarketLink farmers">
+    <ul className="rs-bars" aria-label={t('How customers rate MarketLink farmers')}>
       {[5, 4, 3, 2, 1].map((n) => {
         const share = count ? Math.round(((stars?.[n] || 0) / count) * 100) : 0;
         return (
           <li key={n}>
             <span className="rs-bar-label">
               {n} <i className="bi bi-star-fill" aria-hidden="true" />
-              <span className="visually-hidden"> stars</span>
+              <span className="visually-hidden"> {t('stars')}</span>
             </span>
             <span className="rs-bar" aria-hidden="true">
               <span style={{ width: `${share}%` }} />
@@ -45,14 +46,14 @@ function ReviewCard({ review, copy = false }) {
           <img src={product?.image || farmer?.logo} alt="" loading="lazy" />
           <span className="min-w-0">
             <strong className="d-block text-truncate">{product?.name || farmer?.stallName}</strong>
-            {product && farmer && <span className="d-block text-truncate">from {farmer.stallName}</span>}
+            {product && farmer && <span className="d-block text-truncate">{t('from {name}', { name: farmer.stallName })}</span>}
           </span>
         </Link>
       )}
       <figcaption>
         <Avatar name={customer?.name} src={customer?.avatar} className="avatar-sm" />
         <span className="min-w-0">
-          <strong className="d-block text-truncate">{customer?.name || 'MarketLink customer'}</strong>
+          <strong className="d-block text-truncate">{customer?.name || t('MarketLink customer')}</strong>
           <span className="rs-meta">
             {customer?.city && `${customer.city} · `}
             <time dateTime={String(review.createdAt).slice(0, 10)}>{formatDate(review.createdAt)}</time>
@@ -97,13 +98,13 @@ export default function ReviewsShowcase({ data, loading }) {
       <div className="container">
         <div className="rs-head">
           <div className="rs-intro">
-            <span className="eyebrow">Customer reviews</span>
+            <span className="eyebrow">{t('Customer reviews')}</span>
             <h2 id="reviews-title" className="section-title">
-              Loved by families who shop at the market
+              {t('Loved by families who shop at the market')}
             </h2>
-            <p className="text-muted-2 mb-3">Real words from customers who pre-ordered on MarketLink and collected their food at the stall.</p>
+            <p className="text-muted-2 mb-3">{t('Real words from customers who pre-ordered on MarketLink and collected their food at the stall.')}</p>
             <p className="rs-verified-note">
-              <i className="bi bi-patch-check-fill" aria-hidden="true" /> Only customers who picked up an order get the “Verified purchase” badge.
+              <i className="bi bi-patch-check-fill" aria-hidden="true" /> {t('Only customers who picked up an order get the “Verified purchase” badge.')}
             </p>
           </div>
           <div className="rs-summary">
@@ -113,9 +114,9 @@ export default function ReviewsShowcase({ data, loading }) {
                   <strong>{summary.average.toFixed(1)}</strong>
                   <span>
                     <RatingStars value={summary.average} size="1.15rem" />
-                    <span className="d-block small">from {summary.count} reviews</span>
+                    <span className="d-block small">{t('from {n} reviews', { n: summary.count })}</span>
                     <span className="rs-verified">
-                      <i className="bi bi-patch-check-fill" aria-hidden="true" /> {summary.verifiedShare}% verified purchases
+                      <i className="bi bi-patch-check-fill" aria-hidden="true" /> {t('{n}% verified purchases', { n: summary.verifiedShare })}
                     </span>
                   </span>
                 </div>
@@ -128,7 +129,7 @@ export default function ReviewsShowcase({ data, loading }) {
         </div>
       </div>
 
-      <div className={`rs-wall ${paused ? 'is-paused' : ''}`} aria-label="What customers say">
+      <div className={`rs-wall ${paused ? 'is-paused' : ''}`} aria-label={t('What customers say')}>
         {loading && !reviews.length ? (
           <div className="rs-track">
             {[0, 1, 2, 3].map((i) => (
@@ -141,7 +142,7 @@ export default function ReviewsShowcase({ data, loading }) {
       </div>
       <div className="container rs-controls">
         <button type="button" className="rs-pause" onClick={() => setPaused((p) => !p)} aria-pressed={paused}>
-          <i className={`bi ${paused ? 'bi-play-fill' : 'bi-pause-fill'}`} aria-hidden="true" /> {paused ? 'Play reviews' : 'Pause reviews'}
+          <i className={`bi ${paused ? 'bi-play-fill' : 'bi-pause-fill'}`} aria-hidden="true" /> {paused ? t('Play reviews') : t('Pause reviews')}
         </button>
       </div>
     </section>

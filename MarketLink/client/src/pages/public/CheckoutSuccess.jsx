@@ -1,9 +1,10 @@
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { formatDateKey, money, time12 } from '../../utils/format';
+import { rich, t } from '../../i18n';
 
 export default function CheckoutSuccess() {
-  useDocumentTitle('Pre-order placed');
+  useDocumentTitle(t('Pre-order placed'));
   const { state } = useLocation();
   if (!state?.orders) return <Navigate to="/account/orders" replace />;
   return (
@@ -12,17 +13,17 @@ export default function CheckoutSuccess() {
         <span className="success-icon mb-3" aria-hidden="true">
           <i className="bi bi-check-lg" />
         </span>
-        <h1 className="display-font">Your pre-order is in!</h1>
-        <p className="text-muted-2">We've told the farmer and sent a confirmation to your e-mail. You'll get an alert when it's ready for pickup.</p>
+        <h1 className="display-font">{t('Your pre-order is in!')}</h1>
+        <p className="text-muted-2">{t('We\'ve told the farmer and sent a confirmation to your e-mail. You\'ll get an alert when it\'s ready for pickup.')}</p>
       </div>
       {state.newAccount && (
         <div className="account-created mb-4">
           <i className="bi bi-envelope-check-fill" aria-hidden="true" />
           <div>
-            <strong className="d-block">Check your inbox</strong>
+            <strong className="d-block">{t('Check your inbox')}</strong>
             <span className="small">
-              Your MarketLink password was sent to <strong>{state.newAccount.email}</strong>. Use it to log in next time and change it in{' '}
-              <Link to="/account/profile">Profile &amp; family</Link>.
+              {rich('Your MarketLink password was sent to <b>{email}</b>. Use it to log in next time. You can change it here:', { email: state.newAccount.email })}{' '}
+              <Link to="/account/profile">{t('Profile & family')}</Link>
             </span>
           </div>
         </div>
@@ -33,22 +34,22 @@ export default function CheckoutSuccess() {
             <div className="flex-grow-1">
               <strong className="d-block">{o.orderNumber}</strong>
               <span className="small text-muted-2">
-                Pickup {formatDateKey(o.pickupDate)} · {time12(o.pickupSlot.start)} to {time12(o.pickupSlot.end)}
+                {t('Pickup')} {formatDateKey(o.pickupDate)} · {time12(o.pickupSlot.start)} {t('to')} {time12(o.pickupSlot.end)}
               </span>
             </div>
             <strong>{money(o.totalAmount)}</strong>
             <Link to={`/account/orders/${o._id}`} className="btn btn-soft btn-sm">
-              View order
+              {t('View order')}
             </Link>
           </div>
         ))}
       </div>
       <div className="d-flex gap-2 justify-content-center">
         <Link to="/account/orders" className="btn btn-primary">
-          My orders
+          {t('My orders')}
         </Link>
         <Link to="/products" className="btn btn-white">
-          Keep shopping
+          {t('Keep shopping')}
         </Link>
       </div>
     </div>

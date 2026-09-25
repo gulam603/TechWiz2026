@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
+import { t } from '../../i18n';
 
 /**
  * "Subscribe to our newsletter" form. `variant="band"` is the large home page block,
@@ -27,13 +28,13 @@ export default function NewsletterCta({ variant = 'band', source = 'home' }) {
   const form = (
     <form className="nl-form" onSubmit={submit} noValidate={false}>
       <label htmlFor={id} className="visually-hidden">
-        Your e-mail address
+        {t('Your e-mail address')}
       </label>
       <div className="nl-field">
         <i className="bi bi-envelope" aria-hidden="true" />
-        <input id={id} type="email" required={!user} placeholder={user?.email || 'Your e-mail address'} value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" maxLength={120} />
+        <input id={id} type="email" required={!user} placeholder={user?.email || t('Your e-mail address')} value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" maxLength={120} />
         <button type="submit" className="btn btn-lime" disabled={state.busy}>
-          {state.busy ? <span className="spinner-border spinner-border-sm" aria-hidden="true" /> : 'Subscribe'}
+          {state.busy ? <span className="spinner-border spinner-border-sm" aria-hidden="true" /> : t('Subscribe')}
         </button>
       </div>
       <div aria-live="polite" className="nl-status">
@@ -54,8 +55,8 @@ export default function NewsletterCta({ variant = 'band', source = 'home' }) {
   if (variant === 'footer') {
     return (
       <div className="nl-footer">
-        <h6>Weekly harvest e-mail</h6>
-        <p className="small mb-2">What is fresh, what is in season and new farmers near you. Once a week, no spam.</p>
+        <h6>{t('Weekly harvest e-mail')}</h6>
+        <p className="small mb-2">{t('What is fresh, what is in season and new farmers near you. Once a week, no spam.')}</p>
         {form}
       </div>
     );
@@ -72,9 +73,9 @@ export default function NewsletterCta({ variant = 'band', source = 'home' }) {
           </div>
           <div className="row align-items-center g-4 position-relative">
             <div className="col-lg-6">
-              <span className="eyebrow">Newsletter</span>
-              <h2 id="nl-title" className="section-title mt-2">Get the weekly harvest list in your inbox</h2>
-              <p className="mb-0">Once a week: what the markets will have, seasonal picks and new farmers. Unsubscribe with one click.</p>
+              <span className="eyebrow">{t('Newsletter')}</span>
+              <h2 id="nl-title" className="section-title mt-2">{t('Get the weekly harvest list in your inbox')}</h2>
+              <p className="mb-0">{t('Once a week: what the markets will have, seasonal picks and new farmers. Unsubscribe with one click.')}</p>
             </div>
             <div className="col-lg-6">{form}</div>
           </div>

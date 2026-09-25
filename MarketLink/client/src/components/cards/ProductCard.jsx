@@ -8,6 +8,7 @@ import ProduceImage from '../common/ProduceImage';
 import RatingStars from '../common/RatingStars';
 import FavButton from '../common/FavButton';
 import { productPath } from '../../utils/links';
+import { productName, t } from '../../i18n';
 
 const QuickViewModal = lazy(() => import('../product/QuickViewModal'));
 
@@ -23,7 +24,7 @@ export default function ProductCard({ product }) {
 
   function openAdd() {
     if (user && user.role !== 'customer') {
-      toast('Only customer accounts can place pre-orders', 'error');
+      toast(t('Only customer accounts can place pre-orders'), 'error');
       return;
     }
     setQuick('add');
@@ -32,24 +33,24 @@ export default function ProductCard({ product }) {
   return (
     <article className={`product-card ${soldOut ? 'is-soldout' : ''}`}>
       <div className="card-top-badges">
-        {soldOut && <span className="chip chip-dark">Sold out</span>}
-        {low && <span className="chip chip-warn">Only {product.quantityAvailable} left</span>}
+        {soldOut && <span className="chip chip-dark">{t('Sold out')}</span>}
+        {low && <span className="chip chip-warn">{t('Only')} {product.quantityAvailable} {t('left')}</span>}
       </div>
       <FavButton type="products" id={product._id} className="fav-btn" />
       <div className="product-media">
-        <ProduceImage src={product.image} alt={product.name} color={product.category?.color} />
-        <button type="button" className="quickview-btn" onClick={() => setQuick('view')} aria-label={`Quick view: ${product.name}`}>
-          <i className="bi bi-eye" aria-hidden="true" /> Quick view
+        <ProduceImage src={product.image} alt={productName(product)} color={product.category?.color} />
+        <button type="button" className="quickview-btn" onClick={() => setQuick('view')} aria-label={t('Quick view: {name}', { name: productName(product) })}>
+          <i className="bi bi-eye" aria-hidden="true" /> {t('Quick view')}
         </button>
       </div>
       <div className="product-body">
         <span className="product-cat">{product.category?.name}</span>
         <h3 className="product-name">
-          <Link to={productPath(product)}>{product.name}</Link>
+          <Link to={productPath(product)}>{productName(product)}</Link>
         </h3>
         {product.farmer?.stallName && (
           <div className="product-farmer">
-            by <Link to={`/farmers/${product.farmer.slug}`}>{product.farmer.stallName}</Link>
+            {t('by')} <Link to={`/farmers/${product.farmer.slug}`}>{product.farmer.stallName}</Link>
           </div>
         )}
         {product.ratingCount > 0 && (
@@ -62,9 +63,9 @@ export default function ProductCard({ product }) {
             {money(product.price)}
             <span className="unit">/ {product.unit}</span>
           </div>
-          <button type="button" className="add-btn" onClick={openAdd} disabled={soldOut} aria-haspopup="dialog" aria-label={`Add ${product.name} to basket${inCart ? ` (${inCart.quantity} already in it)` : ''}`} title="Choose how many and add to basket">
+          <button type="button" className="add-btn" onClick={openAdd} disabled={soldOut} aria-haspopup="dialog" aria-label={inCart ? t('Add {name} to basket ({n} already in it)', { name: productName(product), n: inCart.quantity }) : t('Add {name} to basket', { name: productName(product) })} title={t('Choose how many and add to basket')}>
             <i className="bi bi-basket2" aria-hidden="true" />
-            <span className="add-label">{soldOut ? 'Sold out' : 'Add'}</span>
+            <span className="add-label">{soldOut ? t('Sold out') : t('Add')}</span>
             {inCart && (
               <span className="add-count" aria-hidden="true">
                 {inCart.quantity}

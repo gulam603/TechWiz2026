@@ -8,6 +8,7 @@ import ProduceImage from '../common/ProduceImage';
 import QuantityStepper from '../common/QuantityStepper';
 import { money } from '../../utils/format';
 import { productPath } from '../../utils/links';
+import { productName, t } from '../../i18n';
 
 /** Basket in a sidebar on the right: lines per farmer, quantities, total, full basket and checkout. */
 export default function CartDrawer() {
@@ -59,17 +60,17 @@ export default function CartDrawer() {
 
   return createPortal(
     <div className={`cart-drawer-root ${open ? 'is-open' : ''}`} inert={!open}>
-      <button type="button" className="cart-drawer-backdrop" aria-label="Close basket" tabIndex={-1} onClick={closeDrawer} />
-      <aside className="cart-drawer" role="dialog" aria-modal="true" aria-label="Your basket" tabIndex={-1} ref={panel}>
+      <button type="button" className="cart-drawer-backdrop" aria-label={t('Close basket')} tabIndex={-1} onClick={closeDrawer} />
+      <aside className="cart-drawer" role="dialog" aria-modal="true" aria-label={t('Your basket')} tabIndex={-1} ref={panel}>
         <header className="cart-drawer-head">
           <div>
-            <h5 className="mb-0">Your basket</h5>
+            <h5 className="mb-0">{t('Your basket')}</h5>
             <span className="fs-7 text-muted-2">
-              {cart.count} item{cart.count === 1 ? '' : 's'}
-              {cart.groups.length > 0 && ` from ${cart.groups.length} farmer${cart.groups.length === 1 ? '' : 's'}`}
+              {cart.count === 1 ? t('1 item') : t('{n} items', { n: cart.count })}
+              {cart.groups.length > 0 && ` ${cart.groups.length === 1 ? t('from 1 farmer') : t('from {n} farmers', { n: cart.groups.length })}`}
             </span>
           </div>
-          <button type="button" className="btn-close" onClick={closeDrawer} aria-label="Close basket" />
+          <button type="button" className="btn-close" onClick={closeDrawer} aria-label={t('Close basket')} />
         </header>
 
         {cart.items.length === 0 ? (
@@ -77,10 +78,10 @@ export default function CartDrawer() {
             <span className="empty-icon" aria-hidden="true">
               <i className="bi bi-basket2" />
             </span>
-            <strong>Your basket is empty</strong>
-            <span className="small text-muted-2">Add fresh produce from local farmers, then pick a pickup slot.</span>
+            <strong>{t('Your basket is empty')}</strong>
+            <span className="small text-muted-2">{t('Add fresh produce from local farmers, then pick a pickup slot.')}</span>
             <button type="button" className="btn btn-primary btn-sm" onClick={() => go('/products')}>
-              Browse products
+              {t('Browse products')}
             </button>
           </div>
         ) : (
@@ -100,7 +101,7 @@ export default function CartDrawer() {
                       <ProduceImage src={item.image} color={item.categoryColor} className="cart-drawer-thumb" />
                       <div className="min-w-0 flex-grow-1">
                         <Link to={productPath(item)} className="d-block text-truncate fw-semi small text-reset">
-                          {item.name}
+                          {productName(item)}
                         </Link>
                         <span className="fs-7 text-muted-2">
                           {money(item.price)} / {item.unit}
@@ -110,7 +111,7 @@ export default function CartDrawer() {
                           <strong className="small">{money(item.price * item.quantity)}</strong>
                         </div>
                       </div>
-                      <button type="button" className="cart-drawer-remove" onClick={() => cart.remove(item.productId)} aria-label={`Remove ${item.name}`} title="Remove">
+                      <button type="button" className="cart-drawer-remove" onClick={() => cart.remove(item.productId)} aria-label={t('Remove {name}', { name: item.name })} title={t('Remove')}>
                         <i className="bi bi-x-lg" />
                       </button>
                     </div>
@@ -120,36 +121,36 @@ export default function CartDrawer() {
             </div>
             <footer className="cart-drawer-foot">
               <div className="d-flex justify-content-between align-items-end mb-2">
-                <span className="fw-semi small">Total due at pickup</span>
+                <span className="fw-semi small">{t('Total due at pickup')}</span>
                 <span className="total">{money(cart.total)}</span>
               </div>
               <p className="fs-7 text-muted-2 mb-3">
-                <i className="bi bi-cash-coin" /> No online payment: you pay each farmer when you collect.
+                <i className="bi bi-cash-coin" /> {t('No online payment: you pay each farmer when you collect.')}
               </p>
               {canOrder ? (
                 <button type="button" className="btn btn-primary w-100 mb-2" onClick={() => go('/checkout')}>
-                  Checkout <i className="bi bi-arrow-right" />
+                  {t('Checkout')} <i className="bi bi-arrow-right" />
                 </button>
               ) : (
-                <div className="alert alert-warning small py-2 mb-2">Only customer accounts can place pre-orders.</div>
+                <div className="alert alert-warning small py-2 mb-2">{t('Only customer accounts can place pre-orders.')}</div>
               )}
               <div className="cart-drawer-actions">
                 <button type="button" className="btn btn-white flex-grow-1" onClick={() => go('/cart')}>
-                  <i className="bi bi-basket2" /> View full basket
+                  <i className="bi bi-basket2" /> {t('View full basket')}
                 </button>
                 <button type="button" className="btn btn-outline-danger cart-empty-btn" onClick={() => setConfirmEmpty(true)} aria-expanded={confirmEmpty} aria-controls="cart-empty-confirm">
-                  <i className="bi bi-trash3" /> Empty basket
+                  <i className="bi bi-trash3" /> {t('Empty basket')}
                 </button>
               </div>
               {confirmEmpty && (
-                <div id="cart-empty-confirm" className="cart-empty-confirm" role="alertdialog" aria-label="Empty the basket?">
-                  <span className="small fw-semi">Remove all {cart.count} items from your basket?</span>
+                <div id="cart-empty-confirm" className="cart-empty-confirm" role="alertdialog" aria-label={t('Empty the basket?')}>
+                  <span className="small fw-semi">{t('Remove all {n} items from your basket?', { n: cart.count })}</span>
                   <div className="d-flex gap-2">
                     <button type="button" className="btn btn-sm btn-white" onClick={() => setConfirmEmpty(false)}>
-                      Keep them
+                      {t('Keep them')}
                     </button>
                     <button type="button" className="btn btn-sm btn-danger" onClick={emptyBasket} autoFocus>
-                      Yes, empty it
+                      {t('Yes, empty it')}
                     </button>
                   </div>
                 </div>

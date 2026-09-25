@@ -1,4 +1,5 @@
-export function PageLoader({ label = 'Loading…' }) {
+import { t } from '../../i18n';
+export function PageLoader({ label = t('Loading…') }) {
   return (
     <div className="page-loader" role="status">
       <div className="text-center">

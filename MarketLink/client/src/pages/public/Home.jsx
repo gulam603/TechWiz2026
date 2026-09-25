@@ -19,6 +19,7 @@ import { DAY_NAMES, nextOccurrence, time12 } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 import useSeo from '../../hooks/useSeo';
 import { homeLd } from '../../utils/seo';
+import { t } from '../../i18n';
 
 /** Finds the market that opens soonest (today counts if it has not closed yet). */
 function useNextMarket(markets) {
@@ -52,16 +53,16 @@ const STATS = [
 /** Search box with categories, key numbers and the next market day, just under the banner. */
 function SearchCard({ stats, next, categories }) {
   return (
-    <section className="search-card-wrap" aria-label="Search and quick facts">
+    <section className="search-card-wrap" aria-label={t('Search and quick facts')}>
       <div className="container">
         <div className="search-card">
           <div className="row g-3 align-items-center">
             <div className="col-lg-8">
               <label className="search-card-label" htmlFor="home-search">
-                What would you like to buy today?
+                {t('What would you like to buy today?')}
               </label>
-              <GlobalSearch withCategory size="lg" inputId="home-search" placeholder="Try mangoes, sourdough or honey…" />
-              <div className="quick-cats" aria-label="Popular categories">
+              <GlobalSearch withCategory size="lg" inputId="home-search" placeholder={t('Try mangoes, sourdough or honey…')} />
+              <div className="quick-cats" aria-label={t('Popular categories')}>
                 {categories === null
                   ? [0, 1, 2, 3, 4].map((i) => <Bone key={i} w={96} h={30} r="50rem" />)
                   : categories.slice(0, 6).map((c) => (
@@ -79,9 +80,9 @@ function SearchCard({ stats, next, categories }) {
                 </span>
                 {next ? (
                   <span className="min-w-0">
-                    <span className="d-block small fw-semi text-muted-2">Next market day</span>
+                    <span className="d-block small fw-semi text-muted-2">{t('Next market day')}</span>
                     <strong className="d-block">
-                      {next.inDays === 0 ? 'Today' : next.inDays === 1 ? 'Tomorrow' : DAY_NAMES[next.date.getDay()]}, {time12(next.market.openTime)}
+                      {next.inDays === 0 ? t('Today') : next.inDays === 1 ? t('Tomorrow') : DAY_NAMES[next.date.getDay()]}, {time12(next.market.openTime)}
                     </strong>
                     <Link to={`/markets/${next.market.slug}`} className="small text-truncate d-block">
                       {next.market.name} <i className="bi bi-arrow-right" aria-hidden="true" />
@@ -101,7 +102,7 @@ function SearchCard({ stats, next, categories }) {
             {STATS.map((s) => (
               <div key={s.key}>
                 <dt>
-                  <i className={`bi ${s.icon}`} aria-hidden="true" /> {s.label}
+                  <i className={`bi ${s.icon}`} aria-hidden="true" /> {t(s.label)}
                 </dt>
                 <dd>{stats ? <CountUp value={stats[s.key]} /> : <Bone w={56} h={26} />}</dd>
               </div>
@@ -138,11 +139,11 @@ export default function Home() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Shop by category</span>
-              <h2 id="cats-title" className="section-title">What's growing this week</h2>
+              <span className="eyebrow">{t('Shop by category')}</span>
+              <h2 id="cats-title" className="section-title">{t('What\'s growing this week')}</h2>
             </div>
             <Link to="/products" className="link-arrow">
-              All products <i className="bi bi-arrow-right" />
+              {t('All products')} <i className="bi bi-arrow-right" />
             </Link>
           </div>
           <div className="category-rail">
@@ -151,7 +152,7 @@ export default function Home() {
                   <Link key={c._id} to={`/products?category=${c.slug}`} className="category-tile" style={{ '--tile-bg': c.color }}>
                     <img src={c.icon} alt="" />
                     <strong>{c.name}</strong>
-                    <span>{c.productCount} items</span>
+                    <span>{c.productCount} {t('items')}</span>
                   </Link>
                 ))
               : Array.from({ length: 8 }, (_, i) => <Bone key={i} h={150} r="1.3rem" className="category-bone" />)}
@@ -164,14 +165,14 @@ export default function Home() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Most loved</span>
+              <span className="eyebrow">{t('Most loved')}</span>
               <h2 id="harvest-title" className="section-title">
-                This week's <span className="italic-accent">harvest</span>
+                {t('This week\'s')} <span className="italic-accent">{t('harvest')}</span>
               </h2>
-              <p>Popular picks from farmers near you. Reserve yours before market day.</p>
+              <p>{t('Popular picks from farmers near you. Reserve yours before market day.')}</p>
             </div>
             <Link to="/products?sort=popular" className="link-arrow">
-              Shop the market <i className="bi bi-arrow-right" />
+              {t('Shop the market')} <i className="bi bi-arrow-right" />
             </Link>
           </div>
           <div className="row g-3 g-lg-4">
@@ -195,12 +196,12 @@ export default function Home() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Markets</span>
-              <h2 id="markets-title" className="section-title">Find a market near you</h2>
-              <p>Every market, its days and opening hours, with directions to the exact pickup point.</p>
+              <span className="eyebrow">{t('Markets')}</span>
+              <h2 id="markets-title" className="section-title">{t('Find a market near you')}</h2>
+              <p>{t('Every market, its days and opening hours, with directions to the exact pickup point.')}</p>
             </div>
             <Link to="/markets" className="link-arrow">
-              All markets <i className="bi bi-arrow-right" />
+              {t('All markets')} <i className="bi bi-arrow-right" />
             </Link>
           </div>
           <div className="row g-4">
@@ -216,7 +217,7 @@ export default function Home() {
                         <span className="flex-grow-1 min-w-0">
                           <strong className="d-block text-truncate">{m.name}</strong>
                           <span className="fs-7 text-muted-2 d-block text-truncate">
-                            {time12(m.openTime)} to {time12(m.closeTime)} · {m.farmerCount} farmers
+                            {time12(m.openTime)} {t('to')} {time12(m.closeTime)} · {m.farmerCount} {t('farmers')}
                           </span>
                         </span>
                         <span className="d-none d-sm-inline-flex">
@@ -250,11 +251,11 @@ export default function Home() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Meet the growers</span>
-              <h2 id="farmers-title" className="section-title">Top-rated farmers</h2>
+              <span className="eyebrow">{t('Meet the growers')}</span>
+              <h2 id="farmers-title" className="section-title">{t('Top-rated farmers')}</h2>
             </div>
             <Link to="/farmers" className="link-arrow">
-              All farmers <i className="bi bi-arrow-right" />
+              {t('All farmers')} <i className="bi bi-arrow-right" />
             </Link>
           </div>
           <div className="row g-3 g-lg-4">
@@ -280,20 +281,20 @@ export default function Home() {
       <section className="section pt-0">
         <div className="container">
           <div className="cta-band">
-            <img className="cta-photo" src="/images/hero/cta-farmer.webp" alt="A farmer harvesting rice" loading="lazy" />
+            <img className="cta-photo" src="/images/hero/cta-farmer.webp" alt={t('A farmer harvesting rice')} loading="lazy" />
             <div className="row">
               <div className="col-lg-7">
-                <span className="eyebrow text-lime">For farmers</span>
-                <h2 className="section-title mt-2">Plan your harvest. Sell before you pack the truck.</h2>
-                <p className="mb-4">Publish your weekly stock and prices, take pre-orders with pickup times and see your best sellers, all from one simple dashboard. Free to join.</p>
+                <span className="eyebrow text-lime">{t('For farmers')}</span>
+                <h2 className="section-title mt-2">{t('Plan your harvest. Sell before you pack the truck.')}</h2>
+                <p className="mb-4">{t('Publish your weekly stock and prices, take pre-orders with pickup times and see your best sellers, all from one simple dashboard. Free to join.')}</p>
                 <div className="d-flex gap-2 flex-wrap">
                   {!user && (
                     <Link to="/register/farmer" className="btn btn-lime btn-lg">
-                      Register your stall
+                      {t('Register your stall')}
                     </Link>
                   )}
                   <Link to="/about" className="btn btn-outline-light btn-lg">
-                    Learn more
+                    {t('Learn more')}
                   </Link>
                 </div>
               </div>

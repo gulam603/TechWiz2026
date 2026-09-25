@@ -17,16 +17,17 @@ import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import FarmerOrderActions from '../farmer/FarmerOrderActions';
 import { formatDate, formatDateKey, money, time12, timeUntil } from '../../utils/format';
+import { productName, rich, t } from '../../i18n';
 
 function ModifyModal({ order, open, onClose, onSaved }) {
   const { toast } = useToast();
-  const [items, setItems] = useState(order.items.map((i) => ({ productId: i.product, name: i.name, price: i.price, unit: i.unit, quantity: i.quantity })));
+  const [items, setItems] = useState(order.items.map((i) => ({ productId: i.product, name: i.name, nameUr: i.nameUr, price: i.price, unit: i.unit, quantity: i.quantity })));
   const [pickup, setPickup] = useState({ pickupDate: order.pickupDate, marketId: order.market._id, slotStart: order.pickupSlot.start });
   const [busy, setBusy] = useState(false);
   const total = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
   async function save() {
-    if (!pickup.slotStart) return toast('Please choose a pickup slot', 'error');
+    if (!pickup.slotStart) return toast(t('Please choose a pickup slot'), 'error');
     setBusy(true);
     try {
       const res = await api.put(`/orders/${order._id}`, {
@@ -35,7 +36,7 @@ function ModifyModal({ order, open, onClose, onSaved }) {
         slotStart: pickup.slotStart,
         marketId: pickup.marketId,
       });
-      toast('Order updated. The farmer will review the changes.');
+      toast(t('Order updated. The farmer will review the changes.'));
       onSaved(res.order);
     } catch (err) {
       toast(err.message, 'error');
@@ -49,38 +50,38 @@ function ModifyModal({ order, open, onClose, onSaved }) {
     <Modal
       open={open}
       onClose={onClose}
-      title={`Modify ${order.orderNumber}`}
+      title={t('Modify {orderNumber}', { orderNumber: order.orderNumber })}
       size="modal-lg"
       footer={
         <>
-          <span className="me-auto fw-bold">New total: {money(total)}</span>
+          <span className="me-auto fw-bold">{t('New total:')} {money(total)}</span>
           <button type="button" className="btn btn-white" onClick={onClose}>
-            Cancel
+            {t('Cancel')}
           </button>
           <button type="button" className="btn btn-primary" onClick={save} disabled={busy}>
-            {busy && <span className="spinner-border spinner-border-sm" />} Save changes
+            {busy && <span className="spinner-border spinner-border-sm" />} {t('Save changes')}
           </button>
         </>
       }
     >
-      <h6>Items</h6>
+      <h6>{t('Items')}</h6>
       {items.map((item, idx) => (
         <div key={item.productId} className="d-flex align-items-center gap-3 py-2 border-bottom">
           <span className="flex-grow-1">
-            <strong className="d-block small">{item.name}</strong>
+            <strong className="d-block small">{productName(item)}</strong>
             <span className="fs-7 text-muted-2">
               {money(item.price)} / {item.unit}
             </span>
           </span>
           <QuantityStepper value={item.quantity} onChange={(q) => setItems(items.map((x, i) => (i === idx ? { ...x, quantity: q } : x)))} />
-          <button type="button" className="btn btn-sm btn-icon btn-white" disabled={items.length === 1} onClick={() => setItems(items.filter((_, i) => i !== idx))} aria-label={`Remove ${item.name}`}>
+          <button type="button" className="btn btn-sm btn-icon btn-white" disabled={items.length === 1} onClick={() => setItems(items.filter((_, i) => i !== idx))} aria-label={t('Remove {name}', { name: item.name })}>
             <i className="bi bi-trash3" />
           </button>
         </div>
       ))}
-      <h6 className="mt-4">Pickup slot</h6>
+      <h6 className="mt-4">{t('Pickup slot')}</h6>
       <PickupPicker farmerId={order.farmer._id} value={pickup} onChange={setPickup} excludeOrder={order._id} />
-      <p className="fs-7 text-muted-2 mb-0 mt-2">Changing an accepted order sends it back to the farmer for approval.</p>
+      <p className="fs-7 text-muted-2 mb-0 mt-2">{t('Changing an accepted order sends it back to the farmer for approval.')}</p>
     </Modal>
   );
 }
@@ -96,7 +97,7 @@ function ReviewForm({ order, type, item, onDone }) {
     setBusy(true);
     try {
       await api.post('/reviews', { orderId: order._id, type, productId: item?.product, rating, comment });
-      toast('Thanks for your review!');
+      toast(t('Thanks for your review!'));
       onDone();
     } catch (err) {
       toast(err.message, 'error');
@@ -108,13 +109,13 @@ function ReviewForm({ order, type, item, onDone }) {
   return (
     <form onSubmit={submit} className="border rounded-4 p-3 mb-2 bg-white">
       <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
-        <strong className="small">{type === 'farmer' ? `Rate ${order.farmer.stallName}` : `Rate ${item.name}`}</strong>
+        <strong className="small">{type === 'farmer' ? t('Rate {stallName}', { stallName: order.farmer.stallName }) : t('Rate {name}', { name: item.name })}</strong>
         <StarInput value={rating} onChange={setRating} />
       </div>
       <div className="d-flex gap-2">
-        <input className="form-control form-control-sm" placeholder="Share a few words (optional)" value={comment} onChange={(e) => setComment(e.target.value)} maxLength={1000} aria-label="Comment" />
+        <input className="form-control form-control-sm" placeholder={t('Share a few words (optional)')} value={comment} onChange={(e) => setComment(e.target.value)} maxLength={1000} aria-label={t('Comment')} />
         <button type="submit" className="btn btn-primary btn-sm" disabled={busy}>
-          Post
+          {t('Post')}
         </button>
       </div>
     </form>
@@ -131,10 +132,10 @@ export default function OrderDetail() {
   const [modifying, setModifying] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [busy, setBusy] = useState(false);
-  useDocumentTitle(data?.order ? `Order ${data.order.orderNumber}` : 'Order');
+  useDocumentTitle(data?.order ? t('Order {orderNumber}', { orderNumber: data.order.orderNumber }) : t('Order'));
 
   if (loading && !data) return <PageLoader />;
-  if (error) return <EmptyState title="Order not found" action={<Link to="/" className="btn btn-primary">Go home</Link>} />;
+  if (error) return <EmptyState title={t('Order not found')} action={<Link to="/" className="btn btn-primary">{t('Go home')}</Link>} />;
 
   const { order } = data;
   const isOwner = user.role === 'customer' && order.customer._id === user._id;
@@ -144,7 +145,7 @@ export default function OrderDetail() {
     setBusy(true);
     try {
       await api.post(`/orders/${order._id}/cancel`);
-      toast('Order cancelled. The farmer has been notified.');
+      toast(t('Order cancelled. The farmer has been notified.'));
       setCancelling(false);
       reload();
     } catch (err) {
@@ -159,9 +160,9 @@ export default function OrderDetail() {
       const res = await api.get(`/orders/${order._id}/reorder`);
       const available = res.items.filter((i) => i.available);
       available.forEach((i) => cart.add(i.product, i.quantity));
-      if (!available.length) toast('These items are not available right now', 'error');
+      if (!available.length) toast(t('These items are not available right now'), 'error');
       else {
-        toast(`${available.length} item(s) added to your basket${available.length < res.items.length ? ' (some are sold out)' : ''}`);
+        toast(`${available.length} item(s) added to your basket${available.length < res.items.length ? t(' (some are sold out)') : ''}`);
         navigate('/cart');
       }
     } catch (err) {
@@ -175,7 +176,7 @@ export default function OrderDetail() {
   return (
     <>
       <Link to={backLink} className="small fw-semi d-inline-block mb-2">
-        <i className="bi bi-arrow-left" /> Back to orders
+        <i className="bi bi-arrow-left" /> {t('Back to orders')}
       </Link>
       <div className="dash-head">
         <div>
@@ -184,27 +185,27 @@ export default function OrderDetail() {
             <StatusBadge status={order.status} />
           </div>
           <p>
-            Placed {formatDate(order.createdAt, { time: true })} · {order.items.length} item(s) · pay at pickup
+            {t('Placed {date} · {n} item(s) · pay at pickup', { date: formatDate(order.createdAt, { time: true }), n: order.items.length })}
           </p>
         </div>
         <div className="d-flex gap-2 flex-wrap">
           {isOwner && order.canModify && (
             <>
               <button type="button" className="btn btn-white" onClick={() => setModifying(true)}>
-                <i className="bi bi-pencil" /> Modify
+                <i className="bi bi-pencil" /> {t('Modify')}
               </button>
               <button type="button" className="btn btn-outline-danger" onClick={() => setCancelling(true)}>
-                <i className="bi bi-x-circle" /> Cancel order
+                <i className="bi bi-x-circle" /> {t('Cancel order')}
               </button>
             </>
           )}
           {isOwner && ['completed', 'cancelled', 'declined'].includes(order.status) && (
             <button type="button" className="btn btn-primary" onClick={reorder}>
-              <i className="bi bi-arrow-repeat" /> Reorder
+              <i className="bi bi-arrow-repeat" /> {t('Reorder')}
             </button>
           )}
           <button type="button" className="btn btn-white" onClick={() => window.print()}>
-            <i className="bi bi-printer" /> Print
+            <i className="bi bi-printer" /> {t('Print')}
           </button>
         </div>
       </div>
@@ -213,7 +214,7 @@ export default function OrderDetail() {
         <div className="pay-note mb-3">
           <i className="bi bi-hourglass-split" />
           <span>
-            You can modify or cancel this order until <strong>{formatDate(order.cutoffAt, { time: true })}</strong> ({timeUntil(order.cutoffAt)}).
+            {rich('You can modify or cancel this order until <b>{date}</b> ({left}).', { date: formatDate(order.cutoffAt, { time: true }), left: timeUntil(order.cutoffAt) })}
           </span>
         </div>
       )}
@@ -230,10 +231,10 @@ export default function OrderDetail() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>Item</th>
-                  <th className="text-end">Price</th>
-                  <th className="text-end">Qty</th>
-                  <th className="text-end">Subtotal</th>
+                  <th>{t('Item')}</th>
+                  <th className="text-end">{t('Price')}</th>
+                  <th className="text-end">{t('Qty')}</th>
+                  <th className="text-end">{t('Subtotal')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -245,7 +246,7 @@ export default function OrderDetail() {
                           <img src={i.image} alt="" />
                         </span>
                         <Link to={`/products/${i.product}`} className="fw-semi text-reset">
-                          {i.name}
+                          {productName(i)}
                         </Link>
                       </div>
                     </td>
@@ -260,7 +261,7 @@ export default function OrderDetail() {
               <tfoot>
                 <tr>
                   <td colSpan={3} className="text-end fw-bold">
-                    Total (pay at pickup)
+                    {t('Total (pay at pickup)')}
                   </td>
                   <td className="text-end fw-bold fs-5 text-forest">{money(order.totalAmount)}</td>
                 </tr>
@@ -272,12 +273,12 @@ export default function OrderDetail() {
             <div className="panel mb-4">
               {order.customerNote && (
                 <p className="mb-2 small">
-                  <strong>Customer note:</strong> {order.customerNote}
+                  <strong>{t('Customer note:')}</strong> {order.customerNote}
                 </p>
               )}
               {order.farmerNote && (
                 <p className="mb-0 small">
-                  <strong>Farmer note:</strong> {order.farmerNote}
+                  <strong>{t('Farmer note:')}</strong> {order.farmerNote}
                 </p>
               )}
             </div>
@@ -287,14 +288,14 @@ export default function OrderDetail() {
             <div className="panel mb-4">
               <div className="panel-head">
                 <h5>
-                  <i className="bi bi-star text-warning" /> Rate your order
+                  <i className="bi bi-star text-warning" /> {t('Rate your order')}
                 </h5>
               </div>
               {!review.farmerReviewed && <ReviewForm order={order} type="farmer" onDone={reload} />}
               {unreviewedItems.map((item) => (
                 <ReviewForm key={String(item.product)} order={order} type="product" item={item} onDone={reload} />
               ))}
-              {review.farmerReviewed && unreviewedItems.length === 0 && <p className="small text-muted-2 mb-0">Thanks! You've reviewed everything in this order.</p>}
+              {review.farmerReviewed && unreviewedItems.length === 0 && <p className="small text-muted-2 mb-0">{t('Thanks! You\'ve reviewed everything in this order.')}</p>}
             </div>
           )}
         </div>
@@ -302,30 +303,30 @@ export default function OrderDetail() {
         <div className="col-lg-5">
           <div className="panel mb-4">
             <h5 className="mb-3">
-              <i className="bi bi-geo-alt text-success" /> Pickup details
+              <i className="bi bi-geo-alt text-success" /> {t('Pickup details')}
             </h5>
             <div className="info-row">
-              <span>Date</span>
+              <span>{t('Date')}</span>
               <span>{formatDateKey(order.pickupDate, { withYear: true })}</span>
             </div>
             <div className="info-row">
-              <span>Time slot</span>
+              <span>{t('Time slot')}</span>
               <span>
-                {time12(order.pickupSlot.start)} to {time12(order.pickupSlot.end)}
+                {time12(order.pickupSlot.start)} {t('to')} {time12(order.pickupSlot.end)}
               </span>
             </div>
             <div className="info-row">
-              <span>Market</span>
+              <span>{t('Market')}</span>
               <span>
                 <Link to={`/markets/${order.market.slug}`}>{order.market.name}</Link>
               </span>
             </div>
             <div className="info-row">
-              <span>Address</span>
+              <span>{t('Address')}</span>
               <span>{order.market.address}</span>
             </div>
             <div className="info-row">
-              <span>Farmer</span>
+              <span>{t('Farmer')}</span>
               <span>
                 <Link to={`/farmers/${order.farmer.slug}`}>{order.farmer.stallName}</Link>
                 <br />
@@ -336,7 +337,7 @@ export default function OrderDetail() {
             </div>
             {user.role !== 'customer' && (
               <div className="info-row">
-                <span>Customer</span>
+                <span>{t('Customer')}</span>
                 <span>
                   {order.customer.name}
                   <br />
@@ -348,8 +349,8 @@ export default function OrderDetail() {
             )}
             <div className="mt-3">
               <DirectionsMap
-                destination={{ lat: order.market.latitude, lng: order.market.longitude, title: order.market.name, subtitle: `Pickup ${time12(order.pickupSlot.start)}` }}
-                extraMarkers={order.farmer.latitude ? [{ id: 'stall', lat: order.farmer.latitude, lng: order.farmer.longitude, type: 'farmer', image: order.farmer.logo, title: order.farmer.stallName, subtitle: 'Farmer stall' }] : []}
+                destination={{ lat: order.market.latitude, lng: order.market.longitude, title: order.market.name, subtitle: t('Pickup {v1}', { v1: time12(order.pickupSlot.start) }) }}
+                extraMarkers={order.farmer.latitude ? [{ id: 'stall', lat: order.farmer.latitude, lng: order.farmer.longitude, type: 'farmer', image: order.farmer.logo, title: order.farmer.stallName, subtitle: t('Farmer stall') }] : []}
                 height={260}
               />
             </div>
@@ -370,9 +371,9 @@ export default function OrderDetail() {
       )}
       <ConfirmModal
         open={cancelling}
-        title="Cancel this pre-order?"
-        message="The reserved items will be released back to the farmer. This cannot be undone."
-        confirmLabel="Yes, cancel order"
+        title={t('Cancel this pre-order?')}
+        message={t('The reserved items will be released back to the farmer. This cannot be undone.')}
+        confirmLabel={t('Yes, cancel order')}
         danger
         busy={busy}
         onConfirm={cancel}

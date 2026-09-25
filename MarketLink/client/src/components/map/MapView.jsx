@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { DEFAULT_CENTER } from '../../config';
 import BaseTiles from './BaseTiles';
 import { pinIcon, userIcon } from './leafletIcons';
+import { t } from '../../i18n';
 
 function FitBounds({ points, disabled, refitOnResize }) {
   const map = useMap();
@@ -106,11 +107,11 @@ export default function MapView({
               <div className="d-flex gap-2 flex-wrap">
                 {m.link && (
                   <Link to={m.link} className="btn btn-sm btn-primary py-1">
-                    {m.linkLabel || 'View'}
+                    {m.linkLabel || t('View')}
                   </Link>
                 )}
                 <a className="btn btn-sm btn-white py-1" href={`https://www.google.com/maps/dir/?api=1&destination=${m.lat},${m.lng}`} target="_blank" rel="noreferrer">
-                  <i className="bi bi-sign-turn-right" /> Directions
+                  <i className="bi bi-sign-turn-right" /> {t('Directions')}
                 </a>
               </div>
             </Popup>
@@ -122,7 +123,7 @@ export default function MapView({
       </MapContainer>
       {tilesFailed && (
         <span className="chip map-offline-note">
-          <i className="bi bi-wifi-off" /> Map tiles need an internet connection
+          <i className="bi bi-wifi-off" /> {t('Map tiles need an internet connection')}
         </span>
       )}
     </div>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { t } from '../../i18n';
 
 // Real photos from the markets (Open Images, CC BY 2.0, see server/uploads/photos/CREDITS.md)
 const PHOTOS = [
@@ -16,11 +17,11 @@ export default function MarketMoments() {
       <div className="container">
         <div className="section-head">
           <div>
-            <span className="eyebrow">At the market</span>
-            <h2 id="moments-title" className="section-title">Real food from real farms</h2>
+            <span className="eyebrow">{t('At the market')}</span>
+            <h2 id="moments-title" className="section-title">{t('Real food from real farms')}</h2>
           </div>
           <Link to="/markets" className="link-arrow">
-            Visit a market <i className="bi bi-arrow-right" />
+            {t('Visit a market')} <i className="bi bi-arrow-right" />
           </Link>
         </div>
         <div className="moments">

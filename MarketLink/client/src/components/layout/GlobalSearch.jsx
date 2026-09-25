@@ -5,12 +5,13 @@ import useClickOutside from '../../hooks/useClickOutside';
 import useFetch from '../../hooks/useFetch';
 import { money } from '../../utils/format';
 import { productPath } from '../../utils/links';
+import { productName, t } from '../../i18n';
 
 /**
  * Instant search across products, farmers and markets (debounced).
  * `withCategory` adds an "All categories" dropdown so people can search inside one category.
  */
-export default function GlobalSearch({ className = '', placeholder = 'Search produce, farmers, markets…', autoFocus = false, withCategory = false, size = '', inputId }) {
+export default function GlobalSearch({ className = '', placeholder = t('Search produce, farmers, markets…'), autoFocus = false, withCategory = false, size = '', inputId }) {
   const [q, setQ] = useState('');
   const [category, setCategory] = useState('');
   const [results, setResults] = useState(null);
@@ -59,9 +60,9 @@ export default function GlobalSearch({ className = '', placeholder = 'Search pro
       <form className="search-pill" onSubmit={submit} role="search">
         {withCategory && (
           <label className="search-cat">
-            <span className="visually-hidden">Category</span>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Search in category">
-              <option value="">All categories</option>
+            <span className="visually-hidden">{t('Category')}</span>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label={t('Search in category')}>
+              <option value="">{t('All categories')}</option>
               {categories.map((c) => (
                 <option key={c._id} value={c.slug}>
                   {c.name}
@@ -79,41 +80,41 @@ export default function GlobalSearch({ className = '', placeholder = 'Search pro
             if (e.target.value.trim().length < 2) setResults(null);
           }}
           onFocus={() => results && setOpen(true)}
-          placeholder={categoryName ? `Search in ${categoryName}…` : placeholder}
+          placeholder={categoryName ? t('Search in {categoryName}…', { categoryName }) : placeholder}
           id={inputId}
-          aria-label={inputId ? undefined : 'Search'}
+          aria-label={inputId ? undefined : t('Search')}
           autoFocus={autoFocus}
         />
         <button type="submit" className="btn btn-primary btn-sm">
-          Search
+          {t('Search')}
         </button>
       </form>
       {open && results && (
         <div className="search-results">
           {total === 0 && (
             <div className="text-muted-2 small p-3 text-center">
-              No matches for “{q}”{categoryName ? ` in ${categoryName}` : ''}.
+              {categoryName ? t('No matches for “{q}” in {category}.', { q, category: categoryName }) : t('No matches for “{q}”.', { q })}
             </div>
           )}
-          {results.products.length > 0 && <div className="search-group-title">Products{categoryName ? ` in ${categoryName}` : ''}</div>}
+          {results.products.length > 0 && <div className="search-group-title">{categoryName ? t('Products in {category}', { category: categoryName }) : t('Products')}</div>}
           {results.products.map((p) => (
             <Link key={p._id} to={productPath(p)} className="search-hit" onClick={close}>
               <img src={p.image} alt="" />
               <span className="flex-grow-1">
-                <strong className="d-block small">{p.name}</strong>
+                <strong className="d-block small">{productName(p)}</strong>
                 <span className="fs-7 text-muted-2">{p.farmer?.stallName}</span>
               </span>
               <span className="small fw-bold">{money(p.price)}</span>
             </Link>
           ))}
-          {results.farmers.length > 0 && <div className="search-group-title">Farmers</div>}
+          {results.farmers.length > 0 && <div className="search-group-title">{t('Farmers')}</div>}
           {results.farmers.map((f) => (
             <Link key={f._id} to={`/farmers/${f.slug}`} className="search-hit" onClick={close}>
               <img src={f.logo} alt="" />
               <strong className="small">{f.stallName}</strong>
             </Link>
           ))}
-          {results.markets.length > 0 && <div className="search-group-title">Markets</div>}
+          {results.markets.length > 0 && <div className="search-group-title">{t('Markets')}</div>}
           {results.markets.map((m) => (
             <Link key={m._id} to={`/markets/${m.slug}`} className="search-hit" onClick={close}>
               <img src={m.image} alt="" />
@@ -126,9 +127,8 @@ export default function GlobalSearch({ className = '', placeholder = 'Search pro
           {total > 0 && (
             <button type="button" className="search-see-all" onClick={submit}>
               <span>
-                See all products for <strong>“{q.trim()}”</strong>
-                {categoryName ? ` in ${categoryName}` : ''}
-              </span>
+                {t('See all products for')} <strong>“{q.trim()}”</strong>
+                {categoryName ? ` ${t('in {category}', { category: categoryName })}` : ''} </span>
               <i className="bi bi-arrow-right" aria-hidden="true" />
             </button>
           )}

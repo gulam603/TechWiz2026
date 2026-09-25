@@ -5,6 +5,7 @@ import { homeFor, useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import PasswordInput from '../../components/common/PasswordInput';
 import useSeo from '../../hooks/useSeo';
+import { t } from '../../i18n';
 
 const DEMO = [
   { label: 'Customer', email: 'customer@marketlink.com', password: 'Customer@123' },
@@ -22,7 +23,7 @@ function allowedReturn(from, user) {
 }
 
 export default function Login() {
-  useSeo({ title: 'Log in', description: 'Log in to MarketLink as a customer, farmer or administrator.' });
+  useSeo({ title: t('Log in'), description: t('Log in to MarketLink as a customer, farmer or administrator.') });
   const { login, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function Login() {
     setError('');
     try {
       const user = await login(form.email, form.password);
-      toast(`Welcome back, ${user.name.split(' ')[0]}!`);
+      toast(t('Welcome back, {v1}!', { v1: user.name.split(' ')[0] }));
       // stay "busy" until the page changes, so this page does not redirect to the dashboard first
       navigate(allowedReturn(location.state?.from, user) || homeFor(user), { replace: true });
     } catch (err) {
@@ -49,42 +50,42 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout title="Your market," highlight="one tap away." text="Log in to pre-order fresh produce, track pickups and manage your favourite farmers, or run your stall if you're a farmer.">
-      <h1 className="mb-1">Welcome back</h1>
-      <p className="text-muted-2 mb-4">One login for customers, farmers and the MarketLink team.</p>
+    <AuthLayout title={t('Your market,')} highlight={t('one tap away.')} text={t('Log in to pre-order fresh produce, track pickups and manage your favourite farmers, or run your stall if you\'re a farmer.')}>
+      <h1 className="mb-1">{t('Welcome back')}</h1>
+      <p className="text-muted-2 mb-4">{t('One login for customers, farmers and the MarketLink team.')}</p>
       <form onSubmit={submit} noValidate>
         {error && <div className="alert alert-danger small py-2">{error}</div>}
         <div className="mb-3">
-          <label className="form-label" htmlFor="email">E-mail</label>
+          <label className="form-label" htmlFor="email">{t('E-mail')}</label>
           <input id="email" type="email" className="form-control form-control-lg" autoComplete="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
         </div>
         <div className="mb-3">
           <div className="d-flex justify-content-between align-items-baseline">
-            <label className="form-label" htmlFor="password">Password</label>
+            <label className="form-label" htmlFor="password">{t('Password')}</label>
             <Link to="/forgot-password" className="small">
-              Forgot password?
+              {t('Forgot password?')}
             </Link>
           </div>
           <PasswordInput id="password" size="lg" autoComplete="current-password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
         </div>
         <button type="submit" className="btn btn-primary btn-lg w-100" disabled={busy}>
-          {busy && <span className="spinner-border spinner-border-sm" />} Log in
+          {busy && <span className="spinner-border spinner-border-sm" />} {t('Log in')}
         </button>
       </form>
       <div className="demo-box mt-4">
         <div className="fw-bold mb-2">
-          <i className="bi bi-magic" /> Demo accounts
+          <i className="bi bi-magic" /> {t('Demo accounts')}
         </div>
         <div className="d-flex gap-2 flex-wrap">
           {DEMO.map((d) => (
             <button key={d.label} type="button" onClick={() => setForm({ email: d.email, password: d.password })}>
-              Use {d.label}
+              {t('Use {role}', { role: t(d.label) })}
             </button>
           ))}
         </div>
       </div>
       <p className="mt-4 small text-center">
-        New here? <Link to="/register">Create a customer account</Link> · <Link to="/register/farmer">Register your stall</Link>
+        {t('New here?')} <Link to="/register">{t('Create a customer account')}</Link> · <Link to="/register/farmer">{t('Register your stall')}</Link>
       </p>
     </AuthLayout>
   );

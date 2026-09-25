@@ -6,6 +6,7 @@ import GlobalSearch from './GlobalSearch';
 import { useAuth } from '../../context/AuthContext';
 import { LINKS, MENUS, visibleItems } from './navConfig';
 import Avatar from '../common/Avatar';
+import { t } from '../../i18n';
 
 /**
  * Slide-in menu for phones and tablets. It is rendered into <body> (outside the sticky header)
@@ -39,11 +40,11 @@ export default function MobileMenu({ open, onClose }) {
 
   return createPortal(
     <div className="mobile-menu-layer d-lg-none">
-      <button type="button" className="mobile-menu-backdrop" aria-label="Close menu" onClick={onClose} />
-      <aside className="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu">
+      <button type="button" className="mobile-menu-backdrop" aria-label={t('Close menu')} onClick={onClose} />
+      <aside className="mobile-menu" role="dialog" aria-modal="true" aria-label={t('Menu')}>
         <div className="mobile-menu-head">
           <Logo />
-          <button type="button" className="nav-icon-btn" onClick={onClose} aria-label="Close menu" ref={closeRef}>
+          <button type="button" className="nav-icon-btn" onClick={onClose} aria-label={t('Close menu')} ref={closeRef}>
             <i className="bi bi-x-lg" />
           </button>
         </div>
@@ -62,39 +63,39 @@ export default function MobileMenu({ open, onClose }) {
             </div>
           )}
 
-          <p className="mobile-menu-section">Explore</p>
-          <nav className="mobile-menu-links" aria-label="Main">
+          <p className="mobile-menu-section">{t('Explore')}</p>
+          <nav className="mobile-menu-links" aria-label={t('Main')}>
             {LINKS.map((l) => (
               <NavLink key={l.to} to={l.to} end={l.end} onClick={onClose}>
-                <i className={`bi ${l.icon}`} /> {l.label}
+                <i className={`bi ${l.icon}`} /> {t(l.label)}
               </NavLink>
             ))}
           </nav>
 
           {user ? (
             <>
-              <p className="mobile-menu-section">My account</p>
-              <nav className="mobile-menu-links" aria-label="Account">
+              <p className="mobile-menu-section">{t('My account')}</p>
+              <nav className="mobile-menu-links" aria-label={t('Account')}>
                 {visibleItems(MENUS[user.role] || [], user).map((m) => (
                   <NavLink key={m.to} to={m.to} end onClick={onClose}>
-                    <i className={`bi ${m.icon}`} /> {m.label}
+                    <i className={`bi ${m.icon}`} /> {t(m.label)}
                   </NavLink>
                 ))}
                 <button type="button" onClick={handleLogout}>
-                  <i className="bi bi-box-arrow-right" /> Log out
+                  <i className="bi bi-box-arrow-right" /> {t('Log out')}
                 </button>
               </nav>
             </>
           ) : (
             <div className="d-grid gap-2 mt-4">
               <Link to="/login" className="btn btn-primary" onClick={onClose}>
-                <i className="bi bi-person-circle" /> Log in
+                <i className="bi bi-person-circle" /> {t('Log in')}
               </Link>
               <Link to="/register" className="btn btn-white" onClick={onClose}>
-                Create a customer account
+                {t('Create a customer account')}
               </Link>
               <Link to="/register/farmer" className="btn btn-lime" onClick={onClose}>
-                <i className="bi bi-shop" /> Sell with us
+                <i className="bi bi-shop" /> {t('Sell with us')}
               </Link>
             </div>
           )}

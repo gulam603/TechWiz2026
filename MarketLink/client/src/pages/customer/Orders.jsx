@@ -13,6 +13,7 @@ import ViewToggle from '../../components/common/ViewToggle';
 import DataGrid from '../../components/admin/DataGrid';
 import { badge, dayCell, display, esc, link, linkButton, moneyCell, muted } from '../../utils/cells';
 import { time12 } from '../../utils/format';
+import { t } from '../../i18n';
 
 const COLUMNS = [
   { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/account/orders/${o._id}`, v)}${o.canModify ? '<div><span class="chip chip-soft">Editable</span></div>' : ''}`) },
@@ -21,7 +22,7 @@ const COLUMNS = [
   { data: 'items', title: 'Items', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc((v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join(' · '))}</span>`, (v) => (v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join('; ')) },
   { data: 'totalAmount', title: 'Total', className: 'text-end', render: display((v) => moneyCell(v)) },
   { data: 'status', title: 'Status', responsivePriority: 3, render: display((v) => badge(v)) },
-  { data: null, title: '', orderable: false, className: 'text-end no-export', responsivePriority: 2, render: (v, type, o) => linkButton(`/account/orders/${o._id}`, 'View', 'btn-white') },
+  { data: null, title: '', orderable: false, className: 'text-end no-export', responsivePriority: 2, render: (v, type, o) => linkButton(`/account/orders/${o._id}`, t('View'), 'btn-white') },
 ];
 
 const TABS = [
@@ -31,7 +32,7 @@ const TABS = [
 ];
 
 export default function CustomerOrders() {
-  useDocumentTitle('My orders');
+  useDocumentTitle(t('My orders'));
   const { user } = useAuth();
   const [tab, setTab] = useState('active');
   const [page, setPage] = useState(1);
@@ -42,31 +43,31 @@ export default function CustomerOrders() {
 
   return (
     <>
-      <DashHeader title="My orders" subtitle="Track, modify or cancel pre-orders before the farmer's cut-off time, and reorder past favourites." actions={<ViewToggle value={view} onChange={setView} />} />
+      <DashHeader title={t('My orders')} subtitle={t('Track, modify or cancel pre-orders before the farmer\'s cut-off time, and reorder past favourites.')} actions={<ViewToggle value={view} onChange={setView} />} />
       <div className="tabs-pill mb-3" role="tablist">
-        {TABS.map((t) => (
+        {TABS.map((tx) => (
           <button
-            key={t.value}
+            key={tx.value}
             type="button"
             role="tab"
-            aria-selected={tab === t.value}
-            className={tab === t.value ? 'active' : ''}
+            aria-selected={tab === tx.value}
+            className={tab === tx.value ? 'active' : ''}
             onClick={() => {
-              setTab(t.value);
+              setTab(tx.value);
               setPage(1);
             }}
           >
-            {t.label}
+            {t(tx.label)}
           </button>
         ))}
       </div>
       {loading && !data ? (
         <PageLoader />
       ) : data.orders.length === 0 ? (
-        <EmptyState title={tab === 'active' ? 'No active pre-orders' : 'No orders yet'} message="Browse this week's harvest and place your first pre-order." action={<Link to="/products" className="btn btn-primary">Start shopping</Link>} />
+        <EmptyState title={tab === 'active' ? t('No active pre-orders') : t('No orders yet')} message={t('Browse this week\'s harvest and place your first pre-order.')} action={<Link to="/products" className="btn btn-primary">{t('Start shopping')}</Link>} />
       ) : table ? (
         <div className="table-card">
-          <DataGrid key={tab} data={data.orders} columns={COLUMNS} order={[[2, 'desc']]} exportName="My MarketLink orders" searchPlaceholder="Order, farmer or item…" />
+          <DataGrid key={tab} data={data.orders} columns={COLUMNS} order={[[2, 'desc']]} exportName="My MarketLink orders" searchPlaceholder={t('Order, farmer or item…')} />
         </div>
       ) : (
         <div className="d-grid gap-2">
@@ -80,16 +81,16 @@ export default function CustomerOrders() {
       {family.data?.orders?.length > 0 && (
         <div className="mt-5">
           <h2 className="h4">
-            <i className="bi bi-people" /> Family orders
+            <i className="bi bi-people" /> {t('Family orders')}
           </h2>
-          <p className="small text-muted-2">Pre-orders placed by members of your household.</p>
+          <p className="small text-muted-2">{t('Pre-orders placed by members of your household.')}</p>
           <div className="d-grid gap-2">
             {family.data.orders.slice(0, 6).map((o) => (
               <OrderCard
                 key={o._id}
                 order={o}
                 to={`/account/orders/${o._id}`}
-                footer={<div className="fs-7 text-muted-2 mt-2">Ordered by {o.customer?.name}</div>}
+                footer={<div className="fs-7 text-muted-2 mt-2">{t('Ordered by')} {o.customer?.name}</div>}
               />
             ))}
           </div>

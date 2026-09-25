@@ -16,17 +16,18 @@ import useViewMode from '../../hooks/useViewMode';
 import ViewToggle from '../../components/common/ViewToggle';
 import DataGrid from '../../components/admin/DataGrid';
 import { action, dateCell, display, esc } from '../../utils/cells';
+import { t } from '../../i18n';
 
 const stars = (n) => `<span class="rating" aria-label="Rated ${n} out of 5">${[1, 2, 3, 4, 5].map((i) => `<i class="bi ${n >= i ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}</span>`;
 
 const COLUMNS = [
-  { data: 'customer.name', title: 'Customer', responsivePriority: 1, render: display((v) => `<strong class="small">${esc(v || 'Customer')}</strong>`) },
+  { data: 'customer.name', title: 'Customer', responsivePriority: 1, render: display((v) => `<strong class="small">${esc(v || t('Customer'))}</strong>`) },
   {
     data: 'rating',
     title: 'Rating',
     render: display((v, r) => `${stars(v)}<div class="mt-1">${r.verified ? '<span class="review-badge is-verified"><i class="bi bi-patch-check-fill"></i> Verified purchase</span>' : '<span class="review-badge"><i class="bi bi-question-circle"></i> Unverified</span>'}</div>`),
   },
-  { data: 'type', title: 'About', render: display((v, r) => `<span class="chip chip-soft">${esc(v === 'product' ? r.product?.name || 'Product' : 'Stall review')}</span>`, (v, r) => (v === 'product' ? r.product?.name : 'Stall')) },
+  { data: 'type', title: 'About', render: display((v, r) => `<span class="chip chip-soft">${esc(v === 'product' ? r.product?.name || t('Product') : t('Stall review'))}</span>`, (v, r) => (v === 'product' ? r.product?.name : t('Stall'))) },
   {
     data: 'comment',
     title: 'Review and your reply',
@@ -41,7 +42,7 @@ const COLUMNS = [
     orderable: false,
     className: 'text-end no-export',
     responsivePriority: 2,
-    render: (v, type, r) => `<div class="dt-actions">${action('reply', r.response?.text ? 'Edit reply' : 'Reply', 'btn-soft', 'bi-reply')}${action('report', 'Report', 'btn-white', 'bi-flag')}</div>`,
+    render: (v, type, r) => `<div class="dt-actions">${action('reply', r.response?.text ? t('Edit reply') : t('Reply'), 'btn-soft', 'bi-reply')}${action('report', t('Report'), 'btn-white', 'bi-flag')}</div>`,
   },
 ];
 
@@ -55,7 +56,7 @@ function ReplyModal({ review, onClose, onSaved }) {
     setBusy(true);
     try {
       const res = await api.post(`/farmer/reviews/${review._id}/respond`, { text });
-      toast('Reply posted');
+      toast(t('Reply posted'));
       onSaved(res.review);
     } catch (err) {
       toast(err.message, 'error');
@@ -67,22 +68,22 @@ function ReplyModal({ review, onClose, onSaved }) {
     <Modal
       open
       onClose={onClose}
-      title={`Reply to ${review.customer?.name || 'the customer'}`}
+      title={`Reply to ${review.customer?.name || t('the customer')}`}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>
-            Cancel
+            {t('Cancel')}
           </button>
           <button type="submit" form="reply-form" className="btn btn-primary" disabled={busy}>
-            Post reply
+            {t('Post reply')}
           </button>
         </>
       }
     >
       <form id="reply-form" onSubmit={send}>
         {review.comment && <blockquote className="small text-muted-2 border-start ps-2">“{review.comment}”</blockquote>}
-        <label className="form-label" htmlFor="reply-text">Your reply</label>
-        <textarea id="reply-text" className="form-control" rows={3} value={text} onChange={(e) => setText(e.target.value)} maxLength={1000} required autoFocus placeholder="Write a friendly reply…" />
+        <label className="form-label" htmlFor="reply-text">{t('Your reply')}</label>
+        <textarea id="reply-text" className="form-control" rows={3} value={text} onChange={(e) => setText(e.target.value)} maxLength={1000} required autoFocus placeholder={t('Write a friendly reply…')} />
       </form>
     </Modal>
   );
@@ -99,7 +100,7 @@ function ReplyBox({ review, onSaved }) {
     setBusy(true);
     try {
       const res = await api.post(`/farmer/reviews/${review._id}/respond`, { text });
-      toast('Reply posted');
+      toast(t('Reply posted'));
       setOpen(false);
       onSaved(res.review);
     } catch (err) {
@@ -112,24 +113,24 @@ function ReplyBox({ review, onSaved }) {
   if (!open)
     return (
       <button type="button" className="btn btn-sm btn-soft mt-2" onClick={() => setOpen(true)}>
-        <i className="bi bi-reply" /> {review.response?.text ? 'Edit reply' : 'Reply'}
+        <i className="bi bi-reply" /> {review.response?.text ? t('Edit reply') : t('Reply')}
       </button>
     );
   return (
     <form className="d-flex gap-2 mt-2 flex-grow-1" onSubmit={send}>
-      <input className="form-control form-control-sm" value={text} onChange={(e) => setText(e.target.value)} placeholder="Write a friendly reply…" maxLength={1000} required aria-label="Reply" autoFocus />
+      <input className="form-control form-control-sm" value={text} onChange={(e) => setText(e.target.value)} placeholder={t('Write a friendly reply…')} maxLength={1000} required aria-label={t('Reply')} autoFocus />
       <button type="submit" className="btn btn-primary btn-sm" disabled={busy}>
-        Post
+        {t('Post')}
       </button>
       <button type="button" className="btn btn-white btn-sm" onClick={() => setOpen(false)}>
-        Cancel
+        {t('Cancel')}
       </button>
     </form>
   );
 }
 
 export default function FarmerReviews() {
-  useDocumentTitle('Reviews');
+  useDocumentTitle(t('Reviews'));
   const [filter, setFilter] = useState('all');
   const { data, loading, setData } = useFetch(`/farmer/reviews${filter === 'unanswered' ? '?unanswered=true' : ''}`);
   const [view, setView] = useViewMode('farmer-reviews');
@@ -142,12 +143,12 @@ export default function FarmerReviews() {
 
   return (
     <>
-      <DashHeader title="Customer reviews" subtitle="See what customers say about your stall and products, and reply to them." actions={<ViewToggle value={view} onChange={setView} />} />
+      <DashHeader title={t('Customer reviews')} subtitle={t('See what customers say about your stall and products, and reply to them.')} actions={<ViewToggle value={view} onChange={setView} />} />
       <div className="d-flex align-items-center gap-3 flex-wrap mb-3">
         <div className="tabs-pill">
           {[
-            ['all', 'All reviews'],
-            ['unanswered', 'Awaiting reply'],
+            ['all', t('All reviews')],
+            ['unanswered', t('Awaiting reply')],
           ].map(([v, l]) => (
             <button key={v} type="button" className={filter === v ? 'active' : ''} onClick={() => setFilter(v)}>
               {l}
@@ -156,12 +157,12 @@ export default function FarmerReviews() {
         </div>
         {filter === 'all' && reviews.length > 0 && (
           <span className="small">
-            <RatingStars value={avg} /> <strong>{avg.toFixed(2)}</strong> average from {reviews.length} reviews
+            <RatingStars value={avg} /> <strong>{avg.toFixed(2)}</strong> {t('average from {n} reviews', { n: reviews.length })}
           </span>
         )}
       </div>
       {reviews.length === 0 ? (
-        <EmptyState icon="bi-chat-heart" title="No reviews here" message="Reviews appear after customers collect their orders." />
+        <EmptyState icon="bi-chat-heart" title={t('No reviews here')} message={t('Reviews appear after customers collect their orders.')} />
       ) : view === 'table' ? (
         <div className="table-card">
           <DataGrid
@@ -170,7 +171,7 @@ export default function FarmerReviews() {
             columns={COLUMNS}
             order={[[4, 'desc']]}
             exportName="MarketLink reviews"
-            searchPlaceholder="Customer, product or text…"
+            searchPlaceholder={t('Customer, product or text…')}
             onAction={(name, r) => {
               if (name === 'reply') setReplying(r);
               if (name === 'report') setReporting(r);
@@ -186,19 +187,19 @@ export default function FarmerReviews() {
                 <strong className="small">{r.customer?.name}</strong>
                 <RatingStars value={r.rating} />
                 <VerifiedBadge verified={r.verified} />
-                <span className="chip chip-soft">{r.type === 'product' ? r.product?.name : 'Stall review'}</span>
+                <span className="chip chip-soft">{r.type === 'product' ? r.product?.name : t('Stall review')}</span>
                 <span className="fs-7 text-muted-2 ms-auto">{timeAgo(r.createdAt)}</span>
               </div>
               {r.comment && <p className="mb-0 mt-2">{r.comment}</p>}
               {r.response?.text && (
                 <div className="farmer-reply mt-2">
-                  <strong className="d-block fs-7 text-success">Your reply</strong>
+                  <strong className="d-block fs-7 text-success">{t('Your reply')}</strong>
                   {r.response.text}
                 </div>
               )}
               <div className="d-flex align-items-center justify-content-between gap-2 flex-wrap">
                 <ReplyBox review={r} onSaved={saved} />
-                <ReportButton targetType="review" targetId={r._id} label="Report review" className="mt-2" />
+                <ReportButton targetType="review" targetId={r._id} label={t('Report review')} className="mt-2" />
               </div>
             </div>
           ))}

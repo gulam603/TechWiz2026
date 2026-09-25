@@ -7,9 +7,10 @@ import { CONTACT } from '../../config';
 import SocialLinks from '../../components/common/SocialLinks';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd } from '../../utils/seo';
+import { t } from '../../i18n';
 
 export default function Contact() {
-  useSeo({ title: 'Contact us', description: 'Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.', jsonLd: breadcrumbLd([{ name: 'Contact us', path: '/contact' }]) });
+  useSeo({ title: t('Contact us'), description: t('Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.'), jsonLd: breadcrumbLd([{ name: 'Contact us', path: '/contact' }]) });
   const { user } = useAuth();
   const { toast } = useToast();
   const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', subject: '', message: '' });
@@ -34,12 +35,12 @@ export default function Contact() {
 
   return (
     <>
-      <PageHero crumbs={[{ label: 'Contact' }]} title="Get in touch" subtitle="Questions about an order, joining as a farmer or partnering with a market? We'd love to hear from you." />
+      <PageHero crumbs={[{ label: t('Contact') }]} title={t('Get in touch')} subtitle={t('Questions about an order, joining as a farmer or partnering with a market? We\'d love to hear from you.')} />
       <div className="container pb-5">
         <div className="row g-4">
           <div className="col-lg-5">
             <div className="cta-band mb-4">
-              <h2 className="h3">MarketLink team</h2>
+              <h2 className="h3">{t('MarketLink team')}</h2>
               <ul className="list-unstyled d-grid gap-3 mt-3 mb-0">
                 <li className="d-flex gap-3">
                   <i className="bi bi-geo-alt-fill text-lime fs-5" />
@@ -61,13 +62,13 @@ export default function Contact() {
                 </li>
               </ul>
               <div className="mt-3 pt-3 border-top border-light border-opacity-25">
-                <span className="small fw-semi d-block mb-2">Follow MarketLink</span>
+                <span className="small fw-semi d-block mb-2">{t('Follow MarketLink')}</span>
                 <SocialLinks />
               </div>
             </div>
             <div className="map-frame" style={{ height: 300 }}>
               <iframe
-                title="MarketLink office on Google Maps"
+                title={t('MarketLink office on Google Maps')}
                 src={`https://www.google.com/maps?q=${encodeURIComponent(CONTACT.mapQuery)}&z=15&output=embed`}
                 width="100%"
                 height="100%"
@@ -77,37 +78,37 @@ export default function Contact() {
               />
             </div>
             <a className="small d-inline-block mt-2" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTACT.mapQuery)}`} target="_blank" rel="noreferrer">
-              <i className="bi bi-box-arrow-up-right" /> Open in Google Maps
+              <i className="bi bi-box-arrow-up-right" /> {t('Open in Google Maps')}
             </a>
           </div>
           <div className="col-lg-7">
             <form className="soft-panel" onSubmit={submit}>
-              <h2 className="h4 mb-3">Send us a message</h2>
+              <h2 className="h4 mb-3">{t('Send us a message')}</h2>
               {sent && (
                 <div className="alert alert-success small">
-                  <i className="bi bi-check-circle" /> Message sent. We usually reply within one working day.
+                  <i className="bi bi-check-circle" /> {t('Message sent. We usually reply within one working day.')}
                 </div>
               )}
               <div className="row g-3">
                 <div className="col-md-6">
-                  <label className="form-label" htmlFor="c-name">Your name</label>
+                  <label className="form-label" htmlFor="c-name">{t('Your name')}</label>
                   <input id="c-name" name="name" className="form-control" required value={form.name} onChange={change} />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label" htmlFor="c-email">E-mail</label>
+                  <label className="form-label" htmlFor="c-email">{t('E-mail')}</label>
                   <input id="c-email" name="email" type="email" className="form-control" required value={form.email} onChange={change} />
                 </div>
                 <div className="col-12">
-                  <label className="form-label" htmlFor="c-subject">Subject</label>
+                  <label className="form-label" htmlFor="c-subject">{t('Subject')}</label>
                   <input id="c-subject" name="subject" className="form-control" value={form.subject} onChange={change} maxLength={150} />
                 </div>
                 <div className="col-12">
-                  <label className="form-label" htmlFor="c-message">Message</label>
+                  <label className="form-label" htmlFor="c-message">{t('Message')}</label>
                   <textarea id="c-message" name="message" className="form-control" rows={6} required value={form.message} onChange={change} maxLength={2000} />
                 </div>
               </div>
               <button type="submit" className="btn btn-primary mt-3" disabled={busy}>
-                {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-send" />} Send message
+                {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-send" />} {t('Send message')}
               </button>
             </form>
           </div>

@@ -3,6 +3,7 @@ import { coverFor } from '../../utils/format';
 import RatingStars from '../common/RatingStars';
 import DayDots from '../common/DayDots';
 import FavButton from '../common/FavButton';
+import { t } from '../../i18n';
 
 export default function FarmerCard({ farmer }) {
   return (
@@ -29,15 +30,15 @@ export default function FarmerCard({ farmer }) {
           </p>
         )}
         <div className="d-flex flex-wrap gap-1 mb-3">
-          {(farmer.tags || []).slice(0, 3).map((t) => (
-            <span key={t} className="chip chip-soft">
-              {t}
+          {(farmer.tags || []).slice(0, 3).map((tx) => (
+            <span key={tx} className="chip chip-soft">
+              {tx}
             </span>
           ))}
         </div>
         <div className="mt-auto d-flex align-items-center justify-content-between gap-2">
           <DayDots days={farmer.operatingDays} />
-          {farmer.productCount !== undefined && <span className="small fw-semi text-muted-2">{farmer.productCount} items</span>}
+          {farmer.productCount !== undefined && <span className="small fw-semi text-muted-2">{farmer.productCount} {t('items')}</span>}
         </div>
       </div>
     </article>

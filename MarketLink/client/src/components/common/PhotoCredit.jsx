@@ -1,9 +1,10 @@
+import { t } from '../../i18n';
 /** Small "Photo: author (licence)" line on a banner photo, linking to the original. */
 export default function PhotoCredit({ credit }) {
   if (!credit?.author) return null;
   return (
     <span className="hero-credit">
-      <i className="bi bi-camera" aria-hidden="true" /> Photo:{' '}
+      <i className="bi bi-camera" aria-hidden="true" /> {t('Photo:')}{' '}
       {credit.source ? (
         <a href={credit.source} target="_blank" rel="noreferrer">
           {credit.author}

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import useClickOutside from '../../hooks/useClickOutside';
 import { timeAgo } from '../../utils/format';
+import { t } from '../../i18n';
 
 export const NOTIF_ICONS = { order: 'bi-bag-check', restock: 'bi-arrow-repeat', stock: 'bi-box-seam', announcement: 'bi-megaphone', review: 'bi-star', account: 'bi-person-check', moderation: 'bi-flag', system: 'bi-info-circle' };
 
@@ -54,21 +55,21 @@ export default function NotificationBell({ allLink }) {
 
   return (
     <div className="ml-dropdown" ref={ref}>
-      <button type="button" className="nav-icon-btn" onClick={toggle} aria-label={`Notifications (${unread} unread)`} aria-expanded={open}>
+      <button type="button" className="nav-icon-btn" onClick={toggle} aria-label={t('Notifications ({unread} unread)', { unread })} aria-expanded={open}>
         <i className="bi bi-bell" />
         {unread > 0 && <span className="count">{unread > 9 ? '9+' : unread}</span>}
       </button>
       {open && (
         <div className="ml-dropdown-menu notif-menu">
           <div className="d-flex align-items-center justify-content-between px-2 py-1">
-            <strong>Notifications</strong>
+            <strong>{t('Notifications')}</strong>
             {unread > 0 && (
               <button type="button" className="btn btn-link btn-sm p-0" onClick={markAll}>
-                Mark all read
+                {t('Mark all read')}
               </button>
             )}
           </div>
-          {items.length === 0 && <div className="text-center text-muted-2 small py-4"><i className="bi bi-check2-circle me-1" /> You're all caught up</div>}
+          {items.length === 0 && <div className="text-center text-muted-2 small py-4"><i className="bi bi-check2-circle me-1" /> {t('You\'re all caught up')}</div>}
           {items.map((n) => (
             <button type="button" key={n._id} className={`notif-item w-100 border-0 text-start ${n.read ? 'bg-transparent' : 'unread'}`} onClick={() => openItem(n)}>
               <span className="notif-icon">
@@ -82,7 +83,7 @@ export default function NotificationBell({ allLink }) {
             </button>
           ))}
           <Link to={allLink} className="ml-dropdown-item justify-content-center fw-semi" onClick={() => setOpen(false)}>
-            View all notifications
+            {t('View all notifications')}
           </Link>
         </div>
       )}

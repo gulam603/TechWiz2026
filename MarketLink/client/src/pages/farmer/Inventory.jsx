@@ -12,6 +12,7 @@ import DataGrid from '../../components/admin/DataGrid';
 import FilterBar from '../../components/admin/FilterBar';
 import { action, dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { money, moneyCompact } from '../../utils/format';
+import { productName, t, unitName } from '../../i18n';
 
 const STATE = {
   ok: ['In stock', 's-available'],
@@ -63,7 +64,7 @@ const COLUMNS = [
     orderable: false,
     className: 'text-end text-nowrap no-export',
     responsivePriority: 2,
-    render: (v, t, p) => (p.isRemoved ? '' : [action('adjust', 'Adjust', 'btn-soft', 'bi-plus-slash-minus'), iconAction('alert', 'Low-stock alert level', 'bi-bell'), iconAction('log', 'Stock history', 'bi-clock-history')].join(' ')),
+    render: (v, tx, p) => (p.isRemoved ? '' : [action('adjust', t('Adjust'), 'btn-soft', 'bi-plus-slash-minus'), iconAction('alert', t('Low-stock alert level'), 'bi-bell'), iconAction('log', t('Stock history'), 'bi-clock-history')].join(' ')),
   },
 ];
 
@@ -111,14 +112,14 @@ function AdjustModal({ product, reasons, onClose, onSaved }) {
     <Modal
       open
       onClose={onClose}
-      title={`Adjust stock: ${product.name}`}
+      title={t('Adjust stock: {name}', { name: product.name })}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>
-            Cancel
+            {t('Cancel')}
           </button>
           <button type="submit" form="adjust-form" className="btn btn-primary" disabled={busy || quantity === '' || after < 0}>
-            {busy && <span className="spinner-border spinner-border-sm" />} Save
+            {busy && <span className="spinner-border spinner-border-sm" />} {t('Save')}
           </button>
         </>
       }
@@ -126,9 +127,9 @@ function AdjustModal({ product, reasons, onClose, onSaved }) {
       <form id="adjust-form" onSubmit={save} className="d-grid gap-3">
         <div className="tabs-pill">
           {[
-            ['add', 'Add stock'],
-            ['remove', 'Remove stock'],
-            ['set', 'Set exact count'],
+            ['add', t('Add stock')],
+            ['remove', t('Remove stock')],
+            ['set', t('Set exact count')],
           ].map(([v, l]) => (
             <button key={v} type="button" className={mode === v ? 'active' : ''} onClick={() => pickMode(v)}>
               {l}
@@ -138,12 +139,12 @@ function AdjustModal({ product, reasons, onClose, onSaved }) {
         <div className="row g-2">
           <div className="col-5">
             <label className="form-label" htmlFor="adj-qty">
-              {mode === 'set' ? 'New count' : 'Quantity'} ({product.unit})
+              {mode === 'set' ? t('New count') : t('Quantity')} ({product.unit})
             </label>
             <input id="adj-qty" type="number" min="0" step="1" className="form-control" required value={quantity} onChange={(e) => setQuantity(e.target.value)} autoFocus />
           </div>
           <div className="col-7">
-            <label className="form-label" htmlFor="adj-reason">Reason</label>
+            <label className="form-label" htmlFor="adj-reason">{t('Reason')}</label>
             <select id="adj-reason" className="form-select" value={reason} onChange={(e) => setReason(e.target.value)}>
               {reasonKeys.map((k) => (
                 <option key={k} value={k}>
@@ -154,22 +155,22 @@ function AdjustModal({ product, reasons, onClose, onSaved }) {
           </div>
         </div>
         <div>
-          <label className="form-label" htmlFor="adj-note">Note (optional)</label>
-          <input id="adj-note" className="form-control" maxLength={150} value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. second picking from the north field" />
+          <label className="form-label" htmlFor="adj-note">{t('Note (optional)')}</label>
+          <input id="adj-note" className="form-control" maxLength={150} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('e.g. second picking from the north field')} />
         </div>
         <div className={`stock-preview ${after < 0 ? 'is-bad' : after <= product.lowStockThreshold ? 'is-low' : ''}`}>
-          <span>Now</span>
+          <span>{t('Now')}</span>
           <strong>
             {product.quantityAvailable} {product.unit}
           </strong>
           <i className="bi bi-arrow-right" aria-hidden="true" />
-          <span>After</span>
-          <strong>{after < 0 ? 'not enough stock' : `${after} ${product.unit}`}</strong>
-          {after >= 0 && after <= product.lowStockThreshold && <span className="chip chip-warn ms-auto">at alert level</span>}
+          <span>{t('After')}</span>
+          <strong>{after < 0 ? t('not enough stock') : `${after} ${product.unit}`}</strong>
+          {after >= 0 && after <= product.lowStockThreshold && <span className="chip chip-warn ms-auto">{t('at alert level')}</span>}
         </div>
         {product.reserved > 0 && (
           <p className="fs-7 text-muted-2 mb-0">
-            <i className="bi bi-info-circle" /> {product.reserved} {product.unit} are already reserved for open pre-orders and are not part of this count.
+            <i className="bi bi-info-circle" /> {t('{n} {unit} are already reserved for open pre-orders and are not part of this count.', { n: product.reserved, unit: unitName(product.unit) })}
           </p>
         )}
       </form>
@@ -184,7 +185,7 @@ function AlertModal({ product, onClose, onSaved }) {
     e.preventDefault();
     try {
       await api.put(`/farmer/inventory/${product._id}/threshold`, { lowStockThreshold: Number(level) });
-      toast(`Alert level for ${product.name} saved`);
+      toast(t('Alert level for {name} saved', { name: product.name }));
       onSaved();
     } catch (err) {
       toast(err.message, 'error');
@@ -194,24 +195,24 @@ function AlertModal({ product, onClose, onSaved }) {
     <Modal
       open
       onClose={onClose}
-      title={`Low-stock alert: ${product.name}`}
+      title={t('Low-stock alert: {name}', { name: product.name })}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>
-            Cancel
+            {t('Cancel')}
           </button>
           <button type="submit" form="alert-form" className="btn btn-primary">
-            Save alert level
+            {t('Save alert level')}
           </button>
         </>
       }
     >
       <form id="alert-form" onSubmit={save}>
         <label className="form-label" htmlFor="alert-level">
-          Alert me when stock is at or below ({product.unit})
+          {t('Alert me when stock is at or below ({unit})', { unit: unitName(product.unit) })}
         </label>
         <input id="alert-level" type="number" min="0" step="1" className="form-control" required value={level} onChange={(e) => setLevel(e.target.value)} />
-        <p className="fs-7 text-muted-2 mt-2 mb-0">You get an e-mail and a notification once when the stock reaches this level. Use 0 to be told only when it is sold out.</p>
+        <p className="fs-7 text-muted-2 mt-2 mb-0">{t('You get an e-mail and a notification once when the stock reaches this level. Use 0 to be told only when it is sold out.')}</p>
       </form>
     </Modal>
   );
@@ -219,7 +220,7 @@ function AlertModal({ product, onClose, onSaved }) {
 
 /** Farmer inventory: stock levels, reserved stock, alert levels, manual adjustments and the full stock log. */
 export default function FarmerInventory() {
-  useDocumentTitle('Inventory');
+  useDocumentTitle(t('Inventory'));
   const { refreshBadges } = useOutletContext() || {};
   const { data, loading, reload } = useFetch('/farmer/inventory');
   const [logFilters, setLogFilters] = useState({ product: '', type: '', from: '', to: '' });
@@ -228,10 +229,10 @@ export default function FarmerInventory() {
   const [alerting, setAlerting] = useState(null);
   const logFields = useMemo(
     () => [
-      { name: 'product', label: 'Product', options: (data?.products || []).map((p) => ({ value: p._id, label: p.name })) },
-      { name: 'type', label: 'Type', options: Object.entries(TYPE_LABEL).map(([value, label]) => ({ value, label })) },
-      { name: 'from', label: 'From', type: 'date' },
-      { name: 'to', label: 'To', type: 'date' },
+      { name: 'product', label: t('Product'), options: (data?.products || []).map((p) => ({ value: p._id, label: p.name })) },
+      { name: 'type', label: t('Type'), options: Object.entries(TYPE_LABEL).map(([value, label]) => ({ value, label })) },
+      { name: 'from', label: t('From'), type: 'date' },
+      { name: 'to', label: t('To'), type: 'date' },
     ],
     [data]
   );
@@ -259,32 +260,32 @@ export default function FarmerInventory() {
   return (
     <>
       <DashHeader
-        title="Inventory"
-        subtitle="Stock on hand, what open pre-orders have reserved, alert levels and every stock change."
+        title={t('Inventory')}
+        subtitle={t('Stock on hand, what open pre-orders have reserved, alert levels and every stock change.')}
         actions={
           <Link to="/farmer/products" className="btn btn-white btn-sm">
-            <i className="bi bi-basket" /> Weekly stock & prices
+            <i className="bi bi-basket" /> {t('Weekly stock & prices')}
           </Link>
         }
       />
       <div className="row g-2 g-xl-3 mb-3 kpi-row">
         <div className="col-6 col-md-4 col-xl-2">
-          <KpiCard variant="accent" icon="bi-box-seam" label="Products" value={totals.products} />
+          <KpiCard variant="accent" icon="bi-box-seam" label={t('Products')} value={totals.products} />
         </div>
         <div className="col-6 col-md-4 col-xl-2">
-          <KpiCard icon="bi-stack" label="Units in stock" value={totals.units} />
+          <KpiCard icon="bi-stack" label={t('Units in stock')} value={totals.units} />
         </div>
         <div className="col-6 col-md-4 col-xl-2">
-          <KpiCard variant="info" icon="bi-cash-stack" label="Stock value" value={moneyCompact(totals.value)} />
+          <KpiCard variant="info" icon="bi-cash-stack" label={t('Stock value')} value={moneyCompact(totals.value)} />
         </div>
         <div className="col-6 col-md-4 col-xl-2">
-          <KpiCard icon="bi-bag-check" label="Reserved" value={totals.reserved} sub="for pre-orders" />
+          <KpiCard icon="bi-bag-check" label={t('Reserved')} value={totals.reserved} sub={t('for pre-orders')} />
         </div>
         <div className="col-6 col-md-4 col-xl-2">
-          <KpiCard variant="warn" icon="bi-exclamation-triangle" label="Low stock" value={totals.low} />
+          <KpiCard variant="warn" icon="bi-exclamation-triangle" label={t('Low stock')} value={totals.low} />
         </div>
         <div className="col-6 col-md-4 col-xl-2">
-          <KpiCard variant="danger" icon="bi-x-octagon" label="Sold out" value={totals.out} />
+          <KpiCard variant="danger" icon="bi-x-octagon" label={t('Sold out')} value={totals.out} />
         </div>
       </div>
 
@@ -295,32 +296,32 @@ export default function FarmerInventory() {
           </span>
           <div className="flex-grow-1">
             <strong>
-              {lowOnes.length} product{lowOnes.length > 1 ? 's are' : ' is'} at or below the alert level
+              {lowOnes.length === 1 ? t('1 product is at or below the alert level') : t('{n} products are at or below the alert level', { n: lowOnes.length })}
             </strong>
             <div className="small text-muted-2">{lowOnes.map((p) => `${p.name} (${p.quantityAvailable} ${p.unit})`).join(' · ')}</div>
           </div>
           <button type="button" className="btn btn-forest btn-sm" onClick={() => setAdjusting(lowOnes[0])}>
-            Restock {lowOnes[0].name}
+            {t('Restock {name}', { name: productName(lowOnes[0]) })}
           </button>
         </div>
       )}
 
       <div className="table-card mb-3">
-        <DataGrid data={products} columns={COLUMNS} order={[[1, 'asc']]} exportName="Inventory" onAction={onAction} searchPlaceholder="Search products…" />
+        <DataGrid data={products} columns={COLUMNS} order={[[1, 'asc']]} exportName="Inventory" onAction={onAction} searchPlaceholder={t('Search products…')} />
       </div>
 
       <div className="table-card" id="stock-log">
         <div className="panel-head px-3 pt-3">
           <h5>
-            <i className="bi bi-clock-history" /> Stock log
+            <i className="bi bi-clock-history" /> {t('Stock log')}
           </h5>
-          <span className="fs-7 text-muted-2">every change: pre-orders, cancellations, the weekly template and your own adjustments</span>
+          <span className="fs-7 text-muted-2">{t('every change: pre-orders, cancellations, the weekly template and your own adjustments')}</span>
         </div>
         <FilterBar fields={logFields} value={logFilters} onChange={setLogFilters} />
-        <DataGrid data={log?.movements || []} columns={LOG_COLUMNS} order={[[0, 'desc']]} exportName="Stock log" searchPlaceholder="Search the log…" />
+        <DataGrid data={log?.movements || []} columns={LOG_COLUMNS} order={[[0, 'desc']]} exportName="Stock log" searchPlaceholder={t('Search the log…')} />
       </div>
       <p className="fs-7 text-muted-2 mt-2 mb-0">
-        Stock value = price × units in stock ({money(totals.value)}). Low-stock alerts are sent by e-mail and as a notification.
+        {t('Stock value = price × units in stock ({value}). Low-stock alerts are sent by e-mail and as a notification.', { value: money(totals.value) })}
       </p>
 
       {adjusting && <AdjustModal product={adjusting} reasons={reasons} onClose={() => setAdjusting(null)} onSaved={saved} />}

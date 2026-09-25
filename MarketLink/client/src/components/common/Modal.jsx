@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { t } from '../../i18n';
 
 /** Accessible modal dialog controlled by React state (no Bootstrap JS needed). */
 export default function Modal({ open, title, onClose, children, footer, size = '' }) {
@@ -23,7 +24,7 @@ export default function Modal({ open, title, onClose, children, footer, size = '
       <div className={`ml-modal ${size}`} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1} ref={ref}>
         <div className="ml-modal-header">
           <h5>{title}</h5>
-          <button type="button" className="btn-close" onClick={onClose} aria-label="Close" />
+          <button type="button" className="btn-close" onClick={onClose} aria-label={t('Close')} />
         </div>
         <div className="ml-modal-body">{children}</div>
         {footer && <div className="ml-modal-footer">{footer}</div>}
@@ -33,7 +34,7 @@ export default function Modal({ open, title, onClose, children, footer, size = '
   );
 }
 
-export function ConfirmModal({ open, title = 'Are you sure?', message, confirmLabel = 'Confirm', danger, busy, onConfirm, onClose, children }) {
+export function ConfirmModal({ open, title = t('Are you sure?'), message, confirmLabel = t('Confirm'), danger, busy, onConfirm, onClose, children }) {
   return (
     <Modal
       open={open}
@@ -42,7 +43,7 @@ export function ConfirmModal({ open, title = 'Are you sure?', message, confirmLa
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose} disabled={busy}>
-            Cancel
+            {t('Cancel')}
           </button>
           <button type="button" className={`btn ${danger ? 'btn-danger' : 'btn-primary'}`} onClick={onConfirm} disabled={busy}>
             {busy && <span className="spinner-border spinner-border-sm" />} {confirmLabel}

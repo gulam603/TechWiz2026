@@ -6,6 +6,7 @@ import { PageHero } from '../../components/common/PageHeader';
 import { Bone } from '../../components/common/Skeletons';
 import FaqList from '../../components/faq/FaqList';
 import { breadcrumbLd, faqLd, ldGraph } from '../../utils/seo';
+import { t } from '../../i18n';
 
 const GROUP_ICONS = { shopping: 'bi-basket2', pickup: 'bi-geo-alt', farmers: 'bi-shop', account: 'bi-person-lock' };
 
@@ -24,9 +25,9 @@ export default function Faq() {
     .filter((s) => s.items.length);
 
   useSeo({
-    title: 'Frequently asked questions',
-    description: 'Answers about pre-ordering from local farmers on MarketLink: how ordering works, pickup at the market, paying the farmer in cash, changing an order and selling as a farmer.',
-    keywords: ['MarketLink FAQ', 'how to pre-order vegetables', 'farmers market pickup', 'pay at pickup', 'sell produce online Pakistan'],
+    title: t('Frequently asked questions'),
+    description: t('Answers about pre-ordering from local farmers on MarketLink: how ordering works, pickup at the market, paying the farmer in cash, changing an order and selling as a farmer.'),
+    keywords: [t('MarketLink FAQ'), t('how to pre-order vegetables'), t('farmers market pickup'), t('pay at pickup'), t('sell produce online Pakistan')],
     jsonLd: ldGraph(faqLd(faqs), breadcrumbLd([{ name: 'FAQs', path: '/faq' }])),
   });
 
@@ -34,22 +35,22 @@ export default function Faq() {
     <>
       <PageHero
         crumbs={[{ label: 'FAQs' }]}
-        title="Frequently asked questions"
-        subtitle="Short answers about ordering, pickup, payment and selling on MarketLink. In one line: you reserve fresh food from local farmers online, collect it at the market and pay the farmer there."
+        title={t('Frequently asked questions')}
+        subtitle={t('Short answers about ordering, pickup, payment and selling on MarketLink. In one line: you reserve fresh food from local farmers online, collect it at the market and pay the farmer there.')}
       >
         <div className="faq-search">
           <i className="bi bi-search" aria-hidden="true" />
           <label htmlFor="faq-search" className="visually-hidden">
-            Search the questions
+            {t('Search the questions')}
           </label>
-          <input id="faq-search" type="search" className="form-control" placeholder="Search, e.g. payment, cancel, pickup" value={query} onChange={(e) => setQuery(e.target.value)} maxLength={80} />
+          <input id="faq-search" type="search" className="form-control" placeholder={t('Search, e.g. payment, cancel, pickup')} value={query} onChange={(e) => setQuery(e.target.value)} maxLength={80} />
         </div>
       </PageHero>
 
       <div className="container pb-5">
-        <div className="faq-tabs" role="group" aria-label="Topics">
+        <div className="faq-tabs" role="group" aria-label={t('Topics')}>
           <button type="button" className={`chip chip-btn ${group === 'all' ? 'active' : ''}`} aria-pressed={group === 'all'} onClick={() => setGroup('all')}>
-            All questions
+            {t('All questions')}
           </button>
           {Object.entries(groups).map(([key, label]) => (
             <button key={key} type="button" className={`chip chip-btn ${group === key ? 'active' : ''}`} aria-pressed={group === key} onClick={() => setGroup(key)}>
@@ -62,7 +63,7 @@ export default function Faq() {
           <div className="col-lg-8">
             {error && <div className="alert alert-danger">{error.message}</div>}
             {loading && !data && (
-              <div className="d-grid gap-2" aria-busy="true" aria-label="Loading the questions">
+              <div className="d-grid gap-2" aria-busy="true" aria-label={t('Loading the questions')}>
                 {Array.from({ length: 6 }, (_, i) => (
                   <Bone key={i} h={58} r={16} />
                 ))}
@@ -71,16 +72,16 @@ export default function Faq() {
             {data && sections.length === 0 && (
               <div className="soft-panel text-center py-4">
                 <i className="bi bi-search fs-3 text-muted-2" aria-hidden="true" />
-                <p className="mb-2 mt-2">No question matches “{query}”.</p>
+                <p className="mb-2 mt-2">{t('No question matches “{q}”.', { q: query })}</p>
                 <button type="button" className="btn btn-white btn-sm" onClick={() => { setQuery(''); setGroup('all'); }}>
-                  Show all questions
+                  {t('Show all questions')}
                 </button>
               </div>
             )}
             {sections.map((s, i) => (
               <section key={s.key} className="faq-section" aria-labelledby={`faq-group-${s.key}`}>
                 <h2 id={`faq-group-${s.key}`} className="faq-group-title">
-                  <i className={`bi ${GROUP_ICONS[s.key] || 'bi-question-circle'}`} aria-hidden="true" /> {s.label}
+                  <i className={`bi ${GROUP_ICONS[s.key] || 'bi-question-circle'}`} aria-hidden="true" /> {t(s.label)}
                 </h2>
                 <FaqList faqs={s.items} openFirst={i === 0 && !q} />
               </section>
@@ -91,25 +92,25 @@ export default function Faq() {
               <span className="faq-help-icon" aria-hidden="true">
                 <i className="bi bi-chat-dots" />
               </span>
-              <h2 className="h5 mt-3">Still have a question?</h2>
-              <p className="small text-muted-2">Ask the MarketLink assistant (the chat button at the bottom of the page) or send us a message. We reply within one working day.</p>
+              <h2 className="h5 mt-3">{t('Still have a question?')}</h2>
+              <p className="small text-muted-2">{t('Ask the MarketLink assistant (the chat button at the bottom of the page) or send us a message. We reply within one working day.')}</p>
               <Link to="/contact" className="btn btn-primary w-100">
-                <i className="bi bi-envelope" /> Contact us
+                <i className="bi bi-envelope" /> {t('Contact us')}
               </Link>
               <hr />
-              <h3 className="h6">Popular pages</h3>
+              <h3 className="h6">{t('Popular pages')}</h3>
               <ul className="faq-links">
                 <li>
-                  <Link to="/products">Shop this week’s produce</Link>
+                  <Link to="/products">{t('Shop this week’s produce')}</Link>
                 </li>
                 <li>
-                  <Link to="/markets">Markets and opening times</Link>
+                  <Link to="/markets">{t('Markets and opening times')}</Link>
                 </li>
                 <li>
-                  <Link to="/register/farmer">Sell as a farmer</Link>
+                  <Link to="/register/farmer">{t('Sell as a farmer')}</Link>
                 </li>
                 <li>
-                  <Link to="/terms">Terms & Conditions</Link>
+                  <Link to="/terms">{t('Terms & Conditions')}</Link>
                 </li>
               </ul>
             </div>

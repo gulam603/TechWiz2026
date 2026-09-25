@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { t } from '../../i18n';
 
 const STEPS = [
   { icon: 'bi-search', title: 'Find what you need', text: 'See which farmers are at each market this week, what they have and the price.' },
@@ -21,10 +22,10 @@ export default function VideoTour() {
     <section className="section bg-sand" id="how-it-works" aria-labelledby="how-title">
       <div className="container">
         <div className="text-center mb-4 mb-lg-5">
-          <span className="eyebrow">How MarketLink works</span>
-          <h2 id="how-title" className="section-title">From the field to your basket in four steps</h2>
+          <span className="eyebrow">{t('How MarketLink works')}</span>
+          <h2 id="how-title" className="section-title">{t('From the field to your basket in four steps')}</h2>
           <p className="text-muted-2 mx-auto mb-0" style={{ maxWidth: 560 }}>
-            Watch the 30 second tour, or read the steps. No app to install and no card needed.
+            {t('Watch the 30 second tour, or read the steps. No app to install and no card needed.')}
           </p>
         </div>
         <div className="row g-4 align-items-center">
@@ -37,18 +38,18 @@ export default function VideoTour() {
                 playsInline
                 controls={started}
                 onPlay={() => setStarted(true)}
-                aria-label="Video: how to pre-order on MarketLink"
+                aria-label={t('Video: how to pre-order on MarketLink')}
               >
                 <source src="/media/how-it-works.webm" type="video/webm" />
                 <source src="/media/how-it-works.mp4" type="video/mp4" />
-                <track kind="captions" src="/media/how-it-works.vtt" srcLang="en" label="English" default />
+                <track kind="captions" src="/media/how-it-works.vtt" srcLang="en" label={t('English')} default />
               </video>
               {!started && (
-                <button type="button" className="video-play" onClick={play} aria-label="Play the video tour">
+                <button type="button" className="video-play" onClick={play} aria-label={t('Play the video tour')}>
                   <span className="video-play-btn">
                     <i className="bi bi-play-fill" aria-hidden="true" />
                   </span>
-                  <span className="video-play-label">Watch the tour · 0:30</span>
+                  <span className="video-play-label">{t('Watch the tour · 0:30')}</span>
                 </button>
               )}
             </div>

@@ -11,16 +11,17 @@ import { PageLoader } from '../../components/common/Loader';
 import { moneyCompact, timeAgo } from '../../utils/format';
 import { NOTIF_ICONS } from '../../components/layout/NotificationBell';
 import RatingStars from '../../components/common/RatingStars';
+import { t } from '../../i18n';
 
 function greeting() {
   const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 17) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 12) return t('Good morning');
+  if (h < 17) return t('Good afternoon');
+  return t('Good evening');
 }
 
 export default function CustomerDashboard() {
-  useDocumentTitle('My dashboard');
+  useDocumentTitle(t('My dashboard'));
   const { user } = useAuth();
   const { data, loading } = useFetch('/customer/dashboard');
   if (loading && !data) return <PageLoader />;
@@ -31,10 +32,10 @@ export default function CustomerDashboard() {
     <>
       <DashHeader
         title={`${greeting()}, ${user.name.split(' ')[0]}`}
-        subtitle="Here's what's happening with your market orders."
+        subtitle={t('Here\'s what\'s happening with your market orders.')}
         actions={
           <Link to="/products" className="btn btn-primary">
-            <i className="bi bi-basket" /> Shop this week's harvest
+            <i className="bi bi-basket" /> {t('Shop this week\'s harvest')}
           </Link>
         }
       />
@@ -45,29 +46,30 @@ export default function CustomerDashboard() {
             <i className="bi bi-bag-check-fill" />
           </span>
           <div className="flex-grow-1">
-            <strong>{ready.length === 1 ? 'An order is' : `${ready.length} orders are`} ready for pickup!</strong>
+            <strong>{ready.length === 1 ? t('An order is ready for pickup!') : t('{n} orders are ready for pickup!', { n: ready.length })}</strong>
             <div className="small text-muted-2">
-              {ready.map((o) => `${o.farmer?.stallName} at ${o.market?.name}`).join(' · ')}. Remember to pay at the stall.
+              {ready.map((o) => t('{stall} at {market}', { stall: o.farmer?.stallName, market: o.market?.name })).join(' · ')}
+                {t('. Remember to pay at the stall.')}
             </div>
           </div>
           <Link to={`/account/orders/${ready[0]._id}`} className="btn btn-forest btn-sm">
-            View pickup details
+            {t('View pickup details')}
           </Link>
         </div>
       )}
 
       <div className="row g-3 mb-4">
         <div className="col-6 col-xl-3">
-          <KpiCard variant="accent" icon="bi-bag" label="Active pre-orders" value={stats.activeOrders} sub="placed, accepted or ready" />
+          <KpiCard variant="accent" icon="bi-bag" label={t('Active pre-orders')} value={stats.activeOrders} sub={t('placed, accepted or ready')} />
         </div>
         <div className="col-6 col-xl-3">
-          <KpiCard icon="bi-check2-circle" label="Completed pickups" value={stats.completedOrders} />
+          <KpiCard icon="bi-check2-circle" label={t('Completed pickups')} value={stats.completedOrders} />
         </div>
         <div className="col-6 col-xl-3">
-          <KpiCard variant="info" icon="bi-wallet2" label="Spent at markets" value={moneyCompact(stats.totalSpent)} sub="paid at pickup" />
+          <KpiCard variant="info" icon="bi-wallet2" label={t('Spent at markets')} value={moneyCompact(stats.totalSpent)} sub={t('paid at pickup')} />
         </div>
         <div className="col-6 col-xl-3">
-          <KpiCard variant="warn" icon="bi-heart" label="Favourites" value={stats.favorites} sub={`${stats.favoriteFarmers ?? 0} farmers · ${stats.savedMarkets} saved markets`} />
+          <KpiCard variant="warn" icon="bi-heart" label={t('Favourites')} value={stats.favorites} sub={`${stats.favoriteFarmers ?? 0} farmers · ${stats.savedMarkets} saved markets`} />
         </div>
       </div>
 
@@ -75,13 +77,13 @@ export default function CustomerDashboard() {
         <div className="col-xl-8">
           <div className="panel">
             <div className="panel-head">
-              <h5>Upcoming pickups</h5>
+              <h5>{t('Upcoming pickups')}</h5>
               <Link to="/account/orders" className="link-arrow small">
-                All orders <i className="bi bi-arrow-right" />
+                {t('All orders')} <i className="bi bi-arrow-right" />
               </Link>
             </div>
             {upcoming.length === 0 ? (
-              <EmptyState title="No upcoming pickups" message="Your next pre-order will show up here." action={<Link to="/products" className="btn btn-primary btn-sm">Browse products</Link>} />
+              <EmptyState title={t('No upcoming pickups')} message={t('Your next pre-order will show up here.')} action={<Link to="/products" className="btn btn-primary btn-sm">{t('Browse products')}</Link>} />
             ) : (
               <div className="d-grid gap-2">
                 {upcoming.map((o) => (
@@ -94,12 +96,12 @@ export default function CustomerDashboard() {
         <div className="col-xl-4">
           <div className="panel">
             <div className="panel-head">
-              <h5>Latest updates</h5>
+              <h5>{t('Latest updates')}</h5>
               <Link to="/account/notifications" className="link-arrow small">
-                All <i className="bi bi-arrow-right" />
+                {t('All')} <i className="bi bi-arrow-right" />
               </Link>
             </div>
-            {notifications.length === 0 && <p className="small text-muted-2">No notifications yet.</p>}
+            {notifications.length === 0 && <p className="small text-muted-2">{t('No notifications yet.')}</p>}
             <div className="d-grid gap-1">
               {notifications.map((n) => (
                 <Link key={n._id} to={n.link || '/account/notifications'} className={`notif-item ${n.read ? '' : 'unread'}`}>
@@ -120,14 +122,14 @@ export default function CustomerDashboard() {
       <div className="panel mb-4">
         <div className="panel-head">
           <h5>
-            <i className="bi bi-heart" /> Your favourite farmers
+            <i className="bi bi-heart" /> {t('Your favourite farmers')}
           </h5>
           <Link to={farmers.length ? '/account/favorites' : '/farmers'} className="link-arrow small">
-            {farmers.length ? 'All favourites' : 'Find farmers'} <i className="bi bi-arrow-right" />
+            {farmers.length ? t('All favourites') : t('Find farmers')} <i className="bi bi-arrow-right" />
           </Link>
         </div>
         {farmers.length === 0 ? (
-          <p className="small text-muted-2 mb-0">Tap the heart on a farmer's stall page to follow them here and reorder quickly.</p>
+          <p className="small text-muted-2 mb-0">{t('Tap the heart on a farmer\'s stall page to follow them here and reorder quickly.')}</p>
         ) : (
           <div className="fav-farmers">
             {farmers.map((f) => (
@@ -138,7 +140,7 @@ export default function CustomerDashboard() {
                 <span className="flex-grow-1 min-w-0">
                   <strong className="d-block small text-truncate">{f.stallName}</strong>
                   <span className="fs-7 text-muted-2 d-block text-truncate">
-                    <i className="bi bi-geo-alt" /> {f.city} · {f.inStock} in stock
+                    <i className="bi bi-geo-alt" /> {f.city} · {t('{n} in stock', { n: f.inStock })}
                   </span>
                   <RatingStars value={f.ratingAvg} count={f.ratingCount} />
                 </span>
@@ -150,9 +152,9 @@ export default function CustomerDashboard() {
 
       <div className="panel">
         <div className="panel-head">
-          <h5>Picked for you</h5>
+          <h5>{t('Picked for you')}</h5>
           <Link to="/account/favorites" className="link-arrow small">
-            Favourites <i className="bi bi-arrow-right" />
+            {t('Favourites')} <i className="bi bi-arrow-right" />
           </Link>
         </div>
         <div className="row g-3">

@@ -3,12 +3,16 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import '@fontsource-variable/fraunces';
 import '@fontsource-variable/plus-jakarta-sans';
+// Urdu script (only downloaded when Urdu text is on the page)
+import '@fontsource-variable/noto-nastaliq-urdu';
+import '@fontsource-variable/noto-naskh-arabic';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './styles/main.scss';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext';
+import { LanguageProvider } from './i18n/LanguageProvider';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -16,7 +20,9 @@ createRoot(document.getElementById('root')).render(
       <ToastProvider>
         <AuthProvider>
           <CartProvider>
-            <App />
+            <LanguageProvider>
+              <App />
+            </LanguageProvider>
           </CartProvider>
         </AuthProvider>
       </ToastProvider>

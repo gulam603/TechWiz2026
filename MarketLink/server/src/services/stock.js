@@ -69,6 +69,7 @@ export async function reserveItems(farmerId, rawItems) {
   return reserved.map(({ product, quantity }) => ({
     product: product._id,
     name: product.name,
+    nameUr: product.nameUr || undefined,
     image: product.image,
     unit: product.unit,
     price: product.price,

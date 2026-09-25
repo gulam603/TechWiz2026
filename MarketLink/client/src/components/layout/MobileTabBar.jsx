@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { t } from '../../i18n';
 
 const TABS = {
   guest: [
@@ -47,18 +48,18 @@ export default function MobileTabBar() {
   const role = user?.role === 'farmer' && user.status !== 'active' ? 'farmerPending' : user?.role;
   const tabs = TABS[role] || TABS.guest;
   return (
-    <nav className="mobile-tabbar d-lg-none" aria-label="Quick navigation">
-      {tabs.map((t) => (
-        <NavLink key={t.to} to={t.to} end={t.end} className="tab">
+    <nav className="mobile-tabbar d-lg-none" aria-label={t('Quick navigation')}>
+      {tabs.map((tx) => (
+        <NavLink key={tx.to} to={tx.to} end={tx.end} className="tab">
           <span className="tab-icon">
-            <i className={`bi ${t.icon}`} aria-hidden="true" />
-            {t.cart && count > 0 && (
+            <i className={`bi ${tx.icon}`} aria-hidden="true" />
+            {tx.cart && count > 0 && (
               <span key={count} className="tab-count">
                 {count > 99 ? '99+' : count}
               </span>
             )}
           </span>
-          <span className="tab-label">{t.label}</span>
+          <span className="tab-label">{t(tx.label)}</span>
         </NavLink>
       ))}
     </nav>

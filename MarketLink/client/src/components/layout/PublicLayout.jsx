@@ -9,6 +9,7 @@ import CartDrawer from '../cart/CartDrawer';
 import { useAuth } from '../../context/AuthContext';
 import useScrollReveal from '../../hooks/useScrollReveal';
 import { RouteSkeleton } from '../common/Skeletons';
+import { t } from '../../i18n';
 
 export default function PublicLayout({ footer = true }) {
   const { pathname } = useLocation();
@@ -18,7 +19,7 @@ export default function PublicLayout({ footer = true }) {
   return (
     <>
       <a href="#main" className="skip-link">
-        Skip to content
+        {t('Skip to content')}
       </a>
       {!isAdmin && <AnnouncementBar />}
       <Navbar />

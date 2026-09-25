@@ -9,6 +9,7 @@ import MobileTabBar from './MobileTabBar';
 import ChatWidget from '../chat/ChatWidget';
 import CartDrawer from '../cart/CartDrawer';
 import { visibleItems } from './navConfig';
+import { t } from '../../i18n';
 
 // Sidebars of the customer and farmer areas (same look as the admin area).
 // Items marked `approved` are hidden until an admin approves the farmer.
@@ -78,9 +79,9 @@ export default function DashboardLayout({ role }) {
     role === 'customer' ? (
       <>
         <Link to="/products" className="btn btn-sm btn-primary">
-          <i className="bi bi-shop" aria-hidden="true" /> <span className="d-none d-lg-inline">Shop</span>
+          <i className="bi bi-shop" aria-hidden="true" /> <span className="d-none d-lg-inline">{t('Shop')}</span>
         </Link>
-        <button type="button" className="nav-icon-btn" onClick={openDrawer} aria-label={`Basket, ${count} items`} title="Basket" aria-haspopup="dialog">
+        <button type="button" className="nav-icon-btn" onClick={openDrawer} aria-label={t('Basket, {count} items', { count })} title={t('Basket')} aria-haspopup="dialog">
           <i className="bi bi-basket2" />
           {count > 0 && <span key={count} className="count">{count > 99 ? '99+' : count}</span>}
         </button>
@@ -88,11 +89,11 @@ export default function DashboardLayout({ role }) {
     ) : approved ? (
       <>
         <Link to="/farmer/products?new=1" className="btn btn-sm btn-primary">
-          <i className="bi bi-plus-lg" aria-hidden="true" /> <span className="d-none d-lg-inline">Add product</span>
+          <i className="bi bi-plus-lg" aria-hidden="true" /> <span className="d-none d-lg-inline">{t('Add product')}</span>
         </Link>
         {farmer?.slug && (
           <Link to={`/farmers/${farmer.slug}`} className="btn btn-sm btn-lime d-none d-md-inline-flex">
-            <i className="bi bi-shop-window" aria-hidden="true" /> <span className="d-none d-lg-inline">My stall page</span>
+            <i className="bi bi-shop-window" aria-hidden="true" /> <span className="d-none d-lg-inline">{t('My stall page')}</span>
           </Link>
         )}
       </>
@@ -103,9 +104,9 @@ export default function DashboardLayout({ role }) {
       role={role}
       nav={nav}
       homeTo={role === 'customer' ? '/account' : '/farmer'}
-      areaLabel={role === 'customer' ? 'My account' : farmer?.stallName || 'My stall'}
-      roleLabel={role === 'customer' ? 'Customer' : user?.status === 'active' ? 'Farmer' : `Farmer · ${user?.status}`}
-      title={titleFromNav(nav, pathname, { '/account/orders/': 'Order details', '/farmer/orders/': 'Order details' })}
+      areaLabel={role === 'customer' ? t('My account') : farmer?.stallName || t('My stall')}
+      roleLabel={role === 'customer' ? t('Customer') : user?.status === 'active' ? t('Farmer') : t('Farmer · {status}', { status: t(user?.status) })}
+      title={titleFromNav(nav, pathname, { '/account/orders/': t('Order details'), '/farmer/orders/': t('Order details') })}
       badges={badges}
       actions={actions}
       menuLinks={MENUS[role]}

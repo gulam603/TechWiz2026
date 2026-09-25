@@ -6,12 +6,13 @@ import { useToast } from '../../context/ToastContext';
 import useFetch from '../../hooks/useFetch';
 import LocationPicker from '../../components/map/LocationPicker';
 import DayDots from '../../components/common/DayDots';
-import { PASSWORD_HINT, passwordOk } from './Register';
+import { passwordOk } from './Register';
 import { time12 } from '../../utils/format';
 import TermsCheckbox from '../../components/legal/TermsCheckbox';
 import PasswordInput from '../../components/common/PasswordInput';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
+import { categoryName, listText, t } from '../../i18n';
 
 const STEPS = ['Stall & account', 'Farm details', 'Markets & location'];
 const PRACTICES = ['Pesticide-free', 'Organic practices', 'Family farm', 'Free-range', 'Grass-fed', 'Hydroponic', 'Heirloom seeds', 'Picked daily', 'Small batch'];
@@ -39,24 +40,24 @@ const EMPTY = {
 /** Returns the first problem in a step, or '' when the step is complete. */
 function validate(step, f) {
   if (step === 0) {
-    if (!f.stallName.trim()) return 'Please enter your stall / business name.';
-    if (!f.contactPerson.trim()) return 'Please enter the contact person.';
-    if (!PHONE_RULE.test(f.phone.trim())) return 'Please enter a valid contact number (7-20 digits).';
-    if (!EMAIL_RULE.test(f.email.trim())) return 'Please enter a valid e-mail address.';
-    if (!passwordOk(f.password)) return `Password: ${PASSWORD_HINT}.`;
-    if (f.password !== f.confirm) return 'Passwords do not match.';
+    if (!f.stallName.trim()) return t('Please enter your stall / business name.');
+    if (!f.contactPerson.trim()) return t('Please enter the contact person.');
+    if (!PHONE_RULE.test(f.phone.trim())) return t('Please enter a valid contact number (7-20 digits).');
+    if (!EMAIL_RULE.test(f.email.trim())) return t('Please enter a valid e-mail address.');
+    if (!passwordOk(f.password)) return t('Password: at least 8 characters with letters and numbers.');
+    if (f.password !== f.confirm) return t('Passwords do not match.');
   }
   if (step === 1) {
-    if (!f.address.trim()) return 'Please enter your farm or stall address.';
-    if (!f.city.trim()) return 'Please enter your city.';
-    if (!f.categories.length) return 'Choose at least one thing you grow or sell.';
+    if (!f.address.trim()) return t('Please enter your farm or stall address.');
+    if (!f.city.trim()) return t('Please enter your city.');
+    if (!f.categories.length) return t('Choose at least one thing you grow or sell.');
   }
-  if (step === 2 && !f.acceptTerms) return 'Please confirm your details and accept the Terms & Conditions.';
+  if (step === 2 && !f.acceptTerms) return t('Please confirm your details and accept the Terms & Conditions.');
   return '';
 }
 
 export default function RegisterFarmer() {
-  useSeo({ title: 'Sell with MarketLink', description: 'Register your farm stall on MarketLink: list your weekly stock, take pre-orders and set your pickup times.', canonicalPath: '/register/farmer' });
+  useSeo({ title: t('Sell with MarketLink'), description: t('Register your farm stall on MarketLink: list your weekly stock, take pre-orders and set your pickup times.'), canonicalPath: '/register/farmer' });
   const { registerFarmer, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -101,7 +102,7 @@ export default function RegisterFarmer() {
     try {
       const { confirm: _confirm, latitude, longitude, ...rest } = form;
       await registerFarmer({ ...rest, ...(latitude !== '' && longitude !== '' ? { latitude, longitude } : {}) });
-      toast('Registration received! An admin will review your stall shortly.');
+      toast(t('Registration received! An admin will review your stall shortly.'));
       navigate('/farmer', { replace: true });
     } catch (err) {
       setError(err.message);
@@ -116,11 +117,11 @@ export default function RegisterFarmer() {
   const markets = [...(marketData?.markets || [])].sort((a, b) => (b.city === form.city) - (a.city === form.city) || a.name.localeCompare(b.name));
 
   return (
-    <AuthLayout wide title="Sell your harvest" highlight="before market day." text="Publish weekly stock and prices, take pre-orders with pickup slots, and see your best sellers. Your stall goes live after a quick admin approval.">
-      <h1 className="mb-1">Register your stall</h1>
-      <p className="text-muted-2 mb-3">Three short steps. You can edit everything later from your farmer dashboard.</p>
+    <AuthLayout wide title={t('Sell your harvest')} highlight={t('before market day.')} text={t('Publish weekly stock and prices, take pre-orders with pickup slots, and see your best sellers. Your stall goes live after a quick admin approval.')}>
+      <h1 className="mb-1">{t('Register your stall')}</h1>
+      <p className="text-muted-2 mb-3">{t('Three short steps. You can edit everything later from your farmer dashboard.')}</p>
 
-      <div className="wizard-steps" aria-label="Sign-up progress">
+      <div className="wizard-steps" aria-label={t('Sign-up progress')}>
         {STEPS.map((label, i) => (
           <div key={label} className={`wstep ${i === step ? 'current' : ''} ${i < step ? 'done' : ''}`} aria-current={i === step ? 'step' : undefined}>
             <span className="n">{i < step ? <i className="bi bi-check-lg" /> : i + 1}</span>
@@ -135,46 +136,46 @@ export default function RegisterFarmer() {
         {step === 0 && (
           <div className="row g-3">
             <div className="col-12">
-              <label className="form-label" htmlFor="f-stall">Stall / business name *</label>
-              <input id="f-stall" name="stallName" className="form-control" value={form.stallName} onChange={change} placeholder="e.g. Malir Green Fields" maxLength={100} autoFocus />
+              <label className="form-label" htmlFor="f-stall">{t('Stall / business name *')}</label>
+              <input id="f-stall" name="stallName" className="form-control" value={form.stallName} onChange={change} placeholder={t('e.g. Malir Green Fields')} maxLength={100} autoFocus />
             </div>
             <div className="col-md-6">
-              <label className="form-label" htmlFor="f-contact">Contact person *</label>
+              <label className="form-label" htmlFor="f-contact">{t('Contact person *')}</label>
               <input id="f-contact" name="contactPerson" className="form-control" value={form.contactPerson} onChange={change} autoComplete="name" />
             </div>
             <div className="col-md-6">
-              <label className="form-label" htmlFor="f-phone">Contact number *</label>
+              <label className="form-label" htmlFor="f-phone">{t('Contact number *')}</label>
               <input id="f-phone" name="phone" type="tel" className="form-control" value={form.phone} onChange={change} autoComplete="tel" placeholder="+92 300 1234567" />
             </div>
             <div className="col-12">
-              <label className="form-label" htmlFor="f-email">E-mail *</label>
+              <label className="form-label" htmlFor="f-email">{t('E-mail *')}</label>
               <input id="f-email" name="email" type="email" className="form-control" value={form.email} onChange={change} autoComplete="email" />
-              <div className="fs-7 text-muted-2 mt-1">You will use this e-mail to log in and receive new pre-order alerts.</div>
+              <div className="fs-7 text-muted-2 mt-1">{t('You will use this e-mail to log in and receive new pre-order alerts.')}</div>
             </div>
             <div className="col-md-6">
-              <label className="form-label" htmlFor="f-pass">Password *</label>
+              <label className="form-label" htmlFor="f-pass">{t('Password *')}</label>
               <PasswordInput id="f-pass" name="password" value={form.password} onChange={change} autoComplete="new-password" />
             </div>
             <div className="col-md-6">
-              <label className="form-label" htmlFor="f-confirm">Confirm password *</label>
+              <label className="form-label" htmlFor="f-confirm">{t('Confirm password *')}</label>
               <PasswordInput id="f-confirm" name="confirm" value={form.confirm} onChange={change} autoComplete="new-password" />
             </div>
-            <div className="col-12 fs-7 text-muted-2">{PASSWORD_HINT}.</div>
+            <div className="col-12 fs-7 text-muted-2">{t('At least 8 characters with letters and numbers.')}</div>
           </div>
         )}
 
         {step === 1 && (
           <div className="row g-3">
             <div className="col-md-8">
-              <label className="form-label" htmlFor="f-address">Farm / stall address *</label>
-              <input id="f-address" name="address" className="form-control" value={form.address} onChange={change} placeholder="Village / road / area" autoFocus />
+              <label className="form-label" htmlFor="f-address">{t('Farm / stall address *')}</label>
+              <input id="f-address" name="address" className="form-control" value={form.address} onChange={change} placeholder={t('Village / road / area')} autoFocus />
             </div>
             <div className="col-md-4">
-              <label className="form-label" htmlFor="f-city">City *</label>
-              <SearchSelect id="f-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel="City" placeholder="Choose a city" options={cities.map((c) => ({ value: c, label: c }))} />
+              <label className="form-label" htmlFor="f-city">{t('City *')}</label>
+              <SearchSelect id="f-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose a city')} options={cities.map((c) => ({ value: c, label: c }))} />
             </div>
             <div className="col-12">
-              <label className="form-label" htmlFor="f-bio">About your farm</label>
+              <label className="form-label" htmlFor="f-bio">{t('About your farm')}</label>
               <textarea
                 id="f-bio"
                 name="bio"
@@ -183,13 +184,13 @@ export default function RegisterFarmer() {
                 value={form.bio}
                 onChange={change}
                 maxLength={1200}
-                placeholder="What do you grow, how do you farm, what makes your produce special?"
+                placeholder={t('What do you grow, how do you farm, what makes your produce special?')}
               />
               <div className="fs-7 text-muted-2 text-end">{form.bio.length}/1200</div>
             </div>
             <div className="col-12">
-              <span className="form-label d-block">What do you grow / sell? *</span>
-              <div className="choice-grid" role="group" aria-label="Categories">
+              <span className="form-label d-block">{t('What do you grow / sell? *')}</span>
+              <div className="choice-grid" role="group" aria-label={t('Categories')}>
                 {(catData?.categories || []).map((c) => {
                   const on = form.categories.includes(c._id);
                   return (
@@ -202,16 +203,16 @@ export default function RegisterFarmer() {
               </div>
             </div>
             <div className="col-12">
-              <span className="form-label d-block">Farming practices (optional)</span>
+              <span className="form-label d-block">{t('Farming practices (optional)')}</span>
               <div className="d-flex flex-wrap gap-2 mb-2">
-                {[...PRACTICES, ...form.tags.filter((t) => !PRACTICES.includes(t))].map((p) => (
+                {[...PRACTICES, ...form.tags.filter((tx) => !PRACTICES.includes(tx))].map((p) => (
                   <button type="button" key={p} className={`filter-chip ${form.tags.includes(p) ? 'active' : ''}`} onClick={() => toggle('tags', p)} aria-pressed={form.tags.includes(p)}>
                     {p}
                   </button>
                 ))}
               </div>
               <div className="d-flex gap-2" style={{ maxWidth: 360 }}>
-                <input className="form-control form-control-sm" value={customTag} onChange={(e) => setCustomTag(e.target.value)} placeholder="Add your own, e.g. Rain-fed" maxLength={40} aria-label="Custom practice" />
+                <input className="form-control form-control-sm" value={customTag} onChange={(e) => setCustomTag(e.target.value)} placeholder={t('Add your own, e.g. Rain-fed')} maxLength={40} aria-label={t('Custom practice')} />
                 <button
                   type="button"
                   className="btn btn-soft btn-sm text-nowrap"
@@ -221,7 +222,7 @@ export default function RegisterFarmer() {
                     setCustomTag('');
                   }}
                 >
-                  <i className="bi bi-plus" /> Add
+                  <i className="bi bi-plus" /> {t('Add')}
                 </button>
               </div>
             </div>
@@ -231,8 +232,8 @@ export default function RegisterFarmer() {
         {step === 2 && (
           <div className="d-grid gap-3">
             <div>
-              <span className="form-label d-block">Markets you want to sell at (optional)</span>
-              <div className="fs-7 text-muted-2 mb-2">You will set exact pickup days and times after logging in.</div>
+              <span className="form-label d-block">{t('Markets you want to sell at (optional)')}</span>
+              <div className="fs-7 text-muted-2 mb-2">{t('You will set exact pickup days and times after logging in.')}</div>
               <div className="d-grid gap-2" style={{ maxHeight: 260, overflowY: 'auto' }}>
                 {markets.map((m) => {
                   const on = form.markets.includes(m._id);
@@ -243,7 +244,7 @@ export default function RegisterFarmer() {
                       <span className="flex-grow-1 min-w-0">
                         <strong className="d-block small">{m.name}</strong>
                         <span className="fs-7 text-muted-2">
-                          {m.city} · {time12(m.openTime)} to {time12(m.closeTime)}
+                          {m.city} · {time12(m.openTime)} {t('to')} {time12(m.closeTime)}
                         </span>
                       </span>
                       <span className="d-none d-md-inline-flex">
@@ -255,37 +256,37 @@ export default function RegisterFarmer() {
               </div>
             </div>
             <div>
-              <span className="form-label d-block">Farm / stall location on the map (optional)</span>
+              <span className="form-label d-block">{t('Farm / stall location on the map (optional)')}</span>
               <LocationPicker lat={form.latitude} lng={form.longitude} onChange={(p) => setForm((f) => ({ ...f, latitude: p.lat, longitude: p.lng }))} height={220} />
               {form.latitude !== '' && (
                 <div className="fs-7 text-muted-2 mt-1">
-                  Pinned at {form.latitude}, {form.longitude} ·{' '}
+                  {t('Pinned at')} {form.latitude}, {form.longitude} ·{' '}
                   <button type="button" className="btn btn-link btn-sm p-0 align-baseline" onClick={() => setForm({ ...form, latitude: '', longitude: '' })}>
-                    remove pin
+                    {t('remove pin')}
                   </button>
                 </div>
               )}
             </div>
             <div className="soft-panel py-3">
               <div className="info-row">
-                <span>Stall</span>
+                <span>{t('Stall')}</span>
                 <span>{form.stallName}</span>
               </div>
               <div className="info-row">
-                <span>Contact</span>
+                <span>{t('Contact')}</span>
                 <span>
                   {form.contactPerson} · {form.phone}
                 </span>
               </div>
               <div className="info-row">
-                <span>Location</span>
+                <span>{t('Location')}</span>
                 <span>
                   {form.address}, {form.city}
                 </span>
               </div>
               <div className="info-row">
-                <span>Grows / sells</span>
-                <span>{(catData?.categories || []).filter((c) => form.categories.includes(c._id)).map((c) => c.name).join(', ')}</span>
+                <span>{t('Grows / sells')}</span>
+                <span>{listText((catData?.categories || []).filter((c) => form.categories.includes(c._id)).map((c) => categoryName(c)))}</span>
               </div>
             </div>
             <TermsCheckbox
@@ -296,7 +297,7 @@ export default function RegisterFarmer() {
                 setForm((f) => ({ ...f, acceptTerms: v }));
               }}
             >
-              I confirm these details are correct and I will keep my stock, prices and pickup times up to date.{' '}
+              {t('I confirm these details are correct and I will keep my stock, prices and pickup times up to date.')}{' '}
             </TermsCheckbox>
           </div>
         )}
@@ -311,22 +312,22 @@ export default function RegisterFarmer() {
                 setStep(step - 1);
               }}
             >
-              <i className="bi bi-arrow-left" /> Back
+              <i className="bi bi-arrow-left" /> {t('Back')}
             </button>
           )}
           {step < STEPS.length - 1 ? (
             <button type="button" className="btn btn-primary btn-lg flex-grow-1" onClick={next}>
-              Continue <i className="bi bi-arrow-right" />
+              {t('Continue')} <i className="bi bi-arrow-right" />
             </button>
           ) : (
             <button type="submit" className="btn btn-primary btn-lg flex-grow-1" disabled={busy}>
-              {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-send-check" />} Submit for approval
+              {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-send-check" />} {t('Submit for approval')}
             </button>
           )}
         </div>
       </form>
       <p className="mt-4 small text-center">
-        Already registered? <Link to="/login">Log in</Link> · Want to shop instead? <Link to="/register">Create a customer account</Link>
+        {t('Already registered?')} <Link to="/login">{t('Log in')}</Link> {t('· Want to shop instead?')} <Link to="/register">{t('Create a customer account')}</Link>
       </p>
     </AuthLayout>
   );

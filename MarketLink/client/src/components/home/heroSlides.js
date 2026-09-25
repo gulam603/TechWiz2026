@@ -1,5 +1,6 @@
 // Slides of the home page banner. Photos: Open Images (CC BY 2.0), see client/public/images/CREDITS.md.
 import CREDITS from './heroCredits.json';
+import { t } from '../../i18n';
 
 const ALT = {
   welcome: 'Fruit and vegetable stalls at a farmers market',
@@ -60,17 +61,17 @@ const SEASONS = [
 /** The slides for a month: welcome, what is in season, how pickup works and selling for farmers. */
 export function heroSlides(month = new Date().getMonth() + 1) {
   const season = SEASONS.find((s) => s.months.includes(month)) || SEASONS[0];
-  return [
+  const slides = [
     {
       id: 'welcome',
       theme: 'forest',
-      eyebrow: "This week's harvest is live",
-      title: 'Fresh from local farms, reserved for you',
-      text: "See which farmers are at the market, what's in stock and the price. Pre-order online and pick up at the stall.",
-      primary: { label: 'Start shopping', to: '/products' },
-      secondary: { label: 'Find a market', to: '/markets' },
+      eyebrow: t('This week\'s harvest is live'),
+      title: t('Fresh from local farms, reserved for you'),
+      text: t('See which farmers are at the market, what\'s in stock and the price. Pre-order online and pick up at the stall.'),
+      primary: { label: t('Start shopping'), to: '/products' },
+      secondary: { label: t('Find a market'), to: '/markets' },
       photo: hero('welcome'),
-      badge: { icon: 'bi-basket2', text: 'Fresh stock every week' },
+      badge: { icon: 'bi-basket2', text: t('Fresh stock every week') },
     },
     {
       id: 'season',
@@ -79,31 +80,33 @@ export function heroSlides(month = new Date().getMonth() + 1) {
       title: season.title,
       text: season.text,
       primary: { label: season.label, to: season.to },
-      secondary: { label: 'All products', to: '/products' },
+      secondary: { label: t('All products'), to: '/products' },
       photo: season.photo,
       badge: season.badge,
     },
     {
       id: 'pickup',
       theme: 'cream',
-      eyebrow: 'Pickup only, pay at the stall',
-      title: 'Pre-order today, collect on market day',
-      text: 'Choose a pickup time that suits you. We tell you when your order is packed. You pay the farmer in person.',
-      primary: { label: 'How it works', to: '/#how-it-works' },
-      secondary: { label: 'Open the map', to: '/map' },
+      eyebrow: t('Pickup only, pay at the stall'),
+      title: t('Pre-order today, collect on market day'),
+      text: t('Choose a pickup time that suits you. We tell you when your order is packed. You pay the farmer in person.'),
+      primary: { label: t('How it works'), to: '/#how-it-works' },
+      secondary: { label: t('Open the map'), to: '/map' },
       photo: hero('pickup'),
-      badge: { icon: 'bi-cash-coin', text: 'No online payment' },
+      badge: { icon: 'bi-cash-coin', text: t('No online payment') },
     },
     {
       id: 'farmers',
       theme: 'lime',
-      eyebrow: 'For farmers',
-      title: 'Sell your harvest before you pack the truck',
-      text: 'List your weekly stock, take pre-orders with pickup times and see your best sellers. Free to join.',
-      primary: { label: 'Register your stall', to: '/register/farmer', guestOnly: true },
-      secondary: { label: 'Learn more', to: '/about' },
+      eyebrow: t('For farmers'),
+      title: t('Sell your harvest before you pack the truck'),
+      text: t('List your weekly stock, take pre-orders with pickup times and see your best sellers. Free to join.'),
+      primary: { label: t('Register your stall'), to: '/register/farmer', guestOnly: true },
+      secondary: { label: t('Learn more'), to: '/about' },
       photo: hero('farmers', '50% 35%'),
-      badge: { icon: 'bi-shop', text: 'Free to join' },
+      badge: { icon: 'bi-shop', text: t('Free to join') },
     },
   ];
+  // Texts in the language in use (the button labels are translated where they are drawn)
+  return slides.map((s) => ({ ...s, eyebrow: t(s.eyebrow), title: t(s.title), text: t(s.text), photo: { ...s.photo, alt: t(s.photo.alt) }, badge: s.badge && { ...s.badge, text: t(s.badge.text) } }));
 }

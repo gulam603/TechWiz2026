@@ -12,6 +12,7 @@ import { useToast } from '../../context/ToastContext';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
+import { listText, t } from '../../i18n';
 
 export default function Markets() {
   const [filters, setFilters] = useState({ search: '', city: '', category: '', day: '' });
@@ -23,9 +24,9 @@ export default function Markets() {
   const { data, loading } = useFetch(`/markets${toQuery({ ...filters, lat: location?.lat, lng: location?.lng })}`);
   const markets = data?.markets || [];
   useSeo({
-    title: 'Farmers markets',
-    description: 'Find farmers markets near you: opening days and times, location on the map and the farmers selling at each market.',
-    jsonLd: ldGraph(itemListLd('Farmers markets on MarketLink', markets.map((m) => ({ name: m.name, path: `/markets/${m.slug}` }))), breadcrumbLd([{ name: 'Markets', path: '/markets' }])),
+    title: t('Farmers markets'),
+    description: t('Find farmers markets near you: opening days and times, location on the map and the farmers selling at each market.'),
+    jsonLd: ldGraph(itemListLd(t('Farmers markets on MarketLink'), markets.map((m) => ({ name: m.name, path: `/markets/${m.slug}` }))), breadcrumbLd([{ name: 'Markets', path: '/markets' }])),
     canonicalPath: '/markets',
   });
 
@@ -33,7 +34,7 @@ export default function Markets() {
     setLocating(true);
     try {
       setLocation(await getCurrentPosition());
-      toast('Showing markets closest to you');
+      toast(t('Showing markets closest to you'));
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -43,34 +44,34 @@ export default function Markets() {
 
   return (
     <>
-      <PageHero crumbs={[{ label: 'Markets' }]} title="Farmers markets" subtitle="Browse markets by location and day, see which farmers are there and get directions to the pickup point." />
+      <PageHero crumbs={[{ label: t('Markets') }]} title={t('Farmers markets')} subtitle={t('Browse markets by location and day, see which farmers are there and get directions to the pickup point.')} />
       <div className="container pb-5">
         <div className="soft-panel mb-4">
           <div className="row g-2 align-items-center">
             <div className="col-12 col-lg-6 col-xl-3">
               <div className="search-pill">
                 <i className="bi bi-search" />
-                <input placeholder="Search market or area" value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} aria-label="Search markets" />
+                <input placeholder={t('Search market or area')} value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} aria-label={t('Search markets')} />
               </div>
             </div>
             <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.city} onChange={(v) => setFilters({ ...filters, city: v })} ariaLabel="City" emptyLabel="All cities" options={(data?.cities || []).map((c) => ({ value: c, label: c }))} />
+              <SearchSelect value={filters.city} onChange={(v) => setFilters({ ...filters, city: v })} ariaLabel={t('City')} emptyLabel="All cities" options={(data?.cities || []).map((c) => ({ value: c, label: c }))} />
             </div>
             <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.category} onChange={(v) => setFilters({ ...filters, category: v })} ariaLabel="Category" emptyLabel="All produce" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
+              <SearchSelect value={filters.category} onChange={(v) => setFilters({ ...filters, category: v })} ariaLabel={t('Category')} emptyLabel="All produce" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
             </div>
             <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.day} onChange={(v) => setFilters({ ...filters, day: v })} ariaLabel="Market day" emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
+              <SearchSelect value={filters.day} onChange={(v) => setFilters({ ...filters, day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
             </div>
             <div className="col-12 col-xl-3 d-flex gap-2 justify-content-end">
               <button type="button" className={`btn text-nowrap flex-shrink-0 ${location ? 'btn-forest' : 'btn-white'}`} onClick={location ? () => setLocation(null) : nearMe} disabled={locating}>
-                {locating ? <span className="spinner-border spinner-border-sm" /> : <i className={`bi ${location ? 'bi-check2-circle' : 'bi-crosshair'}`} />} Near me
+                {locating ? <span className="spinner-border spinner-border-sm" /> : <i className={`bi ${location ? 'bi-check2-circle' : 'bi-crosshair'}`} />} {t('Near me')}
               </button>
               <div className="tabs-pill flex-nowrap flex-shrink-0">
-                <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')} aria-label="Grid view">
+                <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')} aria-label={t('Grid view')}>
                   <i className="bi bi-grid" />
                 </button>
-                <button type="button" className={view === 'map' ? 'active' : ''} onClick={() => setView('map')} aria-label="Map view">
+                <button type="button" className={view === 'map' ? 'active' : ''} onClick={() => setView('map')} aria-label={t('Map view')}>
                   <i className="bi bi-map" />
                 </button>
               </div>
@@ -89,7 +90,7 @@ export default function Markets() {
               type: 'market',
               image: m.image,
               title: m.name,
-              subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)} to ${time12(m.closeTime)}`,
+              subtitle: t('{v1} · {v2} to {v3}', { v1: listText(m.operatingDays.map((d) => DAY_SHORT[d])), v2: time12(m.openTime), v3: time12(m.closeTime) }),
               link: `/markets/${m.slug}`,
             }))}
           />
@@ -106,7 +107,7 @@ export default function Markets() {
             )}
           </div>
         )}
-        {data && markets.length === 0 && <EmptyState title="No markets found" message="Try a different day, city or produce type." />}
+        {data && markets.length === 0 && <EmptyState title={t('No markets found')} message={t('Try a different day, city or produce type.')} />}
       </div>
     </>
   );

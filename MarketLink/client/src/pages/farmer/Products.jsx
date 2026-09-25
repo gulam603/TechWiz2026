@@ -16,6 +16,7 @@ import { ApprovalBanner } from './Dashboard';
 import { money } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
+import { t } from '../../i18n';
 
 const EMPTY = { name: '', nameUr: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', metaTitle: '', metaDescription: '', keywords: '', schemaSummary: '', schemaSeason: '', schemaStorage: '', schemaUses: '' };
 
@@ -23,8 +24,8 @@ const SCHEMA_KEYS = ['schemaSummary', 'schemaSeason', 'schemaStorage', 'schemaUs
 const SOURCE_LABEL = { claude: 'Written by AI (Claude)', builtin: 'Written by the built-in AI', farmer: 'Written by you' };
 
 const clipText = (text, n) => {
-  const t = String(text || '').replace(/\s+/g, ' ').trim();
-  return t.length > n ? `${t.slice(0, n - 1).replace(/\s+\S*$/, '')}…` : t;
+  const tx = String(text || '').replace(/\s+/g, ' ').trim();
+  return tx.length > n ? `${tx.slice(0, n - 1).replace(/\s+\S*$/, '')}…` : tx;
 };
 
 /**
@@ -41,39 +42,39 @@ function SeoFields({ form, setForm, onAi, aiBusy }) {
   return (
     <details className="seo-fields" open={Boolean(form.metaTitle || form.metaDescription || form.keywords)}>
       <summary>
-        <i className="bi bi-google" aria-hidden="true" /> Search engines (SEO) <span className="text-muted-2 fw-normal">· optional, helps people find this product on Google</span>
+        <i className="bi bi-google" aria-hidden="true" /> {t('Search engines (SEO)')} <span className="text-muted-2 fw-normal">{t('· optional, helps people find this product on Google')}</span>
       </summary>
       <div className="row g-3 mt-1">
         <div className="col-12 d-flex justify-content-between align-items-center gap-2 flex-wrap">
-          <span className="small text-muted-2">Leave empty to use the product name and description.</span>
+          <span className="small text-muted-2">{t('Leave empty to use the product name and description.')}</span>
           <button type="button" className="btn btn-sm btn-ai" onClick={onAi} disabled={form.name.trim().length < 2 || aiBusy}>
-            {aiBusy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" aria-hidden="true" />} Fill in with AI
+            {aiBusy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" aria-hidden="true" />} {t('Fill in with AI')}
           </button>
         </div>
         <div className="col-md-6">
           <label className="form-label d-flex justify-content-between" htmlFor="pf-mtitle">
-            SEO title <span className="text-muted-2 fw-normal">{form.metaTitle.length}/70</span>
+            {t('SEO title')} <span className="text-muted-2 fw-normal">{form.metaTitle.length}/70</span>
           </label>
-          <input id="pf-mtitle" name="metaTitle" className="form-control" maxLength={70} value={form.metaTitle} onChange={change} placeholder={form.name ? `${form.name}, fresh from the farm` : 'e.g. Sindhri mangoes, fresh fruit'} />
+          <input id="pf-mtitle" name="metaTitle" className="form-control" maxLength={70} value={form.metaTitle} onChange={change} placeholder={form.name ? t('{name}, fresh from the farm', { name: form.name }) : t('e.g. Sindhri mangoes, fresh fruit')} />
         </div>
         <div className="col-md-6">
-          <label className="form-label" htmlFor="pf-keywords">Keywords</label>
-          <input id="pf-keywords" name="keywords" className="form-control" value={form.keywords} onChange={change} placeholder="mangoes, sindhri, fresh fruit" aria-describedby="pf-keywords-help" />
+          <label className="form-label" htmlFor="pf-keywords">{t('Keywords')}</label>
+          <input id="pf-keywords" name="keywords" className="form-control" value={form.keywords} onChange={change} placeholder={t('mangoes, sindhri, fresh fruit')} aria-describedby="pf-keywords-help" />
           <div id="pf-keywords-help" className="form-text">
-            Separate with commas, up to 12. {words.length > 0 && <span className={words.length > 12 ? 'text-danger' : ''}>{words.length} added.</span>}
+            {t('Separate with commas, up to 12.')} {words.length > 0 && <span className={words.length > 12 ? 'text-danger' : ''}>{t('{n} added.', { n: words.length })}</span>}
           </div>
         </div>
         <div className="col-12">
           <label className="form-label d-flex justify-content-between" htmlFor="pf-mdesc">
-            SEO description <span className="text-muted-2 fw-normal">{form.metaDescription.length}/170</span>
+            {t('SEO description')} <span className="text-muted-2 fw-normal">{form.metaDescription.length}/170</span>
           </label>
-          <textarea id="pf-mdesc" name="metaDescription" rows={2} className="form-control" maxLength={170} value={form.metaDescription} onChange={change} placeholder="One or two sentences shown under the title in Google." />
+          <textarea id="pf-mdesc" name="metaDescription" rows={2} className="form-control" maxLength={170} value={form.metaDescription} onChange={change} placeholder={t('One or two sentences shown under the title in Google.')} />
         </div>
         <div className="col-12">
-          <div className="seo-preview" aria-label="Google preview">
+          <div className="seo-preview" aria-label={t('Google preview')}>
             <span className="seo-preview-url">marketlink.pk › products › {(form.name || 'your-product').toLowerCase().replace(/[^a-z0-9]+/g, '-')}</span>
-            <strong className="seo-preview-title">{form.metaTitle || form.name || 'Product name'} · MarketLink</strong>
-            <span className="seo-preview-desc">{form.metaDescription || clipText(form.description, 160) || 'Your description appears here.'}</span>
+            <strong className="seo-preview-title">{form.metaTitle || form.name || t('Product name')} · MarketLink</strong>
+            <span className="seo-preview-desc">{form.metaDescription || clipText(form.description, 160) || t('Your description appears here.')}</span>
           </div>
         </div>
       </div>
@@ -89,8 +90,8 @@ function SeoFields({ form, setForm, onAi, aiBusy }) {
 function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
   const preview = {
     '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: form.name || 'Product name',
+    '@type': t('Product'),
+    name: form.name || t('Product name'),
     alternateName: form.nameUr || undefined,
     disambiguatingDescription: form.schemaSummary || undefined,
     category: categoryName ? `Fresh food > ${categoryName}` : undefined,
@@ -106,7 +107,7 @@ function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
   return (
     <details className="seo-fields schema-fields" open={Boolean(form.schemaSummary)}>
       <summary>
-        <i className="bi bi-diagram-3" aria-hidden="true" /> Product schema <span className="text-muted-2 fw-normal">· structured data for Google and AI assistants</span>
+        <i className="bi bi-diagram-3" aria-hidden="true" /> {t('Product schema')} <span className="text-muted-2 fw-normal">{t('· structured data for Google and AI assistants')}</span>
       </summary>
       <div className="row g-3 mt-1">
         <div className="col-12 d-flex justify-content-between align-items-center gap-2 flex-wrap">
@@ -116,34 +117,34 @@ function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
                 <i className="bi bi-stars" aria-hidden="true" /> {SOURCE_LABEL[source]}
               </span>
             ) : (
-              'Leave empty: AI writes it when you save.'
+              t('Leave empty: AI writes it when you save.')
             )}
           </span>
           <button type="button" className="btn btn-sm btn-ai" onClick={onAi} disabled={form.name.trim().length < 2 || aiBusy}>
-            {aiBusy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" aria-hidden="true" />} {source ? 'Write the schema again with AI' : 'Write the schema with AI'}
+            {aiBusy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" aria-hidden="true" />} {source ? t('Write the schema again with AI') : t('Write the schema with AI')}
           </button>
         </div>
         <div className="col-12">
           <label className="form-label d-flex justify-content-between" htmlFor="pf-ssum">
-            Summary <span className="text-muted-2 fw-normal">{form.schemaSummary.length}/300</span>
+            {t('Summary')} <span className="text-muted-2 fw-normal">{form.schemaSummary.length}/300</span>
           </label>
-          <textarea id="pf-ssum" name="schemaSummary" rows={2} className="form-control" maxLength={300} value={form.schemaSummary} onChange={onChange} placeholder="One sentence: what it is, who grows it, price and unit." />
+          <textarea id="pf-ssum" name="schemaSummary" rows={2} className="form-control" maxLength={300} value={form.schemaSummary} onChange={onChange} placeholder={t('One sentence: what it is, who grows it, price and unit.')} />
         </div>
         <div className="col-md-4">
-          <label className="form-label" htmlFor="pf-sseason">Season</label>
-          <input id="pf-sseason" name="schemaSeason" className="form-control" maxLength={80} value={form.schemaSeason} onChange={onChange} placeholder="e.g. May to August" />
+          <label className="form-label" htmlFor="pf-sseason">{t('Season')}</label>
+          <input id="pf-sseason" name="schemaSeason" className="form-control" maxLength={80} value={form.schemaSeason} onChange={onChange} placeholder={t('e.g. May to August')} />
         </div>
         <div className="col-md-8">
-          <label className="form-label" htmlFor="pf-suses">Best for</label>
-          <input id="pf-suses" name="schemaUses" className="form-control" maxLength={200} value={form.schemaUses} onChange={onChange} placeholder="e.g. Salads, raita and summer drinks" />
+          <label className="form-label" htmlFor="pf-suses">{t('Best for')}</label>
+          <input id="pf-suses" name="schemaUses" className="form-control" maxLength={200} value={form.schemaUses} onChange={onChange} placeholder={t('e.g. Salads, raita and summer drinks')} />
         </div>
         <div className="col-12">
-          <label className="form-label" htmlFor="pf-sstore">How to keep it</label>
-          <input id="pf-sstore" name="schemaStorage" className="form-control" maxLength={200} value={form.schemaStorage} onChange={onChange} placeholder="e.g. Refrigerate and use within a week." />
+          <label className="form-label" htmlFor="pf-sstore">{t('How to keep it')}</label>
+          <input id="pf-sstore" name="schemaStorage" className="form-control" maxLength={200} value={form.schemaStorage} onChange={onChange} placeholder={t('e.g. Refrigerate and use within a week.')} />
         </div>
         <div className="col-12">
           <details className="schema-code">
-            <summary className="small fw-semi">Show the structured data (JSON-LD)</summary>
+            <summary className="small fw-semi">{t('Show the structured data (JSON-LD)')}</summary>
             <pre>{JSON.stringify(preview, null, 2)}</pre>
           </details>
         </div>
@@ -152,7 +153,7 @@ function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
   );
 }
 
-export function ImageInput({ label = 'Image', current, file, onFile }) {
+export function ImageInput({ label = t('Image'), current, file, onFile }) {
   // Temporary browser URL so the chosen image can be previewed before upload
   const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file]);
   useEffect(() => () => preview && URL.revokeObjectURL(preview), [preview]);
@@ -162,8 +163,8 @@ export function ImageInput({ label = 'Image', current, file, onFile }) {
       <label className="upload-box" style={{ cursor: 'pointer' }}>
         <span className="preview">{preview || current ? <img src={preview || current} alt="" /> : <i className="bi bi-image fs-3 text-muted-2" />}</span>
         <span className="small">
-          <strong className="d-block">{file ? file.name : 'Choose an image'}</strong>
-          <span className="text-muted-2">JPG, PNG or WEBP · max 2 MB</span>
+          <strong className="d-block">{file ? file.name : t('Choose an image')}</strong>
+          <span className="text-muted-2">{t('JPG, PNG or WEBP · max 2 MB')}</span>
         </span>
         <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="d-none" onChange={(e) => onFile(e.target.files?.[0] || null)} />
       </label>
@@ -182,7 +183,7 @@ function GalleryInput({ current, removed, onToggleRemove, files, onFiles }) {
   return (
     <div>
       <span className="form-label d-block">
-        More photos <span className="text-muted-2 fw-normal">(optional, up to {MAX_GALLERY})</span>
+        {t('More photos')} <span className="text-muted-2 fw-normal">{t('(optional, up to {n})', { n: MAX_GALLERY })}</span>
       </span>
       <div className="gallery-input">
         {current.map((g) => {
@@ -190,7 +191,7 @@ function GalleryInput({ current, removed, onToggleRemove, files, onFiles }) {
           return (
             <div key={g.url} className={`gallery-thumb ${gone ? 'is-removed' : ''}`}>
               <img src={g.url} alt="" />
-              <button type="button" onClick={() => onToggleRemove(g.url)} aria-label={gone ? 'Keep this photo' : 'Remove this photo'} title={gone ? 'Keep' : 'Remove'}>
+              <button type="button" onClick={() => onToggleRemove(g.url)} aria-label={gone ? t('Keep this photo') : t('Remove this photo')} title={gone ? t('Keep') : t('Remove')}>
                 <i className={`bi ${gone ? 'bi-arrow-counterclockwise' : 'bi-x-lg'}`} />
               </button>
             </div>
@@ -199,7 +200,7 @@ function GalleryInput({ current, removed, onToggleRemove, files, onFiles }) {
         {files.map((f, i) => (
           <div key={previews[i]} className="gallery-thumb is-new">
             <img src={previews[i]} alt="" />
-            <button type="button" onClick={() => onFiles(files.filter((_, j) => j !== i))} aria-label={`Remove ${f.name}`} title="Remove">
+            <button type="button" onClick={() => onFiles(files.filter((_, j) => j !== i))} aria-label={t('Remove {name}', { name: f.name })} title={t('Remove')}>
               <i className="bi bi-x-lg" />
             </button>
           </div>
@@ -207,13 +208,13 @@ function GalleryInput({ current, removed, onToggleRemove, files, onFiles }) {
         {room > 0 && (
           <label className="gallery-add">
             <i className="bi bi-images" aria-hidden="true" />
-            <span>Add photos</span>
+            <span>{t('Add photos')}</span>
             <input
               type="file"
               multiple
               accept="image/png,image/jpeg,image/webp,image/gif"
               className="d-none"
-              aria-label="Add more product photos"
+              aria-label={t('Add more product photos')}
               onChange={(e) => {
                 onFiles([...files, ...Array.from(e.target.files || [])].slice(0, MAX_GALLERY - kept));
                 e.target.value = '';
@@ -222,7 +223,7 @@ function GalleryInput({ current, removed, onToggleRemove, files, onFiles }) {
           </label>
         )}
       </div>
-      <span className="fs-7 text-muted-2">Show the harvest, the packing or the farm. JPG, PNG or WEBP, max 2 MB each.</span>
+      <span className="fs-7 text-muted-2">{t('Show the harvest, the packing or the farm. JPG, PNG or WEBP, max 2 MB each.')}</span>
     </div>
   );
 }
@@ -276,7 +277,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
         schemaUses: res.uses || '',
       }));
       setSchema({ dirty: true, source: res.source });
-      toast(res.source === 'claude' ? 'Written by AI (Claude). Check it and save.' : 'Written by the built-in AI. Check it and save.');
+      toast(res.source === 'claude' ? t('Written by AI (Claude). Check it and save.') : t('Written by the built-in AI. Check it and save.'));
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -294,7 +295,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
 
   // "Write with AI": a description from the product name, category, unit and the farm's practices
   async function writeDescription() {
-    if (form.name.trim().length < 2) return toast('Type the product name first', 'error');
+    if (form.name.trim().length < 2) return toast(t('Type the product name first'), 'error');
     setWriting(true);
     try {
       const res = await api.post('/farmer/products/describe', { name: form.name, category: form.category, unit: form.unit, variant });
@@ -320,7 +321,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
       if (removeGallery.length) fd.append('removeGallery', removeGallery.join(','));
       if (product) await api.upload('PUT', `/farmer/products/${product._id}`, fd);
       else await api.upload('POST', '/farmer/products', fd);
-      toast(product ? 'Product updated' : 'Product added to your stall');
+      toast(product ? t('Product updated') : t('Product added to your stall'));
       onSaved();
     } catch (err) {
       toast(err.message, 'error');
@@ -330,47 +331,47 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
   }
 
   return (
-    <Modal open onClose={onClose} title={product ? `Edit ${product.name}` : 'Add a product'} size="modal-lg">
+    <Modal open onClose={onClose} title={product ? t('Edit {name}', { name: product.name }) : t('Add a product')} size="modal-lg">
       <form onSubmit={submit}>
         <div className="row g-3">
           <div className="col-md-4">
-            <label className="form-label" htmlFor="pf-name">Product name</label>
+            <label className="form-label" htmlFor="pf-name">{t('Product name')}</label>
             <input id="pf-name" name="name" className="form-control" required value={form.name} onChange={change} maxLength={100} />
           </div>
           <div className="col-md-4">
             <label className="form-label" htmlFor="pf-nameur">
-              Name in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+              {t('Name in Urdu')} <span className="text-muted-2 fw-normal">{t('(optional)')}</span>
             </label>
             <input id="pf-nameur" name="nameUr" className="form-control" dir="rtl" lang="ur" value={form.nameUr} onChange={change} maxLength={100} placeholder="مثلاً سندھڑی آم" />
           </div>
           <div className="col-md-4">
-            <label className="form-label" htmlFor="pf-cat">Category</label>
-            <SearchSelect id="pf-cat" value={form.category} onChange={(v) => setForm((f) => ({ ...f, category: v }))} required ariaLabel="Category" options={categories.map((c) => ({ value: c._id, label: c.name }))} />
+            <label className="form-label" htmlFor="pf-cat">{t('Category')}</label>
+            <SearchSelect id="pf-cat" value={form.category} onChange={(v) => setForm((f) => ({ ...f, category: v }))} required ariaLabel={t('Category')} options={categories.map((c) => ({ value: c._id, label: c.name }))} />
           </div>
           <div className="col-6 col-md-3">
-            <label className="form-label" htmlFor="pf-price">Price ({CURRENCY})</label>
+            <label className="form-label" htmlFor="pf-price">{t('Price ({currency})', { currency: t(CURRENCY) })}</label>
             <input id="pf-price" name="price" type="number" min="0" step="0.01" className="form-control" required value={form.price} onChange={change} />
           </div>
           <div className="col-6 col-md-3">
-            <label className="form-label" htmlFor="pf-unit">Unit</label>
-            <SearchSelect id="pf-unit" value={form.unit} onChange={(v) => setForm((f) => ({ ...f, unit: v }))} ariaLabel="Unit" options={units.map((u) => ({ value: u, label: u }))} />
+            <label className="form-label" htmlFor="pf-unit">{t('Unit')}</label>
+            <SearchSelect id="pf-unit" value={form.unit} onChange={(v) => setForm((f) => ({ ...f, unit: v }))} ariaLabel={t('Unit')} options={units.map((u) => ({ value: u, label: u }))} />
           </div>
           <div className="col-6 col-md-3">
-            <label className="form-label" htmlFor="pf-qty">Available now</label>
+            <label className="form-label" htmlFor="pf-qty">{t('Available now')}</label>
             <input id="pf-qty" name="quantityAvailable" type="number" min="0" className="form-control" value={form.quantityAvailable} onChange={change} />
           </div>
           <div className="col-6 col-md-3">
-            <label className="form-label" htmlFor="pf-tpl">Weekly template</label>
-            <input id="pf-tpl" name="templateQuantity" type="number" min="0" className="form-control" value={form.templateQuantity} onChange={change} placeholder="same as stock" />
+            <label className="form-label" htmlFor="pf-tpl">{t('Weekly template')}</label>
+            <input id="pf-tpl" name="templateQuantity" type="number" min="0" className="form-control" value={form.templateQuantity} onChange={change} placeholder={t('same as stock')} />
           </div>
           <div className="col-12">
             <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
-              <label className="form-label mb-0" htmlFor="pf-desc">Description</label>
+              <label className="form-label mb-0" htmlFor="pf-desc">{t('Description')}</label>
               <button type="button" className="btn btn-sm btn-ai" onClick={writeDescription} disabled={writing}>
-                {writing ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" />} {variant ? 'Try another' : 'Write with AI'}
+                {writing ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" />} {variant ? t('Try another') : t('Write with AI')}
               </button>
             </div>
-            <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} placeholder="Type the product name, then press Write with AI" />
+            <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} placeholder={t('Type the product name, then press Write with AI')} />
           </div>
           <div className="col-12">
             <SeoFields form={form} setForm={setForm} onAi={writeSeoWithAi} aiBusy={aiBusy} />
@@ -379,7 +380,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
             <SchemaFields form={form} onChange={changeSchema} source={schema.source} onAi={writeSeoWithAi} aiBusy={aiBusy} categoryName={categories.find((c) => c._id === form.category)?.name} />
           </div>
           <div className="col-md-5">
-            <ImageInput label="Main photo" current={product?.image} file={file} onFile={setFile} />
+            <ImageInput label={t('Main photo')} current={product?.image} file={file} onFile={setFile} />
           </div>
           <div className="col-md-7">
             <GalleryInput
@@ -393,10 +394,10 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
         </div>
         <div className="d-flex justify-content-end gap-2 mt-4">
           <button type="button" className="btn btn-white" onClick={onClose}>
-            Cancel
+            {t('Cancel')}
           </button>
           <button type="submit" className="btn btn-primary" disabled={busy}>
-            {busy && <span className="spinner-border spinner-border-sm" />} {product ? 'Save changes' : 'Add product'}
+            {busy && <span className="spinner-border spinner-border-sm" />} {product ? t('Save changes') : t('Add product')}
           </button>
         </div>
       </form>
@@ -414,7 +415,7 @@ const STATUS_OPTIONS = [
 const stockColumns = (approved) => [
   {
     data: 'name',
-    title: 'Product',
+    title: t('Product'),
     responsivePriority: 1,
     render: display(
       (v, p) =>
@@ -425,14 +426,14 @@ const stockColumns = (approved) => [
       (v, p) => `${v} ${p.category?.name || ''}`
     ),
   },
-  { data: 'price', title: 'Price', className: 'dt-nowrap', render: display((v, p) => `<span class="small fw-semi">${esc(money(v))}/${esc(p.unit)}</span>`) },
-  { data: 'quantityAvailable', title: 'In stock', responsivePriority: 3, render: display((v, p) => numberInput('quantityAvailable', v, `Stock of ${p.name}`, !approved)) },
-  { data: 'templateQuantity', title: 'Weekly template', render: display((v, p) => numberInput('templateQuantity', v, `Weekly template of ${p.name}`, !approved)) },
-  { data: 'status', title: 'Status', responsivePriority: 4, render: display((v, p) => selectInput('status', v, STATUS_OPTIONS, `Status of ${p.name}`, !approved), (v) => v.replace('_', ' ')) },
-  { data: 'totalSold', title: 'Sold', className: 'text-end' },
+  { data: 'price', title: t('Price'), className: 'dt-nowrap', render: display((v, p) => `<span class="small fw-semi">${esc(money(v))}/${esc(p.unit)}</span>`) },
+  { data: 'quantityAvailable', title: t('In stock'), responsivePriority: 3, render: display((v, p) => numberInput('quantityAvailable', v, t('Stock of {name}', { name: p.name }), !approved)) },
+  { data: 'templateQuantity', title: t('Weekly template'), render: display((v, p) => numberInput('templateQuantity', v, t('Weekly template of {name}', { name: p.name }), !approved)) },
+  { data: 'status', title: t('Status'), responsivePriority: 4, render: display((v, p) => selectInput('status', v, STATUS_OPTIONS, t('Status of {name}', { name: p.name }), !approved), (v) => v.replace('_', ' ')) },
+  { data: 'totalSold', title: t('Sold'), className: 'text-end' },
   {
     data: null,
-    title: 'Actions',
+    title: t('Actions'),
     orderable: false,
     className: 'text-end text-nowrap no-export',
     responsivePriority: 2,
@@ -441,7 +442,7 @@ const stockColumns = (approved) => [
 ];
 
 export default function FarmerProducts() {
-  useDocumentTitle('Weekly stock');
+  useDocumentTitle(t('Weekly stock'));
   const { user } = useAuth();
   const { toast } = useToast();
   const [params, setParams] = useSearchParams();
@@ -473,7 +474,7 @@ export default function FarmerProducts() {
     try {
       const res = await api.put(`/farmer/products/${product._id}`, body);
       replace(res.product);
-      toast('Saved');
+      toast(t('Saved'));
     } catch (err) {
       toast(err.message, 'error');
       setData((d) => ({ ...d, products: [...d.products] })); // show the saved value again
@@ -484,7 +485,7 @@ export default function FarmerProducts() {
     try {
       const res = await api.patch(`/farmer/products/${product._id}/status`, { status: next });
       replace(res.product);
-      toast(`${product.name} marked as ${next.replace('_', ' ')}`);
+      toast(t('{name} marked as {v2}', { name: product.name, v2: t(next.replace('_', ' ')) }));
     } catch (err) {
       toast(err.message, 'error');
       setData((d) => ({ ...d, products: [...d.products] })); // show the saved status again
@@ -508,7 +509,7 @@ export default function FarmerProducts() {
     try {
       await api.put('/farmer/template', { autoApplyTemplate: checked });
       setData((d) => ({ ...d, autoApplyTemplate: checked }));
-      toast(checked ? 'Weekly stock will refresh automatically every week' : 'Automatic weekly refresh turned off');
+      toast(checked ? t('Weekly stock will refresh automatically every week') : t('Automatic weekly refresh turned off'));
     } catch (err) {
       toast(err.message, 'error');
     }
@@ -517,7 +518,7 @@ export default function FarmerProducts() {
   async function remove() {
     try {
       await api.del(`/farmer/products/${deleting._id}`);
-      toast('Product deleted');
+      toast(t('Product deleted'));
       setDeleting(null);
       reload();
     } catch (err) {
@@ -531,8 +532,8 @@ export default function FarmerProducts() {
   return (
     <>
       <DashHeader
-        title="Weekly stock & pricing"
-        subtitle="Add products, update quantities and prices, and mark items sold out or temporarily unavailable."
+        title={t('Weekly stock & pricing')}
+        subtitle={t('Add products, update quantities and prices, and mark items sold out or temporarily unavailable.')}
         actions={
           approved && (
             <button
@@ -543,7 +544,7 @@ export default function FarmerProducts() {
                 setFormOpen(true);
               }}
             >
-              <i className="bi bi-plus-lg" /> Add product
+              <i className="bi bi-plus-lg" /> {t('Add product')}
             </button>
           )
         }
@@ -557,10 +558,10 @@ export default function FarmerProducts() {
               <i className="bi bi-arrow-repeat fs-5 text-forest" />
             </span>
             <div>
-              <strong>Recurring weekly stock template</strong>
+              <strong>{t('Recurring weekly stock template')}</strong>
               <div className="small text-muted-2">
-                Set a “weekly template” quantity per product. Applying the template resets available stock to those amounts
-                {data.templateLastAppliedWeek && ` · last applied ${data.templateLastAppliedWeek}`}.
+                {t('Set a “weekly template” quantity per product. Applying the template resets available stock to those amounts.')}
+            {data.templateLastAppliedWeek && ` ${t('Last applied: {week}', { week: data.templateLastAppliedWeek })}`}
               </div>
             </div>
           </div>
@@ -568,11 +569,11 @@ export default function FarmerProducts() {
             <div className="form-check form-switch mb-0">
               <input className="form-check-input" type="checkbox" role="switch" id="autoTpl" checked={data.autoApplyTemplate} onChange={(e) => toggleAuto(e.target.checked)} disabled={!approved} />
               <label className="form-check-label small fw-semi" htmlFor="autoTpl">
-                Auto-apply every week
+                {t('Auto-apply every week')}
               </label>
             </div>
             <button type="button" className="btn btn-lime btn-sm" onClick={applyTemplate} disabled={!approved || applying}>
-              {applying ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-lightning-charge" />} Apply now
+              {applying ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-lightning-charge" />} {t('Apply now')}
             </button>
           </div>
         </div>
@@ -582,10 +583,10 @@ export default function FarmerProducts() {
         <div className="table-toolbar">
           <div className="tabs-pill">
             {[
-              ['', 'All'],
-              ['available', 'Available'],
-              ['sold_out', 'Sold out'],
-              ['unavailable', 'Unavailable'],
+              ['', t('All')],
+              ['available', t('Available')],
+              ['sold_out', t('Sold out')],
+              ['unavailable', t('Unavailable')],
             ].map(([v, l]) => (
               <button key={v} type="button" className={status === v ? 'active' : ''} onClick={() => setParams(v ? { status: v } : {})}>
                 {l}
@@ -595,7 +596,7 @@ export default function FarmerProducts() {
         </div>
         {products.length === 0 ? (
           <div className="p-4">
-            <EmptyState title="No products here" message={approved ? 'Add your first product to start taking pre-orders.' : 'You can add products once your stall is approved.'} />
+            <EmptyState title={t('No products here')} message={approved ? t('Add your first product to start taking pre-orders.') : t('You can add products once your stall is approved.')} />
           </div>
         ) : (
           <DataGrid
@@ -604,8 +605,8 @@ export default function FarmerProducts() {
             columns={stockColumns(approved)}
             order={[]}
             exportName="MarketLink weekly stock"
-            searchPlaceholder="Search products…"
-            emptyText="No products here"
+            searchPlaceholder={t('Search products…')}
+            emptyText={t('No products here')}
             onEdit={(field, p, value) => {
               if (field === 'status') setStatus(p, value);
               else if (value !== '' && Number(value) >= 0 && Number(value) !== p[field]) quickUpdate(p, { [field]: Number(value) });
@@ -634,7 +635,7 @@ export default function FarmerProducts() {
           }}
         />
       )}
-      <ConfirmModal open={Boolean(deleting)} title={`Delete ${deleting?.name}?`} message="Customers will no longer see this product. Past orders keep their history." confirmLabel="Delete" danger onConfirm={remove} onClose={() => setDeleting(null)} />
+      <ConfirmModal open={Boolean(deleting)} title={t('Delete {name}?', { name: deleting?.name })} message={t('Customers will no longer see this product. Past orders keep their history.')} confirmLabel={t('Delete')} danger onConfirm={remove} onClose={() => setDeleting(null)} />
     </>
   );
 }

@@ -17,6 +17,7 @@ import { time12 } from '../../utils/format';
 import FarmerOrderActions, { ACTION_DONE, DeclineModal, ORDER_ACTIONS, runOrderAction } from './FarmerOrderActions';
 import { ApprovalBanner } from './Dashboard';
 import { useAuth } from '../../context/AuthContext';
+import { t } from '../../i18n';
 
 const TABS = [
   { value: 'active', label: 'Open' },
@@ -32,7 +33,7 @@ const COLUMNS = [
     data: 'customer.name',
     title: 'Customer',
     orderable: true,
-    render: display((v, o) => `<strong class="small d-block">${esc(v || 'Customer')}</strong>${o.customer?.phone ? `<a class="fs-7" href="tel:${esc(o.customer.phone)}">${esc(o.customer.phone)}</a>` : ''}`),
+    render: display((v, o) => `<strong class="small d-block">${esc(v || t('Customer'))}</strong>${o.customer?.phone ? `<a class="fs-7" href="tel:${esc(o.customer.phone)}">${esc(o.customer.phone)}</a>` : ''}`),
   },
   {
     data: 'items',
@@ -50,12 +51,12 @@ const COLUMNS = [
     orderable: false,
     className: 'text-end no-export',
     responsivePriority: 2,
-    render: (v, type, o) => `<div class="dt-actions">${(ORDER_ACTIONS[o.status] || []).map((a) => action(a.action, a.label, a.cls, a.icon)).join('')}${linkButton(`/farmer/orders/${o._id}`, 'Details')}</div>`,
+    render: (v, type, o) => `<div class="dt-actions">${(ORDER_ACTIONS[o.status] || []).map((a) => action(a.action, a.label, a.cls, a.icon)).join('')}${linkButton(`/farmer/orders/${o._id}`, t('Details'))}</div>`,
   },
 ];
 
 export default function FarmerOrders() {
-  useDocumentTitle('Pre-orders');
+  useDocumentTitle(t('Pre-orders'));
   const { user } = useAuth();
   const { toast } = useToast();
   const [params] = useSearchParams();
@@ -89,32 +90,32 @@ export default function FarmerOrders() {
 
   return (
     <>
-      <DashHeader title="Pre-orders" subtitle="Accept or decline new pre-orders, mark them ready for pickup and complete them at the stall." actions={!focus && <ViewToggle value={view} onChange={setView} />} />
+      <DashHeader title={t('Pre-orders')} subtitle={t('Accept or decline new pre-orders, mark them ready for pickup and complete them at the stall.')} actions={!focus && <ViewToggle value={view} onChange={setView} />} />
       <ApprovalBanner status={user.status} />
       <div className="d-flex flex-wrap gap-2 align-items-center mb-3">
         <div className="tabs-pill" role="tablist">
-          {TABS.map((t) => (
+          {TABS.map((tx) => (
             <button
-              key={t.value}
+              key={tx.value}
               type="button"
               role="tab"
-              aria-selected={tab === t.value}
-              className={tab === t.value ? 'active' : ''}
+              aria-selected={tab === tx.value}
+              className={tab === tx.value ? 'active' : ''}
               onClick={() => {
-                setTab(t.value);
+                setTab(tx.value);
                 setPage(1);
               }}
             >
-              {t.label}
-              {data && <span className="n">{tabCount(t.value) || 0}</span>}
+              {t(tx.label)}
+              {data && <span className="n">{tabCount(tx.value) || 0}</span>}
             </button>
           ))}
         </div>
-        <input type="date" className="form-control w-auto" value={date} onChange={(e) => setDate(e.target.value)} aria-label="Pickup date" />
+        <input type="date" className="form-control w-auto" value={date} onChange={(e) => setDate(e.target.value)} aria-label={t('Pickup date')} />
         {!table && (
           <div className="search-pill" style={{ maxWidth: 240 }}>
             <i className="bi bi-search" />
-            <input placeholder="Order number" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Search order number" />
+            <input placeholder={t('Order number')} value={search} onChange={(e) => setSearch(e.target.value)} aria-label={t('Search order number')} />
           </div>
         )}
         {(date || search) && (
@@ -126,7 +127,7 @@ export default function FarmerOrders() {
               setSearch('');
             }}
           >
-            Clear
+            {t('Clear')}
           </button>
         )}
       </div>
@@ -134,10 +135,10 @@ export default function FarmerOrders() {
       {loading && !data ? (
         <PageLoader />
       ) : data.orders.length === 0 ? (
-        <EmptyState icon="bi-receipt" title="No pre-orders here" message="New pre-orders from customers will appear in this list." />
+        <EmptyState icon="bi-receipt" title={t('No pre-orders here')} message={t('New pre-orders from customers will appear in this list.')} />
       ) : table ? (
         <div className="table-card">
-          <DataGrid key={`${tab}-${date}`} data={data.orders} columns={COLUMNS} order={[[3, 'asc']]} exportName="MarketLink pre-orders" searchPlaceholder="Order, customer or item…" onAction={onAction} />
+          <DataGrid key={`${tab}-${date}`} data={data.orders} columns={COLUMNS} order={[[3, 'asc']]} exportName="MarketLink pre-orders" searchPlaceholder={t('Order, customer or item…')} onAction={onAction} />
         </div>
       ) : (
         <div className="d-grid gap-2">
@@ -159,7 +160,7 @@ export default function FarmerOrders() {
                   </div>
                   <FarmerOrderActions order={o} compact onChange={reload} />
                   <Link to={`/farmer/orders/${o._id}`} className="btn btn-sm btn-white">
-                    Details
+                    {t('Details')}
                   </Link>
                 </div>
               }

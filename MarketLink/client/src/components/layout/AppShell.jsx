@@ -5,6 +5,7 @@ import useClickOutside from '../../hooks/useClickOutside';
 import Avatar from '../common/Avatar';
 import Logo, { LogoMark } from '../common/Logo';
 import NotificationBell from './NotificationBell';
+import { t } from '../../i18n';
 
 const COLLAPSE_KEY = 'ml_sidebar';
 
@@ -31,7 +32,7 @@ function UserMenu({ roleLabel, links, logoutTo }) {
   useClickOutside(ref, () => setOpen(false), open);
   return (
     <div className="ml-dropdown" ref={ref}>
-      <button type="button" className="btn p-0 border-0 d-flex align-items-center gap-2" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Account menu">
+      <button type="button" className="btn p-0 border-0 d-flex align-items-center gap-2" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={t('Account menu')}>
         <Avatar name={user.name} src={user.avatar} />
         <span className="d-none d-md-inline text-start lh-sm">
           <strong className="d-block small">{user.name}</strong>
@@ -48,7 +49,7 @@ function UserMenu({ roleLabel, links, logoutTo }) {
           <hr className="my-1" />
           {links.map((l) => (
             <Link key={l.to} to={l.to} className="ml-dropdown-item" onClick={() => setOpen(false)}>
-              <i className={`bi ${l.icon}`} /> {l.label}
+              <i className={`bi ${l.icon}`} /> {t(l.label)}
             </Link>
           ))}
           <hr className="my-1" />
@@ -61,7 +62,7 @@ function UserMenu({ roleLabel, links, logoutTo }) {
               navigate(logoutTo);
             }}
           >
-            <i className="bi bi-box-arrow-right" /> Log out
+            <i className="bi bi-box-arrow-right" /> {t('Log out')}
           </button>
         </div>
       )}
@@ -120,7 +121,7 @@ export default function AppShell({
   return (
     <div className={`app-shell shell-${role} ${collapsed ? 'is-collapsed' : ''} ${drawerOpen ? 'drawer-open' : ''}`}>
       <a href="#app-main" className="skip-link">
-        Skip to content
+        {t('Skip to content')}
       </a>
       <aside className="app-side" aria-label={`${areaLabel} navigation`}>
         <div className="app-brand">
@@ -130,7 +131,7 @@ export default function AppShell({
           <Link to={homeTo} className="brand-mini" aria-label={`${areaLabel} home`}>
             <LogoMark size={36} />
           </Link>
-          <button type="button" className="app-drawer-close" onClick={() => setDrawerPath(null)} aria-label="Close menu">
+          <button type="button" className="app-drawer-close" onClick={() => setDrawerPath(null)} aria-label={t('Close menu')}>
             <i className="bi bi-x-lg" />
           </button>
         </div>
@@ -143,27 +144,27 @@ export default function AppShell({
             ) : (
               <NavLink key={item.to} to={item.to} end={item.end} className="app-link" title={collapsed ? item.label : undefined}>
                 <i className={`bi ${item.icon}`} aria-hidden="true" />
-                <span className="app-link-label">{item.label}</span>
+                <span className="app-link-label">{t(item.label)}</span>
                 {item.badge && badges[item.badge] > 0 && <span className={`app-badge ${item.badgeTone || ''}`}>{badges[item.badge]}</span>}
               </NavLink>
             )
           )}
         </nav>
         {sidebarFooter}
-        <button type="button" className="app-collapse" onClick={toggleCollapsed} aria-pressed={collapsed} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+        <button type="button" className="app-collapse" onClick={toggleCollapsed} aria-pressed={collapsed} aria-label={collapsed ? t('Expand sidebar') : t('Collapse sidebar')}>
           <i className={`bi ${collapsed ? 'bi-chevron-double-right' : 'bi-chevron-double-left'}`} aria-hidden="true" />
-          <span className="app-link-label">Collapse sidebar</span>
+          <span className="app-link-label">{t('Collapse sidebar')}</span>
         </button>
       </aside>
-      <button type="button" className="app-backdrop" aria-label="Close menu" tabIndex={-1} onClick={() => setDrawerPath(null)} />
+      <button type="button" className="app-backdrop" aria-label={t('Close menu')} tabIndex={-1} onClick={() => setDrawerPath(null)} />
 
       <div className="app-body">
         {before}
         <header className="app-top">
-          <button type="button" className="nav-icon-btn app-menu-btn" onClick={() => setDrawerPath(pathname)} aria-label="Open menu" aria-expanded={drawerOpen}>
+          <button type="button" className="nav-icon-btn app-menu-btn" onClick={() => setDrawerPath(pathname)} aria-label={t('Open menu')} aria-expanded={drawerOpen}>
             <i className="bi bi-list" />
           </button>
-          <button type="button" className="nav-icon-btn app-collapse-btn" onClick={toggleCollapsed} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+          <button type="button" className="nav-icon-btn app-collapse-btn" onClick={toggleCollapsed} aria-label={collapsed ? t('Expand sidebar') : t('Collapse sidebar')}>
             <i className={`bi ${collapsed ? 'bi-layout-sidebar' : 'bi-layout-sidebar-inset'}`} />
           </button>
           <div className="app-title">
@@ -172,7 +173,7 @@ export default function AppShell({
           </div>
           <div className="app-top-actions">
             {actions}
-            <Link to="/" className="nav-icon-btn d-none d-sm-inline-flex" title="View website" aria-label="View website">
+            <Link to="/" className="nav-icon-btn d-none d-sm-inline-flex" title={t('View website')} aria-label={t('View website')}>
               <i className="bi bi-globe2" />
             </Link>
             <NotificationBell allLink={`${homeTo}/notifications`} />

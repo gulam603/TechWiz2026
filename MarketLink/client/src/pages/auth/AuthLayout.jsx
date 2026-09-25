@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import useFetch from '../../hooks/useFetch';
+import { t } from '../../i18n';
 
 // Real produce photos floating around the market photo in the login / sign-up banner.
 // x / y are percentages of the scene: the outer ring is spaced evenly along an ellipse,
@@ -55,10 +56,10 @@ export default function AuthLayout({ title, highlight, text, children, variant =
       <div className={`auth-art ${variant}`} onMouseMove={handleMove} onMouseLeave={handleLeave}>
         <div className="d-flex align-items-center justify-content-between gap-2 position-relative">
           <span className="chip hero-chip">
-            <span className="text-lime">●</span> eGreen Basket
+            <span className="text-lime">●</span> {t('eGreen Basket')}
           </span>
           <span className="small" style={{ color: 'rgba(255,255,255,.65)' }}>
-            Fresh · Local · Pay at pickup
+            {t('Fresh · Local · Pay at pickup')}
           </span>
         </div>
 
@@ -94,13 +95,13 @@ export default function AuthLayout({ title, highlight, text, children, variant =
           <p className="mt-2 mb-3">{text}</p>
           <div className="d-flex flex-wrap gap-2">
             <span className="chip hero-chip">
-              <i className="bi bi-geo-alt" /> {stats?.markets ?? '-'} markets
+              <i className="bi bi-geo-alt" /> {t('{n} markets', { n: stats?.markets ?? '-' })}
             </span>
             <span className="chip hero-chip">
-              <i className="bi bi-shop" /> {stats?.farmers ?? '-'} local farmers
+              <i className="bi bi-shop" /> {t('{n} local farmers', { n: stats?.farmers ?? '-' })}
             </span>
             <span className="chip hero-chip">
-              <i className="bi bi-basket" /> {stats?.products ?? '-'} products this week
+              <i className="bi bi-basket" /> {t('{n} products this week', { n: stats?.products ?? '-' })}
             </span>
           </div>
         </div>

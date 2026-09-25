@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom';
+import { t } from '../../i18n';
 
 /** Grey placeholder shapes shown while a page or its data is loading (e.g. on a slow connection). */
 export function Bone({ w = '100%', h = 16, r, className = '', style }) {
@@ -25,7 +26,7 @@ function CardGrid({ count = 4, height = 280 }) {
 /** Shape of the home page: banner, search card, category row and products. */
 export function HomeSkeleton() {
   return (
-    <div className="page-skeleton" role="status" aria-label="Loading the home page">
+    <div className="page-skeleton" role="status" aria-label={t('Loading the home page')}>
       <div className="container">
         <div className="skeleton hero-skeleton" />
         <div className="skeleton-searchcard">
@@ -45,7 +46,7 @@ export function HomeSkeleton() {
         <Bone w={220} h={26} className="mt-5 mb-3" />
         <CardGrid count={4} />
       </div>
-      <span className="visually-hidden">Loading…</span>
+      <span className="visually-hidden">{t('Loading…')}</span>
     </div>
   );
 }
@@ -53,14 +54,14 @@ export function HomeSkeleton() {
 /** Generic page: title area and a grid of cards (shop, markets, farmers ...). */
 export function PageSkeleton() {
   return (
-    <div className="page-skeleton" role="status" aria-label="Loading the page">
+    <div className="page-skeleton" role="status" aria-label={t('Loading the page')}>
       <div className="container">
         <Bone w={140} h={12} className="mt-4" />
         <Bone w="min(420px, 80%)" h={38} className="mt-3" />
         <Bone w="min(560px, 90%)" h={14} className="mt-3 mb-4" />
         <CardGrid count={8} />
       </div>
-      <span className="visually-hidden">Loading…</span>
+      <span className="visually-hidden">{t('Loading…')}</span>
     </div>
   );
 }

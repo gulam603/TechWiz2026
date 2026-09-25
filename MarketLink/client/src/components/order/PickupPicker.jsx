@@ -1,5 +1,6 @@
 import useFetch from '../../hooks/useFetch';
 import { DAY_SHORT, MONTHS, parseDateKey, time12 } from '../../utils/format';
+import { t } from '../../i18n';
 
 /**
  * Lets the customer choose a pickup date, then a market window and a time slot.
@@ -17,14 +18,14 @@ export default function PickupPicker({ farmerId, value, onChange, excludeOrder }
   if (!dates.length)
     return (
       <div className="alert alert-warning small mb-0">
-        This farmer has no open pickup slots in the next two weeks. Please remove these items or try again later.
+        {t('This farmer has no open pickup slots in the next two weeks. Please remove these items or try again later.')}
       </div>
     );
 
   return (
     <div>
-      <div className="small fw-bold mb-2">1. Pickup date</div>
-      <div className="date-chips mb-3" role="radiogroup" aria-label="Pickup date">
+      <div className="small fw-bold mb-2">{t('1. Pickup date')}</div>
+      <div className="date-chips mb-3" role="radiogroup" aria-label={t('Pickup date')}>
         {dates.map((d) => {
           const date = parseDateKey(d.date);
           return (
@@ -45,11 +46,11 @@ export default function PickupPicker({ farmerId, value, onChange, excludeOrder }
       </div>
       {day && (
         <>
-          <div className="small fw-bold mb-2">2. Time slot</div>
+          <div className="small fw-bold mb-2">{t('2. Time slot')}</div>
           {day.windows.map((w) => (
             <div key={w.market._id + w.start} className="mb-3">
               <div className="small text-muted-2 mb-2">
-                <i className="bi bi-geo-alt-fill text-success" /> <strong className="text-forest">{w.market.name}</strong> · {time12(w.start)} to {time12(w.end)}
+                <i className="bi bi-geo-alt-fill text-success" /> <strong className="text-forest">{w.market.name}</strong> · {time12(w.start)} {t('to')} {time12(w.end)}
               </div>
               <div className="slot-grid">
                 {w.slots.map((s) => {
@@ -64,7 +65,7 @@ export default function PickupPicker({ farmerId, value, onChange, excludeOrder }
                       aria-pressed={active}
                     >
                       {time12(s.start)}
-                      <small>{s.available ? `${s.remaining} left` : s.remaining === 0 ? 'Full' : 'Closed'}</small>
+                      <small>{s.available ? t('{n} left', { n: s.remaining }) : s.remaining === 0 ? t('Full') : t('Closed')}</small>
                     </button>
                   );
                 })}

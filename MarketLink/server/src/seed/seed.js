@@ -261,7 +261,7 @@ async function main() {
           const createdAt = new Date(pickupAt.getTime() - randInt(14, 72) * 3600 * 1000);
           const items = pickMany(products, randInt(1, 3)).map((p) => {
             const quantity = randInt(1, 3);
-            return { product: p._id, name: p.name, image: p.image, unit: p.unit, price: p.price, quantity, subtotal: round2(p.price * quantity) };
+            return { product: p._id, name: p.name, nameUr: p.nameUr, image: p.image, unit: p.unit, price: p.price, quantity, subtotal: round2(p.price * quantity) };
           });
           const r = random();
           const status = r < 0.85 ? ORDER_STATUS.COMPLETED : r < 0.93 ? ORDER_STATUS.CANCELLED : ORDER_STATUS.DECLINED;
@@ -322,7 +322,7 @@ async function main() {
     const items = [];
     for (const [name, quantity] of lines) {
       const p = findProduct(farmerKey, name);
-      items.push({ product: p._id, name: p.name, image: p.image, unit: p.unit, price: p.price, quantity, subtotal: round2(p.price * quantity) });
+      items.push({ product: p._id, name: p.name, nameUr: p.nameUr, image: p.image, unit: p.unit, price: p.price, quantity, subtotal: round2(p.price * quantity) });
       await Product.updateOne({ _id: p._id }, { $inc: { quantityAvailable: -quantity } });
     }
     const history = [{ status: ORDER_STATUS.PLACED, at: createdAt, by: 'customer' }];

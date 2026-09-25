@@ -11,6 +11,7 @@ import { DAY_NAMES, DAY_SHORT } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
+import { listText, t } from '../../i18n';
 
 export default function Farmers() {
   const [filters, setFilters] = useState({ search: '', city: '', market: '', day: '', category: '', rating: '', practice: '', sort: 'rating', page: 1 });
@@ -23,57 +24,57 @@ export default function Farmers() {
   const set = (changes) => setFilters((f) => ({ ...f, ...changes, page: changes.page || 1 }));
   const markets = (marketData?.markets || []).filter((m) => !filters.city || m.city === filters.city);
   useSeo({
-    title: 'Local farmers',
-    description: 'Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.',
-    jsonLd: ldGraph(itemListLd('Local farmers on MarketLink', (data?.farmers || []).map((f) => ({ name: f.stallName, path: `/farmers/${f.slug}` }))), breadcrumbLd([{ name: 'Farmers', path: '/farmers' }])),
+    title: t('Local farmers'),
+    description: t('Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.'),
+    jsonLd: ldGraph(itemListLd(t('Local farmers on MarketLink'), (data?.farmers || []).map((f) => ({ name: f.stallName, path: `/farmers/${f.slug}` }))), breadcrumbLd([{ name: 'Farmers', path: '/farmers' }])),
     canonicalPath: '/farmers',
   });
 
   return (
     <>
-      <PageHero crumbs={[{ label: 'Farmers' }]} title="Meet your local farmers" subtitle="Every stall on MarketLink, with their markets, operating days, current stock and reviews." />
+      <PageHero crumbs={[{ label: t('Farmers') }]} title={t('Meet your local farmers')} subtitle={t('Every stall on MarketLink, with their markets, operating days, current stock and reviews.')} />
       <div className="container pb-5">
         <div className="soft-panel mb-4">
           <div className="row g-2">
             <div className="col-12 col-md-6 col-xl-3">
               <div className="search-pill">
                 <i className="bi bi-search" />
-                <input placeholder="Search farmer or speciality" value={filters.search} onChange={(e) => set({ search: e.target.value })} aria-label="Search farmers" />
+                <input placeholder={t('Search farmer or speciality')} value={filters.search} onChange={(e) => set({ search: e.target.value })} aria-label={t('Search farmers')} />
               </div>
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.city} onChange={(v) => set({ city: v, market: '' })} ariaLabel="City" emptyLabel="All cities" options={(marketData?.cities || []).map((c) => ({ value: c, label: c }))} />
+              <SearchSelect value={filters.city} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={(marketData?.cities || []).map((c) => ({ value: c, label: c }))} />
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.market} onChange={(v) => set({ market: v })} ariaLabel="Market" emptyLabel="All markets" options={markets.map((m) => ({ value: m._id, label: m.name, hint: m.city }))} />
+              <SearchSelect value={filters.market} onChange={(v) => set({ market: v })} ariaLabel={t('Market')} emptyLabel="All markets" options={markets.map((m) => ({ value: m._id, label: m.name, hint: m.city }))} />
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.category} onChange={(v) => set({ category: v })} ariaLabel="Category" emptyLabel="All categories" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
+              <SearchSelect value={filters.category} onChange={(v) => set({ category: v })} ariaLabel={t('Category')} emptyLabel="All categories" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.day} onChange={(v) => set({ day: v })} ariaLabel="Market day" emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
+              <SearchSelect value={filters.day} onChange={(v) => set({ day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
             </div>
             <div className="col-6 col-md-3">
-              <select className="form-select" value={filters.rating} onChange={(e) => set({ rating: e.target.value })} aria-label="Rating">
-                <option value="">Any rating</option>
-                <option value="4">4 stars and up</option>
-                <option value="3">3 stars and up</option>
+              <select className="form-select" value={filters.rating} onChange={(e) => set({ rating: e.target.value })} aria-label={t('Rating')}>
+                <option value="">{t('Any rating')}</option>
+                <option value="4">{t('4 stars and up')}</option>
+                <option value="3">{t('3 stars and up')}</option>
               </select>
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.practice} onChange={(v) => set({ practice: v })} ariaLabel="Farming practice" emptyLabel="Any practice" options={(practiceData?.practices || []).map((p) => ({ value: p, label: p }))} />
+              <SearchSelect value={filters.practice} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={(practiceData?.practices || []).map((p) => ({ value: p, label: p }))} />
             </div>
             <div className="col-12 col-md-6 col-xl-3 d-flex gap-2">
-              <select className="form-select" value={filters.sort} onChange={(e) => set({ sort: e.target.value })} aria-label="Sort">
-                <option value="rating">Top rated</option>
-                <option value="name">Name A to Z</option>
-                <option value="newest">Newest</option>
+              <select className="form-select" value={filters.sort} onChange={(e) => set({ sort: e.target.value })} aria-label={t('Sort')}>
+                <option value="rating">{t('Top rated')}</option>
+                <option value="name">{t('Name A to Z')}</option>
+                <option value="newest">{t('Newest')}</option>
               </select>
               <div className="tabs-pill flex-shrink-0">
-                <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')} aria-label="Grid view" aria-pressed={view === 'grid'}>
+                <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')} aria-label={t('Grid view')} aria-pressed={view === 'grid'}>
                   <i className="bi bi-grid" />
                 </button>
-                <button type="button" className={view === 'map' ? 'active' : ''} onClick={() => setView('map')} aria-label="Map view" aria-pressed={view === 'map'}>
+                <button type="button" className={view === 'map' ? 'active' : ''} onClick={() => setView('map')} aria-label={t('Map view')} aria-pressed={view === 'map'}>
                   <i className="bi bi-map" />
                 </button>
               </div>
@@ -93,9 +94,9 @@ export default function Farmers() {
                 type: 'farmer',
                 image: f.logo,
                 title: f.stallName,
-                subtitle: `${f.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${f.markets.map((m) => m.name).join(', ')}`,
+                subtitle: `${listText(f.operatingDays.map((d) => DAY_SHORT[d]))} · ${listText(f.markets.map((m) => m.name))}`,
                 link: `/farmers/${f.slug}`,
-                linkLabel: 'View stall',
+                linkLabel: t('View stall'),
               }))}
           />
         ) : (
@@ -111,7 +112,7 @@ export default function Farmers() {
             )}
           </div>
         )}
-        {data && data.farmers.length === 0 && <EmptyState icon="bi-people" title="No farmers found" message="Try clearing a filter." />}
+        {data && data.farmers.length === 0 && <EmptyState icon="bi-people" title={t('No farmers found')} message={t('Try clearing a filter.')} />}
         {view === 'grid' && <Pagination page={filters.page} pages={data?.pages} onChange={(page) => set({ page })} />}
       </div>
     </>

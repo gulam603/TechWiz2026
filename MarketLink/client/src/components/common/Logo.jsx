@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { t } from '../../i18n';
 
 /** MarketLink mark, designed in Canva (basket, leaf and handle in a rounded frame) and rebuilt as SVG. */
 export function LogoMark({ size = 38 }) {
@@ -17,10 +18,10 @@ export function LogoMark({ size = 38 }) {
 
 export default function Logo({ light = false, to = '/' }) {
   return (
-    <Link to={to} className={`brand ${light ? 'brand-light' : ''}`} aria-label="MarketLink home">
+    <Link to={to} className={`brand ${light ? 'brand-light' : ''}`} aria-label={t('MarketLink home')}>
       <LogoMark />
       <span className="brand-name">
-        Market<span>Link</span>
+        {t('Market')}<span>{t('Link')}</span>
       </span>
     </Link>
   );

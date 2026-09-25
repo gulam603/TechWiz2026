@@ -7,6 +7,7 @@ import { LogoMark } from '../../components/common/Logo';
 import CountUp from '../../components/common/CountUp';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd } from '../../utils/seo';
+import { t } from '../../i18n';
 
 const VALUES = [
   { icon: 'bi-signpost-split', color: '#e4f3d8', title: 'Fewer wasted trips', text: 'Customers see live stock and prices before leaving home, so nobody arrives to an empty stall.' },
@@ -16,38 +17,35 @@ const VALUES = [
 ];
 
 export default function About() {
-  useSeo({ title: 'About MarketLink', description: 'MarketLink brings local farmers markets online so families can reserve fresh food before market day and farmers waste less. Built by Team Omniverse.', jsonLd: breadcrumbLd([{ name: 'About MarketLink', path: '/about' }]) });
+  useSeo({ title: t('About MarketLink'), description: t('MarketLink brings local farmers markets online so families can reserve fresh food before market day and farmers waste less. Built by Team Omniverse.'), jsonLd: breadcrumbLd([{ name: 'About MarketLink', path: '/about' }]) });
   const { data } = useFetch('/stats');
   return (
     <>
-      <PageHero crumbs={[{ label: 'About' }]} title="Bringing the farmers market online, without losing its soul" subtitle="MarketLink (theme: eGreen Basket) is a platform that connects local farmers-market stalls with the families who shop there." />
+      <PageHero crumbs={[{ label: t('About') }]} title={t('Bringing the farmers market online, without losing its soul')} subtitle={t('MarketLink (theme: eGreen Basket) is a platform that connects local farmers-market stalls with the families who shop there.')} />
       <div className="container pb-5">
         <div className="row g-4 align-items-stretch mb-5">
           <div className="col-lg-7">
             <div className="soft-panel h-100">
-              <span className="eyebrow">Why we built it</span>
-              <h2 className="h3 mt-2">The problem</h2>
+              <span className="eyebrow">{t('Why we built it')}</span>
+              <h2 className="h3 mt-2">{t('The problem')}</h2>
               <p className="text-muted-2">
-                Local markets are growing, but availability is still shared on chalkboards, flyers and by word of mouth. Shoppers arrive to find popular items sold out or a stall
-                closed for the week, and farmers have no easy way to publish weekly stock or take orders in advance.
+                {t('Local markets are growing, but availability is still shared on chalkboards, flyers and by word of mouth. Shoppers arrive to find popular items sold out or a stall closed for the week, and farmers have no easy way to publish weekly stock or take orders in advance.')}
               </p>
-              <h2 className="h3 mt-4">Our solution</h2>
+              <h2 className="h3 mt-4">{t('Our solution')}</h2>
               <p className="text-muted-2 mb-0">
-                Farmers publish their weekly stock, prices and pickup windows. Customers find nearby markets on the map, browse and filter products, pre-order for a pickup slot, and
-                leave reviews after collecting. Admins keep the platform healthy by approving farmers, managing markets and moderating content. An AI assistant answers everyday
-                questions like market timings and pickup windows.
+                {t('Farmers publish their weekly stock, prices and pickup windows. Customers find nearby markets on the map, browse and filter products, pre-order for a pickup slot, and leave reviews after collecting. Admins keep the platform healthy by approving farmers, managing markets and moderating content. An AI assistant answers everyday questions like market timings and pickup windows.')}
               </p>
             </div>
           </div>
           <div className="col-lg-5">
             <div className="cta-band about-stats h-100 d-flex flex-column justify-content-center">
-              <img className="about-stats-photo" src="/images/hero/pickup.webp" alt="Crates of fresh fruit and vegetables at a farmers market" loading="lazy" />
+              <img className="about-stats-photo" src="/images/hero/pickup.webp" alt={t('Crates of fresh fruit and vegetables at a farmers market')} loading="lazy" />
               <div className="row g-3 text-center position-relative">
                 {[
-                  [data?.markets, 'Markets'],
-                  [data?.farmers, 'Farmers'],
-                  [data?.products, 'Products'],
-                  [data?.ordersCompleted, 'Pickups'],
+                  [data?.markets, t('Markets')],
+                  [data?.farmers, t('Farmers')],
+                  [data?.products, t('Products')],
+                  [data?.ordersCompleted, t('Pickups')],
                 ].map(([n, label]) => (
                   <div key={label} className="col-6">
                     <div className="display-font text-lime" style={{ fontSize: '2.6rem' }}>
@@ -65,8 +63,8 @@ export default function About() {
 
         <div className="section-head">
           <div>
-            <span className="eyebrow">What we care about</span>
-            <h2 className="section-title">Our values</h2>
+            <span className="eyebrow">{t('What we care about')}</span>
+            <h2 className="section-title">{t('Our values')}</h2>
           </div>
         </div>
         <div className="row g-3 mb-5">
@@ -85,9 +83,9 @@ export default function About() {
 
         <div className="section-head">
           <div>
-            <span className="eyebrow">The team</span>
-            <h2 className="section-title">Who built MarketLink</h2>
-            <p>Created by {TEAM_NAME} for the TechWiz 2026 “End-to-End Web Solutions” challenge.</p>
+            <span className="eyebrow">{t('The team')}</span>
+            <h2 className="section-title">{t('Who built MarketLink')}</h2>
+            <p>{t('Created by {team} for the TechWiz 2026 “End-to-End Web Solutions” challenge.', { team: TEAM_NAME })}</p>
           </div>
         </div>
         <div className="team-banner mb-3">
@@ -95,7 +93,7 @@ export default function About() {
             <LogoMark size={64} />
           </span>
           <div className="team-banner-text">
-            <span className="team-banner-label">Designed and developed by</span>
+            <span className="team-banner-label">{t('Designed and developed by')}</span>
             <h3 className="team-banner-name">{TEAM_NAME}</h3>
             <p className="mb-0">
               <i className="bi bi-geo-alt me-1" aria-hidden="true" />
@@ -104,10 +102,10 @@ export default function About() {
           </div>
           <div className="team-banner-chips">
             <span className="chip hero-chip">
-              <i className="bi bi-trophy" aria-hidden="true" /> TechWiz 2026
+              <i className="bi bi-trophy" aria-hidden="true" /> {t('TechWiz 2026')}
             </span>
             <span className="chip hero-chip">
-              <i className="bi bi-basket2" aria-hidden="true" /> eGreen Basket
+              <i className="bi bi-basket2" aria-hidden="true" /> {t('eGreen Basket')}
             </span>
           </div>
         </div>
@@ -127,15 +125,15 @@ export default function About() {
 
         <div className="soft-panel d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div>
-            <h3 className="h4 mb-1">Have questions?</h3>
-            <p className="text-muted-2 mb-0">Our team is happy to help farmers and shoppers get started.</p>
+            <h3 className="h4 mb-1">{t('Have questions?')}</h3>
+            <p className="text-muted-2 mb-0">{t('Our team is happy to help farmers and shoppers get started.')}</p>
           </div>
           <div className="d-flex gap-2">
             <Link to="/contact" className="btn btn-primary">
-              Contact us
+              {t('Contact us')}
             </Link>
             <Link to="/register/farmer" className="btn btn-lime">
-              Become a seller
+              {t('Become a seller')}
             </Link>
           </div>
         </div>

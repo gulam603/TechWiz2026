@@ -9,10 +9,11 @@ import DayDots from '../../components/common/DayDots';
 import { PageLoader } from '../../components/common/Loader';
 import { DAY_NAMES, formatDateKey, time12, toDateKey } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
+import { t } from '../../i18n';
 
 /** Markets the farmer sells at, weekly pickup windows, slot settings, cut-off and stall map pin. */
 export default function FarmerPickup() {
-  useDocumentTitle('Markets & pickup');
+  useDocumentTitle(t('Markets & pickup'));
   const { data } = useFetch('/farmer/me');
   const { data: marketData } = useFetch('/markets');
   if (!data || !marketData) return <PageLoader />;
@@ -50,8 +51,8 @@ function PickupEditor({ farmer, allMarkets }) {
     try {
       const res = await api.put('/farmer/pickup', { markets, pickupWindows: windows, blockedDates: blocked, ...settings });
       setBlocked(res.farmer.blockedDates || []);
-      toast('Pickup settings saved');
-      if (res.clashes) toast(`${res.clashes} open pre-order(s) fall on a closed date. Please decline them or contact those customers`, 'error');
+      toast(t('Pickup settings saved'));
+      if (res.clashes) toast(t('{clashes} open pre-order(s) fall on a closed date. Please decline them or contact those customers', { clashes: res.clashes }), 'error');
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -68,7 +69,7 @@ function PickupEditor({ farmer, allMarkets }) {
         fd.append('longitude', pin.lng);
         return fd;
       })());
-      toast('Stall location saved');
+      toast(t('Stall location saved'));
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -83,11 +84,11 @@ function PickupEditor({ farmer, allMarkets }) {
 
   return (
     <>
-      <DashHeader title="Markets & pickup" subtitle="Choose where you sell, when customers can collect orders, and pin your stall on the map." />
+      <DashHeader title={t('Markets & pickup')} subtitle={t('Choose where you sell, when customers can collect orders, and pin your stall on the map.')} />
 
       <div className="panel mb-4">
         <div className="panel-head">
-          <h5>1. Markets you sell at</h5>
+          <h5>{t('1. Markets you sell at')}</h5>
         </div>
         <div className="row g-2">
           {allMarkets.map((m) => {
@@ -99,7 +100,7 @@ function PickupEditor({ farmer, allMarkets }) {
                   <span className="min-w-0">
                     <strong className="d-block small">{m.name}</strong>
                     <span className="fs-7 text-muted-2 d-block">
-                      {m.city} · {time12(m.openTime)} to {time12(m.closeTime)}
+                      {m.city} · {time12(m.openTime)} {t('to')} {time12(m.closeTime)}
                     </span>
                     <DayDots days={m.operatingDays} />
                   </span>
@@ -113,43 +114,43 @@ function PickupEditor({ farmer, allMarkets }) {
       <div className="panel mb-4">
         <div className="panel-head">
           <div>
-            <h5>2. Weekly pickup windows</h5>
-            <div className="fs-7 text-muted-2">Customers choose a slot inside these windows at checkout.</div>
+            <h5>{t('2. Weekly pickup windows')}</h5>
+            <div className="fs-7 text-muted-2">{t('Customers choose a slot inside these windows at checkout.')}</div>
           </div>
           <button type="button" className="btn btn-soft btn-sm" onClick={addWindow} disabled={!markets.length}>
-            <i className="bi bi-plus-lg" /> Add window
+            <i className="bi bi-plus-lg" /> {t('Add window')}
           </button>
         </div>
-        {!markets.length && <p className="small text-muted-2">Select at least one market first.</p>}
+        {!markets.length && <p className="small text-muted-2">{t('Select at least one market first.')}</p>}
         {windows.map((w, i) => (
           <div key={i}>
             <div className="window-row">
-              <SearchSelect size="sm" value={w.market} onChange={(v) => updateWindow(i, { market: v })} ariaLabel="Market" options={markets.map((id) => ({ value: id, label: marketById[id]?.name || 'Market' }))} />
-              <select className="form-select form-select-sm" value={w.day} onChange={(e) => updateWindow(i, { day: Number(e.target.value) })} aria-label="Day">
+              <SearchSelect size="sm" value={w.market} onChange={(v) => updateWindow(i, { market: v })} ariaLabel={t('Market')} options={markets.map((id) => ({ value: id, label: marketById[id]?.name || t('Market') }))} />
+              <select className="form-select form-select-sm" value={w.day} onChange={(e) => updateWindow(i, { day: Number(e.target.value) })} aria-label={t('Day')}>
                 {DAY_NAMES.map((d, idx) => (
                   <option key={d} value={idx}>
                     {d}
                   </option>
                 ))}
               </select>
-              <input type="time" className="form-control form-control-sm" value={w.start} onChange={(e) => updateWindow(i, { start: e.target.value })} aria-label="Start time" />
-              <input type="time" className="form-control form-control-sm" value={w.end} onChange={(e) => updateWindow(i, { end: e.target.value })} aria-label="End time" />
-              <button type="button" className="btn btn-sm btn-white btn-icon" onClick={() => setWindows(windows.filter((_, idx) => idx !== i))} aria-label="Remove window">
+              <input type="time" className="form-control form-control-sm" value={w.start} onChange={(e) => updateWindow(i, { start: e.target.value })} aria-label={t('Start time')} />
+              <input type="time" className="form-control form-control-sm" value={w.end} onChange={(e) => updateWindow(i, { end: e.target.value })} aria-label={t('End time')} />
+              <button type="button" className="btn btn-sm btn-white btn-icon" onClick={() => setWindows(windows.filter((_, idx) => idx !== i))} aria-label={t('Remove window')}>
                 <i className="bi bi-trash3" />
               </button>
             </div>
             {outsideHours(w) && (
               <div className="fs-7 text-warning-emphasis mb-2">
-                <i className="bi bi-exclamation-triangle" /> This window is outside the market's days or opening hours.
+                <i className="bi bi-exclamation-triangle" /> {t('This window is outside the market\'s days or opening hours.')}
               </div>
             )}
           </div>
         ))}
 
-        <h6 className="mt-4">3. Closed dates</h6>
-        <p className="fs-7 text-muted-2 mb-2">Not coming to the market on a certain day (holiday, harvest failed, closed for the week)? Add the date and customers can’t book pickups for it.</p>
+        <h6 className="mt-4">{t('3. Closed dates')}</h6>
+        <p className="fs-7 text-muted-2 mb-2">{t('Not coming to the market on a certain day (holiday, harvest failed, closed for the week)? Add the date and customers can’t book pickups for it.')}</p>
         <div className="d-flex gap-2 flex-wrap align-items-center mb-2">
-          <input type="date" className="form-control form-control-sm w-auto" min={toDateKey()} value={newDate} onChange={(e) => setNewDate(e.target.value)} aria-label="Closed date" />
+          <input type="date" className="form-control form-control-sm w-auto" min={toDateKey()} value={newDate} onChange={(e) => setNewDate(e.target.value)} aria-label={t('Closed date')} />
           <button
             type="button"
             className="btn btn-soft btn-sm"
@@ -159,65 +160,65 @@ function PickupEditor({ farmer, allMarkets }) {
               setNewDate('');
             }}
           >
-            <i className="bi bi-calendar-x" /> Add closed date
+            <i className="bi bi-calendar-x" /> {t('Add closed date')}
           </button>
         </div>
         <div className="d-flex gap-2 flex-wrap">
-          {blocked.length === 0 && <span className="small text-muted-2">No closed dates.</span>}
+          {blocked.length === 0 && <span className="small text-muted-2">{t('No closed dates.')}</span>}
           {blocked.map((d) => (
             <span key={d} className="chip chip-danger">
               {formatDateKey(d, { withYear: true })}
-              <button type="button" className="btn-close ms-1" style={{ fontSize: '.55rem' }} onClick={() => setBlocked(blocked.filter((x) => x !== d))} aria-label={`Remove ${d}`} />
+              <button type="button" className="btn-close ms-1" style={{ fontSize: '.55rem' }} onClick={() => setBlocked(blocked.filter((x) => x !== d))} aria-label={t('Remove {d}', { d })} />
             </span>
           ))}
         </div>
 
-        <h6 className="mt-4">4. Slots & cut-off</h6>
+        <h6 className="mt-4">{t('4. Slots & cut-off')}</h6>
         <div className="row g-3">
           <div className="col-md-4">
-            <label className="form-label" htmlFor="slotMinutes">Slot length</label>
+            <label className="form-label" htmlFor="slotMinutes">{t('Slot length')}</label>
             <select id="slotMinutes" className="form-select" value={settings.slotMinutes} onChange={(e) => setSettings({ ...settings, slotMinutes: Number(e.target.value) })}>
               {[15, 20, 30, 45, 60, 90, 120].map((n) => (
                 <option key={n} value={n}>
-                  {n} minutes
+                  {n} {t('minutes')}
                 </option>
               ))}
             </select>
           </div>
           <div className="col-md-4">
-            <label className="form-label" htmlFor="slotCapacity">Max orders per slot</label>
+            <label className="form-label" htmlFor="slotCapacity">{t('Max orders per slot')}</label>
             <input id="slotCapacity" type="number" min="1" max="100" className="form-control" value={settings.slotCapacity} onChange={(e) => setSettings({ ...settings, slotCapacity: Number(e.target.value) })} />
           </div>
           <div className="col-md-4">
-            <label className="form-label" htmlFor="cutoff">Order cut-off (hours before slot)</label>
+            <label className="form-label" htmlFor="cutoff">{t('Order cut-off (hours before slot)')}</label>
             <input id="cutoff" type="number" min="0" max="168" className="form-control" value={settings.orderCutoffHours} onChange={(e) => setSettings({ ...settings, orderCutoffHours: Number(e.target.value) })} />
           </div>
         </div>
         <button type="button" className="btn btn-primary mt-4" onClick={save} disabled={busy}>
-          {busy && <span className="spinner-border spinner-border-sm" />} Save markets & pickup settings
+          {busy && <span className="spinner-border spinner-border-sm" />} {t('Save markets & pickup settings')}
         </button>
       </div>
 
       <div className="panel">
         <div className="panel-head">
           <div>
-            <h5>5. Stall location (map pin)</h5>
-            <div className="fs-7 text-muted-2">Shown to customers on the map with directions to your pickup point.</div>
+            <h5>{t('5. Stall location (map pin)')}</h5>
+            <div className="fs-7 text-muted-2">{t('Shown to customers on the map with directions to your pickup point.')}</div>
           </div>
         </div>
         <LocationPicker lat={pin.lat} lng={pin.lng} onChange={(p) => setPin({ lat: p.lat, lng: p.lng })} height={340} />
         <div className="row g-2 mt-2 align-items-end">
           <div className="col-6 col-md-3">
-            <label className="form-label" htmlFor="lat">Latitude</label>
+            <label className="form-label" htmlFor="lat">{t('Latitude')}</label>
             <input id="lat" type="number" step="0.000001" className="form-control" value={pin.lat} onChange={(e) => setPin({ ...pin, lat: e.target.value })} />
           </div>
           <div className="col-6 col-md-3">
-            <label className="form-label" htmlFor="lng">Longitude</label>
+            <label className="form-label" htmlFor="lng">{t('Longitude')}</label>
             <input id="lng" type="number" step="0.000001" className="form-control" value={pin.lng} onChange={(e) => setPin({ ...pin, lng: e.target.value })} />
           </div>
           <div className="col-md-3">
             <button type="button" className="btn btn-primary w-100" onClick={savePin} disabled={savingPin || pin.lat === '' || pin.lng === ''}>
-              Save location
+              {t('Save location')}
             </button>
           </div>
         </div>

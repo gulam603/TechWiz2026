@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import Modal from '../../components/common/Modal';
+import { t } from '../../i18n';
 
 export const ORDER_ACTIONS = {
   placed: [
@@ -50,22 +51,22 @@ export function DeclineModal({ order, onClose, onDone }) {
   return (
     <Modal
       open
-      title={`Decline ${order.orderNumber}?`}
+      title={t('Decline {orderNumber}?', { orderNumber: order.orderNumber })}
       onClose={onClose}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>
-            Back
+            {t('Back')}
           </button>
           <button type="button" className="btn btn-danger" disabled={busy} onClick={decline}>
-            Decline order
+            {t('Decline order')}
           </button>
         </>
       }
     >
-      <p className="small text-muted-2">The reserved stock goes back to your inventory and the customer receives an e-mail with your reason.</p>
-      <label className="form-label" htmlFor="decline-reason">Reason (shown to the customer)</label>
-      <textarea id="decline-reason" className="form-control" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Harvest was smaller than expected this week" maxLength={300} />
+      <p className="small text-muted-2">{t('The reserved stock goes back to your inventory and the customer receives an e-mail with your reason.')}</p>
+      <label className="form-label" htmlFor="decline-reason">{t('Reason (shown to the customer)')}</label>
+      <textarea id="decline-reason" className="form-control" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t('e.g. Harvest was smaller than expected this week')} maxLength={300} />
     </Modal>
   );
 }
@@ -93,7 +94,7 @@ export default function FarmerOrderActions({ order, onChange, compact = false })
 
   return (
     <div className={compact ? 'd-flex gap-2 flex-wrap' : 'panel mb-4 d-flex align-items-center gap-2 flex-wrap'}>
-      {!compact && <strong className="me-auto">Update this pre-order</strong>}
+      {!compact && <strong className="me-auto">{t('Update this pre-order')}</strong>}
       {actions.map((a) => (
         <button
           key={a.action}
@@ -102,7 +103,7 @@ export default function FarmerOrderActions({ order, onChange, compact = false })
           disabled={Boolean(busy)}
           onClick={() => (a.action === 'decline' ? setDeclining(true) : run(a.action))}
         >
-          {busy === a.action ? <span className="spinner-border spinner-border-sm" /> : <i className={`bi ${a.icon}`} />} {a.label}
+          {busy === a.action ? <span className="spinner-border spinner-border-sm" /> : <i className={`bi ${a.icon}`} />} {t(a.label)}
         </button>
       ))}
       {declining && (

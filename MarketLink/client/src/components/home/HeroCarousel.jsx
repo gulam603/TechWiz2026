@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { heroSlides } from './heroSlides';
+import { t } from '../../i18n';
 
 const DELAY = 3000; // ms each slide stays on screen
 
@@ -19,7 +20,7 @@ function scrollToHash(e, to) {
 function SlideLink({ link, className }) {
   return (
     <Link to={link.to} className={className} onClick={(e) => scrollToHash(e, link.to)}>
-      {link.label}
+      {t(link.label)}
     </Link>
   );
 }
@@ -59,7 +60,7 @@ export default function HeroCarousel() {
   }
 
   return (
-    <section className="hero-carousel" aria-roledescription="carousel" aria-label="Highlights">
+    <section className="hero-carousel" aria-roledescription="carousel" aria-label={t('Highlights')}>
       <div className="container">
         <div
           className={`hc-frame theme-${slides[index].theme}`}
@@ -111,11 +112,11 @@ export default function HeroCarousel() {
                   )}
                   {s.photo.credit && (
                     <figcaption className="hc-credit">
-                      Photo:{' '}
+                      {t('Photo:')}{' '}
                       <a href={s.photo.credit.source} target="_blank" rel="noreferrer">
                         {s.photo.credit.author}
                       </a>{' '}
-                      (CC BY 2.0)
+                      {t('(CC BY 2.0)')}
                     </figcaption>
                   )}
                 </figure>
@@ -124,20 +125,20 @@ export default function HeroCarousel() {
           })}
 
           <div className="hc-controls">
-            <button type="button" className="hc-arrow" onClick={() => go(-1)} aria-label="Previous slide">
+            <button type="button" className="hc-arrow" onClick={() => go(-1)} aria-label={t('Previous slide')}>
               <i className="bi bi-chevron-left" aria-hidden="true" />
             </button>
-            <div className="hc-dots" role="group" aria-label="Choose a slide">
+            <div className="hc-dots" role="group" aria-label={t('Choose a slide')}>
               {slides.map((s, i) => (
-                <button key={s.id} type="button" className={`hc-dot ${i === index ? 'active' : ''}`} onClick={() => setIndex(i)} aria-label={`Slide ${i + 1}: ${s.eyebrow}`} aria-current={i === index ? 'true' : undefined}>
+                <button key={s.id} type="button" className={`hc-dot ${i === index ? 'active' : ''}`} onClick={() => setIndex(i)} aria-label={t('Slide {v1}: {eyebrow}', { v1: i + 1, eyebrow: s.eyebrow })} aria-current={i === index ? 'true' : undefined}>
                   {i === index && <span key={index} className={`hc-dot-fill ${playing ? '' : 'is-paused'}`} style={{ animationDuration: `${DELAY}ms` }} />}
                 </button>
               ))}
             </div>
-            <button type="button" className="hc-arrow" onClick={() => go(1)} aria-label="Next slide">
+            <button type="button" className="hc-arrow" onClick={() => go(1)} aria-label={t('Next slide')}>
               <i className="bi bi-chevron-right" aria-hidden="true" />
             </button>
-            <button type="button" className="hc-arrow hc-pause" onClick={() => setStopped((v) => !v)} aria-label={stopped ? 'Play the slides' : 'Pause the slides'} aria-pressed={stopped}>
+            <button type="button" className="hc-arrow hc-pause" onClick={() => setStopped((v) => !v)} aria-label={stopped ? t('Play the slides') : t('Pause the slides')} aria-pressed={stopped}>
               <i className={`bi ${stopped ? 'bi-play-fill' : 'bi-pause-fill'}`} aria-hidden="true" />
             </button>
           </div>

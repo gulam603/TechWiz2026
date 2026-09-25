@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MapView from './MapView';
 import { googleDirectionsUrl, osmDirectionsUrl } from '../../utils/format';
+import { t } from '../../i18n';
 
 /** Asks the browser for the user's position (returns a Promise). */
 export function getCurrentPosition() {
@@ -44,7 +45,7 @@ export default function DirectionsMap({ destination, extraMarkers = [], height =
       setSummary({ km: (best.distance / 1000).toFixed(1), min: Math.round(best.duration / 60) });
       setStatus('done');
     } catch (err) {
-      setError(err.message === 'Failed to fetch' ? 'Could not load the route. Use the Google Maps link instead.' : err.message);
+      setError(err.message === 'Failed to fetch' ? t('Could not load the route. Use the Google Maps link instead.') : err.message);
       setStatus('error');
     }
   }
@@ -56,17 +57,17 @@ export default function DirectionsMap({ destination, extraMarkers = [], height =
       <MapView markers={markers} userLocation={userLocation} route={route} height={height} />
       <div className="d-flex flex-wrap align-items-center gap-2 mt-3">
         <button type="button" className="btn btn-primary btn-sm" onClick={showRoute} disabled={status === 'loading'}>
-          {status === 'loading' ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-signpost-split" />} Route from my location
+          {status === 'loading' ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-signpost-split" />} {t('Route from my location')}
         </button>
         <a className="btn btn-white btn-sm" href={googleDirectionsUrl(destination.lat, destination.lng)} target="_blank" rel="noreferrer">
-          <i className="bi bi-google" /> Google Maps
+          <i className="bi bi-google" /> {t('Google Maps')}
         </a>
         <a className="btn btn-white btn-sm" href={osmDirectionsUrl(destination.lat, destination.lng)} target="_blank" rel="noreferrer">
-          <i className="bi bi-map" /> OpenStreetMap
+          <i className="bi bi-map" /> {t('OpenStreetMap')}
         </a>
         {summary && (
           <span className="chip chip-lime">
-            <i className="bi bi-car-front" /> {summary.km} km · about {summary.min} min
+            <i className="bi bi-car-front" /> {summary.km} {t('km · about')} {summary.min} {t('min')}
           </span>
         )}
       </div>

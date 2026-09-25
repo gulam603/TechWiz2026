@@ -4,6 +4,7 @@ import TermsContent from '../../components/legal/TermsContent';
 import { TERMS_SECTIONS, TERMS_UPDATED } from '../../components/legal/terms';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd } from '../../utils/seo';
+import { t } from '../../i18n';
 
 function jump(e, id) {
   e.preventDefault();
@@ -11,23 +12,23 @@ function jump(e, id) {
 }
 
 export default function Terms() {
-  useSeo({ title: 'Terms & Conditions', description: 'The terms for using MarketLink as a customer or farmer, and how your personal data is handled.', jsonLd: breadcrumbLd([{ name: 'Terms & Conditions', path: '/terms' }]) });
+  useSeo({ title: t('Terms & Conditions'), description: t('The terms for using MarketLink as a customer or farmer, and how your personal data is handled.'), jsonLd: breadcrumbLd([{ name: 'Terms & Conditions', path: '/terms' }]) });
   return (
     <>
       <PageHero
-        crumbs={[{ label: 'Terms & Conditions' }]}
-        title="Terms & Conditions"
-        subtitle="The simple rules that keep MarketLink fair for customers and farmers. Please read them before you create an account."
+        crumbs={[{ label: t('Terms & Conditions') }]}
+        title={t('Terms & Conditions')}
+        subtitle={t('The simple rules that keep MarketLink fair for customers and farmers. Please read them before you create an account.')}
       >
         <span className="chip hero-chip">
-          <i className="bi bi-calendar3" aria-hidden="true" /> Last updated {TERMS_UPDATED}
+          <i className="bi bi-calendar3" aria-hidden="true" /> {t('Last updated')} {TERMS_UPDATED}
         </span>
       </PageHero>
       <div className="container pb-5">
         <div className="row g-4">
           <aside className="col-lg-3 d-none d-lg-block">
-            <nav className="terms-toc" aria-label="Sections">
-              <span className="eyebrow">On this page</span>
+            <nav className="terms-toc" aria-label={t('Sections')}>
+              <span className="eyebrow">{t('On this page')}</span>
               <ol>
                 {TERMS_SECTIONS.map((s) => (
                   <li key={s.id}>
@@ -42,7 +43,7 @@ export default function Terms() {
           <div className="col-lg-9">
             <details className="terms-toc-mobile d-lg-none">
               <summary>
-                <i className="bi bi-list-ul" aria-hidden="true" /> On this page
+                <i className="bi bi-list-ul" aria-hidden="true" /> {t('On this page')}
               </summary>
               <ol>
                 {TERMS_SECTIONS.map((s) => (
@@ -63,13 +64,13 @@ export default function Terms() {
             <div className="terms-panel">
               <TermsContent />
               <div className="terms-foot">
-                <p className="mb-0 small text-muted-2">By creating an account you confirm that you have read and agree to these terms.</p>
+                <p className="mb-0 small text-muted-2">{t('By creating an account you confirm that you have read and agree to these terms.')}</p>
                 <div className="d-flex gap-2 flex-wrap">
                   <Link to="/register" className="btn btn-primary">
-                    Create an account
+                    {t('Create an account')}
                   </Link>
                   <Link to="/contact" className="btn btn-white">
-                    Ask a question
+                    {t('Ask a question')}
                   </Link>
                 </div>
               </div>

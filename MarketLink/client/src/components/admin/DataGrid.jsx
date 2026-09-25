@@ -11,6 +11,7 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.css';
 import 'datatables.net-responsive-bs5/css/responsive.bootstrap5.css';
 import 'datatables.net-buttons-bs5/css/buttons.bootstrap5.css';
 import { api } from '../../api/client';
+import { t } from '../../i18n';
 
 DT.Buttons.jszip(JSZip); // Excel export
 // A DataTables warning is for developers: log it in the console instead of an alert box
@@ -40,7 +41,7 @@ const LANGUAGE = {
  * Cells are HTML strings (see utils/cells.js). Buttons with data-action call onAction(action, row);
  * links with data-href open inside the app. Export buttons: CSV, Excel and Print.
  */
-export default function DataGrid({ table, data, columns, filters, order = [[0, 'desc']], pageLength = 10, exportName = 'MarketLink', onAction, onEdit, reloadKey = 0, searchPlaceholder, className = '', emptyText }) {
+export default function DataGrid({ table, data, columns, filters, order = [[0, 'desc']], pageLength = 10, exportName = t('MarketLink'), onAction, onEdit, reloadKey = 0, searchPlaceholder, className = '', emptyText }) {
   const ref = useRef(null);
   const wrap = useRef(null);
   const onEditRef = useRef(onEdit);
@@ -107,12 +108,12 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
       pageLength,
       lengthMenu: [
         [10, 25, 50, 100, -1],
-        [10, 25, 50, 100, 'All'],
+        [10, 25, 50, 100, t('All')],
       ],
       searchDelay: 350,
       language: { ...LANGUAGE, searchPlaceholder: searchPlaceholder || LANGUAGE.searchPlaceholder, ...(emptyText ? { emptyTable: emptyText } : {}) },
       layout: {
-        topStart: ['pageLength', { buttons: ['csv', 'excel', 'print'].map((type) => ({ extend: type === 'csv' ? 'csvHtml5' : type === 'excel' ? 'excelHtml5' : 'print', text: `<i class="bi ${type === 'csv' ? 'bi-filetype-csv' : type === 'excel' ? 'bi-file-earmark-excel' : 'bi-printer'}"></i> ${type === 'csv' ? 'CSV' : type === 'excel' ? 'Excel' : 'Print'}`, className: 'btn btn-sm btn-white', title: exportName, exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' } })) }],
+        topStart: ['pageLength', { buttons: ['csv', 'excel', 'print'].map((type) => ({ extend: type === 'csv' ? 'csvHtml5' : type === 'excel' ? 'excelHtml5' : 'print', text: `<i class="bi ${type === 'csv' ? 'bi-filetype-csv' : type === 'excel' ? 'bi-file-earmark-excel' : 'bi-printer'}"></i> ${type === 'csv' ? 'CSV' : type === 'excel' ? t('Excel') : t('Print')}`, className: 'btn btn-sm btn-white', title: exportName, exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' } })) }],
         topEnd: 'search',
         bottomStart: 'info',
         bottomEnd: 'paging',

@@ -13,6 +13,7 @@ import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, itemListLd, ldGraph } from '../../utils/seo';
+import { t } from '../../i18n';
 
 const SORTS = [
   { value: 'popular', label: 'Most popular' },
@@ -43,17 +44,17 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
           onDone?.();
         }}
       >
-        <div className="filter-title">Search</div>
+        <div className="filter-title">{t('Search')}</div>
         <div className="search-pill">
           <i className="bi bi-search" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products" aria-label="Search products" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Search products')} aria-label={t('Search products')} />
         </div>
       </form>
 
-      <div className="filter-title">Category</div>
+      <div className="filter-title">{t('Category')}</div>
       <div className="d-grid gap-1">
         <button type="button" className={`cat-option ${!category ? 'active' : ''}`} onClick={() => set({ category: '' })}>
-          <i className="bi bi-grid" style={{ width: 24, textAlign: 'center' }} /> All products
+          <i className="bi bi-grid" style={{ width: 24, textAlign: 'center' }} /> {t('All products')}
         </button>
         {categories.map((c) => (
           <button type="button" key={c._id} className={`cat-option ${category === c.slug ? 'active' : ''}`} onClick={() => set({ category: c.slug })}>
@@ -63,17 +64,17 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
         ))}
       </div>
 
-      <div className="filter-title">Location</div>
-      <SearchSelect className="mb-2" value={params.get('city') || ''} onChange={(v) => set({ city: v, market: '' })} ariaLabel="City" emptyLabel="All cities" options={cities.map((c) => ({ value: c, label: c }))} />
+      <div className="filter-title">{t('Location')}</div>
+      <SearchSelect className="mb-2" value={params.get('city') || ''} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={cities.map((c) => ({ value: c, label: c }))} />
       <SearchSelect
         value={params.get('market') || ''}
         onChange={(v) => set({ market: v })}
-        ariaLabel="Market"
+        ariaLabel={t('Market')}
         emptyLabel="All markets"
         options={markets.filter((m) => !params.get('city') || m.city === params.get('city')).map((m) => ({ value: m._id, label: m.name, hint: m.city }))}
       />
 
-      <div className="filter-title">Market day</div>
+      <div className="filter-title">{t('Market day')}</div>
       <div className="day-picker">
         {DAY_LETTER.map((letter, i) => (
           <button
@@ -90,7 +91,7 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
         ))}
       </div>
 
-      <div className="filter-title">Price ({CURRENCY})</div>
+      <div className="filter-title">{t('Price ({currency})', { currency: t(CURRENCY) })}</div>
       <form
         className="d-flex gap-2 align-items-center"
         onSubmit={(e) => {
@@ -99,18 +100,18 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
           onDone?.();
         }}
       >
-        <input type="number" min="0" className="form-control form-control-sm" placeholder="Min" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} aria-label="Minimum price" />
-        <span>to</span>
-        <input type="number" min="0" className="form-control form-control-sm" placeholder="Max" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} aria-label="Maximum price" />
-        <button type="submit" className="btn btn-soft btn-sm btn-icon" aria-label="Apply price">
+        <input type="number" min="0" className="form-control form-control-sm" placeholder={t('Min')} value={minPrice} onChange={(e) => setMinPrice(e.target.value)} aria-label={t('Minimum price')} />
+        <span>{t('to')}</span>
+        <input type="number" min="0" className="form-control form-control-sm" placeholder={t('Max')} value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} aria-label={t('Maximum price')} />
+        <button type="submit" className="btn btn-soft btn-sm btn-icon" aria-label={t('Apply price')}>
           <i className="bi bi-arrow-right" />
         </button>
       </form>
 
-      <div className="filter-title">Rating</div>
-      <div className="d-flex gap-1 flex-wrap" role="group" aria-label="Minimum rating">
+      <div className="filter-title">{t('Rating')}</div>
+      <div className="d-flex gap-1 flex-wrap" role="group" aria-label={t('Minimum rating')}>
         {[
-          ['', 'Any'],
+          ['', t('Any')],
           ['4', '4+'],
           ['3', '3+'],
         ].map(([v, l]) => (
@@ -122,8 +123,8 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
 
       {practices.length > 0 && (
         <>
-          <div className="filter-title">Farming practice</div>
-          <SearchSelect value={params.get('practice') || ''} onChange={(v) => set({ practice: v })} ariaLabel="Farming practice" emptyLabel="Any practice" options={practices.map((p) => ({ value: p, label: p }))} />
+          <div className="filter-title">{t('Farming practice')}</div>
+          <SearchSelect value={params.get('practice') || ''} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={practices.map((p) => ({ value: p, label: p }))} />
         </>
       )}
 
@@ -137,7 +138,7 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
           onChange={(e) => set({ inStock: e.target.checked ? 'true' : '' })}
         />
         <label className="form-check-label small fw-semi" htmlFor="inStock">
-          In stock only
+          {t('In stock only')}
         </label>
       </div>
     </div>
@@ -155,12 +156,12 @@ export default function Products() {
   const query = {};
   for (const key of FILTER_KEYS) if (params.get(key)) query[key] = params.get(key);
   const { data, loading, error, reload } = useFetch(`/products${toQuery({ limit: 12, ...query })}`);
-  const listLd = itemListLd(seoCategory ? `${seoCategory.name} from local farmers` : 'Fresh produce this week', (data?.products || []).map((p) => ({ name: p.name, path: `/products/${p.slug}` })));
+  const listLd = itemListLd(seoCategory ? t('{name} from local farmers', { name: seoCategory.name }) : t('Fresh produce this week'), (data?.products || []).map((p) => ({ name: p.name, path: `/products/${p.slug}` })));
   const crumbLd = breadcrumbLd([{ name: 'Shop', path: '/products' }, ...(seoCategory ? [{ name: seoCategory.name, path: `/products?category=${seoCategory.slug}` }] : [])]);
   useSeo(
     seoCategory
-      ? { title: `${seoCategory.name} from local farmers`, description: clip(seoCategory.description || `Fresh ${seoCategory.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`), canonicalPath: `/products?category=${seoCategory.slug}`, jsonLd: ldGraph(listLd, crumbLd) }
-      : { title: 'Shop fresh produce', description: "Browse this week's vegetables, fruit, dairy, honey, baked goods and more from local farmers. Filter by market, day, city and price, then pre-order for pickup.", canonicalPath: '/products', jsonLd: ldGraph(listLd, crumbLd) }
+      ? { title: t('{name} from local farmers', { name: seoCategory.name }), description: clip(seoCategory.description || t('Fresh {v1} from local farmers. Pre-order and pick up at the market.', { v1: seoCategory.name.toLowerCase() })), canonicalPath: `/products?category=${seoCategory.slug}`, jsonLd: ldGraph(listLd, crumbLd) }
+      : { title: t('Shop fresh produce'), description: t('Browse this week\'s vegetables, fruit, dairy, honey, baked goods and more from local farmers. Filter by market, day, city and price, then pre-order for pickup.'), canonicalPath: '/products', jsonLd: ldGraph(listLd, crumbLd) }
   );
 
   /** Updates one or more filters in the URL (resetting to page 1). */
@@ -182,9 +183,9 @@ export default function Products() {
   return (
     <>
       <PageHero
-        crumbs={[{ label: 'Shop' }]}
-        title={activeCategory ? activeCategory.name : 'Shop the market'}
-        subtitle={activeCategory?.description || 'Browse this week’s stock from every farmer. Filter by market, day and price, then pre-order for pickup.'}
+        crumbs={[{ label: t('Shop') }]}
+        title={activeCategory ? activeCategory.name : t('Shop the market')}
+        subtitle={activeCategory?.description || t('Browse this week’s stock from every farmer. Filter by market, day and price, then pre-order for pickup.')}
       />
       <div className="container pb-5">
         <div className="row g-4">
@@ -195,27 +196,27 @@ export default function Products() {
             <div className="results-bar">
               <div className="d-flex align-items-center gap-2 flex-wrap">
                 <button type="button" className="btn btn-white btn-sm d-lg-none" onClick={() => setShowFilters(true)}>
-                  <i className="bi bi-sliders" /> Filters {activeFilters.length > 0 && `(${activeFilters.length})`}
+                  <i className="bi bi-sliders" /> {t('Filters')} {activeFilters.length > 0 && `(${activeFilters.length})`}
                 </button>
                 <span className="small text-muted-2">
-                  <strong className="text-forest">{data?.total ?? '…'}</strong> products
+                  <strong className="text-forest">{data?.total ?? '…'}</strong> {t('products')}
                   {params.get('search') && (
                     <>
                       {' '}
-                      for “<strong>{params.get('search')}</strong>”
+                      {t('for “')}<strong>{params.get('search')}</strong>”
                     </>
                   )}
                 </span>
                 {activeFilters.length > 0 && (
                   <button type="button" className="btn btn-link btn-sm p-0" onClick={() => setParams({})}>
-                    Clear filters
+                    {t('Clear filters')}
                   </button>
                 )}
               </div>
-              <select className="form-select form-select-sm w-auto" value={params.get('sort') || 'popular'} onChange={(e) => set({ sort: e.target.value })} aria-label="Sort products">
+              <select className="form-select form-select-sm w-auto" value={params.get('sort') || 'popular'} onChange={(e) => set({ sort: e.target.value })} aria-label={t('Sort products')}>
                 {SORTS.map((s) => (
                   <option key={s.value} value={s.value}>
-                    {s.label}
+                    {t(s.label)}
                   </option>
                 ))}
               </select>
@@ -236,11 +237,11 @@ export default function Products() {
             {data && data.products.length === 0 && (
               <EmptyState
                 icon="bi-search"
-                title="Nothing matches those filters"
-                message="Try another category, market day or a wider price range."
+                title={t('Nothing matches those filters')}
+                message={t('Try another category, market day or a wider price range.')}
                 action={
                   <button type="button" className="btn btn-primary" onClick={() => setParams({})}>
-                    Clear all filters
+                    {t('Clear all filters')}
                   </button>
                 }
               />
@@ -252,10 +253,10 @@ export default function Products() {
 
       {showFilters && (
         <>
-          <div className="offcanvas offcanvas-start show" style={{ visibility: 'visible' }} tabIndex={-1} aria-label="Filters">
+          <div className="offcanvas offcanvas-start show" style={{ visibility: 'visible' }} tabIndex={-1} aria-label={t('Filters')}>
             <div className="offcanvas-header">
-              <h5 className="offcanvas-title">Filters</h5>
-              <button type="button" className="btn-close" onClick={() => setShowFilters(false)} aria-label="Close" />
+              <h5 className="offcanvas-title">{t('Filters')}</h5>
+              <button type="button" className="btn-close" onClick={() => setShowFilters(false)} aria-label={t('Close')} />
             </div>
             <div className="offcanvas-body">
               <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} practices={practiceData?.practices} onDone={() => setShowFilters(false)} />

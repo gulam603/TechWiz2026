@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Modal from '../common/Modal';
 import TermsContent from './TermsContent';
 import { TERMS_UPDATED } from './terms';
+import { t } from '../../i18n';
 
 /**
  * Required "I agree" checkbox for the sign-up forms. The terms open in a dialog,
@@ -14,23 +15,23 @@ export default function TermsCheckbox({ id, checked, onChange, children }) {
       <div className="form-check terms-check">
         <input id={id} type="checkbox" className="form-check-input" checked={checked} onChange={(e) => onChange(e.target.checked)} required />
         <label className="form-check-label small" htmlFor={id}>
-          {children}I agree to the MarketLink{' '}
+          {children}{t('I agree to the MarketLink')}{' '}
           <button type="button" className="btn-inline-link" onClick={() => setOpen(true)}>
-            Terms &amp; Conditions
+            {t('Terms & Conditions')}
           </button>{' '}
-          and privacy notice.
+          {t('and privacy notice.')}
         </label>
       </div>
       <Modal
         open={open}
         onClose={() => setOpen(false)}
-        title="Terms & Conditions"
+        title={t('Terms & Conditions')}
         size="modal-lg terms-modal"
         footer={
           <>
-            <span className="me-auto small text-muted-2 align-self-center">Last updated {TERMS_UPDATED}</span>
+            <span className="me-auto small text-muted-2 align-self-center">{t('Last updated')} {TERMS_UPDATED}</span>
             <button type="button" className="btn btn-white" onClick={() => setOpen(false)}>
-              Close
+              {t('Close')}
             </button>
             <button
               type="button"
@@ -40,7 +41,7 @@ export default function TermsCheckbox({ id, checked, onChange, children }) {
                 setOpen(false);
               }}
             >
-              <i className="bi bi-check2-circle" aria-hidden="true" /> I agree
+              <i className="bi bi-check2-circle" aria-hidden="true" /> {t('I agree')}
             </button>
           </>
         }

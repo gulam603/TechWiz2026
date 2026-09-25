@@ -5,6 +5,7 @@ import { DEFAULT_CENTER } from '../../config';
 import BaseTiles from './BaseTiles';
 import { pinIcon } from './leafletIcons';
 import { getCurrentPosition } from './DirectionsMap';
+import { t } from '../../i18n';
 
 function ClickHandler({ onPick }) {
   useMapEvents({ click: (e) => onPick({ lat: +e.latlng.lat.toFixed(6), lng: +e.latlng.lng.toFixed(6) }) });
@@ -62,9 +63,9 @@ export default function LocationPicker({ lat, lng, onChange, height = 300 }) {
       </div>
       <div className="d-flex align-items-center gap-2 mt-2 flex-wrap">
         <button type="button" className="btn btn-white btn-sm" onClick={useMyLocation}>
-          <i className="bi bi-crosshair" /> Use my current location
+          <i className="bi bi-crosshair" /> {t('Use my current location')}
         </button>
-        <span className="small text-muted-2">Click on the map or drag the pin to set the exact pickup point.</span>
+        <span className="small text-muted-2">{t('Click on the map or drag the pin to set the exact pickup point.')}</span>
       </div>
       {error && <div className="small text-danger mt-1">{error}</div>}
     </div>

@@ -12,9 +12,10 @@ import { PasswordForm } from '../customer/Profile';
 import ProfilePhoto from '../../components/common/ProfilePhoto';
 import { ApprovalBanner } from './Dashboard';
 import SearchSelect from '../../components/common/SearchSelect';
+import { t } from '../../i18n';
 
 export default function FarmerProfile() {
-  useDocumentTitle('Stall profile');
+  useDocumentTitle(t('Stall profile'));
   const { data, setData } = useFetch('/farmer/me');
   if (!data) return <PageLoader />;
   return <ProfileEditor data={data} setData={setData} />;
@@ -48,7 +49,7 @@ function ProfileEditor({ data, setData }) {
 
   // "Generate with AI": a short "about the farm" text from the stall details
   async function writeBio() {
-    if (form.stallName.trim().length < 2) return toast('Type the stall / farm name first', 'error');
+    if (form.stallName.trim().length < 2) return toast(t('Type the stall / farm name first'), 'error');
     setWriting(true);
     try {
       const res = await api.post('/farmer/describe', {
@@ -78,7 +79,7 @@ function ProfileEditor({ data, setData }) {
       setData(res);
       setLogo(null);
       setCover(null);
-      toast('Stall profile saved');
+      toast(t('Stall profile saved'));
       refresh();
     } catch (err) {
       toast(err.message, 'error');
@@ -90,12 +91,12 @@ function ProfileEditor({ data, setData }) {
   return (
     <>
       <DashHeader
-        title="Stall profile"
-        subtitle="This is what customers see on your public stall page."
+        title={t('Stall profile')}
+        subtitle={t('This is what customers see on your public stall page.')}
         actions={
           data.farmer.isActive && (
             <Link to={`/farmers/${data.farmer.slug}`} className="btn btn-white" target="_blank">
-              <i className="bi bi-box-arrow-up-right" /> View public page
+              <i className="bi bi-box-arrow-up-right" /> {t('View public page')}
             </Link>
           )
         }
@@ -106,42 +107,42 @@ function ProfileEditor({ data, setData }) {
           <form className="panel" onSubmit={save}>
             <div className="row g-3">
               <div className="col-md-6">
-                <label className="form-label" htmlFor="s-name">Stall / business name</label>
+                <label className="form-label" htmlFor="s-name">{t('Stall / business name')}</label>
                 <input id="s-name" name="stallName" className="form-control" required value={form.stallName} onChange={change} />
               </div>
               <div className="col-md-6">
-                <label className="form-label" htmlFor="s-contact">Contact person</label>
+                <label className="form-label" htmlFor="s-contact">{t('Contact person')}</label>
                 <input id="s-contact" name="contactPerson" className="form-control" required value={form.contactPerson} onChange={change} />
               </div>
               <div className="col-md-6">
-                <label className="form-label" htmlFor="s-phone">Contact number</label>
-                <input id="s-phone" name="phone" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title="7-20 digits, spaces, +, - or brackets" value={form.phone} onChange={change} />
+                <label className="form-label" htmlFor="s-phone">{t('Contact number')}</label>
+                <input id="s-phone" name="phone" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title={t('7-20 digits, spaces, +, - or brackets')} value={form.phone} onChange={change} />
               </div>
               <div className="col-md-6">
-                <label className="form-label" htmlFor="s-email">E-mail</label>
+                <label className="form-label" htmlFor="s-email">{t('E-mail')}</label>
                 <input id="s-email" className="form-control" value={data.farmer.email} disabled />
               </div>
               <div className="col-md-8">
-                <label className="form-label" htmlFor="s-address">Address</label>
+                <label className="form-label" htmlFor="s-address">{t('Address')}</label>
                 <input id="s-address" name="address" className="form-control" required value={form.address} onChange={change} />
               </div>
               <div className="col-md-4">
-                <label className="form-label" htmlFor="s-city">City</label>
-                <SearchSelect id="s-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel="City" placeholder="Choose a city" options={(cityData?.cities || []).map((c) => ({ value: c.name, label: c.name, hint: c.province }))} />
+                <label className="form-label" htmlFor="s-city">{t('City')}</label>
+                <SearchSelect id="s-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose a city')} options={(cityData?.cities || []).map((c) => ({ value: c.name, label: c.name, hint: c.province }))} />
               </div>
               <div className="col-12">
                 <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
-                  <label className="form-label mb-0" htmlFor="s-bio">About your farm</label>
+                  <label className="form-label mb-0" htmlFor="s-bio">{t('About your farm')}</label>
                   <button type="button" className="btn btn-sm btn-ai" onClick={writeBio} disabled={writing}>
-                    {writing ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" />} {variant ? 'Try another' : 'Generate with AI'}
+                    {writing ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" />} {variant ? t('Try another') : t('Generate with AI')}
                   </button>
                 </div>
                 <textarea id="s-bio" name="bio" rows={5} className="form-control" value={form.bio} onChange={change} maxLength={1200} />
-                <span className="fs-7 text-muted-2">The AI uses your stall name, city, categories, practices and markets. Edit the text before saving.</span>
+                <span className="fs-7 text-muted-2">{t('The AI uses your stall name, city, categories, practices and markets. Edit the text before saving.')}</span>
               </div>
               <div className="col-12">
-                <span className="form-label d-block">What you grow / sell</span>
-                <div className="choice-grid" role="group" aria-label="Categories">
+                <span className="form-label d-block">{t('What you grow / sell')}</span>
+                <div className="choice-grid" role="group" aria-label={t('Categories')}>
                   {(catData?.categories || []).map((c) => {
                     const on = form.categories.includes(c._id);
                     return (
@@ -160,18 +161,18 @@ function ProfileEditor({ data, setData }) {
                 </div>
               </div>
               <div className="col-12">
-                <label className="form-label" htmlFor="s-tags">Farming practices (comma separated)</label>
-                <input id="s-tags" name="tags" className="form-control" value={form.tags} onChange={change} placeholder="Pesticide-free, Family farm" />
+                <label className="form-label" htmlFor="s-tags">{t('Farming practices (comma separated)')}</label>
+                <input id="s-tags" name="tags" className="form-control" value={form.tags} onChange={change} placeholder={t('Pesticide-free, Family farm')} />
               </div>
               <div className="col-md-6">
-                <ImageInput label="Logo" current={data.farmer.logo} file={logo} onFile={setLogo} />
+                <ImageInput label={t('Logo')} current={data.farmer.logo} file={logo} onFile={setLogo} />
               </div>
               <div className="col-md-6">
-                <ImageInput label="Cover photo" current={data.farmer.coverImage} file={cover} onFile={setCover} />
+                <ImageInput label={t('Cover photo')} current={data.farmer.coverImage} file={cover} onFile={setCover} />
               </div>
             </div>
             <button type="submit" className="btn btn-primary mt-4" disabled={busy}>
-              {busy && <span className="spinner-border spinner-border-sm" />} Save profile
+              {busy && <span className="spinner-border spinner-border-sm" />} {t('Save profile')}
             </button>
           </form>
         </div>
@@ -179,11 +180,11 @@ function ProfileEditor({ data, setData }) {
           <div className="panel">
             <div className="panel-head">
               <h5>
-                <i className="bi bi-person-circle" /> Your photo
+                <i className="bi bi-person-circle" /> {t('Your photo')}
               </h5>
             </div>
-            <ProfilePhoto subtitle={`Contact person · ${data.farmer.stallName}`} />
-            <p className="small text-muted-2 mb-0">Shown in the menu and on your dashboard. Your stall logo and cover photo are set on the left.</p>
+            <ProfilePhoto subtitle={t('Contact person · {stallName}', { stallName: data.farmer.stallName })} />
+            <p className="small text-muted-2 mb-0">{t('Shown in the menu and on your dashboard. Your stall logo and cover photo are set on the left.')}</p>
           </div>
           <PasswordForm />
         </div>

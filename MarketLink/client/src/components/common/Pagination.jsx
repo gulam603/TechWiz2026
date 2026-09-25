@@ -1,12 +1,13 @@
+import { t } from '../../i18n';
 export default function Pagination({ page, pages, onChange }) {
   if (!pages || pages <= 1) return null;
   const numbers = [];
   for (let i = Math.max(1, page - 2); i <= Math.min(pages, page + 2); i += 1) numbers.push(i);
   return (
-    <nav aria-label="Pagination" className="d-flex justify-content-center mt-4">
+    <nav aria-label={t('Pagination')} className="d-flex justify-content-center mt-4">
       <ul className="pagination mb-0">
         <li className={`page-item ${page <= 1 ? 'disabled' : ''}`}>
-          <button type="button" className="page-link" onClick={() => onChange(page - 1)} aria-label="Previous page">
+          <button type="button" className="page-link" onClick={() => onChange(page - 1)} aria-label={t('Previous page')}>
             <i className="bi bi-chevron-left" />
           </button>
         </li>
@@ -28,7 +29,7 @@ export default function Pagination({ page, pages, onChange }) {
           </li>
         )}
         <li className={`page-item ${page >= pages ? 'disabled' : ''}`}>
-          <button type="button" className="page-link" onClick={() => onChange(page + 1)} aria-label="Next page">
+          <button type="button" className="page-link" onClick={() => onChange(page + 1)} aria-label={t('Next page')}>
             <i className="bi bi-chevron-right" />
           </button>
         </li>

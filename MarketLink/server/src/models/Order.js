@@ -8,6 +8,7 @@ const orderItemSchema = new Schema(
   {
     product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     name: { type: String, required: true },
+    nameUr: String, // the Urdu name at order time (shown when the site is in Urdu)
     image: String,
     unit: String,
     price: { type: Number, required: true, min: 0 },

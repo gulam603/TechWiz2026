@@ -11,6 +11,7 @@ import PickupPicker from '../../components/order/PickupPicker';
 import { PageHero } from '../../components/common/PageHeader';
 import { formatDateKey, money, time12 } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
+import { listText, productName, rich, t } from '../../i18n';
 
 function FarmerCheckout({ group, value, onChange }) {
   const handlePickup = useCallback((pickup) => onChange({ ...value, ...pickup }), [value, onChange]);
@@ -21,7 +22,7 @@ function FarmerCheckout({ group, value, onChange }) {
         <div className="flex-grow-1">
           <strong className="d-block">{group.farmer.stallName}</strong>
           <span className="fs-7 text-muted-2">
-            {group.items.map((i) => `${i.quantity} × ${i.name}`).join(', ')}
+            {listText(group.items.map((i) => `${i.quantity} × ${productName(i)}`))}
           </span>
         </div>
         <strong>{money(group.subtotal)}</strong>
@@ -29,14 +30,14 @@ function FarmerCheckout({ group, value, onChange }) {
       <div className="p-3 p-md-4">
         <PickupPicker farmerId={group.farmer._id} value={value} onChange={handlePickup} />
         <label className="form-label mt-2" htmlFor={`note-${group.farmer._id}`}>
-          Note for the farmer (optional)
+          {t('Note for the farmer (optional)')}
         </label>
         <textarea
           id={`note-${group.farmer._id}`}
           className="form-control"
           rows={2}
           maxLength={500}
-          placeholder="e.g. Please pick ripe mangoes for today"
+          placeholder={t('e.g. Please pick ripe mangoes for today')}
           value={value.note || ''}
           onChange={(e) => onChange({ ...value, note: e.target.value })}
         />
@@ -60,7 +61,7 @@ function GuestDetails({ onCreated }) {
   async function submit(e) {
     e.preventDefault();
     setError(null);
-    if (!form.acceptTerms) return setError({ message: 'Please accept the Terms & Conditions to continue.' });
+    if (!form.acceptTerms) return setError({ message: t('Please accept the Terms & Conditions to continue.') });
     setBusy(true);
     try {
       const res = await quickAccount(form);
@@ -78,8 +79,8 @@ function GuestDetails({ onCreated }) {
       <div className="cart-group-head">
         <span className="step-dot">1</span>
         <div className="flex-grow-1">
-          <strong className="d-block">Your details</strong>
-          <span className="fs-7 text-muted-2">No account needed. We create one for you and e-mail your password, so you can follow your pickup.</span>
+          <strong className="d-block">{t('Your details')}</strong>
+          <span className="fs-7 text-muted-2">{t('No account needed. We create one for you and e-mail your password, so you can follow your pickup.')}</span>
         </div>
       </div>
       <div className="p-3 p-md-4">
@@ -88,35 +89,35 @@ function GuestDetails({ onCreated }) {
             {error.message}{' '}
             {error.exists && (
               <Link to="/login" state={{ from: '/checkout' }} className="alert-link">
-                Log in
+                {t('Log in')}
               </Link>
             )}
           </div>
         )}
         <div className="row g-3">
           <div className="col-sm-6">
-            <label className="form-label" htmlFor="g-first">First name</label>
+            <label className="form-label" htmlFor="g-first">{t('First name')}</label>
             <input id="g-first" name="firstName" className="form-control" required maxLength={40} autoComplete="given-name" value={form.firstName} onChange={change} />
           </div>
           <div className="col-sm-6">
-            <label className="form-label" htmlFor="g-last">Last name</label>
+            <label className="form-label" htmlFor="g-last">{t('Last name')}</label>
             <input id="g-last" name="lastName" className="form-control" required maxLength={40} autoComplete="family-name" value={form.lastName} onChange={change} />
           </div>
           <div className="col-sm-6">
-            <label className="form-label" htmlFor="g-email">E-mail</label>
+            <label className="form-label" htmlFor="g-email">{t('E-mail')}</label>
             <input id="g-email" name="email" type="email" className="form-control" required autoComplete="email" value={form.email} onChange={change} />
           </div>
           <div className="col-sm-6">
-            <label className="form-label" htmlFor="g-phone">Contact number</label>
-            <input id="g-phone" name="phone" type="tel" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title="7-20 digits, spaces, +, - or brackets" placeholder="+92 300 1234567" autoComplete="tel" value={form.phone} onChange={change} />
+            <label className="form-label" htmlFor="g-phone">{t('Contact number')}</label>
+            <input id="g-phone" name="phone" type="tel" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title={t('7-20 digits, spaces, +, - or brackets')} placeholder="+92 300 1234567" autoComplete="tel" value={form.phone} onChange={change} />
           </div>
           <div className="col-sm-8">
-            <label className="form-label" htmlFor="g-address">Address</label>
+            <label className="form-label" htmlFor="g-address">{t('Address')}</label>
             <input id="g-address" name="address" className="form-control" required maxLength={200} autoComplete="street-address" value={form.address} onChange={change} />
           </div>
           <div className="col-sm-4">
-            <label className="form-label" htmlFor="g-city">City</label>
-            <SearchSelect id="g-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel="City" placeholder="Choose…" options={(cityData?.cities || []).map((c) => ({ value: c.name, label: c.name, hint: c.province }))} />
+            <label className="form-label" htmlFor="g-city">{t('City')}</label>
+            <SearchSelect id="g-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose…')} options={(cityData?.cities || []).map((c) => ({ value: c.name, label: c.name, hint: c.province }))} />
           </div>
           <div className="col-12">
             <TermsCheckbox id="g-terms" checked={form.acceptTerms} onChange={(v) => setForm((f) => ({ ...f, acceptTerms: v }))} />
@@ -124,12 +125,12 @@ function GuestDetails({ onCreated }) {
         </div>
         <div className="d-flex flex-wrap align-items-center gap-3 mt-3">
           <button type="submit" className="btn btn-primary" disabled={busy}>
-            {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-arrow-right-circle" />} Continue to pickup
+            {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-arrow-right-circle" />} {t('Continue to pickup')}
           </button>
           <span className="small text-muted-2">
-            Already have an account?{' '}
+            {t('Already have an account?')}{' '}
             <Link to="/login" state={{ from: '/checkout' }}>
-              Log in
+              {t('Log in')}
             </Link>
           </span>
         </div>
@@ -139,7 +140,7 @@ function GuestDetails({ onCreated }) {
 }
 
 export default function Checkout() {
-  useDocumentTitle('Checkout');
+  useDocumentTitle(t('Checkout'));
   const cart = useCart();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -156,7 +157,7 @@ export default function Checkout() {
   if (user && user.role !== 'customer') {
     return (
       <div className="container py-5">
-        <div className="alert alert-warning">Only customer accounts can place pre-orders. You are logged in as a {user.role}.</div>
+        <div className="alert alert-warning">{t('Only customer accounts can place pre-orders. You are logged in as a {role}.', { role: t(user.role) })}</div>
       </div>
     );
   }
@@ -166,7 +167,7 @@ export default function Checkout() {
   async function placeOrder() {
     setError('');
     if (!ready) {
-      setError('Please choose a pickup slot for every farmer.');
+      setError(t('Please choose a pickup slot for every farmer.'));
       return;
     }
     setBusy(true);
@@ -183,7 +184,7 @@ export default function Checkout() {
       setPlaced(true);
       navigate('/checkout/success', { state: { orders: res.orders, newAccount }, replace: true });
       cart.clear();
-      toast('Pre-order placed! Check your e-mail and notifications.');
+      toast(t('Pre-order placed! Check your e-mail and notifications.'));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -194,9 +195,9 @@ export default function Checkout() {
   return (
     <>
       <PageHero
-        crumbs={[{ label: 'Basket', to: '/cart' }, { label: 'Checkout' }]}
-        title={user ? 'Choose your pickup' : 'Checkout'}
-        subtitle={user ? "Pick a date and time slot for each farmer. You can change or cancel until the farmer's cut-off time." : 'Tell us who is picking up, then choose a pickup slot for each farmer. No payment online.'}
+        crumbs={[{ label: t('Basket'), to: '/cart' }, { label: t('Checkout') }]}
+        title={user ? t('Choose your pickup') : t('Checkout')}
+        subtitle={user ? t('Pick a date and time slot for each farmer. You can change or cancel until the farmer\'s cut-off time.') : t('Tell us who is picking up, then choose a pickup slot for each farmer. No payment online.')}
       />
       <div className="container pb-5">
         <div className="row g-4">
@@ -206,9 +207,9 @@ export default function Checkout() {
               <div className="account-created">
                 <i className="bi bi-person-check-fill" aria-hidden="true" />
                 <div>
-                  <strong className="d-block">Your account is ready</strong>
+                  <strong className="d-block">{t('Your account is ready')}</strong>
                   <span className="small">
-                    We e-mailed your password to <strong>{newAccount.email}</strong>. You can change it later in Profile &amp; family.
+                    {rich('We e-mailed your password to <b>{email}</b>. You can change it later in Profile & family.', { email: newAccount.email })}
                     {newAccount.mailNote && <span className="d-block text-muted-2">{newAccount.mailNote}</span>}
                   </span>
                 </div>
@@ -221,8 +222,8 @@ export default function Checkout() {
                 <div className="cart-group-head">
                   <span className="step-dot">2</span>
                   <div className="flex-grow-1">
-                    <strong className="d-block">Pickup date and time</strong>
-                    <span className="fs-7 text-muted-2">Available after your details: one pickup slot for each of the {cart.groups.length} farmer{cart.groups.length === 1 ? '' : 's'} in your basket.</span>
+                    <strong className="d-block">{t('Pickup date and time')}</strong>
+                    <span className="fs-7 text-muted-2">{cart.groups.length === 1 ? t('Available after your details: one pickup slot for the farmer in your basket.') : t('Available after your details: one pickup slot for each of the {n} farmers in your basket.', { n: cart.groups.length })}</span>
                   </div>
                 </div>
               </div>
@@ -230,36 +231,36 @@ export default function Checkout() {
           </div>
           <div className="col-lg-4">
             <div className="summary-card">
-              <h5 className="mb-3">Pickup summary</h5>
+              <h5 className="mb-3">{t('Pickup summary')}</h5>
               {cart.groups.map((g) => {
                 const c = choices[g.farmer._id];
                 return (
                   <div key={g.farmer._id} className="info-row">
                     <span>{g.farmer.stallName}</span>
-                    <span>{c?.slotStart ? `${formatDateKey(c.pickupDate)}, ${time12(c.slotStart)}` : <em className="text-muted-2 fw-normal">choose a slot</em>}</span>
+                    <span>{c?.slotStart ? `${formatDateKey(c.pickupDate)}, ${time12(c.slotStart)}` : <em className="text-muted-2 fw-normal">{t('choose a slot')}</em>}</span>
                   </div>
                 );
               })}
               {user && (
                 <div className="info-row">
-                  <span>Customer</span>
+                  <span>{t('Customer')}</span>
                   <span>{user.name}</span>
                 </div>
               )}
               <div className="d-flex justify-content-between align-items-end my-3">
-                <span className="fw-semi">Total due at pickup</span>
+                <span className="fw-semi">{t('Total due at pickup')}</span>
                 <span className="total">{money(cart.total)}</span>
               </div>
               <div className="pay-note mb-3">
                 <i className="bi bi-shield-check" />
-                <span>Payment is settled in person at pickup. MarketLink never asks for card details.</span>
+                <span>{t('Payment is settled in person at pickup. MarketLink never asks for card details.')}</span>
               </div>
               {error && <div className="alert alert-danger small py-2">{error}</div>}
               <button type="button" className="btn btn-primary btn-lg w-100" onClick={placeOrder} disabled={busy || !ready || !user}>
-                {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-check2-circle" />} Place pre-order
+                {busy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-check2-circle" />} {t('Place pre-order')}
               </button>
               <Link to="/cart" className="btn btn-link w-100 mt-1">
-                Back to basket
+                {t('Back to basket')}
               </Link>
             </div>
           </div>

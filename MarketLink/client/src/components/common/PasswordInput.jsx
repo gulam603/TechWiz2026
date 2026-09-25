@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { t } from '../../i18n';
 
 /**
  * Password box with one show / hide (eye) button inside the field.
@@ -9,7 +10,7 @@ export default function PasswordInput({ id, size = '', className = '', ...props 
   return (
     <div className={`pass-field ${size ? `pass-field-${size}` : ''}`}>
       <input id={id} type={show ? 'text' : 'password'} className={`form-control ${size ? `form-control-${size}` : ''} ${className}`} {...props} />
-      <button type="button" className="pass-eye" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'} aria-controls={id} aria-pressed={show}>
+      <button type="button" className="pass-eye" onClick={() => setShow(!show)} aria-label={show ? t('Hide password') : t('Show password')} aria-controls={id} aria-pressed={show}>
         <i className={`bi ${show ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true" />
       </button>
     </div>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ProduceImage from './ProduceImage';
+import { productName, t } from '../../i18n';
 
 /** Full-screen photo viewer (opened by clicking the main photo). */
 function Lightbox({ photos, index, setIndex, name, onClose }) {
@@ -23,16 +24,16 @@ function Lightbox({ photos, index, setIndex, name, onClose }) {
   }, [count, onClose, setIndex]);
   return createPortal(
     <div className="pd-lightbox" role="dialog" aria-modal="true" aria-label={`${name} photos`} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <button type="button" className="pd-lightbox-close" onClick={onClose} aria-label="Close" ref={closeRef}>
+      <button type="button" className="pd-lightbox-close" onClick={onClose} aria-label={t('Close')} ref={closeRef}>
         <i className="bi bi-x-lg" />
       </button>
-      <img src={photos[index].url} alt={`${name}, photo ${index + 1} of ${count}`} />
+      <img src={photos[index].url} alt={t('{name}, photo {v2} of {count}', { name, v2: index + 1, count })} />
       {count > 1 && (
         <>
-          <button type="button" className="pd-arrow prev" onClick={() => go(-1)} aria-label="Previous photo">
+          <button type="button" className="pd-arrow prev" onClick={() => go(-1)} aria-label={t('Previous photo')}>
             <i className="bi bi-chevron-left" />
           </button>
-          <button type="button" className="pd-arrow next" onClick={() => go(1)} aria-label="Next photo">
+          <button type="button" className="pd-arrow next" onClick={() => go(1)} aria-label={t('Next photo')}>
             <i className="bi bi-chevron-right" />
           </button>
           <span className="pd-count">
@@ -49,13 +50,13 @@ function Credit({ credit }) {
   if (!credit?.author) return null;
   return (
     <p className="photo-credit">
-      <i className="bi bi-camera" /> Photo: {credit.author}
+      <i className="bi bi-camera" /> {t('Photo:')} {credit.author}
       {credit.source && (
         <>
           {' '}
           ·{' '}
           <a href={credit.source} target="_blank" rel="noreferrer">
-            source
+            {t('source')}
           </a>
         </>
       )}
@@ -105,7 +106,7 @@ export default function ProductGallery({ product, children, zoom = true }) {
         style={zoom ? { '--zoom-origin': origin } : undefined}
         role={count > 1 ? 'region' : undefined}
         aria-roledescription={count > 1 ? 'carousel' : undefined}
-        aria-label={count > 1 ? `${product.name} photos` : undefined}
+        aria-label={count > 1 ? t('{name} photos', { name: productName(product) }) : undefined}
         tabIndex={count > 1 ? 0 : undefined}
         onKeyDown={onKey}
         onTouchStart={(e) => (touch.current = e.touches[0].clientX)}
@@ -115,18 +116,18 @@ export default function ProductGallery({ product, children, zoom = true }) {
         onMouseMove={onMouseMove}
         onClick={(e) => zoom && !e.target.closest('button') && setViewer(true)}
       >
-        <ProduceImage key={current.url} src={current.url} alt={count > 1 ? `${product.name}, photo ${index + 1} of ${count}` : product.name} color={product.category?.color} className="pd-main" />
+        <ProduceImage key={current.url} src={current.url} alt={count > 1 ? t('{name}, photo {v2} of {count}', { name: productName(product), v2: index + 1, count }) : productName(product)} color={product.category?.color} className="pd-main" />
         {zoom && (
-          <button type="button" className="pd-zoom-btn" onClick={() => setViewer(true)} aria-label="View the photo full screen" title="Full screen">
+          <button type="button" className="pd-zoom-btn" onClick={() => setViewer(true)} aria-label={t('View the photo full screen')} title={t('Full screen')}>
             <i className="bi bi-arrows-fullscreen" aria-hidden="true" />
           </button>
         )}
         {count > 1 && (
           <>
-            <button type="button" className="pd-arrow prev" onClick={() => go(-1)} aria-label="Previous photo">
+            <button type="button" className="pd-arrow prev" onClick={() => go(-1)} aria-label={t('Previous photo')}>
               <i className="bi bi-chevron-left" />
             </button>
-            <button type="button" className="pd-arrow next" onClick={() => go(1)} aria-label="Next photo">
+            <button type="button" className="pd-arrow next" onClick={() => go(1)} aria-label={t('Next photo')}>
               <i className="bi bi-chevron-right" />
             </button>
             <span className="pd-count" aria-live="polite">
@@ -137,16 +138,16 @@ export default function ProductGallery({ product, children, zoom = true }) {
         {children}
       </div>
       {count > 1 && (
-        <div className="pd-thumbs" role="tablist" aria-label="Choose a photo">
+        <div className="pd-thumbs" role="tablist" aria-label={t('Choose a photo')}>
           {photos.map((p, i) => (
-            <button key={p.url} type="button" role="tab" aria-selected={i === index} aria-label={`Photo ${i + 1}`} className={i === index ? 'active' : ''} onClick={() => setIndex(i)}>
+            <button key={p.url} type="button" role="tab" aria-selected={i === index} aria-label={t('Photo {v1}', { v1: i + 1 })} className={i === index ? 'active' : ''} onClick={() => setIndex(i)}>
               <ProduceImage src={p.url} alt="" color={product.category?.color} />
             </button>
           ))}
         </div>
       )}
       <Credit credit={current.credit} />
-      {viewer && <Lightbox photos={photos} index={Math.min(index, count - 1)} setIndex={setIndex} name={product.name} onClose={closeViewer} />}
+      {viewer && <Lightbox photos={photos} index={Math.min(index, count - 1)} setIndex={setIndex} name={productName(product)} onClose={closeViewer} />}
     </div>
   );
 }

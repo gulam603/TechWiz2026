@@ -8,9 +8,10 @@ import EmptyState from '../../components/common/EmptyState';
 import { PageHero } from '../../components/common/PageHeader';
 import { money } from '../../utils/format';
 import { productPath } from '../../utils/links';
+import { productName, t } from '../../i18n';
 
 export default function Cart() {
-  useDocumentTitle('Your basket');
+  useDocumentTitle(t('Your basket'));
   const cart = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -19,9 +20,9 @@ export default function Cart() {
     return (
       <div className="container py-5">
         <EmptyState
-          title="Your basket is empty"
-          message="Browse this week's harvest and add a few things. You'll choose a pickup slot at checkout."
-          action={<Link to="/products" className="btn btn-primary">Start shopping</Link>}
+          title={t('Your basket is empty')}
+          message={t('Browse this week\'s harvest and add a few things. You\'ll choose a pickup slot at checkout.')}
+          action={<Link to="/products" className="btn btn-primary">{t('Start shopping')}</Link>}
         />
       </div>
     );
@@ -29,7 +30,7 @@ export default function Cart() {
 
   return (
     <>
-      <PageHero crumbs={[{ label: 'Basket' }]} title="Your basket" subtitle={`${cart.count} item${cart.count === 1 ? '' : 's'} from ${cart.groups.length} farmer${cart.groups.length === 1 ? '' : 's'}. Each farmer gets its own pickup slot.`} />
+      <PageHero crumbs={[{ label: t('Basket') }]} title={t('Your basket')} subtitle={`${cart.count} item${cart.count === 1 ? '' : 's'} from ${cart.groups.length} farmer${cart.groups.length === 1 ? '' : 's'}. Each farmer gets its own pickup slot.`} />
       <div className="container pb-5">
         <div className="row g-4">
           <div className="col-lg-8 d-grid gap-3">
@@ -38,7 +39,7 @@ export default function Cart() {
                 <div className="cart-group-head">
                   {g.farmer.logo && <img src={g.farmer.logo} alt="" />}
                   <div className="flex-grow-1">
-                    <span className="fs-7 text-muted-2 d-block">Pickup from</span>
+                    <span className="fs-7 text-muted-2 d-block">{t('Pickup from')}</span>
                     <Link to={`/farmers/${g.farmer.slug}`} className="fw-bold">
                       {g.farmer.stallName}
                     </Link>
@@ -52,7 +53,7 @@ export default function Cart() {
                     </div>
                     <div className="flex-grow-1 min-w-0">
                       <Link to={productPath(item)} className="name d-block text-truncate text-reset">
-                        {item.name}
+                        {productName(item)}
                       </Link>
                       <span className="small text-muted-2">
                         {money(item.price)} / {item.unit}
@@ -62,7 +63,7 @@ export default function Cart() {
                     <strong className="d-none d-sm-block text-end" style={{ minWidth: 90 }}>
                       {money(item.price * item.quantity)}
                     </strong>
-                    <button type="button" className="btn btn-sm btn-icon btn-white" onClick={() => cart.remove(item.productId)} aria-label={`Remove ${item.name}`}>
+                    <button type="button" className="btn btn-sm btn-icon btn-white" onClick={() => cart.remove(item.productId)} aria-label={t('Remove {name}', { name: item.name })}>
                       <i className="bi bi-trash3" />
                     </button>
                   </div>
@@ -71,13 +72,13 @@ export default function Cart() {
             ))}
             <div>
               <button type="button" className="btn btn-link text-danger p-0" onClick={cart.clear}>
-                <i className="bi bi-x-circle" /> Empty basket
+                <i className="bi bi-x-circle" /> {t('Empty basket')}
               </button>
             </div>
           </div>
           <div className="col-lg-4">
             <div className="summary-card">
-              <h5 className="mb-3">Order summary</h5>
+              <h5 className="mb-3">{t('Order summary')}</h5>
               {cart.groups.map((g) => (
                 <div key={g.farmer._id} className="info-row">
                   <span>{g.farmer.stallName}</span>
@@ -85,23 +86,23 @@ export default function Cart() {
                 </div>
               ))}
               <div className="d-flex justify-content-between align-items-end mt-3 mb-3">
-                <span className="fw-semi">Total due at pickup</span>
+                <span className="fw-semi">{t('Total due at pickup')}</span>
                 <span className="total">{money(cart.total)}</span>
               </div>
               <div className="pay-note mb-3">
                 <i className="bi bi-cash-coin" />
-                <span>No online payment. You pay each farmer when you collect your order.</span>
+                <span>{t('No online payment. You pay each farmer when you collect your order.')}</span>
               </div>
               {user && user.role !== 'customer' ? (
-                <div className="alert alert-warning small mb-0">Only customer accounts can place pre-orders.</div>
+                <div className="alert alert-warning small mb-0">{t('Only customer accounts can place pre-orders.')}</div>
               ) : (
                 <>
                   <button type="button" className="btn btn-primary btn-lg w-100" onClick={() => navigate('/checkout')}>
-                    {user ? 'Choose pickup & checkout' : 'Checkout'} <i className="bi bi-arrow-right" />
+                    {user ? t('Choose pickup & checkout') : t('Checkout')} <i className="bi bi-arrow-right" />
                   </button>
                   {!user && (
                     <p className="small text-muted-2 text-center mt-2 mb-0">
-                      No account needed · <Link to="/login" state={{ from: '/checkout' }}>Log in</Link> if you have one
+                      {t('No account needed ·')} <Link to="/login" state={{ from: '/checkout' }}>{t('Log in')}</Link> {t('if you have one')}
                     </p>
                   )}
                 </>

@@ -10,27 +10,28 @@ import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import MapView from '../../components/map/MapView';
 import { time12 } from '../../utils/format';
+import { t } from '../../i18n';
 
 export default function Favorites() {
-  useDocumentTitle('Favourites');
+  useDocumentTitle(t('Favourites'));
   const [tab, setTab] = useState('products');
   const { data, loading } = useFetch('/customer/favorites');
   if (loading && !data) return <PageLoader />;
 
   const tabs = [
-    { value: 'products', label: 'Products', n: data.products.length },
-    { value: 'farmers', label: 'Farmers', n: data.farmers.length },
-    { value: 'markets', label: 'Saved markets', n: data.markets.length },
+    { value: 'products', label: t('Products'), n: data.products.length },
+    { value: 'farmers', label: t('Farmers'), n: data.farmers.length },
+    { value: 'markets', label: t('Saved markets'), n: data.markets.length },
   ];
 
   return (
     <>
-      <DashHeader title="Favourites" subtitle="Quick access to what you love. You'll get a restock alert when a favourite product is back." />
+      <DashHeader title={t('Favourites')} subtitle={t('Quick access to what you love. You\'ll get a restock alert when a favourite product is back.')} />
       <div className="tabs-pill mb-4" role="tablist">
-        {tabs.map((t) => (
-          <button key={t.value} type="button" role="tab" aria-selected={tab === t.value} className={tab === t.value ? 'active' : ''} onClick={() => setTab(t.value)}>
-            {t.label}
-            <span className="n">{t.n}</span>
+        {tabs.map((tx) => (
+          <button key={tx.value} type="button" role="tab" aria-selected={tab === tx.value} className={tab === tx.value ? 'active' : ''} onClick={() => setTab(tx.value)}>
+            {t(tx.label)}
+            <span className="n">{tx.n}</span>
           </button>
         ))}
       </div>
@@ -45,7 +46,7 @@ export default function Favorites() {
             ))}
           </div>
         ) : (
-          <EmptyState title="No favourite products yet" message="Tap the heart on any product to save it here." action={<Link to="/products" className="btn btn-primary">Browse products</Link>} />
+          <EmptyState title={t('No favourite products yet')} message={t('Tap the heart on any product to save it here.')} action={<Link to="/products" className="btn btn-primary">{t('Browse products')}</Link>} />
         ))}
 
       {tab === 'farmers' &&
@@ -58,7 +59,7 @@ export default function Favorites() {
             ))}
           </div>
         ) : (
-          <EmptyState icon="bi-people" title="No favourite farmers yet" action={<Link to="/farmers" className="btn btn-primary">Meet the farmers</Link>} />
+          <EmptyState icon="bi-people" title={t('No favourite farmers yet')} action={<Link to="/farmers" className="btn btn-primary">{t('Meet the farmers')}</Link>} />
         ))}
 
       {tab === 'markets' &&
@@ -78,7 +79,7 @@ export default function Favorites() {
             </div>
           </>
         ) : (
-          <EmptyState title="No saved markets" message="Save your usual markets for quick directions and pickup details." action={<Link to="/markets" className="btn btn-primary">Find markets</Link>} />
+          <EmptyState title={t('No saved markets')} message={t('Save your usual markets for quick directions and pickup details.')} action={<Link to="/markets" className="btn btn-primary">{t('Find markets')}</Link>} />
         ))}
     </>
   );

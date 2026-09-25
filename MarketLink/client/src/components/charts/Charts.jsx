@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { compactNumber, MONTHS, parseDateKey } from '../../utils/format';
+import { t } from '../../i18n';
 
 // Single-series charts in the brand green. Specs: 2px lines, ~10% area wash,
 // bars <= 24px with 4px rounded ends, hairline solid grid, text in ink colours only.
@@ -42,7 +43,7 @@ export function ChartCard({ title, subtitle, table, children, actions }) {
           {actions}
           {table && (
             <button type="button" className="btn btn-sm btn-white" onClick={() => setAsTable(!asTable)} aria-pressed={asTable}>
-              <i className={`bi ${asTable ? 'bi-bar-chart' : 'bi-table'}`} /> {asTable ? 'Chart' : 'Table'}
+              <i className={`bi ${asTable ? 'bi-bar-chart' : 'bi-table'}`} /> {asTable ? t('Chart') : t('Table')}
             </button>
           )}
         </div>

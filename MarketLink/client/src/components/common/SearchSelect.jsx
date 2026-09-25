@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { t } from '../../i18n';
 
 const norm = (v) => String(v ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
@@ -18,8 +19,8 @@ export default function SearchSelect({
   onChange,
   options = [],
   emptyLabel,
-  placeholder = 'Choose…',
-  searchPlaceholder = 'Search…',
+  placeholder = t('Choose…'),
+  searchPlaceholder = t('Search…'),
   size = '',
   className = '',
   required = false,
@@ -169,7 +170,7 @@ export default function SearchSelect({
               />
             </div>
             <ul className="ss-options" id={listId} role="listbox" aria-label={ariaLabel}>
-              {shown.length === 0 && <li className="ss-none">No matches</li>}
+              {shown.length === 0 && <li className="ss-none">{t('No matches')}</li>}
               {shown.map((o, i) => {
                 const isSel = String(o.value) === String(value ?? '');
                 return (
@@ -185,7 +186,7 @@ export default function SearchSelect({
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => choose(o)}
                   >
-                    <span className="text-truncate">{o.label}</span>
+                    <span className="text-truncate">{t(o.label)}</span>
                     {o.hint && <span className="ss-hint">{o.hint}</span>}
                     {isSel && <i className="bi bi-check2 ms-auto" aria-hidden="true" />}
                   </li>

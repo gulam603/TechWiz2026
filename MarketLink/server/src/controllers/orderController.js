@@ -303,6 +303,7 @@ export async function reorderItems(req, res) {
         ? {
             _id: p._id,
             name: p.name,
+            nameUr: p.nameUr,
             price: p.price,
             unit: p.unit,
             image: p.image,

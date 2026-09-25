@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { useAuth } from '../../context/AuthContext';
 import ReviewModal from './ReviewModal';
+import { t } from '../../i18n';
 
 /** "Write a review" on product and farmer pages. Buyers write verified reviews, everyone else unverified ones. */
 export default function WriteReviewButton({ type, id, name, onDone }) {
@@ -14,7 +15,7 @@ export default function WriteReviewButton({ type, id, name, onDone }) {
   if (!user) {
     return (
       <Link to="/login" className="btn btn-white btn-sm">
-        <i className="bi bi-pencil-square" /> Log in to review
+        <i className="bi bi-pencil-square" /> {t('Log in to review')}
       </Link>
     );
   }
@@ -25,7 +26,7 @@ export default function WriteReviewButton({ type, id, name, onDone }) {
   return (
     <>
       <button type="button" className="btn btn-primary btn-sm" onClick={() => setOpen(true)}>
-        <i className="bi bi-pencil-square" /> Write a review
+        <i className="bi bi-pencil-square" /> {t('Write a review')}
       </button>
       {open && (
         <ReviewModal

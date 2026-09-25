@@ -1,5 +1,19 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import postcssRTLCSS from 'postcss-rtlcss';
+
+// Urdu is written right to left. postcss-rtlcss adds [dir="rtl"] rules that mirror our own styles
+// (margins, padding, left / right, text-align ...); in "override" mode the normal (left to right)
+// CSS stays exactly as it was. Library styles (maps, tables) are left alone.
+const rtl = postcssRTLCSS({ mode: 'override' });
+const rtlForOurStyles = {
+  postcssPlugin: 'marketlink-rtl',
+  Once(root, helpers) {
+    const file = root.source?.input?.file || '';
+    if (/[\\/]src[\\/]styles[\\/]/.test(file)) return rtl.Once(root, helpers);
+    return undefined;
+  },
+};
 
 // In development the React app runs on :5173 and forwards API / image requests to Express on :5000.
 export default defineConfig({
@@ -12,6 +26,7 @@ export default defineConfig({
     },
   },
   css: {
+    postcss: { plugins: [rtlForOurStyles] },
     preprocessorOptions: {
       scss: {
         // Bootstrap 5.3 still uses the older Sass syntax; hide those library warnings

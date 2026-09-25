@@ -1,33 +1,42 @@
 import { CURRENCY } from '../config';
+import { bilingual, isUrdu } from '../i18n';
 
-export const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-export const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-export const DAY_LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+// Day and month names follow the language in use (English or Urdu)
+export const DAY_NAMES = bilingual(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], ['اتوار', 'پیر', 'منگل', 'بدھ', 'جمعرات', 'جمعہ', 'ہفتہ']);
+export const DAY_SHORT = bilingual(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], ['اتوار', 'پیر', 'منگل', 'بدھ', 'جمعرات', 'جمعہ', 'ہفتہ']);
+export const DAY_LETTER = bilingual(['S', 'M', 'T', 'W', 'T', 'F', 'S'], ['ا', 'پ', 'م', 'ب', 'ج', 'ج', 'ہ']);
+export const MONTHS = bilingual(
+  ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  ['جنوری', 'فروری', 'مارچ', 'اپریل', 'مئی', 'جون', 'جولائی', 'اگست', 'ستمبر', 'اکتوبر', 'نومبر', 'دسمبر']
+);
+
+const comma = () => (isUrdu() ? '، ' : ', ');
 
 /** "All year", "Sep to Nov", "Dec to Feb" or "Jan, Mar, Jul" for announcement months (1-12). */
 export function monthsLabel(months = []) {
   const list = [...new Set(months)].sort((a, b) => a - b);
-  if (!list.length || list.length === 12) return 'All year';
+  if (!list.length || list.length === 12) return isUrdu() ? 'سارا سال' : 'All year';
   if (list.length === 1) return MONTHS[list[0] - 1];
   // Find a run of consecutive months, allowing it to wrap past December (e.g. Dec, Jan, Feb)
   for (const start of list) {
     const run = list.map((_, i) => ((start - 1 + i) % 12) + 1);
-    if (run.every((m) => list.includes(m))) return `${MONTHS[start - 1]} to ${MONTHS[run[run.length - 1] - 1]}`;
+    if (run.every((m) => list.includes(m))) return `${MONTHS[start - 1]} ${isUrdu() ? 'سے' : 'to'} ${MONTHS[run[run.length - 1] - 1]}`;
   }
-  return list.map((m) => MONTHS[m - 1]).join(', ');
+  return list.map((m) => MONTHS[m - 1]).join(comma());
 }
 
-// A non-breaking space keeps "Rs 1,200" on one line inside tables and cards
+// A non-breaking space keeps "Rs 1,200" on one line inside tables and cards (Urdu: "1,200 روپے")
 export function money(value) {
   const n = Number(value) || 0;
-  return `${CURRENCY}\u00a0${n.toLocaleString('en-US', { maximumFractionDigits: 2 })}`;
+  const amount = n.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  return isUrdu() ? `${amount}\u00a0روپے` : `${CURRENCY}\u00a0${amount}`;
 }
 
 /** Short money for big KPI tiles: Rs 836.7k */
 export function moneyCompact(value) {
   const n = Number(value) || 0;
-  return n >= 100000 ? `${CURRENCY}\u00a0${compactNumber(n)}` : money(Math.round(n));
+  if (n < 100000) return money(Math.round(n));
+  return isUrdu() ? `${compactNumber(n)}\u00a0روپے` : `${CURRENCY}\u00a0${compactNumber(n)}`;
 }
 
 export function compactNumber(value) {
@@ -50,52 +59,69 @@ export function toDateKey(date = new Date()) {
 export function formatDateKey(key, { withYear = false } = {}) {
   if (!key) return '';
   const d = parseDateKey(key);
-  return `${DAY_SHORT[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}${withYear ? ` ${d.getFullYear()}` : ''}`;
+  return `${DAY_SHORT[d.getDay()]}${comma()}${d.getDate()} ${MONTHS[d.getMonth()]}${withYear ? ` ${d.getFullYear()}` : ''}`;
 }
 
 export function formatDate(value, { time = false } = {}) {
   if (!value) return '';
   const d = new Date(value);
   const base = `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-  return time ? `${base}, ${formatTime(d)}` : base;
+  return time ? `${base}${comma()}${formatTime(d)}` : base;
+}
+
+// Urdu names the part of the day instead of am / pm: صبح 8:00، دوپہر 1:00، شام 6:00
+function urduPeriod(h) {
+  if (h >= 5 && h < 12) return 'صبح';
+  if (h >= 12 && h < 15) return 'دوپہر';
+  if (h >= 15 && h < 18) return 'سہ پہر';
+  if (h >= 18 && h < 20) return 'شام';
+  return 'رات';
+}
+
+function clock(h, m) {
+  const mm = String(m).padStart(2, '0');
+  if (isUrdu()) return `${urduPeriod(h)} ${h % 12 || 12}:${mm}`;
+  return `${h % 12 || 12}:${mm} ${h >= 12 ? 'pm' : 'am'}`;
 }
 
 export function formatTime(date) {
   const d = new Date(date);
-  let h = d.getHours();
-  const m = String(d.getMinutes()).padStart(2, '0');
-  const ampm = h >= 12 ? 'pm' : 'am';
-  h = h % 12 || 12;
-  return `${h}:${m} ${ampm}`;
+  return clock(d.getHours(), d.getMinutes());
 }
 
-/** "08:30" -> "8:30 am" */
+/** "08:30" -> "8:30 am" (Urdu: "صبح 8:30") */
 export function time12(hhmm) {
   if (!hhmm) return '';
   const [h, m] = hhmm.split(':').map(Number);
-  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'pm' : 'am'}`;
+  return clock(h, m);
 }
 
 export function timeAgo(value) {
+  const ur = isUrdu();
   const seconds = Math.round((Date.now() - new Date(value).getTime()) / 1000);
-  if (seconds < 60) return 'just now';
+  if (seconds < 60) return ur ? 'ابھی ابھی' : 'just now';
   const minutes = Math.round(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return ur ? `${minutes} منٹ پہلے` : `${minutes}m ago`;
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return ur ? `${hours} گھنٹے پہلے` : `${hours}h ago`;
   const days = Math.round(hours / 24);
-  if (days < 7) return `${days}d ago`;
+  if (days < 7) return ur ? `${days} دن پہلے` : `${days}d ago`;
   return formatDate(value);
 }
 
 /** "in 2 days", "in 5 hours" */
 export function timeUntil(value) {
+  const ur = isUrdu();
   const ms = new Date(value).getTime() - Date.now();
-  if (ms <= 0) return 'now';
+  if (ms <= 0) return ur ? 'ابھی' : 'now';
   const hours = Math.round(ms / 3_600_000);
-  if (hours < 1) return `in ${Math.max(1, Math.round(ms / 60000))} min`;
-  if (hours < 48) return `in ${hours} h`;
-  return `in ${Math.round(hours / 24)} days`;
+  if (hours < 1) {
+    const min = Math.max(1, Math.round(ms / 60000));
+    return ur ? `${min} منٹ میں` : `in ${min} min`;
+  }
+  if (hours < 48) return ur ? `${hours} گھنٹوں میں` : `in ${hours} h`;
+  const days = Math.round(hours / 24);
+  return ur ? `${days} دن میں` : `in ${days} days`;
 }
 
 export function initials(name = '') {
@@ -107,16 +133,29 @@ export function initials(name = '') {
     .join('');
 }
 
-export const ORDER_STATUS_META = {
-  placed: { label: 'Placed', icon: 'bi-receipt' },
-  accepted: { label: 'Accepted', icon: 'bi-hand-thumbs-up' },
-  ready: { label: 'Ready for pickup', icon: 'bi-bag-check' },
-  completed: { label: 'Completed', icon: 'bi-check2-circle' },
-  declined: { label: 'Declined', icon: 'bi-x-circle' },
-  cancelled: { label: 'Cancelled', icon: 'bi-slash-circle' },
-};
+export const ORDER_STATUS_META = bilingual(
+  {
+    placed: { label: 'Placed', icon: 'bi-receipt' },
+    accepted: { label: 'Accepted', icon: 'bi-hand-thumbs-up' },
+    ready: { label: 'Ready for pickup', icon: 'bi-bag-check' },
+    completed: { label: 'Completed', icon: 'bi-check2-circle' },
+    declined: { label: 'Declined', icon: 'bi-x-circle' },
+    cancelled: { label: 'Cancelled', icon: 'bi-slash-circle' },
+  },
+  {
+    placed: { label: 'موصول', icon: 'bi-receipt' },
+    accepted: { label: 'منظور', icon: 'bi-hand-thumbs-up' },
+    ready: { label: 'لینے کے لیے تیار', icon: 'bi-bag-check' },
+    completed: { label: 'مکمل', icon: 'bi-check2-circle' },
+    declined: { label: 'نامنظور', icon: 'bi-x-circle' },
+    cancelled: { label: 'منسوخ', icon: 'bi-slash-circle' },
+  }
+);
 
-export const PRODUCT_STATUS_LABEL = { available: 'Available', sold_out: 'Sold out', unavailable: 'Unavailable' };
+export const PRODUCT_STATUS_LABEL = bilingual(
+  { available: 'Available', sold_out: 'Sold out', unavailable: 'Unavailable' },
+  { available: 'دستیاب', sold_out: 'ختم ہو گیا', unavailable: 'دستیاب نہیں' }
+);
 
 // Soft gradient covers picked from a name so every farmer / market looks different but stable
 const COVERS = [

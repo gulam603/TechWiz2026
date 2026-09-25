@@ -10,6 +10,7 @@ import { BarList, ChartCard, ColumnChart, TrendChart } from '../../components/ch
 import DataGrid from '../../components/admin/DataGrid';
 import { dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { formatDateKey, money, moneyCompact } from '../../utils/format';
+import { t } from '../../i18n';
 
 const PRESETS = [
   [7, 'Last 7 days'],
@@ -33,11 +34,11 @@ const CUSTOMER_COLUMNS = [
   { data: 'last', title: 'Last order', render: display((v) => dateCell(v)) },
 ];
 
-const change = (v) => (v === null || v === undefined ? 'no earlier data' : `${v > 0 ? '+' : ''}${v}% vs previous period`);
+const change = (v) => (v === null || v === undefined ? t('no earlier data') : `${v > 0 ? '+' : ''}${v}% vs previous period`);
 
 /** Sales insights for the farmer: what sells, where, when and to whom; printable and exportable. */
 export default function FarmerSales() {
-  useDocumentTitle('Sales report');
+  useDocumentTitle(t('Sales report'));
   const { farmer } = useAuth();
   const [range, setRange] = useState({ days: 30, from: '', to: '' });
   const query = range.from && range.to ? { from: range.from, to: range.to } : { days: range.days };
@@ -46,11 +47,11 @@ export default function FarmerSales() {
   return (
     <div className="sales-report">
       <DashHeader
-        title="Sales report"
-        subtitle={data ? `${farmer?.stallName || 'My stall'} · ${formatDateKey(data.period.from, { withYear: true })} to ${formatDateKey(data.period.to, { withYear: true })}` : 'Sales insights for your stall'}
+        title={t('Sales report')}
+        subtitle={data ? `${farmer?.stallName || t('My stall')} · ${formatDateKey(data.period.from, { withYear: true })} to ${formatDateKey(data.period.to, { withYear: true })}` : t('Sales insights for your stall')}
         actions={
           <button type="button" className="btn btn-white btn-sm d-print-none" onClick={() => window.print()}>
-            <i className="bi bi-printer" /> Print report
+            <i className="bi bi-printer" /> {t('Print report')}
           </button>
         }
       />
@@ -64,11 +65,11 @@ export default function FarmerSales() {
             ))}
           </div>
           <label className="filter-field is-date">
-            <span>From</span>
+            <span>{t('From')}</span>
             <input type="date" className="form-control form-control-sm" value={range.from} onChange={(e) => setRange({ ...range, from: e.target.value })} />
           </label>
           <label className="filter-field is-date">
-            <span>To</span>
+            <span>{t('To')}</span>
             <input type="date" className="form-control form-control-sm" value={range.to} onChange={(e) => setRange({ ...range, to: e.target.value })} />
           </label>
         </div>
@@ -80,22 +81,22 @@ export default function FarmerSales() {
         <>
           <div className="row g-2 g-xl-3 mb-3 kpi-row">
             <div className="col-6 col-md-4 col-xxl-2">
-              <KpiCard variant="accent" icon="bi-cash-stack" label="Revenue" value={moneyCompact(data.kpis.revenue)} sub={change(data.kpis.revenueChange)} />
+              <KpiCard variant="accent" icon="bi-cash-stack" label={t('Revenue')} value={moneyCompact(data.kpis.revenue)} sub={change(data.kpis.revenueChange)} />
             </div>
             <div className="col-6 col-md-4 col-xxl-2">
-              <KpiCard icon="bi-receipt" label="Completed orders" value={data.kpis.orders} sub={change(data.kpis.ordersChange)} />
+              <KpiCard icon="bi-receipt" label={t('Completed orders')} value={data.kpis.orders} sub={change(data.kpis.ordersChange)} />
             </div>
             <div className="col-6 col-md-4 col-xxl-2">
-              <KpiCard icon="bi-basket" label="Items sold" value={data.kpis.items} sub={`avg order ${money(data.kpis.averageOrder)}`} />
+              <KpiCard icon="bi-basket" label={t('Items sold')} value={data.kpis.items} sub={t('avg order {v1}', { v1: money(data.kpis.averageOrder) })} />
             </div>
             <div className="col-6 col-md-4 col-xxl-2">
-              <KpiCard variant="info" icon="bi-people" label="Customers" value={data.kpis.customers} sub={`${data.kpis.repeatCustomers} returning · ${data.kpis.newCustomers} new`} />
+              <KpiCard variant="info" icon="bi-people" label={t('Customers')} value={data.kpis.customers} sub={t('{repeatCustomers} returning · {newCustomers} new', { repeatCustomers: data.kpis.repeatCustomers, newCustomers: data.kpis.newCustomers })} />
             </div>
             <div className="col-6 col-md-4 col-xxl-2">
-              <KpiCard variant="warn" icon="bi-hourglass-split" label="Open pre-orders" value={data.kpis.openOrders} sub={`${money(data.kpis.openValue)} to collect`} />
+              <KpiCard variant="warn" icon="bi-hourglass-split" label={t('Open pre-orders')} value={data.kpis.openOrders} sub={t('{v1} to collect', { v1: money(data.kpis.openValue) })} />
             </div>
             <div className="col-6 col-md-4 col-xxl-2">
-              <KpiCard variant="danger" icon="bi-x-circle" label="Cancelled / declined" value={data.kpis.cancelled} sub={`${data.kpis.cancellationRate}% of pre-orders`} />
+              <KpiCard variant="danger" icon="bi-x-circle" label={t('Cancelled / declined')} value={data.kpis.cancelled} sub={t('{cancellationRate}% of pre-orders', { cancellationRate: data.kpis.cancellationRate })} />
             </div>
           </div>
 
@@ -103,7 +104,7 @@ export default function FarmerSales() {
             <div className="panel mb-3">
               <div className="panel-head">
                 <h5>
-                  <i className="bi bi-lightbulb" /> Insights
+                  <i className="bi bi-lightbulb" /> {t('Insights')}
                 </h5>
               </div>
               <ul className="insight-list">
@@ -118,31 +119,31 @@ export default function FarmerSales() {
 
           <div className="row g-3 mb-3">
             <div className="col-xl-8">
-              <ChartCard title="Revenue per day" subtitle="completed orders, paid at pickup" table={{ columns: ['Date', 'Orders', 'Revenue'], rows: data.series.map((d) => [formatDateKey(d.date), d.orders, money(d.revenue)]) }}>
+              <ChartCard title={t('Revenue per day')} subtitle={t('completed orders, paid at pickup')} table={{ columns: ['Date', 'Orders', 'Revenue'], rows: data.series.map((d) => [formatDateKey(d.date), d.orders, money(d.revenue)]) }}>
                 <TrendChart data={data.series} yKey="revenue" name="Revenue" valueFormatter={money} height={240} />
               </ChartCard>
             </div>
             <div className="col-xl-4">
-              <ChartCard title="Sales by category" table={{ columns: ['Category', 'Items', 'Revenue'], rows: data.categories.map((c) => [c.category, c.quantity, money(c.revenue)]) }}>
-                {data.categories.length ? <BarList data={data.categories} labelKey="category" valueKey="revenue" name="Revenue" valueFormatter={moneyCompact} /> : <p className="small text-muted-2 mb-0">No sales in this period.</p>}
+              <ChartCard title={t('Sales by category')} table={{ columns: ['Category', 'Items', 'Revenue'], rows: data.categories.map((c) => [c.category, c.quantity, money(c.revenue)]) }}>
+                {data.categories.length ? <BarList data={data.categories} labelKey="category" valueKey="revenue" name="Revenue" valueFormatter={moneyCompact} /> : <p className="small text-muted-2 mb-0">{t('No sales in this period.')}</p>}
               </ChartCard>
             </div>
           </div>
 
           <div className="row g-3 mb-3">
             <div className="col-lg-6 col-xl-4">
-              <ChartCard title="Pickup days" subtitle="completed orders by weekday" table={{ columns: ['Day', 'Orders', 'Revenue'], rows: data.weekdays.map((d) => [d.day, d.orders, money(d.revenue)]) }}>
+              <ChartCard title={t('Pickup days')} subtitle={t('completed orders by weekday')} table={{ columns: ['Day', 'Orders', 'Revenue'], rows: data.weekdays.map((d) => [d.day, d.orders, money(d.revenue)]) }}>
                 <ColumnChart data={data.weekdays.map((d) => ({ ...d, label: d.day.slice(0, 3) }))} xKey="label" yKey="orders" name="Orders" dateAxis={false} height={200} />
               </ChartCard>
             </div>
             <div className="col-lg-6 col-xl-4">
-              <ChartCard title="Pickup times" subtitle="orders by slot hour" table={{ columns: ['Hour', 'Orders'], rows: data.slots.map((s) => [`${s.hour}:00`, s.orders]) }}>
+              <ChartCard title={t('Pickup times')} subtitle={t('orders by slot hour')} table={{ columns: ['Hour', 'Orders'], rows: data.slots.map((s) => [`${s.hour}:00`, s.orders]) }}>
                 <ColumnChart data={data.slots.map((s) => ({ ...s, label: `${s.hour}:00` }))} xKey="label" yKey="orders" name="Orders" dateAxis={false} height={200} />
               </ChartCard>
             </div>
             <div className="col-xl-4">
-              <ChartCard title="Markets" subtitle="revenue by pickup market" table={{ columns: ['Market', 'Orders', 'Revenue'], rows: data.markets.map((m) => [m.market, m.orders, money(m.revenue)]) }}>
-                {data.markets.length ? <BarList data={data.markets} labelKey="market" valueKey="revenue" name="Revenue" valueFormatter={moneyCompact} /> : <p className="small text-muted-2 mb-0">No sales in this period.</p>}
+              <ChartCard title={t('Markets')} subtitle={t('revenue by pickup market')} table={{ columns: ['Market', 'Orders', 'Revenue'], rows: data.markets.map((m) => [m.market, m.orders, money(m.revenue)]) }}>
+                {data.markets.length ? <BarList data={data.markets} labelKey="market" valueKey="revenue" name="Revenue" valueFormatter={moneyCompact} /> : <p className="small text-muted-2 mb-0">{t('No sales in this period.')}</p>}
               </ChartCard>
             </div>
           </div>
@@ -152,7 +153,7 @@ export default function FarmerSales() {
               <div className="table-card">
                 <div className="panel-head px-3 pt-3">
                   <h5>
-                    <i className="bi bi-basket" /> Products
+                    <i className="bi bi-basket" /> {t('Products')}
                   </h5>
                 </div>
                 <DataGrid data={data.products} columns={PRODUCT_COLUMNS} order={[[3, 'desc']]} exportName="Sales by product" />
@@ -162,7 +163,7 @@ export default function FarmerSales() {
               <div className="table-card">
                 <div className="panel-head px-3 pt-3">
                   <h5>
-                    <i className="bi bi-people" /> Customers
+                    <i className="bi bi-people" /> {t('Customers')}
                   </h5>
                 </div>
                 <DataGrid data={data.customers} columns={CUSTOMER_COLUMNS} order={[[2, 'desc']]} exportName="Sales by customer" />

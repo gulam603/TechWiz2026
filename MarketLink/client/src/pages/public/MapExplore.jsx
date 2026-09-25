@@ -8,10 +8,11 @@ import { useToast } from '../../context/ToastContext';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd } from '../../utils/seo';
+import { listText, t } from '../../i18n';
 
 /** Full-screen map of every market and farmer stall with search, day filter and "near me". */
 export default function MapExplore() {
-  useSeo({ title: 'Market map', description: 'All farmers markets and farmer stalls on one map, with directions and opening days.', jsonLd: breadcrumbLd([{ name: 'Market map', path: '/map' }]) });
+  useSeo({ title: t('Market map'), description: t('All farmers markets and farmer stalls on one map, with directions and opening days.'), jsonLd: breadcrumbLd([{ name: 'Market map', path: '/map' }]) });
   const { data } = useFetch('/map');
   const { toast } = useToast();
   const [layer, setLayer] = useState('all');
@@ -39,12 +40,12 @@ export default function MapExplore() {
         lng: m.longitude,
         image: m.image,
         title: m.name,
-        subtitle: `${m.operatingDays.map((d) => DAY_SHORT[d]).join(', ')} · ${time12(m.openTime)} to ${time12(m.closeTime)}`,
+        subtitle: t('{v1} · {v2} to {v3}', { v1: listText(m.operatingDays.map((d) => DAY_SHORT[d])), v2: time12(m.openTime), v3: time12(m.closeTime) }),
         address: m.address,
         city: m.city,
         days: m.operatingDays,
         link: `/markets/${m.slug}`,
-        linkLabel: 'View market',
+        linkLabel: t('View market'),
       })),
       ...data.farmers.map((f) => ({
         id: f._id,
@@ -53,12 +54,12 @@ export default function MapExplore() {
         lng: f.longitude,
         image: f.logo,
         title: f.stallName,
-        subtitle: `Stall · ${f.markets.map((m) => m.name).join(', ')}`,
+        subtitle: t('Stall · {v1}', { v1: listText(f.markets.map((m) => m.name)) }),
         address: f.address,
         city: f.city,
         days: f.operatingDays,
         link: `/farmers/${f.slug}`,
-        linkLabel: 'View stall',
+        linkLabel: t('View stall'),
       })),
     ];
     return list
@@ -83,24 +84,24 @@ export default function MapExplore() {
       <div className="explore-layout">
         <div className="explore-panel">
           <div className="p-3 border-bottom">
-            <h1 className="h4 mb-3">Explore the map</h1>
-            <SearchSelect size="sm" className="mb-2" value={activeCity} onChange={setCity} ariaLabel="City" emptyLabel="All cities" disabled={Boolean(me)} options={cities.map((c) => ({ value: c, label: c }))} />
+            <h1 className="h4 mb-3">{t('Explore the map')}</h1>
+            <SearchSelect size="sm" className="mb-2" value={activeCity} onChange={setCity} ariaLabel={t('City')} emptyLabel="All cities" disabled={Boolean(me)} options={cities.map((c) => ({ value: c, label: c }))} />
             <div className="search-pill mb-2">
               <i className="bi bi-search" />
-              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search markets or stalls" aria-label="Search map" />
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Search markets or stalls')} aria-label={t('Search map')} />
             </div>
             <div className="d-flex gap-1 mb-2 flex-wrap">
               {[
-                ['all', 'All'],
-                ['market', 'Markets'],
-                ['farmer', 'Farmer stalls'],
+                ['all', t('All')],
+                ['market', t('Markets')],
+                ['farmer', t('Farmer stalls')],
               ].map(([v, l]) => (
                 <button key={v} type="button" className={`filter-chip ${layer === v ? 'active' : ''}`} onClick={() => setLayer(v)}>
                   {l}
                 </button>
               ))}
               <button type="button" className={`filter-chip ms-auto ${me ? 'active' : ''}`} onClick={me ? () => setMe(null) : locate}>
-                <i className="bi bi-crosshair" /> Near me
+                <i className="bi bi-crosshair" /> {t('Near me')}
               </button>
             </div>
             <div className="day-picker">
@@ -112,7 +113,7 @@ export default function MapExplore() {
             </div>
           </div>
           <div className="explore-list">
-            <div className="small text-muted-2 px-2 py-1">{items.length} places</div>
+            <div className="small text-muted-2 px-2 py-1">{items.length} {t('places')}</div>
             {items.map((i) => (
               <div
                 key={i.id}
@@ -129,11 +130,11 @@ export default function MapExplore() {
                   <strong className="d-block small">{i.title}</strong>
                   <span className="d-block fs-7 text-muted-2 text-truncate">{i.subtitle}</span>
                   <span className="fs-7">
-                    <span className={`chip ${i.type === 'market' ? 'chip-dark' : 'chip-warn'} py-0`}>{i.type === 'market' ? 'Market' : 'Stall'}</span>
-                    {i.distance !== undefined && <span className="ms-2 fw-semi">{i.distance} km</span>}
+                    <span className={`chip ${i.type === 'market' ? 'chip-dark' : 'chip-warn'} py-0`}>{i.type === 'market' ? t('Market') : t('Stall')}</span>
+                    {i.distance !== undefined && <span className="ms-2 fw-semi">{i.distance} {t('km')}</span>}
                   </span>
                 </span>
-                <Link to={i.link} className="btn btn-sm btn-soft btn-icon align-self-center" onClick={(e) => e.stopPropagation()} aria-label={`Open ${i.title}`}>
+                <Link to={i.link} className="btn btn-sm btn-soft btn-icon align-self-center" onClick={(e) => e.stopPropagation()} aria-label={t('Open {title}', { title: i.title })}>
                   <i className="bi bi-arrow-right" />
                 </Link>
               </div>

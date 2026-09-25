@@ -2,6 +2,7 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
+import { t } from '../../i18n';
 
 const WELCOME = {
   from: 'bot',
@@ -119,7 +120,7 @@ export default function ChatWidget() {
         memory: res.memory || c.memory,
       }));
     } catch (err) {
-      setChat((c) => ({ ...c, messages: [...c.messages, { from: 'bot', text: err.message || 'Sorry, something went wrong.' }] }));
+      setChat((c) => ({ ...c, messages: [...c.messages, { from: 'bot', text: err.message || t('Sorry, something went wrong.') }] }));
     } finally {
       setTyping(false);
     }
@@ -146,15 +147,15 @@ export default function ChatWidget() {
   return (
     <>
       {open && (
-        <section className="chat-panel" aria-label="MarketLink assistant">
+        <section className="chat-panel" aria-label={t('MarketLink assistant')}>
           <div className="chat-head">
             <span className="bot-avatar">
               <i className="bi bi-basket2-fill" aria-hidden="true" />
             </span>
             <div className="flex-grow-1 min-w-0">
-              <strong className="d-block">Basket · AI assistant</strong>
+              <strong className="d-block">{t('Basket · AI assistant')}</strong>
               <span className="fs-7" style={{ color: 'rgba(255,255,255,.7)' }}>
-                <i className="bi bi-circle-fill text-lime" style={{ fontSize: 7 }} /> Answers from live market data
+                <i className="bi bi-circle-fill text-lime" style={{ fontSize: 7 }} /> {t('Answers from live market data')}
               </span>
             </div>
             <button
@@ -162,22 +163,22 @@ export default function ChatWidget() {
               className="chat-head-btn"
               onClick={() => setConfirmClear(!confirmClear)}
               disabled={!messages.length && !chips.length}
-              aria-label="Clear chat history"
-              title="Clear chat history"
+              aria-label={t('Clear chat history')}
+              title={t('Clear chat history')}
             >
               <i className="bi bi-trash3" />
             </button>
-            <button type="button" className="btn-close btn-close-white" onClick={() => setOpen(false)} aria-label="Close assistant" />
+            <button type="button" className="btn-close btn-close-white" onClick={() => setOpen(false)} aria-label={t('Close assistant')} />
           </div>
 
           {chips.length > 0 && (
-            <div className="chat-memory" aria-label="What the assistant remembers">
+            <div className="chat-memory" aria-label={t('What the assistant remembers')}>
               <span className="chat-memory-label">
-                <i className="bi bi-bookmark-heart" /> Remembers
+                <i className="bi bi-bookmark-heart" /> {t('Remembers')}
               </span>
               {chips.map((c) => (
                 <span key={c.icon + c.label} className="chat-memory-chip">
-                  <i className={`bi ${c.icon}`} /> {c.label}
+                  <i className={`bi ${c.icon}`} /> {t(c.label)}
                 </span>
               ))}
             </div>
@@ -185,13 +186,13 @@ export default function ChatWidget() {
 
           {confirmClear && (
             <div className="chat-confirm" role="alert">
-              <span>Delete this conversation and everything Basket remembers?</span>
+              <span>{t('Delete this conversation and everything Basket remembers?')}</span>
               <div className="d-flex gap-2">
                 <button type="button" className="btn btn-sm btn-danger" onClick={clearChat}>
-                  <i className="bi bi-trash3" /> Clear chat
+                  <i className="bi bi-trash3" /> {t('Clear chat')}
                 </button>
                 <button type="button" className="btn btn-sm btn-white" onClick={() => setConfirmClear(false)}>
-                  Cancel
+                  {t('Cancel')}
                 </button>
               </div>
             </div>
@@ -200,7 +201,7 @@ export default function ChatWidget() {
           <div className="chat-body" ref={bodyRef}>
             {!loaded && (
               <div className="text-center text-muted-2 small py-2">
-                <span className="spinner-border spinner-border-sm" /> Loading your conversation…
+                <span className="spinner-border spinner-border-sm" /> {t('Loading your conversation…')}
               </div>
             )}
             {shown.map((m, i) => (
@@ -224,7 +225,7 @@ export default function ChatWidget() {
               </Fragment>
             ))}
             {typing && (
-              <div className="msg bot typing" aria-label="Assistant is typing">
+              <div className="msg bot typing" aria-label={t('Assistant is typing')}>
                 <span />
                 <span />
                 <span />
@@ -247,14 +248,14 @@ export default function ChatWidget() {
               send();
             }}
           >
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask about markets, farmers, products…" aria-label="Message" maxLength={300} />
-            <button type="submit" className="btn btn-primary btn-icon" aria-label="Send" disabled={!input.trim() || typing}>
+            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder={t('Ask about markets, farmers, products…')} aria-label={t('Message')} maxLength={300} />
+            <button type="submit" className="btn btn-primary btn-icon" aria-label={t('Send')} disabled={!input.trim() || typing}>
               <i className="bi bi-send-fill" />
             </button>
           </form>
         </section>
       )}
-      <button type="button" className="chat-launcher" onClick={() => setOpen(!open)} aria-label={open ? 'Close assistant' : 'Open AI assistant'} aria-expanded={open}>
+      <button type="button" className="chat-launcher" onClick={() => setOpen(!open)} aria-label={open ? t('Close assistant') : t('Open AI assistant')} aria-expanded={open}>
         {!open && <span className="pulse" />}
         <i className={`bi ${open ? 'bi-x-lg' : 'bi-chat-dots-fill'}`} />
       </button>

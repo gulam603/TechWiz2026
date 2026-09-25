@@ -11,6 +11,7 @@ import ReviewModal from '../../components/reviews/ReviewModal';
 import VerifiedBadge from '../../components/reviews/VerifiedBadge';
 import { formatDate, timeAgo } from '../../utils/format';
 import { productPath } from '../../utils/links';
+import { productName, t } from '../../i18n';
 
 /** A completed pickup with what is still to review: the stall and each product in it. */
 function PickupGroup({ items, onWrite }) {
@@ -27,26 +28,26 @@ function PickupGroup({ items, onWrite }) {
         <div className="min-w-0 flex-grow-1">
           <strong className="d-block text-truncate">{farmer.slug ? <Link to={`/farmers/${farmer.slug}`}>{farmer.stallName}</Link> : farmer.stallName}</strong>
           <span className="fs-7 text-muted-2">
-            Order {first.orderNumber} · picked up {formatDate(first.completedAt)}
+            {t('Order {number} · picked up {date}', { number: first.orderNumber, date: formatDate(first.completedAt) })}
           </span>
         </div>
         {stall ? (
           <button type="button" className="btn btn-lime btn-sm flex-shrink-0 review-stall-btn" onClick={() => onWrite(stall)}>
-            <i className="bi bi-shop-window" /> Rate the stall
+            <i className="bi bi-shop-window" /> {t('Rate the stall')}
           </button>
         ) : (
           <span className="fs-7 text-success fw-semi flex-shrink-0">
-            <i className="bi bi-check2-circle" /> Stall rated
+            <i className="bi bi-check2-circle" /> {t('Stall rated')}
           </span>
         )}
       </div>
       {products.map((item) => (
         <div key={item.product._id} className="review-todo">
           <ProduceImage src={item.product.image} alt="" className="review-todo-img" />
-          <strong className="min-w-0 flex-grow-1 text-truncate small">{item.product.slug ? <Link to={productPath(item.product)}>{item.product.name}</Link> : item.product.name}</strong>
+          <strong className="min-w-0 flex-grow-1 text-truncate small">{item.product.slug ? <Link to={productPath(item.product)}>{productName(item.product)}</Link> : productName(item.product)}</strong>
           <button type="button" className="btn btn-soft btn-sm flex-shrink-0" onClick={() => onWrite(item)}>
-            <i className="bi bi-star" /> <span className="d-none d-sm-inline">Review product</span>
-            <span className="d-sm-none">Review</span>
+            <i className="bi bi-star" /> <span className="d-none d-sm-inline">{t('Review product')}</span>
+            <span className="d-sm-none">{t('Review')}</span>
           </button>
         </div>
       ))}
@@ -56,7 +57,7 @@ function PickupGroup({ items, onWrite }) {
 
 /** Customer: reviews still to write (after a completed pickup) and the reviews already posted. */
 export default function MyReviews() {
-  useDocumentTitle('My reviews');
+  useDocumentTitle(t('My reviews'));
   const { refreshBadges } = useOutletContext() || {};
   const [tab, setTab] = useState('pending');
   const [writing, setWriting] = useState(null);
@@ -73,18 +74,18 @@ export default function MyReviews() {
   const groups = [...byOrder.values()];
 
   const tabs = [
-    { value: 'pending', label: 'To review', n: groups.length },
-    { value: 'written', label: 'My reviews', n: written.length },
+    { value: 'pending', label: t('To review'), n: groups.length },
+    { value: 'written', label: t('My reviews'), n: written.length },
   ];
 
   return (
     <>
-      <DashHeader title="My reviews" subtitle="Rate the farmers and products you picked up. Honest reviews help other families and the farmers." />
+      <DashHeader title={t('My reviews')} subtitle={t('Rate the farmers and products you picked up. Honest reviews help other families and the farmers.')} />
       <div className="tabs-pill mb-3" role="tablist">
-        {tabs.map((t) => (
-          <button key={t.value} type="button" role="tab" aria-selected={tab === t.value} className={tab === t.value ? 'active' : ''} onClick={() => setTab(t.value)}>
-            {t.label}
-            <span className="n">{t.n}</span>
+        {tabs.map((tx) => (
+          <button key={tx.value} type="button" role="tab" aria-selected={tab === tx.value} className={tab === tx.value ? 'active' : ''} onClick={() => setTab(tx.value)}>
+            {t(tx.label)}
+            <span className="n">{tx.n}</span>
           </button>
         ))}
       </div>
@@ -98,11 +99,11 @@ export default function MyReviews() {
           </div>
         ) : (
           <EmptyState
-            title="Nothing to review right now"
-            message="After you pick up an order you can rate the stall and every product in it."
+            title={t('Nothing to review right now')}
+            message={t('After you pick up an order you can rate the stall and every product in it.')}
             action={
               <Link to="/products" className="btn btn-primary">
-                Browse products
+                {t('Browse products')}
               </Link>
             }
           />
@@ -117,14 +118,14 @@ export default function MyReviews() {
                 <div key={r._id} className="col-lg-6">
                   <div className="panel h-100 my-review">
                     <div className="d-flex align-items-center gap-2 mb-2">
-                      <span className={`chip ${isProduct ? 'chip-soft' : 'chip-lime'}`}>{isProduct ? 'Product' : 'Farmer stall'}</span>
+                      <span className={`chip ${isProduct ? 'chip-soft' : 'chip-lime'}`}>{isProduct ? t('Product') : t('Farmer stall')}</span>
                       <strong className="small text-truncate flex-grow-1">
                         {isProduct ? (
-                          r.product ? <Link to={productPath(r.product)}>{r.product.name}</Link> : 'Product'
+                          r.product ? <Link to={productPath(r.product)}>{productName(r.product)}</Link> : t('Product')
                         ) : r.farmer ? (
                           <Link to={`/farmers/${r.farmer.slug}`}>{r.farmer.stallName}</Link>
                         ) : (
-                          'Farmer'
+                          t('Farmer')
                         )}
                       </strong>
                       <span className="fs-7 text-muted-2 flex-shrink-0">{timeAgo(r.createdAt)}</span>
@@ -136,13 +137,13 @@ export default function MyReviews() {
                     {r.comment && <p className="small mb-0 mt-2">{r.comment}</p>}
                     {r.isRemoved && (
                       <p className="fs-7 text-warning-emphasis mb-0 mt-2">
-                        <i className="bi bi-hourglass-split" /> {r.removedReason === 'Held for moderation' ? 'Waiting for a check by the MarketLink team before it is shown.' : 'Hidden by the MarketLink team.'}
+                        <i className="bi bi-hourglass-split" /> {r.removedReason === 'Held for moderation' ? t('Waiting for a check by the MarketLink team before it is shown.') : t('Hidden by the MarketLink team.')}
                       </p>
                     )}
                     {r.response?.text && (
                       <div className="farmer-reply">
                         <strong className="d-block fs-7 text-success mb-1">
-                          <i className="bi bi-reply-fill" /> Reply from {r.farmer?.stallName || 'the farmer'}
+                          <i className="bi bi-reply-fill" /> {t('Reply from {name}', { name: r.farmer?.stallName || t('the farmer') })}
                         </strong>
                         {r.response.text}
                       </div>
@@ -153,7 +154,7 @@ export default function MyReviews() {
             })}
           </div>
         ) : (
-          <EmptyState title="No reviews yet" message="Your reviews will show up here." />
+          <EmptyState title={t('No reviews yet')} message={t('Your reviews will show up here.')} />
         ))}
 
       {writing && (
@@ -163,7 +164,7 @@ export default function MyReviews() {
             orderId: writing.orderId,
             orderNumber: writing.orderNumber,
             productId: writing.product?._id,
-            name: writing.type === 'product' ? writing.product.name : writing.farmer?.stallName,
+            name: writing.type === 'product' ? productName(writing.product) : writing.farmer?.stallName,
           }}
           onClose={() => setWriting(null)}
           onDone={() => {

@@ -9,11 +9,12 @@ import Pagination from '../../components/common/Pagination';
 import { PageLoader } from '../../components/common/Loader';
 import { formatDate, timeAgo } from '../../utils/format';
 import { NOTIF_ICONS as ICONS } from '../../components/layout/NotificationBell';
+import { t } from '../../i18n';
 
 
 /** In-app notifications (shared by customers, farmers and admins). */
 export default function Notifications() {
-  useDocumentTitle('Notifications');
+  useDocumentTitle(t('Notifications'));
   const [page, setPage] = useState(1);
   const { data, loading, reload } = useFetch(`/notifications?page=${page}&limit=15`);
   const navigate = useNavigate();
@@ -36,18 +37,18 @@ export default function Notifications() {
   return (
     <>
       <DashHeader
-        title="Notifications"
-        subtitle={`${data.unread} unread · order updates, stock alerts, reviews and announcements`}
+        title={t('Notifications')}
+        subtitle={t('{unread} unread · order updates, stock alerts, reviews and announcements', { unread: data.unread })}
         actions={
           data.unread > 0 && (
             <button type="button" className="btn btn-white" onClick={markAll}>
-              <i className="bi bi-check2-all" /> Mark all as read
+              <i className="bi bi-check2-all" /> {t('Mark all as read')}
             </button>
           )
         }
       />
       {data.notifications.length === 0 ? (
-        <EmptyState icon="bi-bell" title="No notifications yet" message="Order updates, restock alerts and announcements will appear here." />
+        <EmptyState icon="bi-bell" title={t('No notifications yet')} message={t('Order updates, restock alerts and announcements will appear here.')} />
       ) : (
         <div className="panel p-2">
           {data.notifications.map((n) => (
@@ -62,8 +63,8 @@ export default function Notifications() {
                   {timeAgo(n.createdAt)}
                 </span>
               </button>
-              {!n.read && <span className="chip chip-lime">New</span>}
-              <button type="button" className="btn btn-sm btn-icon btn-white" onClick={() => remove(n._id)} aria-label="Delete notification">
+              {!n.read && <span className="chip chip-lime">{t('New')}</span>}
+              <button type="button" className="btn btn-sm btn-icon btn-white" onClick={() => remove(n._id)} aria-label={t('Delete notification')}>
                 <i className="bi bi-trash3" />
               </button>
             </div>

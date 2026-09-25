@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { t } from '../../i18n';
 
 export function DashHeader({ title, subtitle, actions }) {
   return (
@@ -17,14 +18,14 @@ export function PageHero({ title, subtitle, crumbs = [], children }) {
     <section className="page-hero">
       <div className="container">
         {crumbs.length > 0 && (
-          <nav aria-label="breadcrumb">
+          <nav aria-label={t('breadcrumb')}>
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <Link to="/">Home</Link>
+                <Link to="/">{t('Home')}</Link>
               </li>
               {crumbs.map((c) => (
                 <li key={c.label} className={`breadcrumb-item ${c.to ? '' : 'active'}`}>
-                  {c.to ? <Link to={c.to}>{c.label}</Link> : c.label}
+                  {c.to ? <Link to={c.to}>{t(c.label)}</Link> : t(c.label)}
                 </li>
               ))}
             </ol>

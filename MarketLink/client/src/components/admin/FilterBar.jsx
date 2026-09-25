@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../api/client';
 import SearchSelect from '../common/SearchSelect';
+import { t } from '../../i18n';
 
 let cache = null;
 let pending = null;
@@ -45,20 +46,20 @@ export default function FilterBar({ fields, value, onChange }) {
   const active = fields.filter((f) => value[f.name] !== '' && value[f.name] !== undefined).length;
   const set = (name, v) => onChange({ ...value, [name]: v });
   return (
-    <div className="filter-bar" role="group" aria-label="Filters">
+    <div className="filter-bar" role="group" aria-label={t('Filters')}>
       {fields.map((f) => (
         <label key={f.name} className={`filter-field ${f.type === 'date' ? 'is-date' : ''} ${f.type === 'number' ? 'is-number' : ''} ${f.wide ? 'is-wide' : ''}`}>
-          <span>{f.label}</span>
+          <span>{t(f.label)}</span>
           {f.type === 'date' || f.type === 'number' ? (
             <input type={f.type} className="form-control form-control-sm" value={value[f.name] ?? ''} min={f.type === 'number' ? 0 : undefined} placeholder={f.placeholder} onChange={(e) => set(f.name, e.target.value)} />
           ) : (
-            <SearchSelect size="sm" value={value[f.name] ?? ''} onChange={(v) => set(f.name, v)} options={listFor(f.options, options)} emptyLabel={f.all || 'All'} ariaLabel={f.label} />
+            <SearchSelect size="sm" value={value[f.name] ?? ''} onChange={(v) => set(f.name, v)} options={listFor(f.options, options)} emptyLabel={f.all || t('All')} ariaLabel={t(f.label)} />
           )}
         </label>
       ))}
       {active > 0 && (
         <button type="button" className="btn btn-sm btn-link filter-reset" onClick={() => onChange({ ...value, ...Object.fromEntries(fields.map((f) => [f.name, ''])) })}>
-          <i className="bi bi-x-circle" /> Clear {active} filter{active > 1 ? 's' : ''}
+          <i className="bi bi-x-circle" /> {active === 1 ? t('Clear 1 filter') : t('Clear {n} filters', { n: active })}
         </button>
       )}
     </div>

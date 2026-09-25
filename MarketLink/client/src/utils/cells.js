@@ -1,4 +1,5 @@
 import { ORDER_STATUS_META, PRODUCT_STATUS_LABEL, formatDate, formatDateKey, initials, money } from './format';
+import { t } from '../i18n';
 
 // HTML helpers for DataTables cells. DataTables renders plain HTML, so every value is escaped.
 // Links use data-href so the grid can open them with the React router (no page reload).
@@ -49,7 +50,7 @@ const DAY_TITLES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Fri
 
 /** S M T W T F S with the open days highlighted (same look as the DayDots component). */
 export const dayDotsCell = (days = []) =>
-  `<span class="day-dots" aria-label="Open on ${esc(days.map((d) => DAY_TITLES[d]).join(', ') || 'no days')}">${DAY_LETTERS.map((l, i) => `<span class="d ${days.includes(i) ? 'on' : ''}" title="${DAY_TITLES[i]}">${l}</span>`).join('')}</span>`;
+  `<span class="day-dots" aria-label="Open on ${esc(days.map((d) => DAY_TITLES[d]).join(', ') || t('no days'))}">${DAY_LETTERS.map((l, i) => `<span class="d ${days.includes(i) ? 'on' : ''}" title="${DAY_TITLES[i]}">${l}</span>`).join('')}</span>`;
 
 /** Number box that saves through DataGrid's onEdit(field, row, value). */
 export const numberInput = (field, value, label, disabled = false) =>

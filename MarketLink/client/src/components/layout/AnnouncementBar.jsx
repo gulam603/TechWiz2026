@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { useAuth } from '../../context/AuthContext';
+import { t } from '../../i18n';
 
 const KEY = 'marketlink_dismissed_announcements';
 
@@ -38,10 +39,10 @@ export default function AnnouncementBar() {
         </span>
         {item.link && (
           <Link to={item.link} className="announcement-link">
-            Shop now <i className="bi bi-arrow-right" aria-hidden="true" />
+            {t('Shop now')} <i className="bi bi-arrow-right" aria-hidden="true" />
           </Link>
         )}
-        <button type="button" className="btn-close" aria-label="Dismiss announcement" onClick={() => setDismissed((d) => [...d, item._id])} />
+        <button type="button" className="btn-close" aria-label={t('Dismiss announcement')} onClick={() => setDismissed((d) => [...d, item._id])} />
       </div>
     </div>
   );

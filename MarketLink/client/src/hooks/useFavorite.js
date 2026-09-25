@@ -3,9 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { t } from '../i18n';
 
 const FIELDS = { farmers: 'favoriteFarmers', products: 'favoriteProducts', markets: 'savedMarkets' };
-const LABELS = { farmers: 'favourite farmers', products: 'favourites', markets: 'saved markets' };
+// Toast texts per list: [added, removed]
+const SAVED = { farmers: ['Added to favourite farmers', 'Removed from favourite farmers'], products: ['Added to favourites', 'Removed from favourites'], markets: ['Added to saved markets', 'Removed from saved markets'] };
 
 /** Favourite / save toggle shared by product, farmer and market cards. */
 export default function useFavorite(type, id) {
@@ -21,19 +23,19 @@ export default function useFavorite(type, id) {
     event?.preventDefault();
     event?.stopPropagation();
     if (!user) {
-      toast('Please log in as a customer to save favourites', 'error');
+      toast(t('Please log in as a customer to save favourites'), 'error');
       navigate('/login', { state: { from: location.pathname } });
       return;
     }
     if (user.role !== 'customer') {
-      toast('Favourites are available for customer accounts', 'error');
+      toast(t('Favourites are available for customer accounts'), 'error');
       return;
     }
     setBusy(true);
     try {
       const res = await api.post(`/customer/favorites/${type}/${id}`);
       setUser((u) => ({ ...u, [field]: res.ids }));
-      toast(res.saved ? `Added to ${LABELS[type]}` : `Removed from ${LABELS[type]}`);
+      toast(t(SAVED[type][res.saved ? 0 : 1]));
     } catch (err) {
       toast(err.message, 'error');
     } finally {

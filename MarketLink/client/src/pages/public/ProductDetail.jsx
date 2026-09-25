@@ -20,6 +20,7 @@ import { DAY_SHORT, money, time12 } from '../../utils/format';
 import { productPath } from '../../utils/links';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, ldGraph, productLd } from '../../utils/seo';
+import { categoryName, isUrdu, listText, productName, t, unitName } from '../../i18n';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -35,15 +36,15 @@ export default function ProductDetail() {
     p
       ? {
           // The farmer's own SEO title, description and keywords win (set in the product form)
-          title: p.metaTitle || `${p.name}, Rs ${p.price} per ${p.unit} from ${p.farmer?.stallName}`,
-          description: clip(p.metaDescription || p.description || `${p.name} (${p.category?.name}) from ${p.farmer?.stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.`),
+          title: p.metaTitle || t('{name}, Rs {price} per {unit} from {stallName}', { name: p.name, price: p.price, unit: p.unit, stallName: p.farmer?.stallName }),
+          description: clip(p.metaDescription || p.description || t('{name} ({name2}) from {stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.', { name: p.name, name2: p.category?.name, stallName: p.farmer?.stallName })),
           keywords: [...(p.keywords || []), p.name, p.category?.name, p.farmer?.stallName],
           image: p.image,
           type: 'product',
-          jsonLd: ldGraph(productLd(p), breadcrumbLd([{ name: 'Shop', path: '/products' }, { name: p.category?.name || 'Products', path: `/products?category=${p.category?.slug || ''}` }, { name: p.name, path: `/products/${p.slug}` }])),
+          jsonLd: ldGraph(productLd(p), breadcrumbLd([{ name: 'Shop', path: '/products' }, { name: p.category?.name || t('Products'), path: `/products?category=${p.category?.slug || ''}` }, { name: p.name, path: `/products/${p.slug}` }])),
           canonicalPath: `/products/${p.slug}`,
         }
-      : { title: 'Product' }
+      : { title: t('Product') }
   );
 
   // While another product is loading, the previous one is still in `data`: wait for the new one
@@ -54,7 +55,7 @@ export default function ProductDetail() {
   if (error)
     return (
       <div className="container py-5">
-        <EmptyState title="Product not found" message="It may have been removed or is no longer listed." action={<Link to="/products" className="btn btn-primary">Back to the shop</Link>} />
+        <EmptyState title={t('Product not found')} message={t('It may have been removed or is no longer listed.')} action={<Link to="/products" className="btn btn-primary">{t('Back to the shop')}</Link>} />
       </div>
     );
 
@@ -72,43 +73,43 @@ export default function ProductDetail() {
 
   function addToCart() {
     if (user && user.role !== 'customer') {
-      toast('Only customer accounts can place pre-orders', 'error');
+      toast(t('Only customer accounts can place pre-orders'), 'error');
       return;
     }
     cart.add(product, qty);
-    toast(`${qty} × ${product.name} added to your basket`);
+    toast(t('{qty} × {name} added to your basket', { qty, name: productName(product) }));
     cart.openDrawer();
   }
 
   // Group the farmer's pickup windows by market
   const windowsByMarket = {};
   for (const w of farmer.pickupWindows || []) {
-    const name = farmer.markets?.find((m) => m._id === w.market)?.name || 'Market';
+    const name = farmer.markets?.find((m) => m._id === w.market)?.name || t('Market');
     (windowsByMarket[name] ||= []).push(w);
   }
 
   const ai = product.aiSchema || {};
   // Answer-first facts in a definition list: easy to read, and easy for search engines and AI assistants to extract
   const facts = [
-    ['bi-tag', 'Price', `${money(product.price)} per ${product.unit}`],
-    ['bi-calendar2-week', 'Season', ai.season],
-    ['bi-egg-fried', 'Best for', ai.uses],
-    ['bi-snow2', 'How to keep it', ai.storage],
-    ['bi-shop', 'Grown by', farmer.stallName],
-    ['bi-geo-alt', 'Grown in', farmer.city],
-    ['bi-flower1', 'Farming practice', farmer.tags?.join(', ')],
-    ['bi-cash-coin', 'Payment', 'Cash to the farmer at pickup'],
-    ['bi-hourglass-split', 'Orders close', `${farmer.orderCutoffHours} hours before your pickup slot`],
+    ['bi-tag', t('Price'), `${money(product.price)} per ${product.unit}`],
+    ['bi-calendar2-week', t('Season'), ai.season],
+    ['bi-egg-fried', t('Best for'), ai.uses],
+    ['bi-snow2', t('How to keep it'), ai.storage],
+    ['bi-shop', t('Grown by'), farmer.stallName],
+    ['bi-geo-alt', t('Grown in'), farmer.city],
+    ['bi-flower1', t('Farming practice'), farmer.tags && listText(farmer.tags)],
+    ['bi-cash-coin', t('Payment'), t('Cash to the farmer at pickup')],
+    ['bi-hourglass-split', t('Orders close'), t('{orderCutoffHours} hours before your pickup slot', { orderCutoffHours: farmer.orderCutoffHours })],
   ].filter(([, , value]) => value);
 
   return (
     <article className="container py-4 pd-page" aria-labelledby="pd-name">
-      <nav aria-label="breadcrumb">
+      <nav aria-label={t('breadcrumb')}>
         <ol className="breadcrumb small">
-          <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-          <li className="breadcrumb-item"><Link to="/products">Shop</Link></li>
+          <li className="breadcrumb-item"><Link to="/">{t('Home')}</Link></li>
+          <li className="breadcrumb-item"><Link to="/products">{t('Shop')}</Link></li>
           <li className="breadcrumb-item"><Link to={`/products?category=${product.category?.slug}`}>{product.category?.name}</Link></li>
-          <li className="breadcrumb-item active">{product.name}</li>
+          <li className="breadcrumb-item active">{productName(product)}</li>
         </ol>
       </nav>
 
@@ -124,20 +125,20 @@ export default function ProductDetail() {
         <div className="col-lg-7">
           <span className="chip chip-soft mb-2">{product.category?.name}</span>
           <h1 id="pd-name" className="display-font mb-2 pd-title">
-            {product.name}
+            {productName(product)}
           </h1>
           <div className="d-flex align-items-center gap-3 mb-3 flex-wrap">
             <RatingStars value={product.ratingAvg} count={product.ratingCount} />
-            <StatusBadge status={soldOut ? 'sold_out' : 'available'} label={soldOut ? 'Sold out' : 'In stock'} />
+            <StatusBadge status={soldOut ? 'sold_out' : 'available'} label={soldOut ? t('Sold out') : t('In stock')} />
           </div>
           <div className="price mb-2" style={{ fontSize: '1.9rem' }}>
-            {money(product.price)} <span className="unit">per {product.unit}</span>
+            {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span>
           </div>
           {product.description && <p className="text-muted-2">{product.description}</p>}
 
           <div className="soft-panel my-4 pd-buy">
             <div className="d-flex justify-content-between small fw-semi mb-2">
-              <span>Available this week</span>
+              <span>{t('Available this week')}</span>
               <span>
                 {product.quantityAvailable} {product.unit}
               </span>
@@ -148,15 +149,15 @@ export default function ProductDetail() {
             <div className="d-flex align-items-center gap-3 mt-4 flex-wrap">
               <QuantityStepper value={qty} onChange={setQty} max={Math.max(1, product.quantityAvailable)} size="lg" />
               <button type="button" className="btn btn-primary btn-lg flex-grow-1" onClick={addToCart} disabled={soldOut}>
-                <i className="bi bi-basket2" /> {soldOut ? 'Sold out' : `Add to basket · ${money(product.price * qty)}`}
+                <i className="bi bi-basket2" /> {soldOut ? t('Sold out') : t('Add to basket · {v1}', { v1: money(product.price * qty) })}
               </button>
             </div>
             {inCart && (
               <div className="small mt-2 text-success fw-semi">
-                <i className="bi bi-check-circle" /> {inCart.quantity} in your basket · <Link to="/cart">View basket</Link>
+                <i className="bi bi-check-circle" /> {t('{n} in your basket', { n: inCart.quantity })} · <Link to="/cart">{t('View basket')}</Link>
               </div>
             )}
-            {soldOut && <div className="small mt-2 text-muted-2">Tip: add it to favourites to get a restock alert.</div>}
+            {soldOut && <div className="small mt-2 text-muted-2">{t('Tip: add it to favourites to get a restock alert.')}</div>}
           </div>
 
           <div className="farmer-mini-wrap mb-3">
@@ -165,7 +166,7 @@ export default function ProductDetail() {
                 <img src={farmer.logo} alt="" />
               </span>
               <span className="flex-grow-1 min-w-0">
-                <span className="fs-7 text-muted-2 d-block">Grown & sold by</span>
+                <span className="fs-7 text-muted-2 d-block">{t('Grown & sold by')}</span>
                 <strong className="d-block text-truncate">{farmer.stallName}</strong>
                 <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
               </span>
@@ -176,9 +177,9 @@ export default function ProductDetail() {
 
           <div className="soft-panel">
             <h6 className="mb-2">
-              <i className="bi bi-clock-history text-success" /> Pickup windows
+              <i className="bi bi-clock-history text-success" /> {t('Pickup windows')}
             </h6>
-            {Object.keys(windowsByMarket).length === 0 && <p className="small text-muted-2 mb-0">This farmer hasn't published pickup windows yet.</p>}
+            {Object.keys(windowsByMarket).length === 0 && <p className="small text-muted-2 mb-0">{t('This farmer hasn\'t published pickup windows yet.')}</p>}
             {Object.entries(windowsByMarket).map(([market, windows]) => (
               <div key={market} className="mb-2">
                 <div className="small fw-semi">{market}</div>
@@ -186,7 +187,7 @@ export default function ProductDetail() {
                   {windows.map((w) => (
                     <li key={w._id}>
                       <span className="day">{DAY_SHORT[w.day]}</span>
-                      {time12(w.start)} to {time12(w.end)}
+                      {time12(w.start)} {t('to')} {time12(w.end)}
                     </li>
                   ))}
                 </ul>
@@ -195,7 +196,7 @@ export default function ProductDetail() {
             <div className="pay-note mt-2">
               <i className="bi bi-info-circle" />
               <span>
-                Orders close {farmer.orderCutoffHours} hours before your pickup slot. You pay the farmer at pickup, so there is no online payment.
+                {t('Orders close {h} hours before your pickup slot. You pay the farmer at pickup, so there is no online payment.', { h: farmer.orderCutoffHours })}
               </span>
             </div>
           </div>
@@ -205,7 +206,7 @@ export default function ProductDetail() {
       <section className="pd-facts" aria-labelledby="pd-facts-title">
         <div className="pd-facts-head">
           <h2 id="pd-facts-title" className="h4 mb-1">
-            Quick facts
+            {t('Quick facts')}
           </h2>
           {ai.summary && <p className="pd-facts-summary mb-0">{ai.summary}</p>}
         </div>
@@ -225,24 +226,24 @@ export default function ProductDetail() {
         <div className="row g-4">
           <div className="col-lg-8">
             <div className="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-3">
-              <h2 className="h3 mb-0">Customer reviews</h2>
-              <WriteReviewButton type="product" id={product._id} name={product.name} onDone={reload} />
+              <h2 className="h3 mb-0">{t('Customer reviews')}</h2>
+              <WriteReviewButton type="product" id={product._id} name={productName(product)} onDone={reload} />
             </div>
             <div className="soft-panel">
-              {reviews.length === 0 ? <p className="text-muted-2 mb-0">No reviews yet. Bought it? Share how it was.</p> : reviews.map((r) => <ReviewItem key={r._id} review={r} farmerName={farmer.stallName} />)}
+              {reviews.length === 0 ? <p className="text-muted-2 mb-0">{t('No reviews yet. Bought it? Share how it was.')}</p> : reviews.map((r) => <ReviewItem key={r._id} review={r} farmerName={farmer.stallName} />)}
             </div>
             <div className="text-end mt-2">
-              <ReportButton targetType="product" targetId={product._id} label="Report this listing" />
+              <ReportButton targetType="product" targetId={product._id} label={t('Report this listing')} />
             </div>
           </div>
           <div className="col-lg-4">
-            <h2 className="h3 mb-3">From the same stall</h2>
+            <h2 className="h3 mb-3">{t('From the same stall')}</h2>
             <div className="d-grid gap-2">
               {(data.fromFarmer || []).map((p) => (
                 <Link key={p._id} to={productPath(p)} className="mini-product">
                   <ProduceImage src={p.image} alt="" color={p.category?.color} />
                   <span className="min-w-0 flex-grow-1">
-                    <strong className="d-block small text-truncate">{p.name}</strong>
+                    <strong className="d-block small text-truncate">{productName(p)}</strong>
                     <span className="fs-7 text-muted-2">{p.category?.name}</span>
                   </span>
                   <span className="small fw-bold text-nowrap">
@@ -251,9 +252,9 @@ export default function ProductDetail() {
                   </span>
                 </Link>
               ))}
-              {!(data.fromFarmer || []).length && <p className="small text-muted-2 mb-0">This is the only product of this stall right now.</p>}
+              {!(data.fromFarmer || []).length && <p className="small text-muted-2 mb-0">{t('This is the only product of this stall right now.')}</p>}
               <Link to={`/farmers/${farmer.slug}`} className="link-arrow small mt-1">
-                Visit {farmer.stallName} <i className="bi bi-arrow-right" />
+                {t('Visit {name}', { name: farmer.stallName })} <i className="bi bi-arrow-right" />
               </Link>
             </div>
           </div>
@@ -265,10 +266,10 @@ export default function ProductDetail() {
           <div className="section-head">
             <div>
               <span className="eyebrow">{product.category?.name}</span>
-              <h2 className="section-title">You may also like</h2>
+              <h2 className="section-title">{t('You may also like')}</h2>
             </div>
             <Link to={`/products?category=${product.category?.slug}`} className="link-arrow">
-              More {product.category?.name?.toLowerCase()} <i className="bi bi-arrow-right" />
+              {t('More {category}', { category: isUrdu() ? categoryName(product.category) : product.category?.name?.toLowerCase() })} <i className="bi bi-arrow-right" />
             </Link>
           </div>
           <div className="row g-3">

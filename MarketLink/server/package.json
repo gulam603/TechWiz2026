@@ -10,6 +10,7 @@
     "start": "node src/server.js",
     "seed": "node src/seed/seed.js",
     "export-data": "node src/seed/export.js",
+    "seo-files": "node src/seed/seoFiles.js",
     "mail:test": "node src/scripts/mail-test.js",
     "lint": "eslint src"
   },

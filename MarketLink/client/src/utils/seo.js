@@ -7,23 +7,44 @@ const rating = (x) => (x.ratingCount > 0 ? { aggregateRating: { '@type': 'Aggreg
 export function productLd(product) {
   const url = abs(`/products/${product.slug}`);
   const inStock = product.status === 'available' && product.quantityAvailable > 0;
+  const ai = product.aiSchema || {};
+  const now = new Date();
+  const prop = (name, value) => (value ? { '@type': 'PropertyValue', name, value } : null);
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
+    '@id': `${url}#product`,
     name: product.name,
-    description: product.description || undefined,
+    alternateName: product.nameUr || undefined,
+    description: product.description || ai.summary || undefined,
+    disambiguatingDescription: ai.summary || undefined,
     image: [product.image, ...(product.gallery || []).map((g) => g.url)].filter(Boolean).map(abs),
-    category: product.category?.name,
+    sku: product._id,
+    category: product.category?.name ? `Fresh food > ${product.category.name}` : undefined,
     keywords: product.keywords?.length ? product.keywords.join(', ') : undefined,
     url,
     brand: { '@type': 'Brand', name: product.farmer?.stallName },
+    countryOfOrigin: { '@type': 'Country', name: 'Pakistan' },
+    additionalProperty: [
+      prop('Season', ai.season),
+      prop('Storage', ai.storage),
+      prop('Best for', ai.uses),
+      prop('Grown in', product.farmer?.city),
+      prop('Farming practice', product.farmer?.tags?.length ? product.farmer.tags.join(', ') : ''),
+      prop('Sold per', product.unit),
+      prop('Payment', 'Cash to the farmer at pickup'),
+    ].filter(Boolean),
     offers: {
       '@type': 'Offer',
       url,
       price: product.price,
       priceCurrency: 'PKR',
+      priceValidUntil: new Date(now.getFullYear(), now.getMonth() + 2, 0).toISOString().slice(0, 10),
       availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-      seller: { '@type': 'Organization', name: product.farmer?.stallName },
+      itemCondition: 'https://schema.org/NewCondition',
+      availableDeliveryMethod: 'http://purl.org/goodrelations/v1#DeliveryModePickUp',
+      eligibleQuantity: { '@type': 'QuantitativeValue', unitText: product.unit },
+      seller: { '@type': 'Organization', name: product.farmer?.stallName, url: abs(`/farmers/${product.farmer?.slug}`) },
     },
     ...rating(product),
   };

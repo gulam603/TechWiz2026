@@ -21,6 +21,11 @@ const KNOWLEDGE = [
   { k: /cucumber|kheera/, taste: 'cool, crisp and refreshing with thin skin', use: 'raita, salads and summer drinks', keep: 'Refrigerate and use within a week.' },
   { k: /capsicum|pepper|shimla/, taste: 'glossy, crunchy and mildly sweet', use: 'stir-fries, pizza, salads and stuffed shimla mirch', keep: 'Keep dry in the fridge.' },
   { k: /okra|bhindi/, taste: 'tender, young pods that stay crisp when cooked', use: 'bhindi masala and crispy fried bhindi', keep: 'Keep dry and cook within two to three days.' },
+  { k: /brinjal|eggplant|aubergine|baingan/, taste: 'glossy, firm and freshly picked', use: 'baingan bharta, salan and crispy pakoras', keep: 'Keep in a cool place and cook within a few days.' },
+  { k: /chilli|chili|mirch/, taste: 'crisp, bright green and pleasantly hot', use: 'salan, chutneys, raita and pickles', keep: 'Keep dry in the fridge; removing the stems helps them last longer.' },
+  { k: /broccoli/, taste: 'tight, dark-green florets with tender stems', use: 'stir-fries, soups and quick steamed sides', keep: 'Keep chilled and use within four days.' },
+  { k: /mushroom/, taste: 'firm, white and pleasantly earthy', use: 'stir-fries, soups, pasta and omelettes', keep: 'Keep in a paper bag in the fridge.' },
+  { k: /coconut|nariyal/, taste: 'young green coconuts full of sweet, cool coconut water', use: 'a refreshing drink and the soft malai inside', keep: 'Keep in a cool place and open within a few days.' },
   { k: /cauliflower|gobi/, taste: 'tight, creamy-white florets', use: 'aloo gobi, pakoras and roasted gobi', keep: 'Refrigerate with the leaves on.' },
   { k: /cabbage|band gobi/, taste: 'crisp, tightly packed leaves', use: 'coleslaw, stir-fries and cabbage sabzi', keep: 'Keeps well in the fridge for a week or more.' },
   { k: /peas|matar/, taste: 'sweet, bright-green peas', use: 'matar pulao, aloo matar and keema', keep: 'Keep chilled and shell just before cooking.' },
@@ -58,7 +63,7 @@ const KNOWLEDGE = [
   { k: /mint|podina|coriander|dhania|basil|herb|parsley|methi|fenugreek/, taste: 'fragrant and freshly cut', use: 'chutneys, garnishing, raita and teas', keep: 'Stand the stems in water or wrap in a damp cloth in the fridge.' },
   { k: /lettuce|salad|greens|rocket|kale/, taste: 'crisp, tender leaves', use: 'salads, wraps and burgers', keep: 'Keep chilled in a bag with a paper towel.' },
   { k: /rose|tulip|sunflower|flower|bouquet|bunch|lily|orchid/, taste: 'cut fresh on market morning with long, strong stems', use: 'brightening your home or as a gift', keep: 'Trim the stems and change the water every two days.' },
-  { k: /plant|money plant|cactus|succulent|hibiscus|pot/, taste: 'healthy, well-rooted and ready for a new home', use: 'balconies, windowsills and gifting', keep: 'Water when the top of the soil feels dry and keep in bright, indirect light.' },
+  { k: /plant|money plant|cactus|succulent|hibiscus|\bpot(ted)?\b/, taste: 'healthy, well-rooted and ready for a new home', use: 'balconies, windowsills and gifting', keep: 'Water when the top of the soil feels dry and keep in bright, indirect light.' },
 ];
 
 const CATEGORY_FALLBACK = [
@@ -84,20 +89,24 @@ const lowerFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);
 function findKnowledge(name) {
   const text = name.toLowerCase();
   let best = null;
-  let bestAt = -1;
   for (const entry of KNOWLEDGE) {
     const m = entry.k.exec(text);
-    if (m && m.index >= bestAt) {
-      best = entry;
-      bestAt = m.index;
-    }
+    if (!m) continue;
+    // the match that ends last wins; when two end together, the longer one ("sweet potato" over "potato")
+    const end = m.index + m[0].length;
+    if (!best || end > best.end || (end === best.end && m[0].length > best.len)) best = { entry, end, len: m[0].length };
   }
-  return best;
+  return best?.entry || null;
+}
+
+/** What a product is like, how it is used and how to keep it (knowledge base, then the category). */
+export function produceInfo(name, category = '') {
+  return findKnowledge(name) || CATEGORY_FALLBACK.find((x) => x.k.test(String(category).toLowerCase())) || { taste: 'fresh and full of flavour', use: 'everyday cooking', keep: 'Keep cool and enjoy it fresh.' };
 }
 
 /** Built-in writer: 3 sentences from the knowledge base; `variant` changes the wording. */
 export function localDescription({ name, category = '', unit = '', stallName = 'our farm', practices = [], variant = 0 }) {
-  const info = findKnowledge(name) || CATEGORY_FALLBACK.find((x) => x.k.test(category.toLowerCase())) || { taste: 'fresh and full of flavour', use: 'everyday cooking', keep: 'Keep cool and enjoy it fresh.' };
+  const info = produceInfo(name, category);
   const v = Math.abs(Number(variant) || 0);
   const opener = OPENERS[v % OPENERS.length](name.trim(), stallName);
   const practice = practices.length ? ` (${practices.slice(0, 2).map(lowerFirst).join(', ')})` : '';

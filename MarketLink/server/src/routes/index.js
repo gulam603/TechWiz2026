@@ -128,6 +128,8 @@ router.get('/farmer/insights', ...farmerOnly, farm.farmerInsights);
 
 router.get('/farmer/products', ...farmerOnly, farm.myProducts);
 router.post('/farmer/products/describe', ...approvedFarmer, tools.writeDescription); // "Write with AI"
+router.post('/farmer/products/ai-seo', ...approvedFarmer, farm.aiProductSeo); // SEO + product schema written by AI
+router.post('/farmer/products/:id/schema', ...approvedFarmer, farm.regenerateProductSchema);
 router.post('/farmer/products', ...approvedFarmer, productPhotos, farm.createProduct);
 router.put('/farmer/products/:id', ...approvedFarmer, productPhotos, farm.updateProduct);
 router.patch('/farmer/products/:id/status', ...approvedFarmer, farm.setProductStatus);

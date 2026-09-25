@@ -342,6 +342,7 @@
 
 .todo-list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.45rem;
 }
 
@@ -355,9 +356,15 @@
   color: $ml-ink;
   text-decoration: none;
   font-size: 0.85rem;
+  > .min-w-0 {
+    flex: 1 1 auto;
+  }
   strong,
   span.text-truncate {
     display: block;
+  }
+  strong {
+    overflow-wrap: anywhere;
   }
   span.text-truncate {
     font-size: 0.75rem;

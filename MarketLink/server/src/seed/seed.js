@@ -30,6 +30,7 @@ import { round2, slugify } from '../utils/helpers.js';
 import { generateSlots, getAvailability } from '../services/slots.js';
 import { uniqueSlug } from '../utils/slug.js';
 import { faqs } from '../content/faqs.js';
+import { builtinSchema } from '../services/productSchema.js';
 import { syncValidators } from '../services/migrations.js';
 import { currentMonth } from '../models/Announcement.js';
 import { refreshRatings } from '../services/ratings.js';
@@ -160,6 +161,7 @@ async function main() {
       const product = await Product.create({
         farmer: farmer._id,
         name: p.name,
+        nameUr: data.urduNames[p.name],
         slug: await uniqueSlug(Product, p.name),
         category: categoryByKey[p.cat]._id,
         price: p.price,
@@ -174,6 +176,10 @@ async function main() {
         markets: farmer.markets,
         days: farmer.operatingDays,
         farmerActive: farmer.isActive,
+        // Product schema from the built-in AI writer (Claude writes it for products added later when a key is set)
+        aiSchema: (({ summary, season, storage, uses }) => ({ summary, season, storage, uses, source: 'builtin', generatedAt: new Date() }))(
+          builtinSchema({ name: p.name, category: categoryByKey[p.cat].name, unit: p.unit, price: p.price, stallName: farmer.stallName, city: farmer.city, practices: farmer.tags })
+        ),
       });
       productsByFarmer[f.key].push(product);
     }

@@ -7,6 +7,7 @@ const productSchema = new Schema(
   {
     farmer: { type: Schema.Types.ObjectId, ref: 'Farmer', required: true },
     name: { type: String, required: [true, 'Product name is required'], trim: true, maxlength: 100 },
+    nameUr: { type: String, trim: true, maxlength: 100 }, // Urdu name, shown when the site is in Urdu
     slug: { type: String, trim: true, lowercase: true }, // readable URL: /products/sindhri-mangoes
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: [true, 'Category is required'] },
     price: { type: Number, required: [true, 'Price is required'], min: [0, 'Price cannot be negative'] },
@@ -24,6 +25,16 @@ const productSchema = new Schema(
     keywords: {
       type: [{ type: String, trim: true, lowercase: true, maxlength: 40 }],
       default: [],
+    },
+    // Product schema (schema.org) details written by AI (Claude or the built-in writer) or by the farmer:
+    // an answer-first summary, the season in Pakistan, a storage tip and what it is best for
+    aiSchema: {
+      summary: { type: String, trim: true, maxlength: 300 },
+      season: { type: String, trim: true, maxlength: 80 },
+      storage: { type: String, trim: true, maxlength: 200 },
+      uses: { type: String, trim: true, maxlength: 200 },
+      source: { type: String, enum: ['claude', 'builtin', 'farmer'] },
+      generatedAt: Date,
     },
     image: String,
     // Extra photos for the gallery on the product page (the main photo is `image`)

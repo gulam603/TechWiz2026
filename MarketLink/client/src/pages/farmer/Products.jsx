@@ -17,7 +17,10 @@ import { money } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
 
-const EMPTY = { name: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', metaTitle: '', metaDescription: '', keywords: '' };
+const EMPTY = { name: '', nameUr: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', metaTitle: '', metaDescription: '', keywords: '', schemaSummary: '', schemaSeason: '', schemaStorage: '', schemaUses: '' };
+
+const SCHEMA_KEYS = ['schemaSummary', 'schemaSeason', 'schemaStorage', 'schemaUses'];
+const SOURCE_LABEL = { claude: 'Written by AI (Claude)', builtin: 'Written by the built-in AI', farmer: 'Written by you' };
 
 const clipText = (text, n) => {
   const t = String(text || '').replace(/\s+/g, ' ').trim();
@@ -26,25 +29,14 @@ const clipText = (text, n) => {
 
 /**
  * Optional search engine (SEO) details: the title and text Google shows, and keywords that also help
- * the MarketLink search. "Fill in for me" writes them from the product name, category and description.
+ * the MarketLink search. "Write with AI" fills them (and the product schema below) from the product.
  */
-function SeoFields({ form, setForm, categoryName }) {
+function SeoFields({ form, setForm, onAi, aiBusy }) {
   const change = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   const words = form.keywords
     .split(',')
     .map((k) => k.trim())
     .filter(Boolean);
-
-  function suggest() {
-    const name = form.name.trim();
-    const cat = (categoryName || '').toLowerCase();
-    setForm((f) => ({
-      ...f,
-      metaTitle: clipText(`${name}${cat ? `, fresh ${cat} from a local farmer` : ''}`, 60),
-      metaDescription: clipText(f.description || `Fresh ${name.toLowerCase()} from a local farmer. Pre-order on MarketLink and pay at the stall when you pick it up.`, 160),
-      keywords: [...new Set([name.toLowerCase(), `fresh ${name.toLowerCase()}`, cat, cat && `buy ${cat}`, 'local farmer'].filter(Boolean))].join(', '),
-    }));
-  }
 
   return (
     <details className="seo-fields" open={Boolean(form.metaTitle || form.metaDescription || form.keywords)}>
@@ -54,8 +46,8 @@ function SeoFields({ form, setForm, categoryName }) {
       <div className="row g-3 mt-1">
         <div className="col-12 d-flex justify-content-between align-items-center gap-2 flex-wrap">
           <span className="small text-muted-2">Leave empty to use the product name and description.</span>
-          <button type="button" className="btn btn-sm btn-soft" onClick={suggest} disabled={form.name.trim().length < 2}>
-            <i className="bi bi-magic" aria-hidden="true" /> Fill in for me
+          <button type="button" className="btn btn-sm btn-ai" onClick={onAi} disabled={form.name.trim().length < 2 || aiBusy}>
+            {aiBusy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" aria-hidden="true" />} Fill in with AI
           </button>
         </div>
         <div className="col-md-6">
@@ -83,6 +75,77 @@ function SeoFields({ form, setForm, categoryName }) {
             <strong className="seo-preview-title">{form.metaTitle || form.name || 'Product name'} · MarketLink</strong>
             <span className="seo-preview-desc">{form.metaDescription || clipText(form.description, 160) || 'Your description appears here.'}</span>
           </div>
+        </div>
+      </div>
+    </details>
+  );
+}
+
+/**
+ * Product schema (schema.org structured data) for Google and AI assistants: a one-sentence summary,
+ * the season, a storage tip and what the product is best for. Written by AI automatically when the
+ * product is saved; the farmer can correct any of it.
+ */
+function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
+  const preview = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: form.name || 'Product name',
+    alternateName: form.nameUr || undefined,
+    disambiguatingDescription: form.schemaSummary || undefined,
+    category: categoryName ? `Fresh food > ${categoryName}` : undefined,
+    additionalProperty: [
+      ['Season', form.schemaSeason],
+      ['Storage', form.schemaStorage],
+      ['Best for', form.schemaUses],
+    ]
+      .filter(([, v]) => v)
+      .map(([name, value]) => ({ '@type': 'PropertyValue', name, value })),
+    offers: { '@type': 'Offer', price: Number(form.price) || undefined, priceCurrency: 'PKR', availableDeliveryMethod: 'Pickup at the market' },
+  };
+  return (
+    <details className="seo-fields schema-fields" open={Boolean(form.schemaSummary)}>
+      <summary>
+        <i className="bi bi-diagram-3" aria-hidden="true" /> Product schema <span className="text-muted-2 fw-normal">· structured data for Google and AI assistants</span>
+      </summary>
+      <div className="row g-3 mt-1">
+        <div className="col-12 d-flex justify-content-between align-items-center gap-2 flex-wrap">
+          <span className="small text-muted-2">
+            {source ? (
+              <span className="chip chip-soft">
+                <i className="bi bi-stars" aria-hidden="true" /> {SOURCE_LABEL[source]}
+              </span>
+            ) : (
+              'Leave empty: AI writes it when you save.'
+            )}
+          </span>
+          <button type="button" className="btn btn-sm btn-ai" onClick={onAi} disabled={form.name.trim().length < 2 || aiBusy}>
+            {aiBusy ? <span className="spinner-border spinner-border-sm" /> : <i className="bi bi-stars" aria-hidden="true" />} {source ? 'Write the schema again with AI' : 'Write the schema with AI'}
+          </button>
+        </div>
+        <div className="col-12">
+          <label className="form-label d-flex justify-content-between" htmlFor="pf-ssum">
+            Summary <span className="text-muted-2 fw-normal">{form.schemaSummary.length}/300</span>
+          </label>
+          <textarea id="pf-ssum" name="schemaSummary" rows={2} className="form-control" maxLength={300} value={form.schemaSummary} onChange={onChange} placeholder="One sentence: what it is, who grows it, price and unit." />
+        </div>
+        <div className="col-md-4">
+          <label className="form-label" htmlFor="pf-sseason">Season</label>
+          <input id="pf-sseason" name="schemaSeason" className="form-control" maxLength={80} value={form.schemaSeason} onChange={onChange} placeholder="e.g. May to August" />
+        </div>
+        <div className="col-md-8">
+          <label className="form-label" htmlFor="pf-suses">Best for</label>
+          <input id="pf-suses" name="schemaUses" className="form-control" maxLength={200} value={form.schemaUses} onChange={onChange} placeholder="e.g. Salads, raita and summer drinks" />
+        </div>
+        <div className="col-12">
+          <label className="form-label" htmlFor="pf-sstore">How to keep it</label>
+          <input id="pf-sstore" name="schemaStorage" className="form-control" maxLength={200} value={form.schemaStorage} onChange={onChange} placeholder="e.g. Refrigerate and use within a week." />
+        </div>
+        <div className="col-12">
+          <details className="schema-code">
+            <summary className="small fw-semi">Show the structured data (JSON-LD)</summary>
+            <pre>{JSON.stringify(preview, null, 2)}</pre>
+          </details>
         </div>
       </div>
     </details>
@@ -176,13 +239,50 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
           unit: product.unit,
           quantityAvailable: product.quantityAvailable,
           templateQuantity: product.templateQuantity,
+          nameUr: product.nameUr || '',
           description: product.description || '',
           metaTitle: product.metaTitle || '',
           metaDescription: product.metaDescription || '',
           keywords: (product.keywords || []).join(', '),
+          schemaSummary: product.aiSchema?.summary || '',
+          schemaSeason: product.aiSchema?.season || '',
+          schemaStorage: product.aiSchema?.storage || '',
+          schemaUses: product.aiSchema?.uses || '',
         }
       : EMPTY
   );
+  // Product schema: sent only when it was written with AI in this form or changed by hand
+  const [schema, setSchema] = useState({ dirty: false, source: product?.aiSchema?.source || '' });
+  const [aiBusy, setAiBusy] = useState(false);
+  const changeSchema = (e) => {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    setSchema({ dirty: true, source: 'farmer' });
+  };
+
+  // "Write with AI" for SEO + product schema (+ the Urdu name when it is empty)
+  async function writeSeoWithAi() {
+    setAiBusy(true);
+    try {
+      const res = await api.post('/farmer/products/ai-seo', { name: form.name, category: form.category, unit: form.unit, price: form.price, description: form.description });
+      setForm((f) => ({
+        ...f,
+        nameUr: f.nameUr || res.nameUr || '',
+        metaTitle: res.metaTitle || f.metaTitle,
+        metaDescription: res.metaDescription || f.metaDescription,
+        keywords: (res.keywords || []).join(', ') || f.keywords,
+        schemaSummary: res.summary || '',
+        schemaSeason: res.season || '',
+        schemaStorage: res.storage || '',
+        schemaUses: res.uses || '',
+      }));
+      setSchema({ dirty: true, source: res.source });
+      toast(res.source === 'claude' ? 'Written by AI (Claude). Check it and save.' : 'Written by the built-in AI. Check it and save.');
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      setAiBusy(false);
+    }
+  }
   const [file, setFile] = useState(null);
   const [galleryFiles, setGalleryFiles] = useState([]);
   const [removeGallery, setRemoveGallery] = useState([]);
@@ -212,7 +312,10 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
     e.preventDefault();
     setBusy(true);
     try {
-      const fd = toFormData(form, { image: file });
+      const payload = { ...form };
+      if (schema.dirty) payload.schemaSource = schema.source;
+      else SCHEMA_KEYS.forEach((k) => delete payload[k]);
+      const fd = toFormData(payload, { image: file });
       galleryFiles.forEach((f) => fd.append('gallery', f));
       if (removeGallery.length) fd.append('removeGallery', removeGallery.join(','));
       if (product) await api.upload('PUT', `/farmer/products/${product._id}`, fd);
@@ -230,11 +333,17 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
     <Modal open onClose={onClose} title={product ? `Edit ${product.name}` : 'Add a product'} size="modal-lg">
       <form onSubmit={submit}>
         <div className="row g-3">
-          <div className="col-md-7">
+          <div className="col-md-4">
             <label className="form-label" htmlFor="pf-name">Product name</label>
             <input id="pf-name" name="name" className="form-control" required value={form.name} onChange={change} maxLength={100} />
           </div>
-          <div className="col-md-5">
+          <div className="col-md-4">
+            <label className="form-label" htmlFor="pf-nameur">
+              Name in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+            </label>
+            <input id="pf-nameur" name="nameUr" className="form-control" dir="rtl" lang="ur" value={form.nameUr} onChange={change} maxLength={100} placeholder="مثلاً سندھڑی آم" />
+          </div>
+          <div className="col-md-4">
             <label className="form-label" htmlFor="pf-cat">Category</label>
             <SearchSelect id="pf-cat" value={form.category} onChange={(v) => setForm((f) => ({ ...f, category: v }))} required ariaLabel="Category" options={categories.map((c) => ({ value: c._id, label: c.name }))} />
           </div>
@@ -264,7 +373,10 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
             <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} placeholder="Type the product name, then press Write with AI" />
           </div>
           <div className="col-12">
-            <SeoFields form={form} setForm={setForm} categoryName={categories.find((c) => c._id === form.category)?.name} />
+            <SeoFields form={form} setForm={setForm} onAi={writeSeoWithAi} aiBusy={aiBusy} />
+          </div>
+          <div className="col-12">
+            <SchemaFields form={form} onChange={changeSchema} source={schema.source} onAi={writeSeoWithAi} aiBusy={aiBusy} categoryName={categories.find((c) => c._id === form.category)?.name} />
           </div>
           <div className="col-md-5">
             <ImageInput label="Main photo" current={product?.image} file={file} onFile={setFile} />

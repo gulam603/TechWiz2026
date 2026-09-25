@@ -210,6 +210,8 @@ createCollection(
       lowStockAlertedAt: date,
       soldOutAlertedAt: date,
       description: str(1500),
+      nameUr: str(100),
+      aiSchema: { bsonType: 'object', properties: { summary: str(300), season: str(80), storage: str(200), uses: str(200), source: { enum: ['claude', 'builtin', 'farmer'] }, generatedAt: date }, description: 'product schema details written by AI' },
       metaTitle: str(70), // SEO title (optional)
       metaDescription: str(170), // SEO description (optional)
       keywords: { bsonType: 'array', items: str(40) }, // SEO keywords, also used by the search

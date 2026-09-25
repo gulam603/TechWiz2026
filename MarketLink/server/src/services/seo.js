@@ -5,6 +5,7 @@ import { CLIENT_DIST } from '../utils/paths.js';
 import env from '../config/env.js';
 import { publicFaqs } from '../controllers/faqController.js';
 import { DAY, HOW_IT_WORKS, SITE_SUMMARY, esc, pageBody } from './aeo.js';
+import { productJsonLd } from './productSchema.js';
 
 /**
  * Search engines, AI assistants and link previews (WhatsApp, Facebook, X ...) read the HTML before
@@ -82,24 +83,16 @@ const faqPage = (faqs) =>
       }
     : null;
 
-// Offers are valid until the end of next month (search engines ask for a date; prices change weekly)
-const priceValidUntil = () => {
-  const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth() + 2, 0).toISOString().slice(0, 10);
-};
-
 async function productMeta(slug, origin) {
   const product = await Product.findOne({ slug: slug.toLowerCase(), isRemoved: false, farmerActive: true })
     .populate('category', 'name slug')
-    .populate('farmer', 'stallName slug city pickupWindows markets orderCutoffHours')
+    .populate('farmer', 'stallName slug city tags pickupWindows markets orderCutoffHours')
     .lean();
   if (!product) return null;
   const [reviews, markets] = await Promise.all([
     Review.find({ product: product._id, isRemoved: false, comment: { $exists: true, $ne: '' } }).populate('customer', 'name').sort({ createdAt: -1 }).limit(3).lean(),
     Market.find({ _id: { $in: product.farmer?.markets || [] }, isActive: true }).select('name slug city').lean(),
   ]);
-  const inStock = product.status === 'available' && product.quantityAvailable > 0;
-  const url = `${origin}/products/${product.slug}`;
   const images = [product.image, ...(product.gallery || []).map((g) => g.url)].filter(Boolean).map((u) => absolute(origin, u));
   return {
     // The farmer's own SEO title, description and keywords win; otherwise they are built from the product
@@ -110,40 +103,7 @@ async function productMeta(slug, origin) {
     imageAlt: product.name,
     type: 'product',
     jsonLd: graph(
-      {
-        '@type': 'Product',
-        '@id': `${url}#product`,
-        name: product.name,
-        description: product.description || undefined,
-        image: images,
-        sku: String(product._id),
-        category: product.category?.name,
-        keywords: product.keywords?.length ? product.keywords.join(', ') : undefined,
-        url,
-        brand: { '@type': 'Brand', name: product.farmer?.stallName },
-        offers: {
-          '@type': 'Offer',
-          url,
-          price: product.price,
-          priceCurrency: 'PKR',
-          priceValidUntil: priceValidUntil(),
-          availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-          itemCondition: 'https://schema.org/NewCondition',
-          availableDeliveryMethod: 'http://purl.org/goodrelations/v1#DeliveryModePickUp',
-          eligibleQuantity: { '@type': 'QuantitativeValue', unitText: product.unit },
-          seller: { '@type': 'Organization', name: product.farmer?.stallName, url: `${origin}/farmers/${product.farmer?.slug}` },
-        },
-        ...rating(product),
-        review: reviews.length
-          ? reviews.map((r) => ({
-              '@type': 'Review',
-              reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5, worstRating: 1 },
-              author: { '@type': 'Person', name: String(r.customer?.name || 'Customer').split(' ')[0] },
-              datePublished: new Date(r.createdAt).toISOString().slice(0, 10),
-              reviewBody: r.comment,
-            }))
-          : undefined,
-      },
+      productJsonLd(product, origin, { reviews }),
       breadcrumbs(origin, [
         ['Shop', '/products'],
         [product.category?.name || 'Products', `/products?category=${product.category?.slug || ''}`],
@@ -434,12 +394,8 @@ export async function sendPage(req, res) {
 
 let sitemapCache = { at: 0, origin: '', xml: '' };
 
-/** GET /sitemap.xml: every public page, product, farmer and market with their photos (cached for 10 minutes). */
-export async function sitemap(req, res) {
-  const origin = siteOrigin(req);
-  if (sitemapCache.xml && sitemapCache.origin === origin && Date.now() - sitemapCache.at < 10 * 60 * 1000) {
-    return res.type('application/xml').send(sitemapCache.xml);
-  }
+/** sitemap.xml text: every public page, product, farmer and market with their photos. */
+export async function buildSitemap(origin) {
   const [products, farmers, markets, categories] = await Promise.all([
     Product.find(Product.publicFilter()).select('slug name image gallery updatedAt').lean(),
     Farmer.find({ isActive: true }).select('slug stallName logo coverImage updatedAt').lean(),
@@ -465,30 +421,39 @@ export async function sitemap(req, res) {
     ...markets.map((m) => ({ loc: `/markets/${m.slug}`, lastmod: day(m.updatedAt), priority: '0.7', changefreq: 'weekly', images: photos(m.name, m.image) })),
   ];
   const imageTags = (images = []) => images.map((i) => `<image:image><image:loc>${esc(i.loc)}</image:loc><image:title>${esc(i.title)}</image:title></image:image>`).join('');
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls
     .map((u) => `  <url><loc>${esc(origin + u.loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}<changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority>${imageTags(u.images)}</url>`)
     .join('\n')}\n</urlset>\n`;
-  sitemapCache = { at: Date.now(), origin, xml };
-  res.type('application/xml').send(xml);
+}
+
+/** GET /sitemap.xml (cached for 10 minutes). */
+export async function sitemap(req, res) {
+  const origin = siteOrigin(req);
+  if (!sitemapCache.xml || sitemapCache.origin !== origin || Date.now() - sitemapCache.at > 10 * 60 * 1000) {
+    sitemapCache = { at: Date.now(), origin, xml: await buildSitemap(origin) };
+  }
+  res.type('application/xml').send(sitemapCache.xml);
 }
 
 // Search engines and AI assistants that may read the public pages (answer engines quote MarketLink)
 const AI_CRAWLERS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'anthropic-ai', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended', 'Bingbot', 'DuckAssistBot', 'CCBot'];
 const DISALLOW = ['/api/', '/account', '/farmer/', '/farmer$', '/admin', '/checkout', '/cart', '/reset-password/', '/unsubscribe'];
 
+/** robots.txt text: public pages open to search engines and AI assistants, private pages closed. */
+export function robotsText(origin) {
+  const group = (agents) => [...agents.map((a) => `User-agent: ${a}`), 'Allow: /', ...DISALLOW.map((d) => `Disallow: ${d}`), ''];
+  return [
+    '# MarketLink: local farmers markets online. Public pages may be crawled, indexed and quoted.',
+    `# Summary for AI assistants: ${origin}/llms.txt (full text: ${origin}/llms-full.txt)`,
+    '',
+    ...group(['*']),
+    ...group(AI_CRAWLERS),
+    `Sitemap: ${origin}/sitemap.xml`,
+    '',
+  ].join('\n');
+}
+
 /** GET /robots.txt */
 export function robots(req, res) {
-  const origin = siteOrigin(req);
-  const group = (agents) => [...agents.map((a) => `User-agent: ${a}`), 'Allow: /', ...DISALLOW.map((d) => `Disallow: ${d}`), ''];
-  res.type('text/plain').send(
-    [
-      '# MarketLink: local farmers markets online. Public pages may be crawled, indexed and quoted.',
-      `# Summary for AI assistants: ${origin}/llms.txt (full text: ${origin}/llms-full.txt)`,
-      '',
-      ...group(['*']),
-      ...group(AI_CRAWLERS),
-      `Sitemap: ${origin}/sitemap.xml`,
-      '',
-    ].join('\n')
-  );
+  res.type('text/plain').send(robotsText(siteOrigin(req)));
 }

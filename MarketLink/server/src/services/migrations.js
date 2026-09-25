@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Product from '../models/Product.js';
 import Review from '../models/Review.js';
 import { uniqueSlug } from '../utils/slug.js';
+import { ensureProductSchema } from './productSchema.js';
 
 /**
  * Small data fixes that run once at start-up. They only touch documents that still need them,
@@ -20,6 +21,11 @@ export async function runMigrations() {
   // Reviews written before "Verified purchase" existed were always tied to a completed order
   const verified = await Review.updateMany({ verified: { $exists: false }, order: { $exists: true, $ne: null } }, { $set: { verified: true } });
   if (verified.modifiedCount) console.log(`[db] Marked ${verified.modifiedCount} older review(s) as verified purchases`);
+
+  // Products created before the AI product schema existed get one from the built-in writer
+  const noSchema = await Product.find({ $or: [{ 'aiSchema.summary': { $exists: false } }, { 'aiSchema.summary': '' }] }).limit(500);
+  for (const p of noSchema) await ensureProductSchema(p, { background: false });
+  if (noSchema.length) console.log(`[db] Wrote the product schema of ${noSchema.length} product(s)`);
 }
 
 // Walks every path of a Mongoose schema, including sub-documents and arrays of sub-documents.

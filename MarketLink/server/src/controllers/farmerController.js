@@ -67,7 +67,7 @@ export async function getFarmer(req, res) {
       .lean(),
     Review.find({ farmer: farmer._id, isRemoved: false })
       .populate('customer', 'name avatar')
-      .populate('product', 'name slug')
+      .populate('product', 'name nameUr slug')
       .sort({ createdAt: -1 })
       .limit(30)
       .lean(),

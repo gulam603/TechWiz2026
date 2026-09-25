@@ -18,7 +18,7 @@ export async function listReviews(req, res) {
   }
   if (isValidId(req.query.farmer)) filter.farmer = req.query.farmer;
   const [reviews, total] = await Promise.all([
-    Review.find(filter).populate('customer', 'name avatar').populate('product', 'name slug').sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Review.find(filter).populate('customer', 'name avatar').populate('product', 'name nameUr slug').sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
     Review.countDocuments(filter),
   ]);
   res.json({ reviews, total, page, pages: Math.ceil(total / limit) });
@@ -148,7 +148,7 @@ async function reviewableOrders(customerId) {
 export async function myReviews(req, res) {
   const [pending, written] = await Promise.all([
     reviewableOrders(req.user._id),
-    Review.find({ customer: req.user._id }).populate('product', 'name slug image').populate('farmer', 'stallName slug logo').sort({ createdAt: -1 }).lean(),
+    Review.find({ customer: req.user._id }).populate('product', 'name nameUr slug image').populate('farmer', 'stallName slug logo').sort({ createdAt: -1 }).lean(),
   ]);
   const slugs = await Product.find({ _id: { $in: pending.filter((p) => p.product).map((p) => p.product._id) } }).select('slug').lean();
   const slugOf = new Map(slugs.map((p) => [String(p._id), p.slug]));

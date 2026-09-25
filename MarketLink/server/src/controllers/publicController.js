@@ -41,12 +41,12 @@ export async function globalSearch(req, res) {
   // Category-wise search: only products of that category, and only farmers who sell it
   const category = req.query.category ? await resolveCategory(String(req.query.category)) : null;
   if (req.query.category && !category) return res.json({ products: [], farmers: [], markets: [] });
-  const productFilter = { ...Product.publicFilter(), $or: [{ name: regex }, { keywords: regex }], ...(category ? { category: category._id } : {}) };
+  const productFilter = { ...Product.publicFilter(), $or: [{ name: regex }, { nameUr: regex }, { keywords: regex }], ...(category ? { category: category._id } : {}) };
   const farmerFilter = { isActive: true, $or: [{ stallName: regex }, { tags: regex }] };
   if (category) farmerFilter._id = { $in: await Product.distinct('farmer', { ...Product.publicFilter(), category: category._id }) };
   const [products, farmers, markets] = await Promise.all([
     Product.find(productFilter)
-      .select('name slug price unit image status quantityAvailable farmer category')
+      .select('name nameUr slug price unit image status quantityAvailable farmer category')
       .populate('farmer', 'stallName slug')
       .populate('category', 'name color')
       .limit(6)
@@ -110,10 +110,10 @@ export async function testimonials(req, res) {
   const [reviews, summary] = await Promise.all([
     Review.find({ ...visible, rating: { $gte: 4 }, comment: { $exists: true, $ne: '' } })
       .populate('customer', 'name avatar city')
-      .populate('farmer', 'stallName slug')
-      .populate('product', 'name slug image')
+      .populate('farmer', 'stallName slug logo city')
+      .populate('product', 'name nameUr slug image')
       .sort({ verified: -1, rating: -1, createdAt: -1 })
-      .limit(9)
+      .limit(80)
       .lean(),
     Review.aggregate([
       { $match: visible },
@@ -133,8 +133,21 @@ export async function testimonials(req, res) {
     ]),
   ]);
   const s = summary[0];
+  // Every comment text once and at most two reviews per customer, so the home page shows a varied wall
+  const seenText = new Set();
+  const perCustomer = new Map();
+  const picked = [];
+  for (const r of reviews) {
+    const text = r.comment.trim().toLowerCase();
+    const who = String(r.customer?._id || '');
+    if (seenText.has(text) || (perCustomer.get(who) || 0) >= 2) continue;
+    seenText.add(text);
+    perCustomer.set(who, (perCustomer.get(who) || 0) + 1);
+    picked.push(r);
+    if (picked.length === 12) break;
+  }
   res.json({
-    reviews: reviews.map(({ customer, ...r }) => ({ ...r, customer: customer ? { name: customer.name, avatar: customer.avatar, city: customer.city } : null })),
+    reviews: picked.map(({ customer, ...r }) => ({ ...r, customer: customer ? { name: customer.name, avatar: customer.avatar, city: customer.city } : null })),
     summary: s
       ? { count: s.count, average: Math.round(s.avg * 10) / 10, verifiedShare: Math.round((s.verified / s.count) * 100), stars: { 5: s.r5, 4: s.r4, 3: s.r3, 2: s.r2, 1: s.r1 } }
       : { count: 0, average: 0, verifiedShare: 0, stars: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } },

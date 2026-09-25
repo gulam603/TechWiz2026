@@ -11,6 +11,7 @@ import { pickupDetails, pushStatus } from '../services/orders.js';
 import { readFarmDetails } from './helpers/farmDetails.js';
 import { resolveCity } from './adminToolsController.js';
 import { checkLowStock, orderMovements, recordMovements } from '../services/inventory.js';
+import { ensureProductSchema, generateProductSchema, refreshProductSchema } from '../services/productSchema.js';
 
 // ---------------------------------------------------------------- profile
 
@@ -114,8 +115,26 @@ export function readKeywords(value) {
   return unique;
 }
 
+// Product schema fields in the form (flat, so they also work in multipart uploads)
+const SCHEMA_FIELDS = { schemaSummary: ['summary', 300], schemaSeason: ['season', 80], schemaStorage: ['storage', 200], schemaUses: ['uses', 200] };
+
+/** The farmer's own product schema text; `null` when the form did not send any. */
+function readSchemaFields(body) {
+  if (!Object.keys(SCHEMA_FIELDS).some((k) => body[k] !== undefined)) return null;
+  const out = {};
+  for (const [key, [field, max]] of Object.entries(SCHEMA_FIELDS)) {
+    const value = String(body[key] ?? '').replace(/\s+/g, ' ').trim();
+    if (value.length > max) throw new AppError(`The product schema ${field} can be ${max} characters at most`, 400);
+    out[field] = value;
+  }
+  // Text the form got from "Write with AI" and saved unchanged keeps its AI source
+  out.source = ['claude', 'builtin'].includes(body.schemaSource) ? body.schemaSource : 'farmer';
+  return out;
+}
+
 function readProductBody(body, { partial = false } = {}) {
-  const data = pick(body, ['name', 'description', 'unit', 'metaTitle', 'metaDescription']);
+  const data = pick(body, ['name', 'nameUr', 'description', 'unit', 'metaTitle', 'metaDescription']);
+  if (data.nameUr !== undefined && String(data.nameUr).length > 100) throw new AppError('The Urdu name can be 100 characters at most', 400);
   if (body.keywords !== undefined) data.keywords = readKeywords(body.keywords);
   if (data.metaTitle && String(data.metaTitle).length > 70) throw new AppError('The SEO title can be 70 characters at most', 400);
   if (data.metaDescription && String(data.metaDescription).length > 170) throw new AppError('The SEO description can be 170 characters at most', 400);
@@ -163,7 +182,24 @@ export async function createProduct(req, res) {
   });
   await recordMovements([{ product, change: product.quantityAvailable, type: 'initial', reason: 'New product', by: 'farmer' }]);
   await checkLowStock([product._id]);
+  await saveSchema(product, readSchemaFields(req.body), { changed: true });
   res.status(201).json({ product });
+}
+
+/**
+ * Product schema after a save: the farmer's own text when they wrote it, otherwise written by AI
+ * (straight away when missing, again when the name, category or description changed).
+ */
+async function saveSchema(product, own, { changed }) {
+  const { source, ...text } = own || {};
+  if (own && Object.values(text).some(Boolean)) {
+    product.aiSchema = { ...text, source, generatedAt: new Date() };
+    await product.save();
+    if (!own.summary) await ensureProductSchema(product, { changed: true });
+    return product;
+  }
+  if (own && product.aiSchema?.source === 'farmer') product.aiSchema = undefined; // the farmer cleared their text
+  return ensureProductSchema(product, { changed });
 }
 
 async function loadOwnProduct(req) {
@@ -180,6 +216,7 @@ export async function updateProduct(req, res) {
   const wasEmpty = product.quantityAvailable <= 0 || product.status === PRODUCT_STATUS.SOLD_OUT;
   const before = product.quantityAvailable;
   if (data.name && data.name !== product.name) product.slug = await uniqueSlug(Product, data.name, product._id);
+  const contentChanged = ['name', 'description'].some((k) => data[k] !== undefined && data[k] !== product[k]) || (data.category && String(data.category) !== String(product.category));
   Object.assign(product, data);
   const files = req.files || {};
   if (files.image?.[0]) {
@@ -194,6 +231,7 @@ export async function updateProduct(req, res) {
   await recordMovements([{ product, change: product.quantityAvailable - before, type: 'adjustment', reason: 'Edited in Weekly stock', by: 'farmer' }]);
   await checkLowStock([product._id]);
   if (wasEmpty && product.quantityAvailable > 0 && product.status === PRODUCT_STATUS.AVAILABLE) await notifyRestock(product);
+  await saveSchema(product, readSchemaFields(req.body), { changed: contentChanged });
   res.json({ product });
 }
 
@@ -434,4 +472,30 @@ export async function respondToReview(req, res) {
     link: review.product ? `/products/${(await Product.findById(review.product).select('slug').lean())?.slug || review.product}` : `/farmers/${req.farmer.slug}`,
   });
   res.json({ review });
+}
+
+// POST /api/farmer/products/:id/schema  -> writes the product schema again with AI (replaces the farmer's text)
+export async function regenerateProductSchema(req, res) {
+  const product = await loadOwnProduct(req);
+  await refreshProductSchema(product, { force: true });
+  res.json({ product });
+}
+
+// POST /api/farmer/products/ai-seo  { name, category, unit, price, description }
+// "Write with AI" in the product form: SEO title, description, keywords, Urdu name and product schema
+export async function aiProductSeo(req, res) {
+  const name = String(req.body.name || '').trim().slice(0, 100);
+  if (name.length < 2) throw new AppError('Type the product name first', 400);
+  const category = isValidId(req.body.category) ? (await Category.findById(req.body.category).select('name').lean())?.name : '';
+  const result = await generateProductSchema({
+    name,
+    category: category || '',
+    unit: UNITS.includes(req.body.unit) ? req.body.unit : '',
+    price: toNumber(req.body.price) || undefined,
+    description: String(req.body.description || '').slice(0, 1500),
+    stallName: req.farmer.stallName,
+    city: req.farmer.city || '',
+    practices: req.farmer.tags || [],
+  });
+  res.json(result);
 }

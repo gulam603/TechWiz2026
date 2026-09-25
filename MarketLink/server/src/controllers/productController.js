@@ -22,7 +22,7 @@ async function resolveCategoryId(value) {
 /** Builds the Mongo filter for the product catalogue from query string filters. */
 export async function buildProductFilter(query) {
   const filter = Product.publicFilter();
-  if (query.search) filter.$or = [{ name: containsRegex(query.search) }, { description: containsRegex(query.search) }, { keywords: containsRegex(query.search) }];
+  if (query.search) filter.$or = [{ name: containsRegex(query.search) }, { nameUr: containsRegex(query.search) }, { description: containsRegex(query.search) }, { keywords: containsRegex(query.search) }];
 
   const categoryId = await resolveCategoryId(query.category);
   if (categoryId === null) return null; // unknown category -> no results
@@ -86,7 +86,7 @@ export async function getProduct(req, res) {
     .populate('category', 'name slug color')
     .populate({
       path: 'farmer',
-      select: 'stallName slug logo address latitude longitude ratingAvg ratingCount operatingDays pickupWindows orderCutoffHours markets',
+      select: 'stallName slug logo address city tags latitude longitude ratingAvg ratingCount operatingDays pickupWindows orderCutoffHours markets',
       populate: { path: 'markets', select: 'name slug address' },
     })
     .lean();
@@ -105,7 +105,7 @@ export async function getProduct(req, res) {
       .lean(),
     Product.find({ ...Product.publicFilter(), farmer: product.farmer._id, _id: { $ne: product._id } })
       .populate('category', 'name slug color')
-      .select('name slug image price unit category status quantityAvailable')
+      .select('name nameUr slug image price unit category status quantityAvailable')
       .sort({ totalSold: -1 })
       .limit(4)
       .lean(),

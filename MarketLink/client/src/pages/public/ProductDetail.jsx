@@ -87,8 +87,22 @@ export default function ProductDetail() {
     (windowsByMarket[name] ||= []).push(w);
   }
 
+  const ai = product.aiSchema || {};
+  // Answer-first facts in a definition list: easy to read, and easy for search engines and AI assistants to extract
+  const facts = [
+    ['bi-tag', 'Price', `${money(product.price)} per ${product.unit}`],
+    ['bi-calendar2-week', 'Season', ai.season],
+    ['bi-egg-fried', 'Best for', ai.uses],
+    ['bi-snow2', 'How to keep it', ai.storage],
+    ['bi-shop', 'Grown by', farmer.stallName],
+    ['bi-geo-alt', 'Grown in', farmer.city],
+    ['bi-flower1', 'Farming practice', farmer.tags?.join(', ')],
+    ['bi-cash-coin', 'Payment', 'Cash to the farmer at pickup'],
+    ['bi-hourglass-split', 'Orders close', `${farmer.orderCutoffHours} hours before your pickup slot`],
+  ].filter(([, , value]) => value);
+
   return (
-    <div className="container py-4 pd-page">
+    <article className="container py-4 pd-page" aria-labelledby="pd-name">
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb small">
           <li className="breadcrumb-item"><Link to="/">Home</Link></li>
@@ -109,7 +123,7 @@ export default function ProductDetail() {
 
         <div className="col-lg-7">
           <span className="chip chip-soft mb-2">{product.category?.name}</span>
-          <h1 className="display-font mb-2 pd-title">
+          <h1 id="pd-name" className="display-font mb-2 pd-title">
             {product.name}
           </h1>
           <div className="d-flex align-items-center gap-3 mb-3 flex-wrap">
@@ -188,6 +202,25 @@ export default function ProductDetail() {
         </div>
       </div>
 
+      <section className="pd-facts" aria-labelledby="pd-facts-title">
+        <div className="pd-facts-head">
+          <h2 id="pd-facts-title" className="h4 mb-1">
+            Quick facts
+          </h2>
+          {ai.summary && <p className="pd-facts-summary mb-0">{ai.summary}</p>}
+        </div>
+        <dl className="pd-facts-grid">
+          {facts.map(([icon, label, value]) => (
+            <div key={label} className="pd-fact">
+              <dt>
+                <i className={`bi ${icon}`} aria-hidden="true" /> {label}
+              </dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
       <section className="section pb-0">
         <div className="row g-4">
           <div className="col-lg-8">
@@ -247,6 +280,6 @@ export default function ProductDetail() {
           </div>
         </section>
       )}
-    </div>
+    </article>
   );
 }

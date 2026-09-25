@@ -6,6 +6,7 @@ export const LINKS = [
   { to: '/farmers', label: 'Farmers', icon: 'bi-people' },
   { to: '/map', label: 'Map', icon: 'bi-map' },
   { to: '/about', label: 'About', icon: 'bi-info-circle' },
+  { to: '/faq', label: 'FAQs', icon: 'bi-question-circle', menuOnly: true }, // phone menu only (the desktop bar is full)
   { to: '/contact', label: 'Contact', icon: 'bi-envelope' },
 ];
 

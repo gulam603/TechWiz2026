@@ -47,7 +47,7 @@ export function marketLd(market) {
   const days = (market.operatingDays || []).map((d) => DAY[d]);
   return {
     '@context': 'https://schema.org',
-    '@type': 'Place',
+    '@type': ['Place', 'LocalBusiness'],
     name: market.name,
     description: market.description || undefined,
     image: abs(market.image),
@@ -62,3 +62,72 @@ export const clip = (s, n = 160) => {
   const t = String(s || '').replace(/\s+/g, ' ').trim();
   return t.length > n ? `${t.slice(0, n - 1).replace(/\s+\S*$/, '')}…` : t;
 };
+
+/** Answer text for structured data: paragraphs joined, list lines kept on their own line. */
+const plain = (s) => String(s || '').replace(/\n{2,}/g, '\n').trim();
+
+/** FAQPage structured data (search engines and AI assistants show these answers directly). */
+export function faqLd(faqs) {
+  if (!faqs?.length) return undefined;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: plain(f.answer) } })),
+  };
+}
+
+/** BreadcrumbList: [{ name, path }] from the home page down to the current page. */
+export function breadcrumbLd(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Home', path: '/' }, ...items].map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: abs(c.path) })),
+  };
+}
+
+/** Several JSON-LD objects in one script. */
+export function ldGraph(...items) {
+  const list = items.flat().filter(Boolean).map(({ '@context': _c, ...rest }) => rest);
+  return list.length ? { '@context': 'https://schema.org', '@graph': list } : undefined;
+}
+
+/** ItemList of the products, markets or farmers on a listing page: [{ name, path }]. */
+export function itemListLd(name, items) {
+  if (!items?.length) return undefined;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it.name, url: abs(it.path) })),
+  };
+}
+
+// Home page: how ordering works (same steps as the server's structured data) and the video tour
+const HOW_IT_WORKS = [
+  ['Find fresh produce', 'Browse this week’s stock by category, market, farmer or pickup day.'],
+  ['Add to your basket', 'Press Add on a product, choose how many and add it to the basket. One basket can hold several farmers.'],
+  ['Pick a pickup slot', 'At checkout choose the market, day and time window for each farmer. No account is needed: guests get one automatically.'],
+  ['Collect and pay at the stall', 'Show your order number at the stall on market day and pay the farmer in cash.'],
+];
+
+export function homeLd(faqs) {
+  return ldGraph(
+    faqLd(faqs),
+    {
+      '@type': 'HowTo',
+      name: 'How to pre-order fresh produce on MarketLink',
+      totalTime: 'PT5M',
+      step: HOW_IT_WORKS.map(([name, text], i) => ({ '@type': 'HowToStep', position: i + 1, name, text })),
+    },
+    {
+      '@type': 'VideoObject',
+      name: 'How MarketLink works',
+      description: 'A 30-second tour: find fresh produce, pre-order, pick a pickup time and pay the farmer at the market.',
+      thumbnailUrl: abs('/media/how-it-works.jpg'),
+      contentUrl: abs('/media/how-it-works.mp4'),
+      uploadDate: '2026-09-25',
+      duration: 'PT29S',
+    }
+  );
+}

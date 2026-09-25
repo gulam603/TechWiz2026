@@ -161,7 +161,7 @@ export default function FarmerReviews() {
         )}
       </div>
       {reviews.length === 0 ? (
-        <EmptyState image="/illustrations/sunflower.webp" title="No reviews here" message="Reviews appear after customers collect their orders." />
+        <EmptyState icon="bi-chat-heart" title="No reviews here" message="Reviews appear after customers collect their orders." />
       ) : view === 'table' ? (
         <div className="table-card">
           <DataGrid

@@ -17,15 +17,16 @@ export default function ProductCard({ product }) {
   const { toast } = useToast();
   const soldOut = product.status !== 'available' || product.quantityAvailable <= 0;
   const low = !soldOut && product.quantityAvailable <= 5;
-  const [quick, setQuick] = useState(false);
+  // null (closed), 'view' (Quick view) or 'add' (the Add button: choose how many, then add)
+  const [quick, setQuick] = useState(null);
+  const inCart = cart.items.find((i) => i.productId === product._id);
 
-  function addToCart() {
+  function openAdd() {
     if (user && user.role !== 'customer') {
       toast('Only customer accounts can place pre-orders', 'error');
       return;
     }
-    cart.add(product, 1);
-    toast(`${product.name} added to your basket`);
+    setQuick('add');
   }
 
   return (
@@ -37,7 +38,7 @@ export default function ProductCard({ product }) {
       <FavButton type="products" id={product._id} className="fav-btn" />
       <div className="product-media">
         <ProduceImage src={product.image} alt={product.name} color={product.category?.color} />
-        <button type="button" className="quickview-btn" onClick={() => setQuick(true)} aria-label={`Quick view: ${product.name}`}>
+        <button type="button" className="quickview-btn" onClick={() => setQuick('view')} aria-label={`Quick view: ${product.name}`}>
           <i className="bi bi-eye" aria-hidden="true" /> Quick view
         </button>
       </div>
@@ -61,15 +62,20 @@ export default function ProductCard({ product }) {
             {money(product.price)}
             <span className="unit">/ {product.unit}</span>
           </div>
-          <button type="button" className="add-btn" onClick={addToCart} disabled={soldOut} aria-label={`Add ${product.name} to basket`} title="Add to basket">
+          <button type="button" className="add-btn" onClick={openAdd} disabled={soldOut} aria-haspopup="dialog" aria-label={`Add ${product.name} to basket${inCart ? ` (${inCart.quantity} already in it)` : ''}`} title="Choose how many and add to basket">
             <i className="bi bi-basket2" aria-hidden="true" />
             <span className="add-label">{soldOut ? 'Sold out' : 'Add'}</span>
+            {inCart && (
+              <span className="add-count" aria-hidden="true">
+                {inCart.quantity}
+              </span>
+            )}
           </button>
         </div>
       </div>
       {quick && (
         <Suspense fallback={null}>
-          <QuickViewModal product={product} onClose={() => setQuick(false)} />
+          <QuickViewModal product={product} focusAdd={quick === 'add'} onClose={() => setQuick(null)} />
         </Suspense>
       )}
     </article>

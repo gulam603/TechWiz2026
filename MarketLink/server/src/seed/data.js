@@ -1,7 +1,8 @@
 // Demo data used by `npm run seed`.
-// Images are 3D illustrations from Microsoft Fluent Emoji (MIT licence) stored in /uploads/seed.
+// Pictures are real photos (Open Images, CC BY 2.0): product photos in /uploads/photos (see its CREDITS.md),
+// market and farm photos in /uploads/places (see its CREDITS.md).
 
-const img = (name) => `/uploads/seed/${name}.webp`;
+const thumb = (name) => `/uploads/photos/thumbs/${name}.webp`; // 320 x 320 square, for icons and logos
 
 export const PASSWORDS = {
   admin: 'Admin@123',
@@ -25,14 +26,14 @@ export const cities = [
 export const admin = { name: 'MarketLink Admin', email: 'admin@marketlink.com', phone: '+92 300 0000000', address: 'MarketLink HQ, F.B. Area, Karachi', city: 'Karachi' };
 
 export const categories = [
-  { key: 'veg', name: 'Vegetables', description: 'Seasonal vegetables harvested for market day.', icon: img('carrot'), color: '#E4F3D8', sortOrder: 1 },
-  { key: 'fruit', name: 'Fruits', description: 'Orchard-fresh and tree-ripened fruit.', icon: img('apple'), color: '#FFE4DA', sortOrder: 2 },
-  { key: 'dairy', name: 'Dairy & Eggs', description: 'Fresh milk, cheese, butter and free-range eggs.', icon: img('milk'), color: '#E3EEFB', sortOrder: 3 },
-  { key: 'bakery', name: 'Baked Goods', description: 'Breads and treats baked the morning of the market.', icon: img('bread'), color: '#F8E8CF', sortOrder: 4 },
-  { key: 'herbs', name: 'Herbs & Greens', description: 'Leafy greens and fragrant herbs.', icon: img('herb'), color: '#DAF1E3', sortOrder: 5 },
-  { key: 'honey', name: 'Honey & Preserves', description: 'Raw honey, jams, chutneys and pickles.', icon: img('honey'), color: '#FFF0C2', sortOrder: 6 },
-  { key: 'grains', name: 'Grains & Pulses', description: 'Stone-ground flour, rice, lentils and nuts.', icon: img('wheat'), color: '#F1EAD6', sortOrder: 7 },
-  { key: 'flowers', name: 'Flowers & Plants', description: 'Cut flowers and potted plants.', icon: img('sunflower'), color: '#FBE1EE', sortOrder: 8 },
+  { key: 'veg', name: 'Vegetables', description: 'Seasonal vegetables harvested for market day.', icon: thumb('capsicum-mix'), color: '#E4F3D8', sortOrder: 1 },
+  { key: 'fruit', name: 'Fruits', description: 'Orchard-fresh and tree-ripened fruit.', icon: thumb('red-apples'), color: '#FFE4DA', sortOrder: 2 },
+  { key: 'dairy', name: 'Dairy & Eggs', description: 'Fresh milk, cheese, butter and free-range eggs.', icon: thumb('desi-eggs'), color: '#E3EEFB', sortOrder: 3 },
+  { key: 'bakery', name: 'Baked Goods', description: 'Breads and treats baked the morning of the market.', icon: thumb('country-sourdough-loaf'), color: '#F8E8CF', sortOrder: 4 },
+  { key: 'herbs', name: 'Herbs & Greens', description: 'Leafy greens and fragrant herbs.', icon: thumb('coriander-dhania'), color: '#DAF1E3', sortOrder: 5 },
+  { key: 'honey', name: 'Honey & Preserves', description: 'Raw honey, jams, chutneys and pickles.', icon: thumb('wild-sidr-honey'), color: '#FFF0C2', sortOrder: 6 },
+  { key: 'grains', name: 'Grains & Pulses', description: 'Stone-ground flour, rice, lentils and nuts.', icon: thumb('red-kidney-beans'), color: '#F1EAD6', sortOrder: 7 },
+  { key: 'flowers', name: 'Flowers & Plants', description: 'Cut flowers and potted plants.', icon: thumb('desi-rose-bouquet'), color: '#FBE1EE', sortOrder: 8 },
 ];
 
 // Days: 0 = Sunday ... 6 = Saturday
@@ -48,7 +49,7 @@ export const markets = [
     operatingDays: [6, 0],
     openTime: '07:00',
     closeTime: '13:00',
-    image: img('basket'),
+    image: '/uploads/places/markets/clifton.webp',
   },
   {
     key: 'dha',
@@ -61,7 +62,7 @@ export const markets = [
     operatingDays: [5, 0],
     openTime: '08:00',
     closeTime: '14:00',
-    image: img('tent'),
+    image: '/uploads/places/markets/dha.webp',
   },
   {
     key: 'gulshan',
@@ -74,7 +75,7 @@ export const markets = [
     operatingDays: [0, 3],
     openTime: '07:00',
     closeTime: '15:00',
-    image: img('cart'),
+    image: '/uploads/places/markets/gulshan.webp',
   },
   {
     key: 'nazimabad',
@@ -87,7 +88,7 @@ export const markets = [
     operatingDays: [3, 6],
     openTime: '16:00',
     closeTime: '21:00',
-    image: img('hut'),
+    image: '/uploads/places/markets/nazimabad.webp',
   },
   {
     key: 'bahadurabad',
@@ -100,7 +101,7 @@ export const markets = [
     operatingDays: [2, 5],
     openTime: '16:00',
     closeTime: '21:00',
-    image: img('store'),
+    image: '/uploads/places/markets/bahadurabad.webp',
   },
   {
     key: 'saddar',
@@ -113,7 +114,7 @@ export const markets = [
     operatingDays: [1, 4, 6],
     openTime: '06:00',
     closeTime: '12:00',
-    image: img('sunrise'),
+    image: '/uploads/places/markets/saddar.webp',
   },
   {
     key: 'lahore',
@@ -126,7 +127,7 @@ export const markets = [
     operatingDays: [0, 4],
     openTime: '07:00',
     closeTime: '13:00',
-    image: img('camping'),
+    image: '/uploads/places/markets/lahore.webp',
   },
   {
     key: 'islamabad',
@@ -139,7 +140,7 @@ export const markets = [
     operatingDays: [6, 0],
     openTime: '08:00',
     closeTime: '14:00',
-    image: img('tent'),
+    image: '/uploads/places/markets/islamabad.webp',
   },
 ];
 
@@ -156,7 +157,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Three generations of vegetable growers from Malir. We pick on Friday evening so everything is at its freshest for the weekend markets. No synthetic pesticides, just compost and care.',
     tags: ['Pesticide-free', 'Family farm', 'Picked daily'],
-    logo: img('farmer-man'),
+    logo: thumb('vine-tomatoes'),
+    cover: '/uploads/places/farms/malir.webp',
     latitude: 24.8203,
     longitude: 67.0318,
     windows: [
@@ -187,7 +189,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Mango, banana and melon orchards in the Gadap valley. We tree-ripen our fruit and bring it to market within a day of picking.',
     tags: ['Tree-ripened', 'Orchard'],
-    logo: img('farmer-woman'),
+    logo: thumb('sindhri-mangoes'),
+    cover: '/uploads/places/farms/gadap.webp',
     latitude: 24.9214,
     longitude: 67.0948,
     windows: [
@@ -217,7 +220,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'A cooperative of twelve small dairy families. Grass-fed buffalo and cow milk, fresh paneer and free-range eggs delivered to market on ice.',
     tags: ['Cooperative', 'Grass-fed', 'Free-range'],
-    logo: img('cow'),
+    logo: thumb('farm-paneer'),
+    cover: '/uploads/places/farms/thatta.webp',
     latitude: 24.7942,
     longitude: 67.0671,
     windows: [
@@ -245,7 +249,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Slow-fermented sourdough and French-style pastries baked in small batches before sunrise. We use locally milled flour and Thatta butter.',
     tags: ['Sourdough', 'Small batch'],
-    logo: img('croissant'),
+    logo: thumb('butter-croissants'),
+    cover: '/uploads/places/farms/bakehouse.webp',
     latitude: 24.8188,
     longitude: 67.0296,
     windows: [
@@ -275,7 +280,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Leafy greens and fragrant herbs grown in raised beds and harvested the same afternoon for the evening markets.',
     tags: ['Same-day harvest', 'Hydro-greens'],
-    logo: img('herb'),
+    logo: thumb('fresh-mint-podina'),
+    cover: '/uploads/places/farms/herbs.webp',
     latitude: 24.9395,
     longitude: 67.0441,
     windows: [
@@ -304,7 +310,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Wild Sidr and acacia honey from our hives in the Kirthar foothills, plus small-batch jams and chutneys made from market surplus.',
     tags: ['Raw honey', 'Zero waste'],
-    logo: img('bee'),
+    logo: thumb('acacia-honey'),
+    cover: '/uploads/places/farms/honey.webp',
     latitude: 24.7928,
     longitude: 67.0652,
     windows: [
@@ -331,7 +338,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Stone-ground atta, aged basmati and home-cleaned pulses from farms along the Indus.',
     tags: ['Stone-ground', 'Bulk friendly'],
-    logo: img('wheat'),
+    logo: thumb('aged-basmati-rice'),
+    cover: '/uploads/places/farms/grains.webp',
     latitude: 24.8601,
     longitude: 67.0305,
     windows: [
@@ -359,7 +367,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Cut flowers and easy-care houseplants grown in our shade houses along the Faisal nursery belt.',
     tags: ['Flowers', 'Houseplants'],
-    logo: img('sunflower'),
+    logo: thumb('sunflower-bunch'),
+    cover: '/uploads/places/farms/bloom.webp',
     latitude: 24.8826,
     longitude: 67.0704,
     windows: [
@@ -387,7 +396,8 @@ export const farmers = [
     city: 'Lahore',
     bio: 'A family farm near Raiwind that follows organic practices, growing strawberries, kinnow and winter vegetables for Lahore families.',
     tags: ['Organic practices', 'Winter crops'],
-    logo: img('tractor'),
+    logo: thumb('strawberries'),
+    cover: '/uploads/places/farms/modeltown.webp',
     latitude: 31.4846,
     longitude: 74.3252,
     windows: [
@@ -415,7 +425,8 @@ export const farmers = [
     city: 'Islamabad',
     bio: 'Hillside orchards above Islamabad with apples, peaches, cherries and kiwi from our partner farms in Swat.',
     tags: ['Hill fruit', 'Orchard'],
-    logo: img('farmer'),
+    logo: thumb('red-apples'),
+    cover: '/uploads/places/farms/margalla.webp',
     latitude: 33.7024,
     longitude: 73.0271,
     windows: [
@@ -443,7 +454,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Free-range chicken and eggs. Waiting for approval.',
     tags: ['Free-range'],
-    logo: img('chicken'),
+    logo: thumb('desi-eggs'),
+    cover: '/uploads/places/farms/poultry.webp',
     latitude: 24.93,
     longitude: 67.1,
     windows: [{ market: 'gulshan', day: 0, start: '08:00', end: '12:00' }],
@@ -461,7 +473,8 @@ export const farmers = [
     city: 'Karachi',
     bio: 'Goat milk and cheese. Suspended for repeated late cancellations.',
     tags: ['Goat milk'],
-    logo: img('goat'),
+    logo: thumb('goat-milk'),
+    cover: '/uploads/places/farms/goat.webp',
     latitude: 24.87,
     longitude: 67.0,
     windows: [{ market: 'saddar', day: 1, start: '07:00', end: '10:00' }],

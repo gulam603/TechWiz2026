@@ -14,9 +14,11 @@ import VideoTour from '../../components/home/VideoTour';
 import MarketMoments from '../../components/home/MarketMoments';
 import ReviewsShowcase from '../../components/home/ReviewsShowcase';
 import NewsletterCta from '../../components/home/NewsletterCta';
+import HomeFaq from '../../components/home/HomeFaq';
 import { DAY_NAMES, nextOccurrence, time12 } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 import useSeo from '../../hooks/useSeo';
+import { homeLd } from '../../utils/seo';
 
 /** Finds the market that opens soonest (today counts if it has not closed yet). */
 function useNextMarket(markets) {
@@ -112,7 +114,8 @@ function SearchCard({ stats, next, categories }) {
 }
 
 export default function Home() {
-  useSeo({});
+  const faqs = useFetch('/faqs?home=1');
+  useSeo({ jsonLd: homeLd(faqs.data?.faqs) });
   const { user } = useAuth();
   const stats = useFetch('/stats');
   const cats = useFetch('/categories');
@@ -270,13 +273,14 @@ export default function Home() {
 
       <MarketMoments />
       <ReviewsShowcase data={reviews.data} loading={reviews.loading} />
+      <HomeFaq faqs={faqs.data?.faqs} loading={faqs.loading} />
       <NewsletterCta variant="band" source="home" />
 
       {/* ---------------------------------------------------------- farmer CTA */}
       <section className="section pt-0">
         <div className="container">
           <div className="cta-band">
-            <img className="cta-art" src="/illustrations/tractor.webp" alt="" />
+            <img className="cta-photo" src="/images/hero/cta-farmer.webp" alt="A farmer harvesting rice" loading="lazy" />
             <div className="row">
               <div className="col-lg-7">
                 <span className="eyebrow text-lime">For farmers</span>

@@ -27,17 +27,22 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
 - Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
-- **Home page**: banner carousel (welcome, what is in season now, pickup, farmers), search with a **category drop-down**,
+- **Home page**: banner carousel with real photos (welcome, what is in season now, pickup, farmers; changes every
+  **3 seconds**, pauses under the mouse), search with a **category drop-down**,
   next market day and live numbers, a **30-second video tour**, market photos, **customer reviews** with an average,
-  star bars and the share of verified purchases, and a **newsletter** sign-up (also in the footer, with an unsubscribe page)
+  star bars and the share of verified purchases, **FAQs** and a **newsletter** sign-up (also in the footer, with an unsubscribe page)
+- **FAQ page** (`/faq`): 17 questions in 4 topics with search and topic filters; the admin edits them
 - **Loading skeletons**: on a slow connection the shape of the page appears straight away instead of a blank screen
 - Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
-- Product photos **without a background** on the product cards (the full photo is in the gallery)
+- Real **product photos** on every card; market, farm and banner photos too (no illustrations)
 - Readable product URLs: `/products/sindhri-mangoes`
 - Product details: price, unit, quantity available, farmer, reviews and a **photo gallery** (thumbnails, arrows, swipe,
   **zoom** under the mouse and a full-screen viewer); “From the same stall” and “You may also like” suggestions
-- **Quick view** on every product card: details, photos and “add to basket” in a dialog without leaving the shop
-- **Basket sidebar**: the basket opens on the right (change quantities, remove, total) with *Checkout* and *View full basket*
+- **Quick view** on every product card: details, photos and “add to basket” in a dialog without leaving the shop.
+  The card's **Add** button opens the same dialog so the shopper **chooses how many** before adding
+- The product page photo **fits on the screen** (and stays in view while the details scroll on laptops)
+- **Basket sidebar**: the basket opens on the right (change quantities, remove, total) with *Checkout*, *View full basket*
+  and **Empty basket** (asks once before removing everything)
 - **Checkout without an account**: first name, last name, e-mail, number and address — an account is created,
   a generated password is e-mailed and the pre-order continues straight away
 - **Dropdowns with search** for cities, markets, categories, farmers, customers and every table filter
@@ -99,12 +104,19 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
   pick the months (or Winter / Spring / Summer / Autumn), so “Mango season is here!” only shows in summer
 - Markets, categories, announcements and **newsletter subscribers** in DataTables (CSV / Excel / Print)
 - Contact-us inbox
+- **FAQs**: add, edit, order, hide or delete questions and choose which appear on the home page
 
-**SEO:** every public page has its own title, description, **keywords**, canonical link, Open Graph / X preview tags and
-schema.org structured data (Product with price, stock and rating; LocalBusiness for farmers; Place with opening hours
-for markets; Organization + site search). The server writes these into the HTML before any JavaScript runs,
-answers 404 for unknown products, and serves `/sitemap.xml` (all products, farmers, markets and categories) and
-`/robots.txt` (accounts, dashboards and the basket are kept out of search results).
+**SEO:** every public page has its own title, description, **keywords**, canonical link, Open Graph / X preview tags
+(1200 × 630 share picture) and schema.org structured data: Product (price, stock, pickup, reviews, rating), LocalBusiness
+for farmers, Place with opening hours for markets, **BreadcrumbList** on every page, **ItemList** on the shop, category,
+market and farmer lists, **FAQPage**, **HowTo** and **VideoObject** on the home page, Organization (contact point, cities
+served) + site search. The server writes these into the HTML before any JavaScript runs, answers 404 for unknown
+products, and serves `/sitemap.xml` (every page with its **photos**), `/robots.txt` and a web app manifest.
+
+**AEO (answer engines such as ChatGPT, Claude, Perplexity and Google AI answers):** every public page also carries its
+main facts as plain, answer-first text with links in the HTML (for crawlers that do not run JavaScript),
+`/llms.txt` and `/llms-full.txt` describe the whole site in Markdown (FAQs, markets with times, farmers, this week's
+prices), robots.txt welcomes the AI crawlers, and FAQ answers start with one short, direct sentence.
 
 **Other:** role-based access control (API + UI), responsive / mobile-friendly UI (laptop layout, slide-in mobile menu,
 app-style bottom navigation bar on phones), Bootstrap icons instead of emoji, About Us and Contact Us
@@ -119,7 +131,7 @@ counting-up statistics; all animations switch off when the device asks for reduc
 ```
 MarketLink/
 ├── client/                 React front-end (Vite)
-│   ├── public/             favicon and 3D produce illustrations
+│   ├── public/             favicon, brand/ (logo, icons, share image), images/hero (banner photos), media/ (video), manifest
 │   └── src/
 │       ├── api/            fetch wrapper for the REST API
 │       ├── components/     layout, cards, maps, charts, chat widget, order widgets
@@ -136,7 +148,7 @@ MarketLink/
 │   │   ├── middleware/     auth / roles, uploads, error handling
 │   │   ├── routes/         all /api routes
 │   │   └── seed/           demo data, seed and export scripts
-│   └── uploads/            images: seed illustrations (uploads/seed), product photos + credits (uploads/photos), farmer uploads
+│   └── uploads/            images: product photos + credits (uploads/photos), market and farm photos (uploads/places), farmer uploads
 ├── database/
 │   ├── marketlink-schema.mongodb.js   collections, JSON-schema validators and indexes (mongosh)
 │   └── sample-data/                   exported demo / test data (JSON, one file per collection)
@@ -315,7 +327,8 @@ atomic stock reservation so two customers can never buy the same last item.
 - Product photos: real photos from the **Open Images Dataset** (Google), published on Flickr by their
   authors under **CC BY 2.0**. Every photographer is credited on the product page and in
   `server/uploads/photos/CREDITS.md`.
-- 3D produce illustrations (banners, categories, farmer logos): **Microsoft Fluent Emoji** (MIT licence).
+- Banner, market and farm photos: also **Open Images Dataset** (CC BY 2.0); credited on the page and in
+  `client/public/images/CREDITS.md` and `server/uploads/places/CREDITS.md`. The site uses no illustrations.
 - Logo: designed in **Canva** by the team and rebuilt as SVG / PNG (`client/public/brand`).
 - Tables: **DataTables** (datatables.net, MIT licence).
 - Map data © OpenStreetMap contributors; routing by OSRM.

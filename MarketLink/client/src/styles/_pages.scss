@@ -338,14 +338,6 @@
   p {
     color: rgba(#fff, 0.75);
   }
-  .cta-art {
-    position: absolute;
-    right: 3%;
-    bottom: -10px;
-    width: min(300px, 35%);
-    z-index: -1;
-    opacity: 0.95;
-  }
 }
 
 // ------------------------------------------------------------------ page hero (inner pages)
@@ -801,15 +793,6 @@
   p {
     color: rgba(#fff, 0.78);
   }
-  .market-art {
-    position: absolute;
-    right: 4%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: min(200px, 28%);
-    z-index: -1;
-    filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.35));
-  }
   .day-dots .d {
     background: rgba(#fff, 0.12);
     color: rgba(#fff, 0.55);
@@ -998,14 +981,17 @@
   img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.28));
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid rgba(#fff, 0.92);
+    box-shadow: 0 12px 22px -8px rgba(0, 0, 0, 0.45);
     animation: floaty var(--dur, 5s) ease-in-out infinite;
   }
   &.basket {
     z-index: 1;
     img {
-      filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.35));
+      border-width: 6px;
+      box-shadow: 0 22px 40px -12px rgba(0, 0, 0, 0.55);
     }
   }
   &.inner {
@@ -1721,5 +1707,220 @@
   .pd-thumbs button {
     width: 58px;
     height: 58px;
+  }
+}
+
+// ------------------------------------------------------------------ FAQs (page and home page block)
+.faq-search {
+  position: relative;
+  max-width: 520px;
+  margin-top: 1rem;
+  .bi {
+    position: absolute;
+    left: 1.05rem;
+    top: 50%;
+    translate: 0 -50%;
+    color: $ml-muted;
+  }
+  .form-control {
+    padding: 0.8rem 1rem 0.8rem 2.7rem;
+    border-radius: 50rem;
+  }
+}
+
+.faq-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1.4rem;
+  .chip {
+    font-size: 0.82rem;
+    padding: 0.45rem 0.9rem;
+  }
+}
+
+.faq-section + .faq-section {
+  margin-top: 1.75rem;
+}
+
+.faq-group-title {
+  font-size: 1.1rem;
+  font-family: $font-family-sans-serif;
+  font-weight: 800;
+  color: $ml-forest;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  .bi {
+    color: $ml-green;
+  }
+}
+
+.faq-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.faq-item {
+  background: #fff;
+  border: 1px solid $ml-line;
+  border-radius: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  scroll-margin-top: calc(var(--ml-nav-h) + 1rem);
+  summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    font-weight: 700;
+    color: $ml-ink;
+    border-radius: 1rem;
+    &::-webkit-details-marker {
+      display: none;
+    }
+    &:hover .faq-q {
+      color: $ml-green;
+    }
+    &:focus-visible {
+      outline: 3px solid rgba($ml-leaf, 0.55);
+      outline-offset: 2px;
+    }
+  }
+  .faq-toggle {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: $ml-sand;
+    color: $ml-forest;
+    transition: transform 0.25s ease, background-color 0.2s ease;
+  }
+  &[open] {
+    border-color: rgba($ml-leaf, 0.55);
+    box-shadow: 0 10px 24px -18px rgba(23, 59, 44, 0.45);
+    .faq-toggle {
+      transform: rotate(45deg);
+      background: $ml-lime;
+    }
+  }
+}
+
+.faq-a {
+  padding: 0 1.15rem 1.05rem;
+  color: $ml-muted;
+  font-size: 0.95rem;
+  animation: fadeIn 0.2s ease both;
+  p:last-child,
+  ol:last-child {
+    margin-bottom: 0;
+  }
+  p:first-child {
+    color: $ml-ink;
+    font-weight: 600;
+  }
+  ol {
+    padding-left: 1.2rem;
+    li + li {
+      margin-top: 0.2rem;
+    }
+  }
+}
+
+.faq-help {
+  position: sticky;
+  top: calc(var(--ml-nav-h) + 1rem);
+  background: #fff;
+  border: 1px solid $ml-line;
+  border-radius: 1.4rem;
+  padding: 1.4rem;
+}
+
+.faq-help-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: $ml-green;
+  background: rgba($ml-leaf, 0.16);
+}
+
+.faq-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  a {
+    color: $ml-green;
+    font-weight: 600;
+  }
+}
+
+// Photographer credit on market and farm banner photos
+.hero-credit {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.5rem;
+  z-index: 2;
+  font-size: 0.66rem;
+  color: rgba(#fff, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+  a {
+    color: inherit;
+  }
+}
+
+// Farmer page: the logo overlaps the cover photo, the name and details sit below the photo
+.profile-hero .hero-credit {
+  top: 0.55rem;
+  bottom: auto;
+}
+
+@include media-breakpoint-up(sm) {
+  .profile-head {
+    align-items: flex-start;
+    > .flex-grow-1,
+    > .pb-1 {
+      padding-top: 66px;
+    }
+  }
+}
+
+.profile-head .profile-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1.2rem;
+}
+
+// About: the numbers panel over a market photo
+.about-stats {
+  min-height: 260px;
+  .about-stats-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.35;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(160deg, rgba($ml-forest, 0.55), rgba($ml-forest, 0.9));
   }
 }

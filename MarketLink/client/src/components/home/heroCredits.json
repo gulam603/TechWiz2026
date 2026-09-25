@@ -1,0 +1,34 @@
+{
+  "/images/hero/welcome.webp": {
+    "author": "SteFou!",
+    "source": "https://www.flickr.com/photos/stephen-oung/5332718999"
+  },
+  "/images/hero/autumn.webp": {
+    "author": "Dimitar Nikolov",
+    "source": "https://www.flickr.com/photos/dimnikolov/3471180754"
+  },
+  "/images/hero/winter.webp": {
+    "author": "Michael Gwyther-Jones",
+    "source": "https://www.flickr.com/photos/12587661@N06/8378154084"
+  },
+  "/images/hero/spring.webp": {
+    "author": "Milestoned",
+    "source": "https://www.flickr.com/photos/baccharus/4799105162"
+  },
+  "/images/hero/summer.webp": {
+    "author": "Wicker Paradise",
+    "source": "https://www.flickr.com/photos/wicker-furniture/11475851684"
+  },
+  "/images/hero/pickup.webp": {
+    "author": "Aivar Ruukel",
+    "source": "https://www.flickr.com/photos/soomaa/11202779944"
+  },
+  "/images/hero/farmers.webp": {
+    "author": "U.S. Department of Agriculture",
+    "source": "https://www.flickr.com/photos/usdagov/10547052435"
+  },
+  "/images/hero/cta-farmer.webp": {
+    "author": "Alana King",
+    "source": "https://www.flickr.com/photos/buking2010/5082580472"
+  }
+}

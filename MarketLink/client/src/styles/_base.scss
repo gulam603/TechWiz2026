@@ -339,7 +339,7 @@ img {
 }
 
 // Real product photos (seeded stock photos in /uploads/photos, farmer uploads in /uploads/products)
-// fill their thumbnail frames; the 3D illustrations keep floating with object-fit: contain.
+// fill their thumbnail frames.
 img[src*='/uploads/photos/'],
 img[src*='/uploads/products/'] {
   object-fit: cover;

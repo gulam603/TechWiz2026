@@ -11,9 +11,9 @@ import { DAY_NAMES, DAY_SHORT, time12 } from '../../utils/format';
 import { useToast } from '../../context/ToastContext';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
+import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
 
 export default function Markets() {
-  useSeo({ title: 'Farmers markets', description: 'Find farmers markets near you: opening days and times, location on the map and the farmers selling at each market.' });
   const [filters, setFilters] = useState({ search: '', city: '', category: '', day: '' });
   const { data: catData } = useFetch('/categories');
   const [location, setLocation] = useState(null);
@@ -22,6 +22,12 @@ export default function Markets() {
   const { toast } = useToast();
   const { data, loading } = useFetch(`/markets${toQuery({ ...filters, lat: location?.lat, lng: location?.lng })}`);
   const markets = data?.markets || [];
+  useSeo({
+    title: 'Farmers markets',
+    description: 'Find farmers markets near you: opening days and times, location on the map and the farmers selling at each market.',
+    jsonLd: ldGraph(itemListLd('Farmers markets on MarketLink', markets.map((m) => ({ name: m.name, path: `/markets/${m.slug}` }))), breadcrumbLd([{ name: 'Markets', path: '/markets' }])),
+    canonicalPath: '/markets',
+  });
 
   async function nearMe() {
     setLocating(true);

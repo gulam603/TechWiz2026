@@ -757,3 +757,144 @@ body:has(.cart-drawer-root.is-open) .toast-stack {
   top: 1rem;
   bottom: auto;
 }
+
+// ------------------------------------------------------------------ "Add" opens the quick view: choose how many
+.product-card .add-btn {
+  position: relative;
+}
+
+.add-count {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.3rem;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  padding: 0 0.3rem;
+  border-radius: 50rem;
+  background: $ml-lime;
+  color: $ml-forest;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.2rem;
+  text-align: center;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.qv-buy {
+  background: $ml-sand;
+  border: 1px solid $ml-line;
+  border-radius: 1rem;
+  padding: 0.8rem 0.9rem;
+  &.is-highlighted {
+    border-color: rgba($ml-leaf, 0.7);
+    box-shadow: 0 0 0 4px rgba($ml-leaf, 0.15);
+  }
+}
+
+.qv-buy-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: $ml-forest;
+  strong {
+    font-size: 1.05rem;
+  }
+}
+
+// The quick view fits on one screen: smaller photo, the rest scrolls inside the dialog if needed
+.quickview-modal {
+  .pd-visual {
+    aspect-ratio: auto;
+    height: min(46vh, 360px);
+  }
+  .pd-thumbs button {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+// Phones: a small photo and the "how many" box stays in view at the bottom of the screen
+@include media-breakpoint-down(md) {
+  .quickview-modal {
+    .pd-visual {
+      height: min(26vh, 200px);
+    }
+    .pd-thumbs {
+      display: none;
+    }
+    .quickview-desc {
+      max-height: 4.5rem;
+    }
+    .qv-buy {
+      position: sticky;
+      bottom: 0.5rem;
+      z-index: 3;
+      box-shadow: 0 -10px 28px -18px rgba(0, 0, 0, 0.45);
+    }
+  }
+  .ml-modal-backdrop:has(.quickview-modal) {
+    padding: 0.75rem;
+  }
+}
+
+// ------------------------------------------------------------------ product page: the photo fits on screen
+@include media-breakpoint-up(lg) {
+  .pd-gallery {
+    position: sticky;
+    top: 5.5rem;
+  }
+  .pd-page .pd-visual {
+    aspect-ratio: auto;
+    height: min(58vh, 480px);
+  }
+  .pd-page .pd-thumbs button {
+    width: 60px;
+    height: 60px;
+  }
+  .pd-page .pd-buy {
+    margin: 1rem 0 !important;
+  }
+}
+
+@include media-breakpoint-down(lg) {
+  .pd-page .pd-visual {
+    aspect-ratio: 4 / 3;
+    max-height: 56vh;
+    width: 100%;
+  }
+}
+
+// ------------------------------------------------------------------ basket sidebar: empty the basket
+.cart-drawer-actions {
+  display: flex;
+  gap: 0.5rem;
+  .btn {
+    white-space: nowrap;
+  }
+}
+
+.cart-empty-btn {
+  --bs-btn-color: #{$danger};
+  --bs-btn-border-color: rgba(#{red($danger)}, #{green($danger)}, #{blue($danger)}, 0.35);
+  --bs-btn-hover-bg: #{$danger};
+  --bs-btn-hover-border-color: #{$danger};
+  background: #fff;
+}
+
+.cart-empty-confirm {
+  margin-top: 0.6rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.9rem;
+  background: #fff4f2;
+  border: 1px solid rgba($danger, 0.3);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  animation: fadeIn 0.15s ease both;
+}

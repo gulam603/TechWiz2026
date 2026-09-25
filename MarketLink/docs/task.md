@@ -37,11 +37,14 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Photo zoom and full-screen viewer on the product page; "From the same stall" and "You may also like"
 - [x] Verified purchase / Unverified badges on reviews (reviews without a purchase are allowed once)
 - [x] Search inside dropdowns (cities, markets, categories, farmers, customers, filters)
-- [x] Home page: banner carousel (4 slides, one changes with the season), search with a category drop-down, next market day, 30-second video tour, market photos, customer reviews with a rating summary, newsletter sign-up
+- [x] Home page: banner carousel (4 slides with real photos, one changes with the season, 3 s autoplay), search with a category drop-down, next market day, 30-second video tour, market photos, customer reviews with a rating summary, FAQs, newsletter sign-up
+- [x] FAQ page with search and topics; FAQs on the home page and in the footer
+- [x] "Add" on a product card opens the quick view to choose the amount; "Empty basket" in the basket sidebar
+- [x] Product page photo fits the screen (no scrolling to see the whole picture)
 - [x] Loading skeletons: the page shape shows while the app, a page or its data loads (slow connections)
 - [x] Home link in the navbar and the phone menu
 - [x] Category-wise search (navbar and home page) and keyword search
-- [x] Product photos without a background (cut-outs) on cards; the full photo stays in the gallery
+- [x] Real product photos on the cards again (round 7: cut-outs and illustrations removed)
 - [x] Newsletter: subscribe (home page and footer), welcome e-mail, one-click unsubscribe page
 - [x] Terms & Conditions page linked from the footer (sign-up forms still open it in a dialog)
 - [x] "Table" or "Cards" view for My orders (DataTables)
@@ -88,6 +91,7 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Platform-wide reports: sales by category, customer activity, inventory & low stock, cities overview, reviews & moderation (DataTables with CSV / Excel / Print)
 - [x] Seasonal announcements: pick the months (or a season) for each notice; the banner shows only the notices of the current month, with an optional link
 - [x] Markets, categories, announcements and newsletter subscribers in DataTables (search, sort, CSV / Excel / Print)
+- [x] FAQ management (add, edit, order, hide, delete, show on the home page)
 - [x] DataTables warning "Requested unknown parameter" fixed for every table (empty values allowed, warnings go to the console)
 
 ## 4. Other requirements
@@ -95,7 +99,10 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Role-based access control (API and UI)
 - [x] Responsive: laptop layout, mobile drawer menu, mobile bottom tab bar; every account page checked at 360, 390 and 768 px
 - [x] One show/hide eye button in password fields (browser's own reveal button hidden); flat sidebar colour
-- [x] SEO: per-page titles, descriptions, canonical links, Open Graph / X tags, JSON-LD, sitemap.xml, robots.txt, 404 for unknown pages
+- [x] SEO: per-page titles, descriptions, canonical links, Open Graph / X tags (1200 × 630 share picture), JSON-LD (Product, LocalBusiness, Place, BreadcrumbList, ItemList, FAQPage, HowTo, VideoObject, Organization), image sitemap, robots.txt, web app manifest, 404 for unknown pages
+- [x] AEO: answer-first page text with links in the HTML for crawlers without JavaScript, /llms.txt and /llms-full.txt, AI crawlers allowed in robots.txt
+- [x] Every picture is a real photo (banner, market, farm, category and product photos with credits); no illustrations
+- [x] Alt text on every image
 - [x] Compact desktop layout (more content per screen), custom scrollbars, social media links
 - [x] Database validators kept in step with the code automatically (fixes "Document failed validation" on older databases)
 - [x] SMTP: server picked from the address when SMTP_HOST is empty (Gmail), SMTP_FROM accepted
@@ -117,7 +124,8 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Low-stock and sold-out e-mails delivered through a local SMTP server
 - [x] Every API suite also run against a real MongoDB 8 server (not only FerretDB), including a database with the old validators
 - [x] Round-5 checks: 45 browser checks + 25 API checks (single login, dropdown search, compact layout, categories row, search bar, map popup, quick view, basket sidebar, zoom, related products, verified reviews, checkout without an account, e-mailed password, SEO tags, sitemap, robots, phones)
-- [x] Round-6 checks: 64 browser checks + 44 API checks (carousel autoplay / pause / swipe, Home link, category search, skeletons on a slow connection, video playback, reviews section, newsletter and unsubscribe, seasonal announcements, product SEO fields and page head, cut-out images, DataTables with inline editing, Table / Cards views, no dashes on 21 pages)
+- [x] Round-6 checks: 64 browser checks + 44 API checks (carousel autoplay / pause / swipe, Home link, category search, skeletons on a slow connection, video playback, reviews section, newsletter and unsubscribe, seasonal announcements, product SEO fields and page head, product images, DataTables with inline editing, Table / Cards views, no dashes on 21 pages)
+- [x] Round-7 checks: 80 browser checks + 72 API checks (banner photos and 3 s autoplay, no illustrations or cut-outs on 12 pages, alt text on every image, Add opens the quick view with an amount on desktop and phone, empty basket with confirmation, product photo fits 5 screen sizes, FAQ page / home block / admin CRUD with RBAC and validation, JSON-LD per page type, crawler text without JavaScript, llms.txt, robots, image sitemap, manifest)
 - [x] DataTables sweep: every admin, farmer and customer table at 1440 and 390 px (paging, sorting, search, expanded rows) without a single DataTables warning
 - [x] Responsive sweep: every public page at 18 widths (320 to 1920 px) and every account page at 9 widths; no horizontal scrolling and nothing sticking out of the screen
 - [x] Admin browser test: shell, collapse, place order, CSV export, add farmer, customer history, analytics, cities, mobile drawer, pending-farmer lock, Write with AI

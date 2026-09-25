@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import ProduceImage from '../common/ProduceImage';
 import QuantityStepper from '../common/QuantityStepper';
 import { money } from '../../utils/format';
@@ -14,8 +15,16 @@ export default function CartDrawer() {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const panel = useRef(null);
   const { drawerOpen: open, closeDrawer } = cart;
+  // "Empty basket" asks once before removing everything (per opening of the sidebar)
+  const [confirmEmpty, setConfirmEmpty] = useState(false);
+  const [confirmFor, setConfirmFor] = useState(open);
+  if (confirmFor !== open) {
+    setConfirmFor(open);
+    setConfirmEmpty(false);
+  }
 
   // Close when the page changes
   useEffect(() => {
@@ -40,6 +49,14 @@ export default function CartDrawer() {
   };
   const canOrder = !user || user.role === 'customer';
 
+  function emptyBasket() {
+    const lines = cart.items.length;
+    cart.clear();
+    setConfirmEmpty(false);
+    toast(`Basket emptied (${lines} product${lines === 1 ? '' : 's'} removed)`);
+    panel.current?.focus();
+  }
+
   return createPortal(
     <div className={`cart-drawer-root ${open ? 'is-open' : ''}`} inert={!open}>
       <button type="button" className="cart-drawer-backdrop" aria-label="Close basket" tabIndex={-1} onClick={closeDrawer} />
@@ -57,7 +74,9 @@ export default function CartDrawer() {
 
         {cart.items.length === 0 ? (
           <div className="cart-drawer-empty">
-            <img src="/illustrations/basket.webp" alt="" width={96} />
+            <span className="empty-icon" aria-hidden="true">
+              <i className="bi bi-basket2" />
+            </span>
             <strong>Your basket is empty</strong>
             <span className="small text-muted-2">Add fresh produce from local farmers, then pick a pickup slot.</span>
             <button type="button" className="btn btn-primary btn-sm" onClick={() => go('/products')}>
@@ -114,9 +133,27 @@ export default function CartDrawer() {
               ) : (
                 <div className="alert alert-warning small py-2 mb-2">Only customer accounts can place pre-orders.</div>
               )}
-              <button type="button" className="btn btn-white w-100" onClick={() => go('/cart')}>
-                <i className="bi bi-basket2" /> View full basket
-              </button>
+              <div className="cart-drawer-actions">
+                <button type="button" className="btn btn-white flex-grow-1" onClick={() => go('/cart')}>
+                  <i className="bi bi-basket2" /> View full basket
+                </button>
+                <button type="button" className="btn btn-outline-danger cart-empty-btn" onClick={() => setConfirmEmpty(true)} aria-expanded={confirmEmpty} aria-controls="cart-empty-confirm">
+                  <i className="bi bi-trash3" /> Empty basket
+                </button>
+              </div>
+              {confirmEmpty && (
+                <div id="cart-empty-confirm" className="cart-empty-confirm" role="alertdialog" aria-label="Empty the basket?">
+                  <span className="small fw-semi">Remove all {cart.count} items from your basket?</span>
+                  <div className="d-flex gap-2">
+                    <button type="button" className="btn btn-sm btn-white" onClick={() => setConfirmEmpty(false)}>
+                      Keep them
+                    </button>
+                    <button type="button" className="btn btn-sm btn-danger" onClick={emptyBasket} autoFocus>
+                      Yes, empty it
+                    </button>
+                  </div>
+                </div>
+              )}
             </footer>
           </>
         )}

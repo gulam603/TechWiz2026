@@ -7,10 +7,11 @@ import { DAY_LETTER, DAY_NAMES, DAY_SHORT, distanceKm, time12 } from '../../util
 import { useToast } from '../../context/ToastContext';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
+import { breadcrumbLd } from '../../utils/seo';
 
 /** Full-screen map of every market and farmer stall with search, day filter and "near me". */
 export default function MapExplore() {
-  useSeo({ title: 'Market map', description: 'All farmers markets and farmer stalls on one map, with directions and opening days.' });
+  useSeo({ title: 'Market map', description: 'All farmers markets and farmer stalls on one map, with directions and opening days.', jsonLd: breadcrumbLd([{ name: 'Market map', path: '/map' }]) });
   const { data } = useFetch('/map');
   const { toast } = useToast();
   const [layer, setLayer] = useState('all');

@@ -6,16 +6,17 @@ import { initials } from '../../utils/format';
 import { LogoMark } from '../../components/common/Logo';
 import CountUp from '../../components/common/CountUp';
 import useSeo from '../../hooks/useSeo';
+import { breadcrumbLd } from '../../utils/seo';
 
 const VALUES = [
-  { img: '/illustrations/leafy-greens.webp', color: '#e4f3d8', title: 'Fewer wasted trips', text: 'Customers see live stock and prices before leaving home, so nobody arrives to an empty stall.' },
-  { img: '/illustrations/wheat.webp', color: '#f8e8cf', title: 'Better harvest planning', text: 'Pre-orders tell farmers exactly how much to pick and bring, reducing food waste.' },
-  { img: '/illustrations/farmer.webp', color: '#fde7d6', title: 'Real relationships', text: 'Favourites, reviews and replies build a lasting connection between growers and families.' },
-  { img: '/illustrations/cart.webp', color: '#e3eefb', title: 'Simple & fair', text: 'No online payments, no delivery fees. Reserve online, collect and pay the farmer in person.' },
+  { icon: 'bi-signpost-split', color: '#e4f3d8', title: 'Fewer wasted trips', text: 'Customers see live stock and prices before leaving home, so nobody arrives to an empty stall.' },
+  { icon: 'bi-calendar-check', color: '#f8e8cf', title: 'Better harvest planning', text: 'Pre-orders tell farmers exactly how much to pick and bring, reducing food waste.' },
+  { icon: 'bi-people', color: '#fde7d6', title: 'Real relationships', text: 'Favourites, reviews and replies build a lasting connection between growers and families.' },
+  { icon: 'bi-cash-coin', color: '#e3eefb', title: 'Simple & fair', text: 'No online payments, no delivery fees. Reserve online, collect and pay the farmer in person.' },
 ];
 
 export default function About() {
-  useSeo({ title: 'About MarketLink', description: 'MarketLink brings local farmers markets online so families can reserve fresh food before market day and farmers waste less. Built by Team Omniverse.' });
+  useSeo({ title: 'About MarketLink', description: 'MarketLink brings local farmers markets online so families can reserve fresh food before market day and farmers waste less. Built by Team Omniverse.', jsonLd: breadcrumbLd([{ name: 'About MarketLink', path: '/about' }]) });
   const { data } = useFetch('/stats');
   return (
     <>
@@ -39,8 +40,9 @@ export default function About() {
             </div>
           </div>
           <div className="col-lg-5">
-            <div className="cta-band h-100 d-flex flex-column justify-content-center">
-              <div className="row g-3 text-center">
+            <div className="cta-band about-stats h-100 d-flex flex-column justify-content-center">
+              <img className="about-stats-photo" src="/images/hero/pickup.webp" alt="Crates of fresh fruit and vegetables at a farmers market" loading="lazy" />
+              <div className="row g-3 text-center position-relative">
                 {[
                   [data?.markets, 'Markets'],
                   [data?.farmers, 'Farmers'],
@@ -71,7 +73,9 @@ export default function About() {
           {VALUES.map((v) => (
             <div key={v.title} className="col-sm-6 col-lg-3">
               <div className="value-card" style={{ '--tile-bg': v.color }}>
-                <img src={v.img} alt="" />
+                <span className="value-icon" aria-hidden="true">
+                  <i className={`bi ${v.icon}`} />
+                </span>
                 <h5>{v.title}</h5>
                 <p className="small mb-0">{v.text}</p>
               </div>

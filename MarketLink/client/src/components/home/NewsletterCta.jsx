@@ -65,8 +65,11 @@ export default function NewsletterCta({ variant = 'band', source = 'home' }) {
     <section className="section pt-0" aria-labelledby="nl-title">
       <div className="container">
         <div className="nl-band">
-          <img className="nl-art" src="/uploads/cutouts/red-apples.webp" alt="" aria-hidden="true" />
-          <img className="nl-art nl-art-2" src="/uploads/cutouts/kinnow-oranges.webp" alt="" aria-hidden="true" />
+          <div className="nl-photos" aria-hidden="true">
+            {['strawberries', 'kinnow-oranges', 'vine-tomatoes'].map((name) => (
+              <img key={name} src={`/uploads/photos/thumbs/${name}.webp`} alt="" loading="lazy" />
+            ))}
+          </div>
           <div className="row align-items-center g-4 position-relative">
             <div className="col-lg-6">
               <span className="eyebrow">Newsletter</span>

@@ -12,7 +12,7 @@ export default function MarketCard({ market }) {
             <i className="bi bi-geo-alt-fill" /> {market.distanceKm} km
           </span>
         )}
-        <img src={market.image || '/illustrations/basket.webp'} alt="" loading="lazy" />
+        {market.image ? <img src={market.image} alt={market.name} loading="lazy" /> : <i className="bi bi-shop-window fs-1 text-white-50" aria-hidden="true" />}
       </div>
       <div className="card-body">
         <h3 className="card-title">

@@ -58,7 +58,7 @@ export default function Favorites() {
             ))}
           </div>
         ) : (
-          <EmptyState image="/illustrations/farmer.webp" title="No favourite farmers yet" action={<Link to="/farmers" className="btn btn-primary">Meet the farmers</Link>} />
+          <EmptyState icon="bi-people" title="No favourite farmers yet" action={<Link to="/farmers" className="btn btn-primary">Meet the farmers</Link>} />
         ))}
 
       {tab === 'markets' &&

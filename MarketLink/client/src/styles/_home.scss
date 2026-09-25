@@ -1,5 +1,5 @@
 // ================================================================== home page (banner carousel, search card,
-// video tour, photo mosaic, reviews, newsletter), loading skeletons and product cut-outs
+// video tour, photo mosaic, reviews, newsletter) and loading skeletons
 
 // ------------------------------------------------------------------ banner carousel
 .hero-carousel {
@@ -19,11 +19,11 @@
 .hc-slide {
   grid-area: 1 / 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
   align-items: center;
-  gap: 1.5rem;
-  min-height: 430px;
-  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 4vw, 3.25rem) 4.5rem;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  min-height: 420px;
+  padding: 0.9rem 0.9rem 0.9rem clamp(1.25rem, 4vw, 3.25rem);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.6s ease, visibility 0s linear 0.6s;
@@ -45,17 +45,11 @@
     .hc-copy > :nth-child(4) {
       animation-delay: 0.18s;
     }
-    .hc-img {
-      animation: hcPop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both, hcFloat 6s ease-in-out 0.8s infinite;
+    .hc-photo img {
+      animation: hcZoom 3.6s ease-out both;
     }
-    .hc-img-2 {
-      animation-delay: 0.08s, 1.2s;
-    }
-    .hc-img-3 {
-      animation-delay: 0.16s, 2s;
-    }
-    .hc-img-4 {
-      animation-delay: 0.24s, 2.6s;
+    .hc-badge {
+      animation: hcRise 0.7s 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
   }
   &.theme-forest {
@@ -79,9 +73,6 @@
         background: rgba(#fff, 0.1);
       }
     }
-    .hc-disc {
-      background: radial-gradient(circle, rgba($ml-lime, 0.28), rgba($ml-lime, 0) 68%);
-    }
   }
   &.theme-peach {
     background: linear-gradient(135deg, #fff1e6 0%, #ffd9c2 100%);
@@ -96,6 +87,7 @@
 
 .hc-copy {
   max-width: 560px;
+  padding: 1.5rem 0 3.6rem;
 }
 
 .hc-eyebrow {
@@ -160,48 +152,53 @@
   }
 }
 
-.hc-art {
+.hc-photo {
   position: relative;
   align-self: stretch;
-  min-height: 300px;
+  margin: 0;
+  min-height: 380px;
+  border-radius: 1.4rem;
+  overflow: hidden;
+  background: rgba(#000, 0.08);
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-user-drag: none;
+  }
 }
 
-.hc-disc {
+.hc-badge {
   position: absolute;
-  inset: 4% 8%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(#fff, 0.75), rgba(#fff, 0) 68%);
+  left: 1rem;
+  bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 50rem;
+  background: rgba(#fff, 0.95);
+  color: $ml-forest;
+  font-weight: 700;
+  font-size: 0.86rem;
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.55);
+  .bi {
+    color: $ml-green;
+  }
 }
 
-.hc-img {
+.hc-credit {
   position: absolute;
-  object-fit: contain;
-  filter: drop-shadow(0 18px 18px rgba(23, 59, 44, 0.25));
-  -webkit-user-drag: none;
-}
-
-.hc-img-1 {
-  width: 54%;
-  left: 23%;
-  top: 12%;
-}
-
-.hc-img-2 {
-  width: 32%;
-  left: 0;
-  bottom: 2%;
-}
-
-.hc-img-3 {
-  width: 28%;
-  right: 2%;
-  top: 0;
-}
-
-.hc-img-4 {
-  width: 31%;
-  right: 4%;
-  bottom: 0;
+  right: 0.7rem;
+  bottom: 0.45rem;
+  font-size: 0.66rem;
+  color: rgba(#fff, 0.88);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  a {
+    color: inherit;
+  }
 }
 
 .hc-controls {
@@ -305,24 +302,12 @@
   }
 }
 
-@keyframes hcPop {
+@keyframes hcZoom {
   from {
-    opacity: 0;
-    transform: scale(0.85) translateY(10px);
+    transform: scale(1.06);
   }
   to {
-    opacity: 1;
     transform: none;
-  }
-}
-
-@keyframes hcFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
   }
 }
 
@@ -331,7 +316,8 @@
   .hc-slide.is-active {
     transition: none;
     .hc-copy > *,
-    .hc-img {
+    .hc-photo img,
+    .hc-badge {
       animation: none !important;
     }
   }
@@ -342,8 +328,8 @@
     min-height: 400px;
     gap: 1rem;
   }
-  .hc-art {
-    min-height: 240px;
+  .hc-photo {
+    min-height: 340px;
   }
 }
 
@@ -353,33 +339,26 @@
     align-items: start;
     align-content: start;
     min-height: 0;
-    padding-bottom: 4.25rem;
+    gap: 0.25rem;
+    padding: 0.6rem 0.6rem 4.25rem;
   }
-  .hc-art {
+  .hc-copy {
+    padding: 0.4rem 0.7rem 0;
+  }
+  .hc-photo {
     order: -1;
     min-height: 0;
-    height: 170px;
-    margin: -0.25rem 0 0.25rem;
+    height: clamp(190px, 46vw, 260px);
+    border-radius: 1rem;
   }
-  .hc-img-1 {
-    width: auto;
-    height: 100%;
-    left: 50%;
-    top: 0;
-    transform-origin: center;
-    translate: -50% 0;
+  .hc-badge {
+    left: 0.6rem;
+    bottom: 0.6rem;
+    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
   }
-  .hc-img-2 {
-    width: auto;
-    height: 58%;
-    left: 2%;
-  }
-  .hc-img-3 {
-    width: auto;
-    height: 50%;
-  }
-  .hc-img-4 {
-    display: none;
+  .hc-controls {
+    left: 1.3rem;
   }
   .hc-title {
     font-size: clamp(1.65rem, 7vw, 2.2rem);
@@ -981,21 +960,25 @@
   }
 }
 
-.nl-art {
+.nl-photos {
   position: absolute;
   z-index: -1;
-  width: 150px;
-  right: -24px;
-  top: -34px;
-  filter: drop-shadow(0 14px 16px rgba(0, 0, 0, 0.25));
+  right: 1.2rem;
+  top: -18px;
+  display: flex;
   opacity: 0.95;
-}
-
-.nl-art-2 {
-  width: 110px;
-  top: auto;
-  right: 34%;
-  bottom: -40px;
+  img {
+    width: 92px;
+    height: 92px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.45);
+    margin-left: -22px;
+    &:nth-child(2) {
+      transform: translateY(34px);
+    }
+  }
 }
 
 .nl-field {
@@ -1073,14 +1056,14 @@
 }
 
 @include media-breakpoint-down(md) {
-  .nl-art-2 {
-    display: none;
-  }
-  .nl-art {
-    width: 110px;
-    right: -30px;
-    top: -30px;
-    opacity: 0.5;
+  .nl-photos {
+    right: -18px;
+    top: -26px;
+    opacity: 0.45;
+    img {
+      width: 70px;
+      height: 70px;
+    }
   }
 }
 
@@ -1144,18 +1127,11 @@ span.bone {
   }
 }
 
-// ------------------------------------------------------------------ product photos without a background
-.produce-tile img.cutout {
-  width: 82%;
-  height: 86%;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 14px rgba(23, 59, 44, 0.2));
-}
-
+// ------------------------------------------------------------------ small product photos in lists
 .search-hit img,
 .cart-drawer-line img,
 .mini-product img {
-  object-fit: contain;
+  object-fit: cover;
 }
 
 // ------------------------------------------------------------------ admin announcements: seasons and months
@@ -1372,4 +1348,94 @@ span.bone {
   .video-play-label {
     display: none;
   }
+}
+
+// ================================================================== real photos instead of illustrations
+// category tiles and chips: round photo
+.category-tile img,
+.quick-cats a img,
+.cat-list img,
+.filter-cat img {
+  border-radius: 50%;
+  object-fit: cover;
+  filter: none;
+  box-shadow: 0 0 0 3px rgba(#fff, 0.85), 0 8px 14px -8px rgba(23, 59, 44, 0.55);
+}
+
+.category-tile:hover img {
+  transform: scale(1.08);
+}
+
+// market cards, market page and home call-to-action: photos that fade into the green panel
+.market-hero .market-photo,
+.cta-band .cta-photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 38%);
+  mask-image: linear-gradient(to right, transparent 0, #000 38%);
+}
+
+@include media-breakpoint-down(lg) {
+  .market-hero .market-photo,
+  .cta-band .cta-photo {
+    width: 100%;
+    opacity: 0.22;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+// icons that replaced the illustrations
+.empty-icon,
+.banner-icon,
+.success-icon,
+.value-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: $ml-green;
+  background: rgba($ml-leaf, 0.16);
+}
+
+.cart-drawer-empty .empty-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  font-size: 1.9rem;
+}
+
+.banner-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.25rem;
+  background: rgba(#fff, 0.75);
+}
+
+.success-icon {
+  width: 5rem;
+  height: 5rem;
+  font-size: 2.6rem;
+  color: #fff;
+  background: $ml-green;
+  box-shadow: 0 0 0 10px rgba($ml-leaf, 0.2);
+}
+
+.value-card .value-icon {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.35rem;
+  margin-bottom: 0.75rem;
+  background: rgba(#fff, 0.75);
+}
+
+.chat-panel .chat-head .bot-avatar .bi {
+  font-size: 1.3rem;
+  color: $ml-forest;
 }

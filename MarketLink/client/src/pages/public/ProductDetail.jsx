@@ -19,7 +19,7 @@ import { useToast } from '../../context/ToastContext';
 import { DAY_SHORT, money, time12 } from '../../utils/format';
 import { productPath } from '../../utils/links';
 import useSeo from '../../hooks/useSeo';
-import { clip, productLd } from '../../utils/seo';
+import { breadcrumbLd, clip, ldGraph, productLd } from '../../utils/seo';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -40,7 +40,7 @@ export default function ProductDetail() {
           keywords: [...(p.keywords || []), p.name, p.category?.name, p.farmer?.stallName],
           image: p.image,
           type: 'product',
-          jsonLd: productLd(p),
+          jsonLd: ldGraph(productLd(p), breadcrumbLd([{ name: 'Shop', path: '/products' }, { name: p.category?.name || 'Products', path: `/products?category=${p.category?.slug || ''}` }, { name: p.name, path: `/products/${p.slug}` }])),
           canonicalPath: `/products/${p.slug}`,
         }
       : { title: 'Product' }
@@ -88,7 +88,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="container py-4">
+    <div className="container py-4 pd-page">
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb small">
           <li className="breadcrumb-item"><Link to="/">Home</Link></li>
@@ -116,12 +116,12 @@ export default function ProductDetail() {
             <RatingStars value={product.ratingAvg} count={product.ratingCount} />
             <StatusBadge status={soldOut ? 'sold_out' : 'available'} label={soldOut ? 'Sold out' : 'In stock'} />
           </div>
-          <div className="price mb-3" style={{ fontSize: '2rem' }}>
+          <div className="price mb-2" style={{ fontSize: '1.9rem' }}>
             {money(product.price)} <span className="unit">per {product.unit}</span>
           </div>
           {product.description && <p className="text-muted-2">{product.description}</p>}
 
-          <div className="soft-panel my-4">
+          <div className="soft-panel my-4 pd-buy">
             <div className="d-flex justify-content-between small fw-semi mb-2">
               <span>Available this week</span>
               <span>

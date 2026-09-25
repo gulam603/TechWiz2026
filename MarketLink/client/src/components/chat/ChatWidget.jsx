@@ -149,7 +149,7 @@ export default function ChatWidget() {
         <section className="chat-panel" aria-label="MarketLink assistant">
           <div className="chat-head">
             <span className="bot-avatar">
-              <img src="/illustrations/basket.webp" alt="" />
+              <i className="bi bi-basket2-fill" aria-hidden="true" />
             </span>
             <div className="flex-grow-1 min-w-0">
               <strong className="d-block">Basket · AI assistant</strong>

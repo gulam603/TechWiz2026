@@ -8,19 +8,12 @@ export default function FarmerCard({ farmer }) {
   return (
     <article className="farmer-card">
       <div className="cover" style={{ '--cover': coverFor(farmer.stallName) }}>
-        {farmer.coverImage ? (
-          <img className="cover-photo" src={farmer.coverImage} alt="" loading="lazy" />
-        ) : (
-          <>
-            <img className="cover-art" src={farmer.logo} alt="" style={{ right: 18, top: 14, transform: 'rotate(12deg)', width: 64, opacity: 0.35 }} />
-            <img className="cover-art" src="/illustrations/leafy-greens.webp" alt="" style={{ right: 90, top: 40, width: 46, opacity: 0.35 }} />
-          </>
-        )}
+        {(farmer.coverImage || farmer.logo) && <img className="cover-photo" src={farmer.coverImage || farmer.logo} alt="" loading="lazy" />}
         <div className="position-absolute" style={{ top: 12, right: 12, zIndex: 3 }}>
           <FavButton type="farmers" id={farmer._id} />
         </div>
       </div>
-      <div className="farmer-logo">{farmer.logo ? <img src={farmer.logo} alt="" /> : <i className="bi bi-shop fs-3 text-success" />}</div>
+      <div className="farmer-logo">{farmer.logo ? <img src={farmer.logo} alt={`${farmer.stallName} logo`} loading="lazy" /> : <i className="bi bi-shop fs-3 text-success" />}</div>
       <div className="card-body">
         <h3 className="card-title">
           <Link to={`/farmers/${farmer.slug}`} className="stretched">

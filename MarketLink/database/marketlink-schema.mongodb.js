@@ -82,6 +82,7 @@ createCollection(
       categories: { bsonType: 'array', items: objectId, description: 'what the farmer grows / sells' },
       logo: str(),
       coverImage: str(),
+      coverCredit: { bsonType: 'object', properties: { author: str(), source: str(), license: str() }, description: 'photographer of the cover photo' },
       latitude: num(-90, 90),
       longitude: num(-180, 180),
       markets: { bsonType: 'array', items: objectId },
@@ -152,6 +153,7 @@ createCollection(
       openTime: time,
       closeTime: time,
       image: str(),
+      imageCredit: { bsonType: 'object', properties: { author: str(), source: str(), license: str() }, description: 'photographer of the market photo' },
       isActive: bool,
       createdAt: date,
       updatedAt: date,
@@ -380,6 +382,26 @@ createCollection(
     },
   },
   [[{ email: 1 }, { unique: true }], [{ token: 1 }]]
+);
+
+// faqs: frequently asked questions (FAQ page, home page block and FAQPage structured data)
+createCollection(
+  'faqs',
+  {
+    bsonType: 'object',
+    required: ['question', 'answer'],
+    properties: {
+      question: str(200),
+      answer: str(1500),
+      group: { enum: ['shopping', 'pickup', 'farmers', 'account'] },
+      order: num(),
+      showOnHome: bool,
+      isActive: bool,
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [[{ isActive: 1, group: 1, order: 1 }]]
 );
 
 // contactmessages: messages sent from the Contact Us page

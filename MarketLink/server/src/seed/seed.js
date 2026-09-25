@@ -13,6 +13,7 @@ import {
   ContactMessage,
   Subscriber,
   ContentFlag,
+  Faq,
   Farmer,
   Market,
   Notification,
@@ -28,6 +29,7 @@ import { addDays, combineDateTime, isoWeekKey, startOfDay, toDateKey } from '../
 import { round2, slugify } from '../utils/helpers.js';
 import { generateSlots, getAvailability } from '../services/slots.js';
 import { uniqueSlug } from '../utils/slug.js';
+import { faqs } from '../content/faqs.js';
 import { syncValidators } from '../services/migrations.js';
 import { currentMonth } from '../models/Announcement.js';
 import { refreshRatings } from '../services/ratings.js';
@@ -39,20 +41,9 @@ import fs from 'node:fs';
 const PHOTOS = JSON.parse(fs.readFileSync(new URL('./photoCredits.json', import.meta.url), 'utf8'));
 // Extra photos for the product-page gallery (same source and licence)
 const GALLERY = JSON.parse(fs.readFileSync(new URL('./galleryCredits.json', import.meta.url), 'utf8'));
-// Product photos with the background removed (server/uploads/cutouts); the original photo stays in the gallery
-const CUTOUT_DIR = new URL('../../uploads/cutouts/', import.meta.url);
-const hasCutout = (file) => Boolean(file) && fs.existsSync(new URL(file, CUTOUT_DIR));
-// Close-ups that could not be cut out use a 3D illustration as their cut-out
-const CUTOUT_ILLUSTRATIONS = JSON.parse(fs.readFileSync(new URL('./cutoutIllustrations.json', import.meta.url), 'utf8'));
-const FLUENT_CREDIT = { author: 'Microsoft Fluent Emoji', source: 'https://github.com/microsoft/fluentui-emoji', license: 'MIT' };
-
-/** Credit for the main picture: the photographer (background removed) or the illustration set. */
-function mainImageCredit(photo) {
-  if (!photo) return undefined;
-  if (!hasCutout(photo.file)) return { author: photo.author, source: photo.source, license: photo.license };
-  if (CUTOUT_ILLUSTRATIONS[photo.file]) return FLUENT_CREDIT;
-  return { author: photo.author, source: photo.source, license: `${photo.license}, background removed` };
-}
+// Market and farm photos (Open Images, CC BY 2.0) - see server/uploads/places/CREDITS.md
+const PLACES = JSON.parse(fs.readFileSync(new URL('./placeCredits.json', import.meta.url), 'utf8'));
+const placeCredit = (url) => (url ? PLACES[url] : undefined);
 
 /** Search keywords for a seeded product, e.g. ['sindhri mangoes', 'fresh sindhri mangoes', 'fruits karachi']. */
 function seedKeywords(name, categoryName, city) {
@@ -90,7 +81,7 @@ function orderNumber(date) {
 }
 
 async function clearDatabase() {
-  const models = [Announcement, AssistantChat, Category, City, ContactMessage, ContentFlag, StockMovement, Farmer, Market, Notification, Order, Product, Report, Review, Subscriber, User];
+  const models = [Announcement, AssistantChat, Category, City, ContactMessage, ContentFlag, Faq, StockMovement, Farmer, Market, Notification, Order, Product, Report, Review, Subscriber, User];
   for (const Model of models) {
     await Model.deleteMany({});
     await Model.init(); // make sure indexes exist
@@ -116,7 +107,7 @@ async function main() {
   }
   const marketByKey = {};
   for (const m of data.markets) {
-    marketByKey[m.key] = await Market.create({ ...m, slug: slugify(m.name), mapProvider: 'openstreetmap', mapLink: `https://www.openstreetmap.org/?mlat=${m.latitude}&mlon=${m.longitude}#map=17/${m.latitude}/${m.longitude}` });
+    marketByKey[m.key] = await Market.create({ ...m, imageCredit: placeCredit(m.image?.replace('/uploads/', '')), slug: slugify(m.name), mapProvider: 'openstreetmap', mapLink: `https://www.openstreetmap.org/?mlat=${m.latitude}&mlon=${m.longitude}#map=17/${m.latitude}/${m.longitude}` });
   }
 
   // ---------------------------------------------------------------- farmers & products
@@ -150,6 +141,8 @@ async function main() {
       bio: f.bio,
       tags: f.tags,
       logo: f.logo,
+      coverImage: f.cover,
+      coverCredit: placeCredit(f.cover?.replace('/uploads/', '')),
       latitude: f.latitude,
       longitude: f.longitude,
       pickupWindows: f.windows.map((w) => ({ ...w, market: marketByKey[w.market]._id })),
@@ -175,13 +168,9 @@ async function main() {
         templateQuantity: p.template ?? p.qty,
         description: p.desc,
         keywords: seedKeywords(p.name, categoryByKey[p.cat].name, farmer.city),
-        image: hasCutout(PHOTOS[p.name]?.file) ? `/uploads/cutouts/${PHOTOS[p.name].file}` : PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : `/uploads/seed/${p.img}.webp`,
-        imageCredit: mainImageCredit(PHOTOS[p.name]),
-        gallery: [
-          // With a cut-out main image, the full original photo is the first gallery picture
-          ...(hasCutout(PHOTOS[p.name]?.file) ? [{ url: `/uploads/photos/${PHOTOS[p.name].file}`, credit: { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } }] : []),
-          ...(GALLERY[p.name] || []).map((g) => ({ url: `/uploads/photos/gallery/${g.file}`, credit: { author: g.author, source: g.source, license: g.license } })),
-        ],
+        image: PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : undefined,
+        imageCredit: PHOTOS[p.name] ? { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } : undefined,
+        gallery: (GALLERY[p.name] || []).map((g) => ({ url: `/uploads/photos/gallery/${g.file}`, credit: { author: g.author, source: g.source, license: g.license } })),
         markets: farmer.markets,
         days: farmer.operatingDays,
         farmerActive: farmer.isActive,
@@ -443,6 +432,7 @@ async function main() {
   const seasonal = data.announcements.find((a) => a.months?.includes(month)) || data.announcements[0];
   await ContactMessage.insertMany(data.contactMessages);
   await Subscriber.insertMany(data.subscribers.map((sub, i) => ({ ...sub, createdAt: addDays(new Date(), -(i * 3 + 1)) })));
+  await Faq.insertMany(faqs.map((f, i) => ({ ...f, order: i + 1 })));
 
   const [placedOrder, acceptedOrder, readyOrder] = upcoming;
   const malirUser = farmerByKey.malir.user;

@@ -12,7 +12,7 @@ import { DAY_LETTER, DAY_NAMES } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
-import { clip } from '../../utils/seo';
+import { breadcrumbLd, clip, itemListLd, ldGraph } from '../../utils/seo';
 
 const SORTS = [
   { value: 'popular', label: 'Most popular' },
@@ -149,17 +149,19 @@ export default function Products() {
   const [showFilters, setShowFilters] = useState(false);
   const { data: catData } = useFetch('/categories');
   const seoCategory = (catData?.categories || []).find((c) => c.slug === params.get('category'));
-  useSeo(
-    seoCategory
-      ? { title: `${seoCategory.name} from local farmers`, description: clip(seoCategory.description || `Fresh ${seoCategory.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`), canonicalPath: `/products?category=${seoCategory.slug}` }
-      : { title: 'Shop fresh produce', description: "Browse this week's vegetables, fruit, dairy, honey, baked goods and more from local farmers. Filter by market, day, city and price, then pre-order for pickup.", canonicalPath: '/products' }
-  );
   const { data: marketData } = useFetch('/markets');
   const { data: practiceData } = useFetch('/practices');
 
   const query = {};
   for (const key of FILTER_KEYS) if (params.get(key)) query[key] = params.get(key);
   const { data, loading, error, reload } = useFetch(`/products${toQuery({ limit: 12, ...query })}`);
+  const listLd = itemListLd(seoCategory ? `${seoCategory.name} from local farmers` : 'Fresh produce this week', (data?.products || []).map((p) => ({ name: p.name, path: `/products/${p.slug}` })));
+  const crumbLd = breadcrumbLd([{ name: 'Shop', path: '/products' }, ...(seoCategory ? [{ name: seoCategory.name, path: `/products?category=${seoCategory.slug}` }] : [])]);
+  useSeo(
+    seoCategory
+      ? { title: `${seoCategory.name} from local farmers`, description: clip(seoCategory.description || `Fresh ${seoCategory.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`), canonicalPath: `/products?category=${seoCategory.slug}`, jsonLd: ldGraph(listLd, crumbLd) }
+      : { title: 'Shop fresh produce', description: "Browse this week's vegetables, fruit, dairy, honey, baked goods and more from local farmers. Filter by market, day, city and price, then pre-order for pickup.", canonicalPath: '/products', jsonLd: ldGraph(listLd, crumbLd) }
+  );
 
   /** Updates one or more filters in the URL (resetting to page 1). */
   function set(changes) {
@@ -233,7 +235,7 @@ export default function Products() {
             </div>
             {data && data.products.length === 0 && (
               <EmptyState
-                image="/illustrations/leafy-greens.webp"
+                icon="bi-search"
                 title="Nothing matches those filters"
                 message="Try another category, market day or a wider price range."
                 action={

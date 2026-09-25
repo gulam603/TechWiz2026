@@ -1,30 +1,30 @@
 import { useRef } from 'react';
 import useFetch from '../../hooks/useFetch';
 
-// Produce floating around the basket in the login / sign-up banner.
+// Real produce photos floating around the market photo in the login / sign-up banner.
 // x / y are percentages of the scene: the outer ring is spaced evenly along an ellipse,
 // the inner items sit "further back" (smaller, softer, less parallax).
 const ITEMS = [
-  { img: 'tomato', x: 50, y: 11, size: 20, r: 8 },
-  { img: 'carrot', x: 65.1, y: 13.6, size: 19, r: -24 },
-  { img: 'strawberry', x: 79.2, y: 21.9, size: 16, r: 10 },
-  { img: 'broccoli', x: 90.1, y: 38.3, size: 21, r: -6 },
-  { img: 'mango', x: 90.1, y: 61.7, size: 18, r: 14 },
-  { img: 'honey', x: 79.2, y: 78.1, size: 18, r: -4 },
-  { img: 'eggplant', x: 65.1, y: 86.4, size: 19, r: -28 },
-  { img: 'watermelon', x: 50, y: 89, size: 21, r: 6 },
-  { img: 'cherries', x: 34.9, y: 86.4, size: 16, r: -10 },
-  { img: 'bread', x: 20.8, y: 78.1, size: 19, r: 8 },
-  { img: 'corn', x: 9.9, y: 61.7, size: 19, r: 24 },
-  { img: 'avocado', x: 9.9, y: 38.3, size: 17, r: -12 },
-  { img: 'grapes', x: 20.8, y: 21.9, size: 18, r: 10 },
-  { img: 'bell-pepper', x: 34.9, y: 13.6, size: 17, r: -8 },
-  { img: 'peas', x: 22, y: 50, size: 10, r: -20, inner: true },
-  { img: 'blueberries', x: 78, y: 50, size: 10, r: 0, inner: true },
-  { img: 'chilli', x: 30, y: 28, size: 10, r: 30, inner: true },
-  { img: 'egg', x: 70, y: 28, size: 10, r: 12, inner: true },
-  { img: 'lemon', x: 30, y: 72, size: 10, r: -14, inner: true },
-  { img: 'mushroom', x: 70, y: 72, size: 10, r: 8, inner: true },
+  { img: 'vine-tomatoes', x: 50, y: 11, size: 18, r: 8 },
+  { img: 'sweet-carrots', x: 65.1, y: 13.6, size: 17, r: -6 },
+  { img: 'strawberries', x: 79.2, y: 21.9, size: 15, r: 10 },
+  { img: 'broccoli', x: 90.1, y: 38.3, size: 18, r: -6 },
+  { img: 'sindhri-mangoes', x: 90.1, y: 61.7, size: 17, r: 8 },
+  { img: 'acacia-honey', x: 79.2, y: 78.1, size: 16, r: -4 },
+  { img: 'purple-brinjal', x: 65.1, y: 86.4, size: 17, r: -8 },
+  { img: 'watermelon', x: 50, y: 89, size: 18, r: 6 },
+  { img: 'cherries', x: 34.9, y: 86.4, size: 15, r: -10 },
+  { img: 'country-sourdough-loaf', x: 20.8, y: 78.1, size: 17, r: 8 },
+  { img: 'sweet-corn', x: 9.9, y: 61.7, size: 17, r: 6 },
+  { img: 'kiwi', x: 9.9, y: 38.3, size: 16, r: -12 },
+  { img: 'red-apples', x: 20.8, y: 21.9, size: 17, r: 10 },
+  { img: 'capsicum-mix', x: 34.9, y: 13.6, size: 16, r: -8 },
+  { img: 'green-peas-matar', x: 22, y: 50, size: 10, r: -10, inner: true },
+  { img: 'peaches', x: 78, y: 50, size: 10, r: 0, inner: true },
+  { img: 'green-chillies', x: 30, y: 28, size: 10, r: 12, inner: true },
+  { img: 'desi-eggs', x: 70, y: 28, size: 10, r: 12, inner: true },
+  { img: 'lemons', x: 30, y: 72, size: 10, r: -14, inner: true },
+  { img: 'button-mushrooms', x: 70, y: 72, size: 10, r: 8, inner: true },
 ].map((item, i) => ({ ...item, depth: item.inner ? 6 : 14 + (i % 3) * 7 }));
 
 /** Split screen used by the login / register pages. */
@@ -69,8 +69,8 @@ export default function AuthLayout({ title, highlight, text, children, variant =
           {[12, 38, 64, 88].map((x, i) => (
             <span key={x} className="sparkle" style={{ left: `${x}%`, top: `${i % 2 ? 58 : 44}%`, '--delay': `${-i * 0.9}s` }} />
           ))}
-          <span className="float-item basket" style={{ left: '50%', top: '50%', '--size': 60, '--depth': 8, '--i': 0 }}>
-            <img src="/illustrations/basket.webp" alt="" style={{ '--r': '-4deg', '--dur': '6.5s' }} />
+          <span className="float-item basket" style={{ left: '50%', top: '50%', '--size': 46, '--depth': 8, '--i': 0 }}>
+            <img src="/images/hero/welcome.webp" alt="" style={{ '--r': '-4deg', '--dur': '6.5s' }} />
           </span>
           {ITEMS.map((item, i) => (
             <span
@@ -79,7 +79,7 @@ export default function AuthLayout({ title, highlight, text, children, variant =
               style={{ left: `${item.x}%`, top: `${item.y}%`, '--size': item.size, '--depth': item.depth, '--i': i + 1 }}
             >
               <img
-                src={`/illustrations/${item.img}.webp`}
+                src={`/uploads/photos/thumbs/${item.img}.webp`}
                 alt=""
                 style={{ '--r': `${item.r}deg`, '--dur': `${4.6 + (i % 5) * 0.7}s`, animationDelay: `${-(i % 7) * 0.8}s` }}
               />

@@ -47,6 +47,7 @@ export default function Footer() {
           <div className="col-md-4 col-lg-2">
             <h6>Help &amp; legal</h6>
             <ul className="list-unstyled d-grid gap-2 small">
+              <li><Link to="/faq">FAQs</Link></li>
               <li><Link to="/contact">Contact us</Link></li>
               <li><Link to="/about">About MarketLink</Link></li>
               <li><Link to="/terms">Terms &amp; Conditions</Link></li>
@@ -82,7 +83,7 @@ export default function Footer() {
             © {new Date().getFullYear()} MarketLink · eGreen Basket · Built by <Link to="/about">{TEAM_NAME}</Link> · <Link to="/terms">Terms &amp; Conditions</Link>
           </span>
           <span>
-            Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> · Photos: Open Images (CC BY 2.0) · Illustrations: Microsoft Fluent (MIT)
+            Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> · Photos: Open Images (CC BY 2.0)
           </span>
         </div>
       </div>

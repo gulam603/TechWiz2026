@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { imageKind } from '../../utils/images';
 
 /**
- * Product / farmer image on a soft coloured tile. 3D illustrations (.webp in /uploads/seed) and
- * photos without a background (/uploads/cutouts) are shown "floating"; other photos fill the tile.
+ * Product / farmer photo on a soft coloured tile. The photo fills the tile; a basket icon shows
+ * when there is no photo or it fails to load.
  */
 export default function ProduceImage({ src, alt = '', color, className = '', style }) {
   const [failed, setFailed] = useState(false);

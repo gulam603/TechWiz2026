@@ -13,7 +13,7 @@ Bootstrap 5 (`client/src/styles`).
 | `_dashboard.scss` | dashboard layout, collapsible sidebar, compact KPI cards, panels, tables, profile photo, family banner |
 | `_admin.scss` | admin shell (sidebar, top bar, drawer), filter bar, DataTables theme, admin modals, analytics heat map, pending-farmer screens |
 | `_shop.scss` | basket sidebar, quick view, zoom, dropdown search, review badges, compact desktop sizes |
-| `_home.scss` | home banner carousel, search card, video tour, photo mosaic, reviews, newsletter, loading skeletons, product cut-outs, season picker, Table / Cards switch |
+| `_home.scss` | home banner carousel (photo on the right), search card, video tour, photo mosaic, reviews, newsletter, loading skeletons, season picker, Table / Cards switch, round category photos |
 
 ## 1. Colour
 
@@ -69,7 +69,7 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
 | Buttons | `btn-primary` (green), `btn-lime`, `btn-forest`, `btn-soft`, `btn-white`, round `btn-icon`; press feedback `scale(0.98)`; labels never wrap |
 | Chips | `chip`, `chip-soft`, `hero-chip` (on dark), filter chips and day dots (S M T W T F S) |
 | Product card | produce tile (4:3) + category, name, farmer, rating, price per unit, add button; lifts on hover |
-| Produce tile | real photos fill the tile (`img.photo`, object-fit cover); 3D illustrations float on a pastel tile |
+| Produce tile | the product photo fills the tile (object-fit cover); a basket icon when there is no photo |
 | Status badges | orders (placed, accepted, ready, completed, declined, cancelled), accounts (active, pending, suspended, inactive), products (available, sold out, unavailable, removed) |
 | KPI cards | icon on the left, label, value, sub-text (one line on laptops, up to two lines on phones); first card is the dark "lead" card |
 | App shell | one layout for the customer, farmer and admin areas: flat forest sidebar (no gradient) with section labels, lime active marker and counters; icon-only collapsed mode with tooltips |
@@ -104,16 +104,18 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
 - **Product photos:** real photos from the Open Images Dataset (Flickr, CC BY 2.0), cropped to
   4:3, 800 × 600 WebP. The photographer is credited on the product page and in
   `server/uploads/photos/CREDITS.md`. Farmers can upload their own photo instead.
-- **Photos without a background:** product cards show a cut-out of each seeded product
-  (`server/uploads/cutouts`, 640 × 640 transparent WebP) floating on the category colour. The
-  background was removed automatically; close-ups that could not be cut out cleanly use the
-  matching 3D illustration. The full photo is the first picture of the product gallery. See
-  `server/uploads/cutouts/CREDITS.md`.
+- **Banner, market and farm photos:** also Open Images (CC BY 2.0), chosen per slide and cropped
+  for their frame: 8 banner photos (1024 px, `client/public/images/hero`), 8 market photos
+  (4:3, 800 px) and 12 farm cover photos (16:9, 1024 px) in `server/uploads/places`. Category icons
+  and farmer logos are round 320 px crops of product photos (`uploads/photos/thumbs`). Each photo
+  shows its photographer; see the two `CREDITS.md` files.
 - **Video:** `client/public/media/how-it-works.mp4` (29 s, 1280 × 720, about 0.8 MB) with a poster
   image and English captions (`how-it-works.vtt`). It shows the real website on a phone for the four
   steps; it only downloads when the visitor presses play.
-- **Illustrations:** Microsoft Fluent 3D illustrations (MIT) are used as decoration: the login and
-  sign-up banner, home hero, category icons, farmer logos and market cards.
+- **No illustrations:** every picture is a real photo. Empty states, banners and value cards use
+  Bootstrap Icons in a soft circle (`.empty-icon`, `.banner-icon`, `.value-icon`).
+- **Share picture:** `client/public/brand/og-image.jpg` (1200 × 630) for link previews of pages
+  without their own photo.
 - Farmer pages without a cover photo show three of the farmer's product photos as tilted prints.
 
 ## 6. Motion
@@ -121,7 +123,7 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
 | Animation | Where |
 | --- | --- |
 | `pageIn` | every route change (fade + rise) |
-| `hcRise`, `hcPop`, `hcFloat` | home banner: text rises, produce pops in and floats; the active dot fills while a slide is shown |
+| `hcRise`, `hcZoom` | home banner: text rises, the photo settles from a slight zoom; slides change every 3 s and the active dot fills in 3 s |
 | Scroll reveal (`.reveal` + IntersectionObserver) | cards and section headings fade up when they scroll into view |
 | Count-up | home and About statistics count from 0 when visible |
 | `floaty`, `popIn`, `glowPulse`, `twinkle` | floating produce ring on the auth banner, with mouse parallax |

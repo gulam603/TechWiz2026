@@ -8,7 +8,11 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="text/plain" title="MarketLink for AI assistants" href="/llms.txt" />
+    <meta name="geo.region" content="PK" />
+    <meta name="geo.placename" content="Karachi" />
     <!-- The server replaces this block with the tags of each page (server/src/services/seo.js) -->
     <!--seo:start-->
     <title>MarketLink | Fresh from local farmers markets</title>
@@ -17,7 +21,7 @@
     <meta property="og:site_name" content="MarketLink" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="MarketLink | Fresh from local farmers markets" />
-    <meta property="og:image" content="/brand/icon-512.png" />
+    <meta property="og:image" content="/brand/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <!--seo:end-->
     <!-- Shown until the app has loaded, so a slow connection sees the page taking shape instead of a blank screen -->
@@ -35,6 +39,7 @@
       @keyframes boot{0%{background-position:100% 50%}100%{background-position:0 50%}}
       @keyframes spin{to{transform:rotate(360deg)}}
       @media (prefers-reduced-motion:reduce){.boot b,.boot-msg i{animation:none}}
+      .prerender{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
     </style>
   </head>
   <body>
@@ -48,6 +53,8 @@
           <p class="boot-msg"><i></i> Loading fresh produce from local farmers…</p>
         </div>
       </div>
+      <!-- The server writes the page's main text and links here for crawlers that do not run JavaScript -->
+      <!--prerender:start--><!--prerender:end-->
     </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

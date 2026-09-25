@@ -25,9 +25,9 @@ sends guests to the right login page and blocks other roles.
 
 | Route | Page | Content |
 | --- | --- | --- |
-| `/` | Home | banner carousel (welcome, this season's harvest, pickup, farmers; autoplay with pause, dots, arrows, swipe), search card (category drop-down, popular categories, next market day, live numbers), categories row, popular products, video tour + 4 steps, markets near you (map), top-rated farmers, market photos, customer reviews (average, star bars, verified share, swipeable cards), newsletter, farmer call-to-action |
+| `/` | Home | banner carousel with real photos (welcome, this season's harvest, pickup, farmers; changes every 3 s, pause, dots, arrows, swipe), search card (category drop-down, popular categories, next market day, live numbers), categories row, popular products, video tour + 4 steps, markets near you (map), top-rated farmers, market photos, customer reviews (average, star bars, verified share, swipeable cards), FAQs (6 questions + link to all), newsletter, farmer call-to-action; a product card's Add opens the quick view to choose the amount |
 | `/products` | Shop | search, filters (category, city, market, market day, price range, in stock), sorting, pagination |
-| `/products/:slug` | Product detail (readable URL, e.g. `/products/sindhri-mangoes`; old id links redirect) | real product photo with credit, price, unit, stock bar, quantity + add to basket, farmer card, pickup windows, reviews, related products |
+| `/products/:slug` | Product detail (readable URL, e.g. `/products/sindhri-mangoes`; old id links redirect) | real product photo with credit (fits the screen, stays in view on laptops), price, unit, stock bar, quantity + add to basket, farmer card, pickup windows, reviews, related products |
 | `/markets` | Markets | search, city dropdown (cities table), produce category dropdown, day filter, "Near me" (distance sort), grid or map view |
 | `/markets/:slug` | Market detail | days, hours, address, map with directions, farmers at this market, save market |
 | `/farmers` | Farmers | search, city, market, category, day, rating and farming-practice filters, grid or map view |
@@ -35,6 +35,7 @@ sends guests to the right login page and blocks other roles.
 | `/map` | Explore map | full map of markets and stalls with a searchable list, day filter, "near me", routes |
 | `/about` | About us | problem, solution, live numbers, values, "Who built MarketLink" – Team Omniverse banner and team cards |
 | `/terms` | Terms & Conditions | 12 sections (accounts, pre-orders, cancellations, payment, farmers, reviews, AI assistant, privacy …) with a table of contents (a fold-out list on phones); linked from the footer, while the sign-up forms open the same text in a dialog |
+| `/faq` | FAQs | 17 questions in 4 topics (shopping, pickup & payment, farmers, account & privacy), search, topic chips, help box; FAQPage structured data |
 | `/unsubscribe?token=` | Unsubscribe | opened from the newsletter e-mail; stops the newsletter for that address |
 | `/contact` | Contact us | static team contact, Google Map, contact form (goes to the admin inbox) |
 | `/cart` | Basket | items grouped by farmer (one pickup per farmer), quantities, totals; the basket icon opens the same basket as a sidebar on the right |
@@ -89,6 +90,7 @@ Every admin table is a DataTables grid (search, sort, paging, CSV / Excel / Prin
 | `/admin/reviews` | Reviews | remove or restore reviews; filters: visibility, product/farmer, rating, farmer, dates |
 | `/admin/moderation` | Moderation | KPIs, Open / Resolved / Dismissed tabs, reports about reviews, listings and stalls plus reviews held by the word filter; publish, remove, restore, suspend stall, dismiss (with a note) |
 | `/admin/announcements` | Announcements | publish or edit a site banner + in-app notification; season presets or months, optional link; DataTable with Live / Waiting for its season / Hidden |
+| `/admin/faqs` | FAQs | add / edit questions (topic, home page), order numbers in the table, hide, delete, CSV / Excel |
 | `/admin/newsletter` | Newsletter | subscribers in a DataTable (status, where they signed up, dates), remove, CSV / Excel export |
 | `/admin/messages` | Contact messages | inbox from the Contact page (open, mark read, reply by e-mail, delete) |
 | `/admin/notifications` | Notifications | system notices |

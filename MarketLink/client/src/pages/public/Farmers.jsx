@@ -10,9 +10,9 @@ import { PageHero } from '../../components/common/PageHeader';
 import { DAY_NAMES, DAY_SHORT } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
+import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
 
 export default function Farmers() {
-  useSeo({ title: 'Local farmers', description: 'Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.' });
   const [filters, setFilters] = useState({ search: '', city: '', market: '', day: '', category: '', rating: '', practice: '', sort: 'rating', page: 1 });
   const { data: practiceData } = useFetch('/practices');
   const [view, setView] = useState('grid');
@@ -22,6 +22,12 @@ export default function Farmers() {
   const { data: catData } = useFetch('/categories');
   const set = (changes) => setFilters((f) => ({ ...f, ...changes, page: changes.page || 1 }));
   const markets = (marketData?.markets || []).filter((m) => !filters.city || m.city === filters.city);
+  useSeo({
+    title: 'Local farmers',
+    description: 'Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.',
+    jsonLd: ldGraph(itemListLd('Local farmers on MarketLink', (data?.farmers || []).map((f) => ({ name: f.stallName, path: `/farmers/${f.slug}` }))), breadcrumbLd([{ name: 'Farmers', path: '/farmers' }])),
+    canonicalPath: '/farmers',
+  });
 
   return (
     <>
@@ -105,7 +111,7 @@ export default function Farmers() {
             )}
           </div>
         )}
-        {data && data.farmers.length === 0 && <EmptyState image="/illustrations/farmer.webp" title="No farmers found" message="Try clearing a filter." />}
+        {data && data.farmers.length === 0 && <EmptyState icon="bi-people" title="No farmers found" message="Try clearing a filter." />}
         {view === 'grid' && <Pagination page={filters.page} pages={data?.pages} onChange={(page) => set({ page })} />}
       </div>
     </>

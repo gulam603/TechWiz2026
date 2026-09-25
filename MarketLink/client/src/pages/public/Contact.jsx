@@ -6,9 +6,10 @@ import { useAuth } from '../../context/AuthContext';
 import { CONTACT } from '../../config';
 import SocialLinks from '../../components/common/SocialLinks';
 import useSeo from '../../hooks/useSeo';
+import { breadcrumbLd } from '../../utils/seo';
 
 export default function Contact() {
-  useSeo({ title: 'Contact us', description: 'Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.' });
+  useSeo({ title: 'Contact us', description: 'Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.', jsonLd: breadcrumbLd([{ name: 'Contact us', path: '/contact' }]) });
   const { user } = useAuth();
   const { toast } = useToast();
   const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', subject: '', message: '' });

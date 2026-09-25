@@ -80,7 +80,7 @@ export default function Navbar() {
         {isAdminArea && user?.role === 'admin' && <span className="chip chip-dark d-none d-sm-inline-flex">Admin console</span>}
 
         <ul className="navbar-nav flex-row gap-1 mx-auto d-none d-lg-flex">
-          {LINKS.map((l) => (
+          {LINKS.filter((l) => !l.menuOnly).map((l) => (
             <li key={l.to} className="nav-item">
               <NavLink to={l.to} end={l.end} className="nav-link">
                 {l.label}

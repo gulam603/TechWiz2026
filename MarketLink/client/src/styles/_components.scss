@@ -378,17 +378,11 @@
     z-index: -1;
   }
   img {
-    width: 58%;
-    height: 72%;
-    object-fit: contain;
-    filter: drop-shadow(0 12px 14px rgba(23, 59, 44, 0.18));
-    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  img.photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: none;
+    border-radius: 0;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .tile-fallback {
     font-size: 3rem;
@@ -412,9 +406,6 @@
     box-shadow: $box-shadow-lg;
     border-color: transparent;
     .produce-tile img {
-      transform: scale(1.07) rotate(-3deg);
-    }
-    .produce-tile img.photo {
       transform: scale(1.05);
     }
   }
@@ -757,9 +748,9 @@
     justify-content: center;
     overflow: hidden;
     img {
-      width: 80%;
-      height: 80%;
-      object-fit: contain;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
   .card-body {
@@ -785,10 +776,17 @@
     align-items: center;
     justify-content: center;
     background: var(--cover, linear-gradient(135deg, #1f4a37, #2e7d4f));
+    overflow: hidden;
     img {
-      width: 96px;
-      filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.3));
-      transition: transform 0.35s ease;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+    .chip {
+      z-index: 1;
     }
     .distance {
       position: absolute;
@@ -802,7 +800,7 @@
     }
   }
   &:hover .market-visual img {
-    transform: scale(1.08) rotate(4deg);
+    transform: scale(1.05);
   }
   .card-body {
     padding: 1.1rem 1.2rem 1.2rem;
@@ -838,10 +836,17 @@
   background: #fff;
   border: 1px dashed #d9d1bf;
   border-radius: 1.4rem;
-  img {
-    width: 88px;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 10px 12px rgba(23, 59, 44, 0.15));
+  .empty-icon {
+    width: 4.5rem;
+    height: 4.5rem;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem;
+    color: $ml-green;
+    background: rgba($ml-leaf, 0.14);
   }
   h5 {
     color: $ml-forest;

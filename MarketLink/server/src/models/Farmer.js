@@ -35,6 +35,7 @@ const farmerSchema = new Schema(
     categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }], // what the farmer grows / sells
     logo: String,
     coverImage: String,
+    coverCredit: { author: String, source: String, license: String }, // photographer of a licensed stock cover photo
 
     // Location of the stall / pickup point shown on the map
     latitude: { type: Number, min: -90, max: 90 },

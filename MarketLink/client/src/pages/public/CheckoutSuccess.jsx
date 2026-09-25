@@ -9,7 +9,9 @@ export default function CheckoutSuccess() {
   return (
     <div className="container py-5" style={{ maxWidth: 760 }}>
       <div className="text-center mb-4">
-        <img src="/illustrations/basket.webp" alt="" width={110} className="mb-3" style={{ filter: 'drop-shadow(0 14px 16px rgba(23,59,44,.2))' }} />
+        <span className="success-icon mb-3" aria-hidden="true">
+          <i className="bi bi-check-lg" />
+        </span>
         <h1 className="display-font">Your pre-order is in!</h1>
         <p className="text-muted-2">We've told the farmer and sent a confirmation to your e-mail. You'll get an alert when it's ready for pickup.</p>
       </div>

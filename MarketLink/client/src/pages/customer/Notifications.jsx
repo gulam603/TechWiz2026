@@ -47,7 +47,7 @@ export default function Notifications() {
         }
       />
       {data.notifications.length === 0 ? (
-        <EmptyState image="/illustrations/sunflower.webp" title="No notifications yet" message="Order updates, restock alerts and announcements will appear here." />
+        <EmptyState icon="bi-bell" title="No notifications yet" message="Order updates, restock alerts and announcements will appear here." />
       ) : (
         <div className="panel p-2">
           {data.notifications.map((n) => (

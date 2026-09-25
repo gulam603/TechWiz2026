@@ -1,5 +1,17 @@
-// Slides of the home page banner. Images are product photos without a background (uploads/cutouts).
-const cut = (name) => `/uploads/cutouts/${name}.webp`;
+// Slides of the home page banner. Photos: Open Images (CC BY 2.0), see client/public/images/CREDITS.md.
+import CREDITS from './heroCredits.json';
+
+const ALT = {
+  welcome: 'Fruit and vegetable stalls at a farmers market',
+  winter: 'Fresh mandarin oranges with their leaves',
+  spring: 'Punnets of ripe strawberries',
+  summer: 'A basket of ripe mangoes',
+  autumn: 'Red apples and green pears',
+  pickup: 'Crates of fresh produce ready at a market stall',
+  farmers: 'A farmer harvesting sweet potatoes in the field',
+};
+
+const hero = (name, focus = '50% 50%') => ({ src: `/images/hero/${name}.webp`, alt: ALT[name], focus, credit: CREDITS[`/images/hero/${name}.webp`] });
 
 // The harvest slide changes with the season (month 1 = January), like the announcement bar
 const SEASONS = [
@@ -10,7 +22,8 @@ const SEASONS = [
     text: 'Juicy kinnow from Sargodha, sweet carrots and leafy greens are at the markets now. Reserve yours before Friday.',
     to: '/products?category=vegetables',
     label: 'Shop winter produce',
-    images: ['kinnow-oranges', 'sweet-carrots', 'iceberg-lettuce', 'farm-potatoes'],
+    photo: hero('winter'),
+    badge: { icon: 'bi-snow', text: 'Winter citrus is in' },
   },
   {
     months: [3, 4],
@@ -19,7 +32,8 @@ const SEASONS = [
     text: 'Sweet Lahore strawberries, fresh mint and crunchy cucumbers. Boxes sell out quickly, so pre-order early.',
     to: '/products?category=fruits',
     label: 'Shop spring produce',
-    images: ['strawberries', 'fresh-mint-podina', 'desi-cucumbers', 'lemons'],
+    photo: hero('spring'),
+    badge: { icon: 'bi-flower1', text: 'Picked this week' },
   },
   {
     months: [5, 6, 7, 8],
@@ -28,7 +42,8 @@ const SEASONS = [
     text: 'The king of fruits, straight from the Gadap orchards. Pre-order early: they sell out by Sunday noon.',
     to: '/products?category=fruits',
     label: 'Shop mangoes',
-    images: ['sindhri-mangoes', 'chaunsa-mangoes', 'cantaloupe-melon', 'bananas'],
+    photo: hero('summer', '50% 60%'),
+    badge: { icon: 'bi-sun', text: 'Tree-ripened mangoes' },
   },
   {
     months: [9, 10, 11],
@@ -37,7 +52,8 @@ const SEASONS = [
     text: 'New-season fruit from the hills of Swat, picked this week and brought to your nearest market.',
     to: '/products?category=fruits',
     label: 'Shop autumn fruit',
-    images: ['red-apples', 'pears', 'kiwi', 'green-apples'],
+    photo: hero('autumn'),
+    badge: { icon: 'bi-tree', text: 'New-season fruit' },
   },
 ];
 
@@ -53,7 +69,8 @@ export function heroSlides(month = new Date().getMonth() + 1) {
       text: "See which farmers are at the market, what's in stock and the price. Pre-order online and pick up at the stall.",
       primary: { label: 'Start shopping', to: '/products' },
       secondary: { label: 'Find a market', to: '/markets' },
-      images: [cut('farm-potatoes'), cut('red-onions'), cut('green-chillies'), cut('purple-brinjal')],
+      photo: hero('welcome'),
+      badge: { icon: 'bi-basket2', text: 'Fresh stock every week' },
     },
     {
       id: 'season',
@@ -63,7 +80,8 @@ export function heroSlides(month = new Date().getMonth() + 1) {
       text: season.text,
       primary: { label: season.label, to: season.to },
       secondary: { label: 'All products', to: '/products' },
-      images: season.images.map(cut),
+      photo: season.photo,
+      badge: season.badge,
     },
     {
       id: 'pickup',
@@ -73,7 +91,8 @@ export function heroSlides(month = new Date().getMonth() + 1) {
       text: 'Choose a pickup time that suits you. We tell you when your order is packed. You pay the farmer in person.',
       primary: { label: 'How it works', to: '/#how-it-works' },
       secondary: { label: 'Open the map', to: '/map' },
-      images: [cut('country-sourdough-loaf'), cut('farm-paneer'), cut('acacia-honey'), cut('butter-croissants')],
+      photo: hero('pickup'),
+      badge: { icon: 'bi-cash-coin', text: 'No online payment' },
     },
     {
       id: 'farmers',
@@ -83,7 +102,8 @@ export function heroSlides(month = new Date().getMonth() + 1) {
       text: 'List your weekly stock, take pre-orders with pickup times and see your best sellers. Free to join.',
       primary: { label: 'Register your stall', to: '/register/farmer', guestOnly: true },
       secondary: { label: 'Learn more', to: '/about' },
-      images: [cut('desi-rose-bouquet'), cut('mango-chutney'), cut('sunflower-bunch'), cut('hand-churned-butter')],
+      photo: hero('farmers', '50% 35%'),
+      badge: { icon: 'bi-shop', text: 'Free to join' },
     },
   ];
 }

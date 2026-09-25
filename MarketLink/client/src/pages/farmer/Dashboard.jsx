@@ -15,7 +15,9 @@ export function ApprovalBanner({ status }) {
   const pending = status === 'pending';
   return (
     <div className="approval-banner" style={pending ? undefined : { background: '#fdecea', borderColor: '#f6c9c3' }}>
-      <img src={pending ? '/illustrations/sunflower.webp' : '/illustrations/farmer.webp'} alt="" />
+      <span className="banner-icon" aria-hidden="true">
+        <i className={`bi ${pending ? 'bi-hourglass-split' : 'bi-slash-circle'}`} />
+      </span>
       <div>
         <strong>{pending ? 'Your stall is waiting for admin approval' : 'Your stall is suspended'}</strong>
         <div className="small text-muted-2">
@@ -41,7 +43,7 @@ function FarmerWaiting({ status }) {
   const checks = f
     ? [
         { done: Boolean(f.bio), label: 'Tell customers about your farm', hint: 'About your farm' },
-        { done: Boolean(f.logo) && !f.logo.includes('/illustrations/'), label: 'Upload your stall logo', hint: 'Logo' },
+        { done: Boolean(f.logo), label: 'Upload your stall logo', hint: 'Logo' },
         { done: f.categories?.length > 0, label: 'Choose what you grow or sell', hint: 'Categories' },
         { done: f.markets?.length > 0, label: 'Pick the markets where you sell', hint: 'Markets' },
         { done: f.latitude != null, label: 'Drop a map pin for your farm or stall', hint: 'Map pin' },

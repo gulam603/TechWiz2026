@@ -17,6 +17,7 @@ const marketSchema = new mongoose.Schema(
     openTime: { type: String, default: '07:00' },
     closeTime: { type: String, default: '13:00' },
     image: { type: String },
+    imageCredit: { author: String, source: String, license: String }, // photographer of a licensed stock photo
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

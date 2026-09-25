@@ -41,7 +41,9 @@ export default function CustomerDashboard() {
 
       {ready.length > 0 && (
         <div className="approval-banner" style={{ background: 'linear-gradient(120deg,#e9f7d4,#f7fbe9)', borderColor: '#cfe9a8' }}>
-          <img src="/illustrations/basket.webp" alt="" />
+          <span className="banner-icon" aria-hidden="true">
+            <i className="bi bi-bag-check-fill" />
+          </span>
           <div className="flex-grow-1">
             <strong>{ready.length === 1 ? 'An order is' : `${ready.length} orders are`} ready for pickup!</strong>
             <div className="small text-muted-2">

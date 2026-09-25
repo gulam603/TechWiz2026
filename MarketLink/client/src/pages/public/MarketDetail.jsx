@@ -8,8 +8,9 @@ import RatingStars from '../../components/common/RatingStars';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { DAY_NAMES, DAY_SHORT, time12 } from '../../utils/format';
+import PhotoCredit from '../../components/common/PhotoCredit';
 import useSeo from '../../hooks/useSeo';
-import { clip, marketLd } from '../../utils/seo';
+import { breadcrumbLd, clip, ldGraph, marketLd } from '../../utils/seo';
 
 export default function MarketDetail() {
   const { slug } = useParams();
@@ -21,7 +22,7 @@ export default function MarketDetail() {
           title: `${m.name}, farmers market${m.city ? ` in ${m.city}` : ''}`,
           description: clip(m.description || `${m.name}, ${m.address}. See the farmers, opening days and pre-order on MarketLink.`),
           image: m.image,
-          jsonLd: marketLd(m),
+          jsonLd: ldGraph(marketLd(m), breadcrumbLd([{ name: 'Markets', path: '/markets' }, { name: m.name, path: `/markets/${m.slug}` }])),
           canonicalPath: `/markets/${m.slug}`,
         }
       : { title: 'Market' }
@@ -48,7 +49,8 @@ export default function MarketDetail() {
       </nav>
 
       <div className="market-hero mb-4">
-        <img className="market-art" src={market.image || '/illustrations/basket.webp'} alt="" />
+        {market.image && <img className="market-photo" src={market.image} alt={market.name} />}
+        <PhotoCredit credit={market.imageCredit} />
         <div style={{ maxWidth: 640 }}>
           <span className="chip chip-lime mb-3">
             <i className="bi bi-geo-alt-fill" /> {market.city}

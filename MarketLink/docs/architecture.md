@@ -44,7 +44,7 @@ flowchart LR
 ```
 MarketLink/
 ├── client/                 React front end (Vite)
-│   ├── public/             favicon, brand/ (logo PNGs, icons), 3D illustrations
+│   ├── public/             favicon, brand/ (logo PNGs, icons, og-image.jpg share picture), images/hero (banner photos), media/ (video), manifest.webmanifest
 │   └── src/
 │       ├── api/            fetch wrapper (cookies, JSON errors)
 │       ├── components/     layout (navbar, drawer, tab bar), admin (AdminLayout, DataGrid, FilterBar,
@@ -67,7 +67,7 @@ MarketLink/
 │   │   ├── assets/         logo for e-mails
 │   │   ├── seed/           demo data, seed script, JSON export
 │   │   └── utils/          constants, dates, helpers, slug, dataTable (DataTables server-side processing)
-│   └── uploads/            seed illustrations, product photos, farmer uploads, profile photos (avatars)
+│   └── uploads/            product photos (photos/, square thumbs in photos/thumbs), market and farm photos (places/), farmer uploads, profile photos (avatars)
 ├── database/               mongosh schema script + sample-data/*.json (test data)
 └── docs/                   these documents
 ```
@@ -140,7 +140,7 @@ erDiagram
 | `markets` | name, slug, address, city (from `cities`), categories (what is sold there), operatingDays, openTime, closeTime, latitude, longitude, mapProvider, mapLink, image |
 | `cities` | name (unique), slug, province, latitude/longitude (city centre), isActive, sortOrder – source of every city dropdown |
 | `categories` | name, slug, description, color, icon, sortOrder, isActive |
-| `products` | farmer, category, name, slug (readable URL `/products/sindhri-mangoes`), description, price, unit, quantityAvailable, templateQuantity, lowStockThreshold (alert level) + lowStockAlertedAt / soldOutAlertedAt, status (available / sold_out / unavailable), metaTitle, metaDescription, keywords (SEO, also used by the search), image (seed products: a photo without a background from `uploads/cutouts`), imageCredit, gallery (up to 4 extra photos with credits), markets/days (copied for fast filters), rating, totalSold, moderation flags |
+| `products` | farmer, category, name, slug (readable URL `/products/sindhri-mangoes`), description, price, unit, quantityAvailable, templateQuantity, lowStockThreshold (alert level) + lowStockAlertedAt / soldOutAlertedAt, status (available / sold_out / unavailable), metaTitle, metaDescription, keywords (SEO, also used by the search), image (a real photo from `uploads/photos`), imageCredit, gallery (up to 4 extra photos with credits), markets/days (copied for fast filters), rating, totalSold, moderation flags |
 | `orders` | orderNumber, customer, farmer, market, items (product, name, price, unit, quantity – price frozen at order time), totalAmount, pickupDate, pickupSlot, pickupAt, cutoffAt, placedBy (customer / admin), status + statusHistory |
 | `reviews` | customer, order (for buyers), verified (true = tied to the customer's completed order), type (product / farmer), product or farmer, rating 1–5, comment, response (farmer reply), isRemoved (moderation) |
 | `notifications` | user, type (order, restock, stock, announcement, review, account, moderation, system), title, message, link, read |

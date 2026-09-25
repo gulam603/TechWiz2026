@@ -10,7 +10,8 @@ import env from './config/env.js';
 import routes from './routes/index.js';
 import { errorHandler, notFound } from './middleware/error.js';
 import { CLIENT_DIST, UPLOAD_ROOT } from './utils/paths.js';
-import { robots, sendPage, sitemap } from './services/seo.js';
+import { robots, sendPage, siteOrigin, sitemap } from './services/seo.js';
+import { llmsFullTxt, llmsTxt } from './services/aeo.js';
 
 /** Removes keys that start with "$" or contain "." (blocks NoSQL operator injection). */
 function sanitize(value) {
@@ -70,9 +71,11 @@ export function createApp() {
   app.use('/api', routes);
   app.use('/api', notFound);
 
-  // SEO: search engines read these two files
+  // SEO: search engines read these files; AI assistants read llms.txt (a Markdown summary of the site)
   app.get('/robots.txt', robots);
   app.get('/sitemap.xml', (req, res, next) => sitemap(req, res).catch(next));
+  app.get('/llms.txt', (req, res, next) => llmsTxt(req, res, siteOrigin(req)).catch(next));
+  app.get('/llms-full.txt', (req, res, next) => llmsFullTxt(req, res, siteOrigin(req)).catch(next));
 
   // In production the Express server also serves the built React app.
   if (fs.existsSync(CLIENT_DIST)) {

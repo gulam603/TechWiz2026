@@ -12,9 +12,9 @@ import ReportButton from '../../components/reviews/ReportButton';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { coverFor, DAY_SHORT, formatDateKey, time12 } from '../../utils/format';
-import { isIllustration } from '../../utils/images';
+import PhotoCredit from '../../components/common/PhotoCredit';
 import useSeo from '../../hooks/useSeo';
-import { clip, farmerLd } from '../../utils/seo';
+import { breadcrumbLd, clip, farmerLd, ldGraph } from '../../utils/seo';
 
 export default function FarmerDetail() {
   const { slug } = useParams();
@@ -29,7 +29,7 @@ export default function FarmerDetail() {
           description: clip(f.bio || `${f.stallName} sells fresh produce on MarketLink. See this week's stock, pickup times and reviews.`),
           image: f.coverImage || f.logo,
           type: 'profile',
-          jsonLd: farmerLd(f),
+          jsonLd: ldGraph(farmerLd(f), breadcrumbLd([{ name: 'Farmers', path: '/farmers' }, { name: f.stallName, path: `/farmers/${f.slug}` }])),
           canonicalPath: `/farmers/${f.slug}`,
         }
       : { title: 'Farmer' }
@@ -45,7 +45,7 @@ export default function FarmerDetail() {
   if (error)
     return (
       <div className="container py-5">
-        <EmptyState image="/illustrations/farmer.webp" title="Farmer not found" action={<Link to="/farmers" className="btn btn-primary">All farmers</Link>} />
+        <EmptyState icon="bi-people" title="Farmer not found" action={<Link to="/farmers" className="btn btn-primary">All farmers</Link>} />
       </div>
     );
 
@@ -62,16 +62,21 @@ export default function FarmerDetail() {
     <div className="container py-4">
       <div className="profile-hero" style={{ '--cover': coverFor(farmer.stallName) }}>
         {farmer.coverImage ? (
-          <img className="cover-photo" src={farmer.coverImage} alt="" />
+          <>
+            <img className="cover-photo" src={farmer.coverImage} alt={`${farmer.stallName}: the farm`} />
+            <PhotoCredit credit={farmer.coverCredit} />
+          </>
         ) : (
           <>
             {[
               { src: products[0]?.image || farmer.logo, style: { width: 150, right: '8%', top: 24, transform: 'rotate(10deg)' } },
-              { src: products[1]?.image || '/illustrations/leafy-greens.webp', style: { width: 96, right: '24%', top: 60, transform: 'rotate(-12deg)' } },
-              { src: products[2]?.image || '/illustrations/carrot.webp', style: { width: 80, right: '38%', top: 20 } },
-            ].map((art, i) => (
-              <img key={i} className={`cover-art ${isIllustration(art.src) ? '' : 'photo-card'}`} src={art.src} alt="" style={art.style} />
-            ))}
+              { src: products[1]?.image, style: { width: 96, right: '24%', top: 60, transform: 'rotate(-12deg)' } },
+              { src: products[2]?.image, style: { width: 80, right: '38%', top: 20 } },
+            ]
+              .filter((art) => art.src)
+              .map((art, i) => (
+                <img key={i} className="cover-art photo-card" src={art.src} alt="" style={art.style} />
+              ))}
           </>
         )}
       </div>

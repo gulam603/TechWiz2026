@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { heroSlides } from './heroSlides';
 
-const DELAY = 6500; // ms each slide stays on screen
+const DELAY = 3000; // ms each slide stays on screen
 
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -102,12 +102,23 @@ export default function HeroCarousel() {
                     {primary !== s.secondary && <SlideLink link={s.secondary} className="btn btn-lg hc-secondary" />}
                   </div>
                 </div>
-                <div className="hc-art" aria-hidden="true">
-                  <span className="hc-disc" />
-                  {s.images.map((src, n) => (
-                    <img key={src} src={src} alt="" className={`hc-img hc-img-${n + 1}`} loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 && n === 0 ? 'high' : undefined} draggable="false" />
-                  ))}
-                </div>
+                <figure className="hc-photo">
+                  <img src={s.photo.src} alt={s.photo.alt} style={{ objectPosition: s.photo.focus }} loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : undefined} draggable="false" />
+                  {s.badge && (
+                    <span className="hc-badge">
+                      <i className={`bi ${s.badge.icon}`} aria-hidden="true" /> {s.badge.text}
+                    </span>
+                  )}
+                  {s.photo.credit && (
+                    <figcaption className="hc-credit">
+                      Photo:{' '}
+                      <a href={s.photo.credit.source} target="_blank" rel="noreferrer">
+                        {s.photo.credit.author}
+                      </a>{' '}
+                      (CC BY 2.0)
+                    </figcaption>
+                  )}
+                </figure>
               </div>
             );
           })}

@@ -14,6 +14,7 @@ import * as markets from '../controllers/marketController.js';
 import * as farmers from '../controllers/farmerController.js';
 import * as products from '../controllers/productController.js';
 import * as newsletter from '../controllers/newsletterController.js';
+import * as faq from '../controllers/faqController.js';
 import * as reviews from '../controllers/reviewController.js';
 import * as orders from '../controllers/orderController.js';
 import * as customer from '../controllers/customerController.js';
@@ -66,6 +67,7 @@ router.get('/practices', pub.listPractices);
 router.get('/search', pub.globalSearch);
 router.get('/map', pub.mapData);
 router.get('/testimonials', pub.testimonials);
+router.get('/faqs', faq.listFaqs);
 router.get('/announcements/active', optionalAuth, pub.activeAnnouncements);
 router.post('/contact', formLimiter, pub.submitContact);
 router.post('/newsletter', formLimiter, newsletter.subscribe);
@@ -190,6 +192,11 @@ router.get('/admin/announcements', ...adminOnly, admin.adminAnnouncements);
 router.post('/admin/announcements', ...adminOnly, admin.createAnnouncement);
 router.put('/admin/announcements/:id', ...adminOnly, admin.updateAnnouncement);
 router.delete('/admin/announcements/:id', ...adminOnly, admin.deleteAnnouncement);
+
+router.get('/admin/faqs', ...adminOnly, faq.adminFaqs);
+router.post('/admin/faqs', ...adminOnly, faq.createFaq);
+router.put('/admin/faqs/:id', ...adminOnly, faq.updateFaq);
+router.delete('/admin/faqs/:id', ...adminOnly, faq.deleteFaq);
 
 router.get('/admin/reports', ...adminOnly, admin.listReports);
 router.post('/admin/reports', ...adminOnly, admin.generateReport);

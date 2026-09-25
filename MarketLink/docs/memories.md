@@ -40,9 +40,9 @@ the code so the same problems are not solved twice.
 - Dates for pickups are `YYYY-MM-DD` strings ("date keys"); times are `HH:MM` strings.
 - Money is a number in rupees; the symbol comes from `CURRENCY` / `VITE_CURRENCY` (default `Rs`).
 - Errors: throw `AppError(message, status)`; the error middleware turns it into `{ message }`.
-- Images: `/uploads/seed/*` and `/illustrations/*` are 3D illustrations (float on a tile);
-  `/uploads/photos/*` (stock photos) and `/uploads/products/*` (farmer uploads) are photos
-  (fill the tile). `utils/images.js → isIllustration()` decides.
+- Images: every picture is a real photo and fills its frame (`/uploads/photos`, `/uploads/photos/thumbs`,
+  `/uploads/places`, `/images/hero`, farmer uploads in `/uploads/products`). There are no illustrations
+  or cut-outs any more (removed in round 7).
 - No emoji anywhere in the UI or in text the server sends; use Bootstrap Icons. The assistant uses
   `{{icon:name}}` tokens that the chat widget renders.
 - Keep the SRS words in the UI: pre-order, pickup, stall, market day, weekly stock.
@@ -112,8 +112,16 @@ the code so the same problems are not solved twice.
   column `defaultContent: ''` and sends DataTables warnings to the console instead of an alert.
 - Announcements have `months`; `inSeason()` (models/Announcement.js) filters them by the current month in
   the platform time zone. A notice created for another season is saved but not sent as a notification.
-- Background removal (rembg) works for single products but not for close-ups that fill the photo; those
-  products use the 3D illustration as their cut-out (listed in `server/uploads/cutouts/CREDITS.md`).
+- Round 7 went back to full product photos (the cut-outs and illustrations were removed). Only
+  `storage.googleapis.com` / `open-images-dataset.s3.amazonaws.com` are reachable from the build machine,
+  so banner, market and farm photos were picked from Open Images by label and cropped per frame.
+- A product card's "Add" opens the quick view (`QuickViewModal`, `focusAdd`) to choose the amount;
+  tests use a `quickAdd()` helper (card button, then `.qv-add`).
+- FAQs live in the `faqs` collection (admin page `/admin/faqs`); the seed takes them from
+  `server/src/content/faqs.js`. The first paragraph of an answer is the short answer used in llms.txt.
+- SEO/AEO: `services/seo.js` writes head tags + JSON-LD, and `services/aeo.js` writes the page text for
+  crawlers into `<!--prerender-->` inside `#root` (React replaces it) and serves `/llms.txt` and
+  `/llms-full.txt`. The CSP forbids inline scripts, so the crawler text is hidden with CSS, not JS.
 - The footer has a second form (newsletter), so browser tests select `form:not(.nl-form)` and
   `main input[type=email]` for the login form.
 

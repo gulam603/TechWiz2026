@@ -134,7 +134,7 @@ export default function FarmerOrders() {
       {loading && !data ? (
         <PageLoader />
       ) : data.orders.length === 0 ? (
-        <EmptyState image="/illustrations/cart.webp" title="No pre-orders here" message="New pre-orders from customers will appear in this list." />
+        <EmptyState icon="bi-receipt" title="No pre-orders here" message="New pre-orders from customers will appear in this list." />
       ) : table ? (
         <div className="table-card">
           <DataGrid key={`${tab}-${date}`} data={data.orders} columns={COLUMNS} order={[[3, 'asc']]} exportName="MarketLink pre-orders" searchPlaceholder="Order, customer or item…" onAction={onAction} />

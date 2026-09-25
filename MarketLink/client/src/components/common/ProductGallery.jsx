@@ -47,10 +47,9 @@ function Lightbox({ photos, index, setIndex, name, onClose }) {
 
 function Credit({ credit }) {
   if (!credit?.author) return null;
-  const illustration = credit.license === 'MIT';
   return (
     <p className="photo-credit">
-      <i className={`bi ${illustration ? 'bi-palette' : 'bi-camera'}`} /> {illustration ? 'Illustration' : 'Photo'}: {credit.author}
+      <i className="bi bi-camera" /> Photo: {credit.author}
       {credit.source && (
         <>
           {' '}

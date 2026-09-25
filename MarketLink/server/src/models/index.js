@@ -14,3 +14,4 @@ export { default as City } from './City.js';
 export { default as StockMovement } from './StockMovement.js';
 export { default as ContentFlag } from './ContentFlag.js';
 export { default as Subscriber } from './Subscriber.js';
+export { default as Faq } from './Faq.js';

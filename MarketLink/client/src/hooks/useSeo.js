@@ -59,7 +59,7 @@ function setJsonLd(data) {
   el.textContent = JSON.stringify(data);
 }
 
-const absolute = (url) => (!url ? `${window.location.origin}/brand/icon-512.png` : /^https?:\/\//.test(url) ? url : `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`);
+const absolute = (url) => (!url ? `${window.location.origin}/brand/og-image.jpg` : /^https?:\/\//.test(url) ? url : `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`);
 
 /**
  * Title, description, social preview (Open Graph / X) and structured data of the current page.
@@ -76,7 +76,7 @@ export default function useSeo({ title, description, image, type = 'website', no
     document.title = fullTitle;
     setMeta('name', 'description', desc);
     setMeta('name', 'keywords', words);
-    setMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow');
+    setMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1');
     setCanonical(noindex ? null : url);
     setMeta('property', 'og:title', fullTitle);
     setMeta('property', 'og:description', desc);

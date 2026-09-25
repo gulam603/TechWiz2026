@@ -3,6 +3,7 @@ import { PageHero } from '../../components/common/PageHeader';
 import TermsContent from '../../components/legal/TermsContent';
 import { TERMS_SECTIONS, TERMS_UPDATED } from '../../components/legal/terms';
 import useSeo from '../../hooks/useSeo';
+import { breadcrumbLd } from '../../utils/seo';
 
 function jump(e, id) {
   e.preventDefault();
@@ -10,7 +11,7 @@ function jump(e, id) {
 }
 
 export default function Terms() {
-  useSeo({ title: 'Terms & Conditions', description: 'The terms for using MarketLink as a customer or farmer, and how your personal data is handled.' });
+  useSeo({ title: 'Terms & Conditions', description: 'The terms for using MarketLink as a customer or farmer, and how your personal data is handled.', jsonLd: breadcrumbLd([{ name: 'Terms & Conditions', path: '/terms' }]) });
   return (
     <>
       <PageHero

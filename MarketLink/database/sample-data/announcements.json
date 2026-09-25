@@ -1,24 +1,82 @@
 [
   {
-    "_id": "6ab523e5d6dd911eb52d85fd",
-    "title": "Mango season is here!",
-    "message": "Sindhri and Chaunsa mangoes are now available from Gadap Orchard Co. Pre-order early — they sell out by Sunday noon!",
+    "_id": "6ab661fac73791caf5ee2b07",
+    "title": "Winter harvest is here!",
+    "message": "Kinnow from Sargodha, sweet carrots, green peas and fresh greens are at the markets now. Pre-order for Friday pickup.",
     "audience": "all",
+    "months": [
+      12,
+      1,
+      2
+    ],
+    "link": "/products?category=vegetables",
     "isActive": true,
-    "createdBy": "6ab523e2d6dd911eb52d81eb",
-    "createdAt": "2026-09-24T13:21:41.846Z",
-    "updatedAt": "2026-09-24T13:21:41.846Z",
+    "createdBy": "6ab661f8c73791caf5ee26a8",
+    "createdAt": "2026-09-25T11:58:50.541Z",
+    "updatedAt": "2026-09-25T11:58:50.541Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e5d6dd911eb52d85fe",
+    "_id": "6ab661fac73791caf5ee2b08",
+    "title": "Strawberry season is here!",
+    "message": "Sweet Lahore strawberries and the first spring greens are in. Boxes sell out quickly, so pre-order early.",
+    "audience": "all",
+    "months": [
+      3,
+      4
+    ],
+    "link": "/products?category=fruits",
+    "isActive": true,
+    "createdBy": "6ab661f8c73791caf5ee26a8",
+    "createdAt": "2026-09-25T11:58:50.543Z",
+    "updatedAt": "2026-09-25T11:58:50.543Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab661fac73791caf5ee2b09",
+    "title": "Mango season is here!",
+    "message": "Sindhri and Chaunsa mangoes are now available from Gadap Orchard Co. Pre-order early: they sell out by Sunday noon!",
+    "audience": "all",
+    "months": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "link": "/products?category=fruits",
+    "isActive": true,
+    "createdBy": "6ab661f8c73791caf5ee26a8",
+    "createdAt": "2026-09-25T11:58:50.543Z",
+    "updatedAt": "2026-09-25T11:58:50.543Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab661fac73791caf5ee2b0a",
+    "title": "Autumn harvest: apples and pears are in!",
+    "message": "New-season Swat apples, juicy pears and kiwis from Margalla Hills Farm are at the markets this week. Pre-order for pickup.",
+    "audience": "all",
+    "months": [
+      9,
+      10,
+      11
+    ],
+    "link": "/products?category=fruits",
+    "isActive": true,
+    "createdBy": "6ab661f8c73791caf5ee26a8",
+    "createdAt": "2026-09-25T11:58:50.544Z",
+    "updatedAt": "2026-09-25T11:58:50.544Z",
+    "__v": 0
+  },
+  {
+    "_id": "6ab661fac73791caf5ee2b0b",
     "title": "Tip for farmers: use your weekly template",
     "message": "Set a weekly quantity for each product and MarketLink will refresh your stock automatically every Monday.",
     "audience": "farmer",
+    "months": [],
     "isActive": true,
-    "createdBy": "6ab523e2d6dd911eb52d81eb",
-    "createdAt": "2026-09-24T13:21:41.847Z",
-    "updatedAt": "2026-09-24T13:21:41.847Z",
+    "createdBy": "6ab661f8c73791caf5ee26a8",
+    "createdAt": "2026-09-25T11:58:50.545Z",
+    "updatedAt": "2026-09-25T11:58:50.545Z",
     "__v": 0
   }
 ]

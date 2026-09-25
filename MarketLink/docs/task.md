@@ -112,11 +112,14 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 ## 5. Quality checks (last full run)
 
 - [x] ESLint (client and server) – no errors
-- [x] API suites: 69 + 23 checks, 32 extra SRS checks, 33 admin-tools checks, 31 round-4 checks (inventory, alerts, sales, reviews, moderation, reports)
+- [x] API suites: 69 + 23 checks, 32 extra SRS checks, 33 admin-tools checks, 31 round-4 checks (inventory, alerts, sales, reviews, moderation, reports), 25 round-5 and 44 round-6 checks (257 in total)
 - [x] Round-4 browser test: 111 checks (password eye, shells, reviews, gallery, report, inventory, sales, gallery upload, AI bio, moderation, reports, mobile at 360 / 390 / 768)
 - [x] Low-stock and sold-out e-mails delivered through a local SMTP server
 - [x] Every API suite also run against a real MongoDB 8 server (not only FerretDB), including a database with the old validators
 - [x] Round-5 checks: 45 browser checks + 25 API checks (single login, dropdown search, compact layout, categories row, search bar, map popup, quick view, basket sidebar, zoom, related products, verified reviews, checkout without an account, e-mailed password, SEO tags, sitemap, robots, phones)
+- [x] Round-6 checks: 64 browser checks + 44 API checks (carousel autoplay / pause / swipe, Home link, category search, skeletons on a slow connection, video playback, reviews section, newsletter and unsubscribe, seasonal announcements, product SEO fields and page head, cut-out images, DataTables with inline editing, Table / Cards views, no dashes on 21 pages)
+- [x] DataTables sweep: every admin, farmer and customer table at 1440 and 390 px (paging, sorting, search, expanded rows) without a single DataTables warning
+- [x] Responsive sweep: every public page at 18 widths (320 to 1920 px) and every account page at 9 widths; no horizontal scrolling and nothing sticking out of the screen
 - [x] Admin browser test: shell, collapse, place order, CSV export, add farmer, customer history, analytics, cities, mobile drawer, pending-farmer lock, Write with AI
 - [x] SMTP delivery tested with a local SMTP server (login, order, approval and reset e-mails)
 - [x] Browser flows: customer → farmer → admin, filters, maps, closed dates, sign-up wizard, password reset

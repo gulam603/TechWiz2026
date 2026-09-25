@@ -1,113 +1,108 @@
 [
   {
-    "_id": "6ab523e5d6dd911eb52d86d7",
-    "generatedBy": "6ab523e2d6dd911eb52d81eb",
+    "_id": "6ab661fac73791caf5ee2c2b",
+    "generatedBy": "6ab661f8c73791caf5ee26a8",
     "reportType": "orders_summary",
     "title": "Orders summary",
-    "from": "2026-08-25T19:00:00.000Z",
-    "to": "2026-09-24T13:21:41.923Z",
+    "from": "2026-08-26T19:00:00.000Z",
+    "to": "2026-09-25T11:58:50.591Z",
     "data": {
       "totals": {
-        "orders": 220,
-        "completed": 185,
-        "revenue": 426490,
-        "averageOrder": 2305.35,
-        "cancelled": 17,
-        "declined": 10
+        "orders": 227,
+        "completed": 199,
+        "revenue": 444980,
+        "averageOrder": 2236.08,
+        "cancelled": 14,
+        "declined": 6
       },
       "byStatus": {
         "placed": 3,
         "accepted": 3,
         "ready": 2,
-        "completed": 185,
-        "declined": 10,
-        "cancelled": 17
+        "completed": 199,
+        "declined": 6,
+        "cancelled": 14
       },
       "series": [
         {
-          "date": "2026-08-26",
-          "orders": 9,
-          "revenue": 23050
-        },
-        {
           "date": "2026-08-27",
-          "orders": 12,
-          "revenue": 43510
+          "orders": 16,
+          "revenue": 38900
         },
         {
           "date": "2026-08-28",
-          "orders": 8,
-          "revenue": 15480
+          "orders": 10,
+          "revenue": 20430
         },
         {
           "date": "2026-08-29",
-          "orders": 12,
-          "revenue": 20260
+          "orders": 7,
+          "revenue": 10060
         },
         {
           "date": "2026-08-30",
           "orders": 1,
-          "revenue": 1350
+          "revenue": 3150
         },
         {
           "date": "2026-08-31",
-          "orders": 3,
-          "revenue": 1420
+          "orders": 8,
+          "revenue": 11280
         },
         {
           "date": "2026-09-01",
-          "orders": 4,
-          "revenue": 6020
+          "orders": 5,
+          "revenue": 3930
         },
         {
           "date": "2026-09-02",
-          "orders": 12,
-          "revenue": 10400
+          "orders": 9,
+          "revenue": 8200
         },
         {
           "date": "2026-09-03",
-          "orders": 14,
-          "revenue": 47710
+          "orders": 16,
+          "revenue": 51980
         },
         {
           "date": "2026-09-04",
-          "orders": 13,
-          "revenue": 17120
+          "orders": 17,
+          "revenue": 29980
         },
         {
           "date": "2026-09-05",
           "orders": 5,
-          "revenue": 4420
+          "revenue": 9580
         },
         {
           "date": "2026-09-06",
-          "orders": 3,
-          "revenue": 8750
+          "orders": 4,
+          "revenue": 7380
         },
         {
           "date": "2026-09-07",
-          "orders": 5,
-          "revenue": 10150
+          "orders": 2,
+          "revenue": 3350
         },
         {
           "date": "2026-09-08",
-          "orders": 10,
-          "revenue": 9720
+          "orders": 7,
+          "revenue": 8670
         },
         {
           "date": "2026-09-09",
-          "orders": 6,
-          "revenue": 4870
+          "orders": 11,
+          "revenue": 24830
         },
         {
           "date": "2026-09-10",
           "orders": 14,
-          "revenue": 17010
+          "revenue": 21650
         },
         {
           "date": "2026-09-11",
-          "orders": 10,
-          "revenue": 19030
+          "orders": 12,
+          "revenue": 19420
         },
         {
           "date": "2026-09-12",
@@ -161,22 +156,27 @@
         },
         {
           "date": "2026-09-22",
-          "orders": 3,
-          "revenue": 2940
+          "orders": 5,
+          "revenue": 6510
         },
         {
           "date": "2026-09-23",
+          "orders": 2,
+          "revenue": 2400
+        },
+        {
+          "date": "2026-09-24",
           "orders": 0,
           "revenue": 0
         },
         {
-          "date": "2026-09-24",
+          "date": "2026-09-25",
           "orders": 8,
           "revenue": 0
         }
       ]
     },
-    "generatedAt": "2026-09-24T13:21:41.933Z",
+    "generatedAt": "2026-09-25T11:58:50.599Z",
     "__v": 0
   }
 ]

@@ -1,6 +1,6 @@
 [
   {
-    "_id": "6ab523e3d6dd911eb52d81f4",
+    "_id": "6ab661f8c73791caf5ee26b1",
     "name": "Karachi",
     "slug": "karachi",
     "province": "Sindh",
@@ -8,12 +8,12 @@
     "longitude": 67.0011,
     "isActive": true,
     "sortOrder": 0,
-    "createdAt": "2026-09-24T13:21:39.104Z",
-    "updatedAt": "2026-09-24T13:21:39.104Z",
+    "createdAt": "2026-09-25T11:58:48.457Z",
+    "updatedAt": "2026-09-25T11:58:48.457Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81f5",
+    "_id": "6ab661f8c73791caf5ee26b2",
     "name": "Lahore",
     "slug": "lahore",
     "province": "Punjab",
@@ -21,12 +21,12 @@
     "longitude": 74.3587,
     "isActive": true,
     "sortOrder": 1,
-    "createdAt": "2026-09-24T13:21:39.105Z",
-    "updatedAt": "2026-09-24T13:21:39.105Z",
+    "createdAt": "2026-09-25T11:58:48.458Z",
+    "updatedAt": "2026-09-25T11:58:48.458Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81f6",
+    "_id": "6ab661f8c73791caf5ee26b3",
     "name": "Islamabad",
     "slug": "islamabad",
     "province": "Islamabad Capital Territory",
@@ -34,12 +34,12 @@
     "longitude": 73.0479,
     "isActive": true,
     "sortOrder": 2,
-    "createdAt": "2026-09-24T13:21:39.106Z",
-    "updatedAt": "2026-09-24T13:21:39.106Z",
+    "createdAt": "2026-09-25T11:58:48.459Z",
+    "updatedAt": "2026-09-25T11:58:48.459Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81f7",
+    "_id": "6ab661f8c73791caf5ee26b4",
     "name": "Rawalpindi",
     "slug": "rawalpindi",
     "province": "Punjab",
@@ -47,12 +47,12 @@
     "longitude": 73.0169,
     "isActive": true,
     "sortOrder": 3,
-    "createdAt": "2026-09-24T13:21:39.107Z",
-    "updatedAt": "2026-09-24T13:21:39.107Z",
+    "createdAt": "2026-09-25T11:58:48.460Z",
+    "updatedAt": "2026-09-25T11:58:48.460Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81f8",
+    "_id": "6ab661f8c73791caf5ee26b5",
     "name": "Hyderabad",
     "slug": "hyderabad",
     "province": "Sindh",
@@ -60,12 +60,12 @@
     "longitude": 68.3578,
     "isActive": true,
     "sortOrder": 4,
-    "createdAt": "2026-09-24T13:21:39.108Z",
-    "updatedAt": "2026-09-24T13:21:39.108Z",
+    "createdAt": "2026-09-25T11:58:48.460Z",
+    "updatedAt": "2026-09-25T11:58:48.460Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81f9",
+    "_id": "6ab661f8c73791caf5ee26b6",
     "name": "Faisalabad",
     "slug": "faisalabad",
     "province": "Punjab",
@@ -73,12 +73,12 @@
     "longitude": 73.135,
     "isActive": true,
     "sortOrder": 5,
-    "createdAt": "2026-09-24T13:21:39.109Z",
-    "updatedAt": "2026-09-24T13:21:39.109Z",
+    "createdAt": "2026-09-25T11:58:48.461Z",
+    "updatedAt": "2026-09-25T11:58:48.461Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81fa",
+    "_id": "6ab661f8c73791caf5ee26b7",
     "name": "Multan",
     "slug": "multan",
     "province": "Punjab",
@@ -86,12 +86,12 @@
     "longitude": 71.5249,
     "isActive": true,
     "sortOrder": 6,
-    "createdAt": "2026-09-24T13:21:39.110Z",
-    "updatedAt": "2026-09-24T13:21:39.110Z",
+    "createdAt": "2026-09-25T11:58:48.462Z",
+    "updatedAt": "2026-09-25T11:58:48.462Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81fb",
+    "_id": "6ab661f8c73791caf5ee26b8",
     "name": "Peshawar",
     "slug": "peshawar",
     "province": "Khyber Pakhtunkhwa",
@@ -99,12 +99,12 @@
     "longitude": 71.5249,
     "isActive": true,
     "sortOrder": 7,
-    "createdAt": "2026-09-24T13:21:39.111Z",
-    "updatedAt": "2026-09-24T13:21:39.111Z",
+    "createdAt": "2026-09-25T11:58:48.462Z",
+    "updatedAt": "2026-09-25T11:58:48.462Z",
     "__v": 0
   },
   {
-    "_id": "6ab523e3d6dd911eb52d81fc",
+    "_id": "6ab661f8c73791caf5ee26b9",
     "name": "Quetta",
     "slug": "quetta",
     "province": "Balochistan",
@@ -112,8 +112,8 @@
     "longitude": 66.975,
     "isActive": true,
     "sortOrder": 8,
-    "createdAt": "2026-09-24T13:21:39.112Z",
-    "updatedAt": "2026-09-24T13:21:39.112Z",
+    "createdAt": "2026-09-25T11:58:48.463Z",
+    "updatedAt": "2026-09-25T11:58:48.463Z",
     "__v": 0
   }
 ]

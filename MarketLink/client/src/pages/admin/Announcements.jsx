@@ -202,7 +202,7 @@ export default function AdminAnnouncements() {
           {loading && !data ? (
             <PageLoader />
           ) : (
-            <div className="table-card">
+            <div className="table-card h-100">
               <DataGrid
                 data={data.announcements}
                 columns={columns(month)}

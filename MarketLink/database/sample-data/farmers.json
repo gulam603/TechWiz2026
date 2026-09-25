@@ -1,7 +1,7 @@
 [
   {
-    "_id": "6ab523e3d6dd911eb52d8206",
-    "user": "6ab523e3d6dd911eb52d8205",
+    "_id": "6ab661f8c73791caf5ee26c3",
+    "user": "6ab661f8c73791caf5ee26c2",
     "stallName": "Malir Green Fields",
     "slug": "malir-green-fields",
     "contactPerson": "Ahmed Raza",
@@ -16,14 +16,14 @@
       "Picked daily"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ec"
+      "6ab661f8c73791caf5ee26a9"
     ],
     "logo": "/uploads/seed/farmer-man.webp",
     "latitude": 24.8203,
     "longitude": 67.0318,
     "markets": [
-      "6ab523e3d6dd911eb52d81fd",
-      "6ab523e3d6dd911eb52d81fe"
+      "6ab661f8c73791caf5ee26ba",
+      "6ab661f8c73791caf5ee26bb"
     ],
     "operatingDays": [
       0,
@@ -32,25 +32,25 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d81fd",
+        "market": "6ab661f8c73791caf5ee26ba",
         "day": 6,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d8207"
+        "_id": "6ab661f8c73791caf5ee26c4"
       },
       {
-        "market": "6ab523e3d6dd911eb52d81fd",
+        "market": "6ab661f8c73791caf5ee26ba",
         "day": 0,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d8208"
+        "_id": "6ab661f8c73791caf5ee26c5"
       },
       {
-        "market": "6ab523e3d6dd911eb52d81fe",
+        "market": "6ab661f8c73791caf5ee26bb",
         "day": 5,
         "start": "09:00",
         "end": "13:00",
-        "_id": "6ab523e3d6dd911eb52d8209"
+        "_id": "6ab661f8c73791caf5ee26c6"
       }
     ],
     "slotMinutes": 30,
@@ -60,15 +60,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.42,
-    "ratingCount": 38,
-    "createdAt": "2026-09-24T13:21:39.216Z",
-    "updatedAt": "2026-09-24T13:21:41.826Z",
+    "ratingAvg": 4.31,
+    "ratingCount": 48,
+    "createdAt": "2026-09-25T11:58:48.543Z",
+    "updatedAt": "2026-09-25T11:58:50.523Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e3d6dd911eb52d8223",
-    "user": "6ab523e3d6dd911eb52d8222",
+    "_id": "6ab661f8c73791caf5ee26e8",
+    "user": "6ab661f8c73791caf5ee26e7",
     "stallName": "Gadap Orchard Co.",
     "slug": "gadap-orchard-co",
     "contactPerson": "Zainab Hussain",
@@ -82,14 +82,14 @@
       "Orchard"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ed"
+      "6ab661f8c73791caf5ee26aa"
     ],
     "logo": "/uploads/seed/farmer-woman.webp",
     "latitude": 24.9214,
     "longitude": 67.0948,
     "markets": [
-      "6ab523e3d6dd911eb52d81ff",
-      "6ab523e3d6dd911eb52d8201"
+      "6ab661f8c73791caf5ee26bc",
+      "6ab661f8c73791caf5ee26be"
     ],
     "operatingDays": [
       0,
@@ -98,25 +98,25 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d81ff",
+        "market": "6ab661f8c73791caf5ee26bc",
         "day": 0,
         "start": "08:00",
         "end": "13:00",
-        "_id": "6ab523e3d6dd911eb52d8224"
+        "_id": "6ab661f8c73791caf5ee26e9"
       },
       {
-        "market": "6ab523e3d6dd911eb52d81ff",
+        "market": "6ab661f8c73791caf5ee26bc",
         "day": 3,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d8225"
+        "_id": "6ab661f8c73791caf5ee26ea"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8201",
+        "market": "6ab661f8c73791caf5ee26be",
         "day": 5,
         "start": "16:00",
         "end": "20:00",
-        "_id": "6ab523e3d6dd911eb52d8226"
+        "_id": "6ab661f8c73791caf5ee26eb"
       }
     ],
     "slotMinutes": 30,
@@ -126,15 +126,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.3,
-    "ratingCount": 47,
-    "createdAt": "2026-09-24T13:21:39.336Z",
-    "updatedAt": "2026-09-24T13:21:41.829Z",
+    "ratingAvg": 4.19,
+    "ratingCount": 57,
+    "createdAt": "2026-09-25T11:58:48.640Z",
+    "updatedAt": "2026-09-25T11:58:50.525Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e3d6dd911eb52d823d",
-    "user": "6ab523e3d6dd911eb52d823c",
+    "_id": "6ab661f8c73791caf5ee2709",
+    "user": "6ab661f8c73791caf5ee2708",
     "stallName": "Thatta Dairy Collective",
     "slug": "thatta-dairy-collective",
     "contactPerson": "Imran Soomro",
@@ -149,14 +149,14 @@
       "Free-range"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ee"
+      "6ab661f8c73791caf5ee26ab"
     ],
     "logo": "/uploads/seed/cow.webp",
     "latitude": 24.7942,
     "longitude": 67.0671,
     "markets": [
-      "6ab523e3d6dd911eb52d81fe",
-      "6ab523e3d6dd911eb52d81fd"
+      "6ab661f8c73791caf5ee26bb",
+      "6ab661f8c73791caf5ee26ba"
     ],
     "operatingDays": [
       0,
@@ -165,25 +165,25 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d81fe",
+        "market": "6ab661f8c73791caf5ee26bb",
         "day": 5,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d823e"
+        "_id": "6ab661f8c73791caf5ee270a"
       },
       {
-        "market": "6ab523e3d6dd911eb52d81fe",
+        "market": "6ab661f8c73791caf5ee26bb",
         "day": 0,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d823f"
+        "_id": "6ab661f8c73791caf5ee270b"
       },
       {
-        "market": "6ab523e3d6dd911eb52d81fd",
+        "market": "6ab661f8c73791caf5ee26ba",
         "day": 6,
         "start": "08:00",
         "end": "11:00",
-        "_id": "6ab523e3d6dd911eb52d8240"
+        "_id": "6ab661f8c73791caf5ee270c"
       }
     ],
     "slotMinutes": 30,
@@ -193,15 +193,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.43,
-    "ratingCount": 49,
-    "createdAt": "2026-09-24T13:21:39.447Z",
-    "updatedAt": "2026-09-24T13:21:41.830Z",
+    "ratingAvg": 4.57,
+    "ratingCount": 28,
+    "createdAt": "2026-09-25T11:58:48.745Z",
+    "updatedAt": "2026-09-25T11:58:50.527Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e3d6dd911eb52d824c",
-    "user": "6ab523e3d6dd911eb52d824b",
+    "_id": "6ab661f8c73791caf5ee271d",
+    "user": "6ab661f8c73791caf5ee271c",
     "stallName": "Karachi Artisan Bakehouse",
     "slug": "karachi-artisan-bakehouse",
     "contactPerson": "Sana Mirza",
@@ -215,14 +215,14 @@
       "Small batch"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ef"
+      "6ab661f8c73791caf5ee26ac"
     ],
     "logo": "/uploads/seed/croissant.webp",
     "latitude": 24.8188,
     "longitude": 67.0296,
     "markets": [
-      "6ab523e3d6dd911eb52d81fd",
-      "6ab523e3d6dd911eb52d8201"
+      "6ab661f8c73791caf5ee26ba",
+      "6ab661f8c73791caf5ee26be"
     ],
     "operatingDays": [
       0,
@@ -231,25 +231,25 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d81fd",
+        "market": "6ab661f8c73791caf5ee26ba",
         "day": 6,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d824d"
+        "_id": "6ab661f8c73791caf5ee271e"
       },
       {
-        "market": "6ab523e3d6dd911eb52d81fd",
+        "market": "6ab661f8c73791caf5ee26ba",
         "day": 0,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d824e"
+        "_id": "6ab661f8c73791caf5ee271f"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8201",
+        "market": "6ab661f8c73791caf5ee26be",
         "day": 2,
         "start": "16:00",
         "end": "20:00",
-        "_id": "6ab523e3d6dd911eb52d824f"
+        "_id": "6ab661f8c73791caf5ee2720"
       }
     ],
     "slotMinutes": 30,
@@ -259,15 +259,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.47,
-    "ratingCount": 38,
-    "createdAt": "2026-09-24T13:21:39.563Z",
-    "updatedAt": "2026-09-24T13:21:41.832Z",
+    "ratingAvg": 4.27,
+    "ratingCount": 33,
+    "createdAt": "2026-09-25T11:58:48.836Z",
+    "updatedAt": "2026-09-25T11:58:50.528Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e3d6dd911eb52d8266",
-    "user": "6ab523e3d6dd911eb52d8265",
+    "_id": "6ab661f8c73791caf5ee273e",
+    "user": "6ab661f8c73791caf5ee273d",
     "stallName": "Hyderabad Herb Garden",
     "slug": "hyderabad-herb-garden",
     "contactPerson": "Farhan Qureshi",
@@ -281,15 +281,15 @@
       "Hydro-greens"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81f0",
-      "6ab523e3d6dd911eb52d81ec"
+      "6ab661f8c73791caf5ee26ad",
+      "6ab661f8c73791caf5ee26a9"
     ],
     "logo": "/uploads/seed/herb.webp",
     "latitude": 24.9395,
     "longitude": 67.0441,
     "markets": [
-      "6ab523e3d6dd911eb52d8200",
-      "6ab523e3d6dd911eb52d8202"
+      "6ab661f8c73791caf5ee26bd",
+      "6ab661f8c73791caf5ee26bf"
     ],
     "operatingDays": [
       3,
@@ -298,25 +298,25 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d8200",
+        "market": "6ab661f8c73791caf5ee26bd",
         "day": 3,
         "start": "16:00",
         "end": "20:00",
-        "_id": "6ab523e3d6dd911eb52d8267"
+        "_id": "6ab661f8c73791caf5ee273f"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8200",
+        "market": "6ab661f8c73791caf5ee26bd",
         "day": 6,
         "start": "16:00",
         "end": "20:00",
-        "_id": "6ab523e3d6dd911eb52d8268"
+        "_id": "6ab661f8c73791caf5ee2740"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8202",
+        "market": "6ab661f8c73791caf5ee26bf",
         "day": 4,
         "start": "07:00",
         "end": "11:00",
-        "_id": "6ab523e3d6dd911eb52d8269"
+        "_id": "6ab661f8c73791caf5ee2741"
       }
     ],
     "slotMinutes": 30,
@@ -326,15 +326,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.46,
-    "ratingCount": 39,
-    "createdAt": "2026-09-24T13:21:39.670Z",
-    "updatedAt": "2026-09-24T13:21:41.834Z",
+    "ratingAvg": 4.24,
+    "ratingCount": 38,
+    "createdAt": "2026-09-25T11:58:48.922Z",
+    "updatedAt": "2026-09-25T11:58:50.530Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e3d6dd911eb52d827a",
-    "user": "6ab523e3d6dd911eb52d8279",
+    "_id": "6ab661f9c73791caf5ee2758",
+    "user": "6ab661f8c73791caf5ee2757",
     "stallName": "Kirthar Honey & Preserves",
     "slug": "kirthar-honey-preserves",
     "contactPerson": "Nadia Baloch",
@@ -348,14 +348,14 @@
       "Zero waste"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81f1"
+      "6ab661f8c73791caf5ee26ae"
     ],
     "logo": "/uploads/seed/bee.webp",
     "latitude": 24.7928,
     "longitude": 67.0652,
     "markets": [
-      "6ab523e3d6dd911eb52d81fe",
-      "6ab523e3d6dd911eb52d81ff"
+      "6ab661f8c73791caf5ee26bb",
+      "6ab661f8c73791caf5ee26bc"
     ],
     "operatingDays": [
       0,
@@ -363,18 +363,18 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d81fe",
+        "market": "6ab661f8c73791caf5ee26bb",
         "day": 5,
         "start": "09:00",
         "end": "13:00",
-        "_id": "6ab523e3d6dd911eb52d827b"
+        "_id": "6ab661f9c73791caf5ee2759"
       },
       {
-        "market": "6ab523e3d6dd911eb52d81ff",
+        "market": "6ab661f8c73791caf5ee26bc",
         "day": 0,
         "start": "09:00",
         "end": "13:00",
-        "_id": "6ab523e3d6dd911eb52d827c"
+        "_id": "6ab661f9c73791caf5ee275a"
       }
     ],
     "slotMinutes": 30,
@@ -384,15 +384,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.25,
-    "ratingCount": 20,
-    "createdAt": "2026-09-24T13:21:39.786Z",
-    "updatedAt": "2026-09-24T13:21:41.836Z",
+    "ratingAvg": 4.53,
+    "ratingCount": 19,
+    "createdAt": "2026-09-25T11:58:49.007Z",
+    "updatedAt": "2026-09-25T11:58:50.531Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e3d6dd911eb52d828a",
-    "user": "6ab523e3d6dd911eb52d8289",
+    "_id": "6ab661f9c73791caf5ee276d",
+    "user": "6ab661f9c73791caf5ee276c",
     "stallName": "Indus Grains & Pulses",
     "slug": "indus-grains-pulses",
     "contactPerson": "Kamran Shah",
@@ -406,15 +406,15 @@
       "Bulk friendly"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81f2",
-      "6ab523e3d6dd911eb52d81ec"
+      "6ab661f8c73791caf5ee26af",
+      "6ab661f8c73791caf5ee26a9"
     ],
     "logo": "/uploads/seed/wheat.webp",
     "latitude": 24.8601,
     "longitude": 67.0305,
     "markets": [
-      "6ab523e3d6dd911eb52d8202",
-      "6ab523e3d6dd911eb52d8200"
+      "6ab661f8c73791caf5ee26bf",
+      "6ab661f8c73791caf5ee26bd"
     ],
     "operatingDays": [
       1,
@@ -423,25 +423,25 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d8202",
+        "market": "6ab661f8c73791caf5ee26bf",
         "day": 1,
         "start": "07:00",
         "end": "11:00",
-        "_id": "6ab523e3d6dd911eb52d828b"
+        "_id": "6ab661f9c73791caf5ee276e"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8202",
+        "market": "6ab661f8c73791caf5ee26bf",
         "day": 6,
         "start": "07:00",
         "end": "11:00",
-        "_id": "6ab523e3d6dd911eb52d828c"
+        "_id": "6ab661f9c73791caf5ee276f"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8200",
+        "market": "6ab661f8c73791caf5ee26bd",
         "day": 3,
         "start": "17:00",
         "end": "20:00",
-        "_id": "6ab523e3d6dd911eb52d828d"
+        "_id": "6ab661f9c73791caf5ee2770"
       }
     ],
     "slotMinutes": 30,
@@ -451,15 +451,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.46,
-    "ratingCount": 46,
-    "createdAt": "2026-09-24T13:21:39.895Z",
-    "updatedAt": "2026-09-24T13:21:41.837Z",
+    "ratingAvg": 4.5,
+    "ratingCount": 52,
+    "createdAt": "2026-09-25T11:58:49.095Z",
+    "updatedAt": "2026-09-25T11:58:50.533Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e3d6dd911eb52d829e",
-    "user": "6ab523e3d6dd911eb52d829d",
+    "_id": "6ab661f9c73791caf5ee2786",
+    "user": "6ab661f9c73791caf5ee2785",
     "stallName": "Bloom & Bough Nursery",
     "slug": "bloom-bough-nursery",
     "contactPerson": "Hina Farooq",
@@ -473,14 +473,14 @@
       "Houseplants"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81f3"
+      "6ab661f8c73791caf5ee26b0"
     ],
     "logo": "/uploads/seed/sunflower.webp",
     "latitude": 24.8826,
     "longitude": 67.0704,
     "markets": [
-      "6ab523e3d6dd911eb52d81fd",
-      "6ab523e3d6dd911eb52d8201"
+      "6ab661f8c73791caf5ee26ba",
+      "6ab661f8c73791caf5ee26be"
     ],
     "operatingDays": [
       0,
@@ -488,38 +488,38 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d81fd",
+        "market": "6ab661f8c73791caf5ee26ba",
         "day": 0,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e3d6dd911eb52d829f"
+        "_id": "6ab661f9c73791caf5ee2787"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8201",
+        "market": "6ab661f8c73791caf5ee26be",
         "day": 5,
         "start": "16:00",
         "end": "20:00",
-        "_id": "6ab523e3d6dd911eb52d82a0"
+        "_id": "6ab661f9c73791caf5ee2788"
       }
     ],
     "slotMinutes": 30,
     "slotCapacity": 6,
     "orderCutoffHours": 12,
     "blockedDates": [
-      "2026-09-25"
+      "2026-10-02"
     ],
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.23,
-    "ratingCount": 26,
-    "createdAt": "2026-09-24T13:21:39.996Z",
-    "updatedAt": "2026-09-24T13:21:41.839Z",
+    "ratingAvg": 4.42,
+    "ratingCount": 24,
+    "createdAt": "2026-09-25T11:58:49.187Z",
+    "updatedAt": "2026-09-25T11:58:50.535Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e4d6dd911eb52d82b3",
-    "user": "6ab523e4d6dd911eb52d82b2",
+    "_id": "6ab661f9c73791caf5ee27a1",
+    "user": "6ab661f9c73791caf5ee27a0",
     "stallName": "Ravi Organic Farm",
     "slug": "ravi-organic-farm",
     "contactPerson": "Ali Hamza",
@@ -533,14 +533,14 @@
       "Winter crops"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ed",
-      "6ab523e3d6dd911eb52d81ec"
+      "6ab661f8c73791caf5ee26aa",
+      "6ab661f8c73791caf5ee26a9"
     ],
     "logo": "/uploads/seed/tractor.webp",
     "latitude": 31.4846,
     "longitude": 74.3252,
     "markets": [
-      "6ab523e3d6dd911eb52d8203"
+      "6ab661f8c73791caf5ee26c0"
     ],
     "operatingDays": [
       0,
@@ -548,18 +548,18 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d8203",
+        "market": "6ab661f8c73791caf5ee26c0",
         "day": 0,
         "start": "07:00",
         "end": "12:00",
-        "_id": "6ab523e4d6dd911eb52d82b4"
+        "_id": "6ab661f9c73791caf5ee27a2"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8203",
+        "market": "6ab661f8c73791caf5ee26c0",
         "day": 4,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e4d6dd911eb52d82b5"
+        "_id": "6ab661f9c73791caf5ee27a3"
       }
     ],
     "slotMinutes": 30,
@@ -569,15 +569,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.93,
-    "ratingCount": 15,
-    "createdAt": "2026-09-24T13:21:40.104Z",
-    "updatedAt": "2026-09-24T13:21:41.840Z",
+    "ratingAvg": 4.7,
+    "ratingCount": 20,
+    "createdAt": "2026-09-25T11:58:49.272Z",
+    "updatedAt": "2026-09-25T11:58:50.536Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e4d6dd911eb52d82c9",
-    "user": "6ab523e4d6dd911eb52d82c8",
+    "_id": "6ab661f9c73791caf5ee27bd",
+    "user": "6ab661f9c73791caf5ee27bc",
     "stallName": "Margalla Hills Farm",
     "slug": "margalla-hills-farm",
     "contactPerson": "Mehwish Abbasi",
@@ -591,13 +591,13 @@
       "Orchard"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ed"
+      "6ab661f8c73791caf5ee26aa"
     ],
     "logo": "/uploads/seed/farmer.webp",
     "latitude": 33.7024,
     "longitude": 73.0271,
     "markets": [
-      "6ab523e3d6dd911eb52d8204"
+      "6ab661f8c73791caf5ee26c1"
     ],
     "operatingDays": [
       0,
@@ -605,18 +605,18 @@
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d8204",
+        "market": "6ab661f8c73791caf5ee26c1",
         "day": 6,
         "start": "08:00",
         "end": "13:00",
-        "_id": "6ab523e4d6dd911eb52d82ca"
+        "_id": "6ab661f9c73791caf5ee27be"
       },
       {
-        "market": "6ab523e3d6dd911eb52d8204",
+        "market": "6ab661f8c73791caf5ee26c1",
         "day": 0,
         "start": "08:00",
         "end": "13:00",
-        "_id": "6ab523e4d6dd911eb52d82cb"
+        "_id": "6ab661f9c73791caf5ee27bf"
       }
     ],
     "slotMinutes": 30,
@@ -626,15 +626,15 @@
     "autoApplyTemplate": true,
     "templateLastAppliedWeek": "2026-W39",
     "isActive": true,
-    "ratingAvg": 4.35,
-    "ratingCount": 17,
-    "createdAt": "2026-09-24T13:21:40.206Z",
-    "updatedAt": "2026-09-24T13:21:41.842Z",
+    "ratingAvg": 4.48,
+    "ratingCount": 27,
+    "createdAt": "2026-09-25T11:58:49.357Z",
+    "updatedAt": "2026-09-25T11:58:50.538Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e4d6dd911eb52d82df",
-    "user": "6ab523e4d6dd911eb52d82de",
+    "_id": "6ab661f9c73791caf5ee27d9",
+    "user": "6ab661f9c73791caf5ee27d8",
     "stallName": "Sunny Acres Poultry",
     "slug": "sunny-acres-poultry",
     "contactPerson": "Rashid Mehmood",
@@ -647,24 +647,24 @@
       "Free-range"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ee"
+      "6ab661f8c73791caf5ee26ab"
     ],
     "logo": "/uploads/seed/chicken.webp",
     "latitude": 24.93,
     "longitude": 67.1,
     "markets": [
-      "6ab523e3d6dd911eb52d81ff"
+      "6ab661f8c73791caf5ee26bc"
     ],
     "operatingDays": [
       0
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d81ff",
+        "market": "6ab661f8c73791caf5ee26bc",
         "day": 0,
         "start": "08:00",
         "end": "12:00",
-        "_id": "6ab523e4d6dd911eb52d82e0"
+        "_id": "6ab661f9c73791caf5ee27da"
       }
     ],
     "slotMinutes": 30,
@@ -676,13 +676,13 @@
     "isActive": false,
     "ratingAvg": 0,
     "ratingCount": 0,
-    "createdAt": "2026-09-24T13:21:40.311Z",
-    "updatedAt": "2026-09-24T13:21:41.843Z",
+    "createdAt": "2026-09-25T11:58:49.458Z",
+    "updatedAt": "2026-09-25T11:58:50.539Z",
     "__v": 1
   },
   {
-    "_id": "6ab523e4d6dd911eb52d82e2",
-    "user": "6ab523e4d6dd911eb52d82e1",
+    "_id": "6ab661f9c73791caf5ee27dc",
+    "user": "6ab661f9c73791caf5ee27db",
     "stallName": "Old Town Goat Dairy",
     "slug": "old-town-goat-dairy",
     "contactPerson": "Jawad Iqbal",
@@ -695,24 +695,24 @@
       "Goat milk"
     ],
     "categories": [
-      "6ab523e3d6dd911eb52d81ee"
+      "6ab661f8c73791caf5ee26ab"
     ],
     "logo": "/uploads/seed/goat.webp",
     "latitude": 24.87,
     "longitude": 67,
     "markets": [
-      "6ab523e3d6dd911eb52d8202"
+      "6ab661f8c73791caf5ee26bf"
     ],
     "operatingDays": [
       1
     ],
     "pickupWindows": [
       {
-        "market": "6ab523e3d6dd911eb52d8202",
+        "market": "6ab661f8c73791caf5ee26bf",
         "day": 1,
         "start": "07:00",
         "end": "10:00",
-        "_id": "6ab523e4d6dd911eb52d82e3"
+        "_id": "6ab661f9c73791caf5ee27dd"
       }
     ],
     "slotMinutes": 30,
@@ -724,8 +724,8 @@
     "isActive": false,
     "ratingAvg": 0,
     "ratingCount": 0,
-    "createdAt": "2026-09-24T13:21:40.399Z",
-    "updatedAt": "2026-09-24T13:21:41.845Z",
+    "createdAt": "2026-09-25T11:58:49.533Z",
+    "updatedAt": "2026-09-25T11:58:50.541Z",
     "__v": 1
   }
 ]

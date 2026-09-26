@@ -18,6 +18,7 @@ import { useAuth } from '../../context/AuthContext';
 import useSeo from '../../hooks/useSeo';
 import { homeLd } from '../../utils/seo';
 import { categoryName, t } from '../../i18n';
+import { srcSetFor } from '../../utils/hires';
 
 /** Finds the market that opens soonest (today counts if it has not closed yet). */
 function useNextMarket(markets) {
@@ -214,7 +215,13 @@ function WhyChooseUs() {
       <div className="container">
         <div className="why-grid">
           <div className="why-photo">
-            <img src="/images/hero/pickup.webp" alt={t('Crates of fresh produce ready at a market stall')} loading="lazy" />
+            <img
+              src="/images/hero/pickup.webp"
+              srcSet={srcSetFor('/images/hero/pickup.webp')}
+              sizes="(max-width: 991px) 100vw, 45vw"
+              alt={t('Crates of fresh produce ready at a market stall')}
+              loading="lazy"
+            />
             <span className="why-photo-note">
               <i className="bi bi-bag-check-fill" aria-hidden="true" /> {t('Packed and waiting at the stall')}
             </span>
@@ -258,7 +265,14 @@ function FarmStory({ stats }) {
       <div className="container">
         <div className="story-grid">
           <div className="story-photos">
-            <img className="story-photo-main" src="/images/hero/farmers.webp" alt={t('A farmer harvesting sweet potatoes in the field')} loading="lazy" />
+            <img
+              className="story-photo-main"
+              src="/images/hero/farmers.webp"
+              srcSet={srcSetFor('/images/hero/farmers.webp')}
+              sizes="(max-width: 991px) 100vw, 50vw"
+              alt={t('A farmer harvesting sweet potatoes in the field')}
+              loading="lazy"
+            />
             <img className="story-photo-small" src="/images/hero/summer.webp" alt={t('A basket of ripe mangoes')} loading="lazy" />
             <span className="story-badge">
               <strong>{stats ? <CountUp value={stats.farmers} /> : '…'}</strong>
@@ -321,7 +335,7 @@ function GetInvolved({ user }) {
         </div>
         <div className="join-grid">
           <article className="join-card is-farmer">
-            <img src="/images/hero/cta-farmer.webp" alt="" loading="lazy" />
+            <img src="/images/hero/cta-farmer.webp" srcSet={srcSetFor('/images/hero/cta-farmer.webp')} sizes="(max-width: 991px) 100vw, 50vw" alt="" loading="lazy" />
             <div className="join-body">
               <span className="join-tag">
                 <i className="bi bi-flower1" aria-hidden="true" /> {t('For farmers')}
@@ -340,7 +354,7 @@ function GetInvolved({ user }) {
             </div>
           </article>
           <article className="join-card is-market">
-            <img src="/images/hero/welcome.webp" alt="" loading="lazy" />
+            <img src="/images/hero/welcome.webp" srcSet={srcSetFor('/images/hero/welcome.webp')} sizes="(max-width: 991px) 100vw, 50vw" alt="" loading="lazy" />
             <div className="join-body">
               <span className="join-tag">
                 <i className="bi bi-shop-window" aria-hidden="true" /> {t('For market organisers')}

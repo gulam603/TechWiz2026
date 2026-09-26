@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Bone } from '../common/Skeletons';
 import { isUrdu, t } from '../../i18n';
+import { srcSetFor } from '../../utils/hires';
 
 /** A banner field in the site language ("{percent}" becomes the number); empty Urdu falls back to English. */
 export function bannerText(banner, field) {
@@ -40,7 +41,7 @@ export default function OfferBanner({ banner, loading = false, preview = false }
         )}
       </div>
       <div className="offer-media">
-        {!loading && <img src={banner.image} alt="" loading="lazy" width="1024" height="640" />}
+        {!loading && <img src={banner.image} srcSet={srcSetFor(banner.image)} sizes="(max-width: 767px) 100vw, 50vw" alt="" loading="lazy" width="1024" height="640" />}
         {!loading && percent > 0 && (
           <span className="offer-badge" aria-hidden="true">
             <small>{t('Up to')}</small>

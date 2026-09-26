@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { heroSlides } from './heroSlides';
 import { t } from '../../i18n';
+import { srcSetFor } from '../../utils/hires';
 
 const DELAY = 3000; // ms each slide stays on screen
 
@@ -89,6 +90,8 @@ export default function HeroCarousel() {
               <img
                 className="hb-img"
                 src={s.photo.src}
+                srcSet={srcSetFor(s.photo.src)}
+                sizes="100vw"
                 alt={s.photo.alt}
                 style={{ objectPosition: s.photo.focus }}
                 loading={i === 0 ? 'eager' : 'lazy'}

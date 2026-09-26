@@ -17,3 +17,8 @@ They were cropped and resized to WebP for the website.
 | Home banner: cta-farmer | `cta-farmer.webp` | Alana King | [Flickr](https://www.flickr.com/photos/buking2010/5082580472) |
 | Offers banner | `banners/deal-vegetables.webp` | Mayda Sanchez-Shingler | [Flickr](https://www.flickr.com/photos/maydaohio/8064217445) |
 | Newsletter strip | `banners/fruit-basket.webp` | giorgio winklers | [Flickr](https://www.flickr.com/photos/winklers68/3056578130/) |
+
+The `*-1920.webp` files are 1920 px wide copies of the same photos for large screens. The originals are only
+1024 px wide, so the copies were enlarged with the EDSR super-resolution model (OpenCV `dnn_superres`) and then
+resized to 1920 px. They carry the same credits as the photos above. The credits are listed on the website's
+**Photo credits** page (`/credits`) instead of on the photos.

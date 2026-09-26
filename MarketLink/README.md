@@ -1,0 +1,431 @@
+# MarketLink — eGreen Basket
+
+**MarketLink** connects local farmers-market stalls with customers. Farmers publish their weekly
+stock, prices and pickup windows; customers find nearby markets on a map, browse and filter
+products, pre-order for a pickup slot, and pay the farmer in person at pickup. Administrators
+approve farmers, manage markets and categories, moderate content and generate reports.
+
+Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
+**TechWiz 2026 — End-to-End Web Solutions** with the **MERN** stack.
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | React 19 (Vite), React Router, Bootstrap 5 (custom SCSS theme), Bootstrap Icons, Recharts, DataTables 3 (datatables.net, Bootstrap 5 styling, Responsive + Buttons) |
+| Maps | OpenStreetMap tiles (automatic CARTO fallback) with Leaflet / React-Leaflet, OSRM driving routes, Google Maps links & embed |
+| Backend | Node.js 20+, Express 5 REST API, JWT auth in an httpOnly cookie, Multer uploads, Nodemailer |
+| Database | MongoDB (Mongoose ODM) — local MongoDB or MongoDB Atlas |
+| Languages | English and **Urdu (اردو)**, right to left, with a language switch on every page |
+
+---
+
+## 1. Features (mapped to the SRS)
+
+**Customer**
+- Register (name, contact number, e-mail, address, **Terms & Conditions** checkbox) and log in to a personal dashboard
+- **Profile photo** upload, profile details, password and family sharing on one page
+- **Forgot password**: a one-time reset link (valid 30 minutes) is e-mailed to customers and farmers
+- Browse markets by location (“near me”), city (from the cities table), produce category and day; see the farmers at each market
+- Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
+- Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
+- Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
+- **Home page** (calm and simple: one dark green, one lime accent, white cards and real photos). The sections
+  take turns between **dark green and light cream**:
+  - a **banner across the whole screen** (1920 px photos on large screens, 1024 px on phones) with the words on
+    them; the slides change by themselves every **3 seconds** (they stop only with the pause button, while the
+    keyboard is on the controls or when the tab is hidden). **No photo credits on the photos**: every photographer
+    is listed on the **Photo credits** page (`/credits`, linked in the footer)
+  - search with a **category drop-down** and the next market day, over the bottom of the banner; four promises
+  - **Shop by category** cards with a photo and how many items are in stock; **View all** opens `/categories`
+  - **Offer banner** (“Up to 30% off fresh vegetables”) that the admin edits in **Admin → Offer banner**: the
+    percent (or “use the biggest real offer this week”), headline, text and button in English and Urdu, the photo
+    and the link, with a live preview; it can be hidden
+  - **Top picks this week** with **category chips** (a grid on laptops, a row to swipe on phones)
+  - the **30-second video tour** with the four steps, **top-rated farmers** as a ranked photo carousel (rank,
+    rating, city, “at the market today”), markets with a map
+  - **From our farms to your table**: photos, the three steps from farm to table and the live numbers
+  - **Be part of your local food market**: an invitation for farmers (“Sell your harvest before you pack the
+    truck”) and for market organisers (“Run a farmers market in your city?” → contact page with the topic chosen)
+  - **customer reviews** carousel: the customers sit on an arc, their review is shown large next to it and the
+    reviews move on by themselves (waiting while the mouse is on them; pause button and dots)
+  - **Why choose us** (second last) and the **FAQs**; a **newsletter** strip just above the footer on every page
+- **Footer**: shop, farmer, help and contact links and one line at the bottom:
+  “© 2026 MarketLink · Built by Team Omniverse · Terms & Conditions”
+- **Messages (toasts)** in four kinds, each with its own colour, icon and title: success (“Done”), error (“Something
+  went wrong”), warning (“Please note”, e.g. a missing field or not enough stock) and info (“Good to know”); they close
+  by themselves (the timer stops under the mouse) or with ×
+- **FAQ page** (`/faq`): 17 questions in 4 topics with search and topic filters; **one question open at a time** (opening
+  another closes the first) with a smooth open animation; the admin edits them
+- **Offers**: a farmer can type the usual price next to a lower price; cards and product pages then show
+  “N% off” with the usual price crossed out, and the shop has an **On offer only** filter
+- **Filters on phones and tablets** slide in as a sidebar from the right (from the left in Urdu) with *Clear all* and
+  *Show results*
+- **Refresh** buttons on dashboards and reports update the numbers without reloading the page
+- **Loading skeletons**: on a slow connection the shape of the page appears straight away instead of a blank screen
+- Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
+- Real **product photos** on every card; market, farm and banner photos too (no illustrations)
+- Readable product URLs: `/products/sindhri-mangoes`
+- Product details: price, unit, quantity available, farmer, reviews and a **photo gallery** (thumbnails, arrows, swipe,
+  **zoom** under the mouse and a full-screen viewer); “From the same stall” and “You may also like” suggestions
+- **Quick view** on every product card: details, photos and “add to basket” in a dialog without leaving the shop.
+  The card's **Add** button opens the same dialog so the shopper **chooses how many** before adding
+- The product page photo **fits on the screen** (and stays in view while the details scroll on laptops)
+- **Basket sidebar**: the basket slides in from the side at a calm, natural speed (change quantities, remove, total)
+  with *Checkout*, *View full basket* and **Empty basket** (asks once before removing everything)
+- **Checkout without an account**: first name, last name, e-mail, number and address — an account is created,
+  a generated password is e-mailed and the pre-order continues straight away
+- **Dropdowns with search** for cities, markets, categories, farmers, customers and every table filter
+- Cart grouped by farmer → choose a pickup **date and time slot** inside the farmer’s windows → place pre-order (no online payment)
+- Order status: placed → accepted → ready for pickup → completed (or declined / cancelled)
+- View, **modify** (items + slot) and **cancel** orders before the farmer’s cut-off time; order history and **reorder**
+- Favourite farmers and products (with **restock alerts**) and saved markets; favourite farmers on the dashboard
+- **My orders** as a table (DataTables: search, sort, export) or as simple cards
+- Reviews and ratings for farmers and products — from the product page, the stall page or **My reviews**
+  (to-review list grouped by pickup). Reviews from buyers show **Verified purchase**; customers who did not buy
+  can still write one review, shown as **Unverified**. **Report** a review, listing or stall to the admin
+- Account area with the same sidebar layout as the admin area (collapsible, drawer on phones)
+- In-app notifications + e-mail for order confirmation and “ready for pickup”, including route-friendly pickup details (market, address, time slot and a Google Maps directions link)
+- Optional **family sharing**: linked household members can see each other’s pre-orders
+- **AI assistant** “Basket” (chat widget) answering market timings, farmer availability, pickup windows and product questions from live data,
+  with **memory** (follow-up questions such as “which farmers are there?”, your name and city), saved chat history and a **Clear chat** button
+  The assistant understands **English, Urdu and Roman Urdu / Hinglish** (“sab se acha kisan kaunsa hai?”, “tamatar kahan
+  milega”) and answers questions about the whole site: top-rated farmers and products, best sellers, the cheapest items,
+  offers, new farmers, markets open now, whether a farmer is at the market today, how many farmers / markets / products,
+  cities, categories, restock reminders, reviews, account help, contact and missing orders
+- **Search while typing** (no Enter needed) with an **×** to clear it, in the shop, farmers, markets and map pages; the
+  navbar search shows suggestions after a short pause; the shop has **grid and list** views and removable filter chips
+- **Adding to the basket does not open the basket**; a message offers **View basket**
+- **Remind me when it is back** on sold-out products (guests type an e-mail): a notification and an e-mail on restock
+- **“Did you receive your order?”** after the farmer completes it: *Yes* opens the review of the stall, *No* tells the
+  farmer and the MarketLink team
+- **Markets open today** first on the markets page; every farmer shows whether they are **at the market now, later
+  today, gone for the day or not coming**; the farmers at a market sit in a scroll box
+- **Best sellers** page (`/best-sellers`): top 5 / 10 / 20, for every market or one market, and per category
+- Notifications when **a market in your city opens today** and when **a new farmer joins** your market
+- After checkout the page address is **`/checkout/<order number>`**, so it can be bookmarked to follow the order
+- **Phone numbers with a country flag** and dial code (intl-tel-input) in every form; saved as +923001234567
+- Contact page with an optional **topic** (request a new market, complaint about a market or farmer, help with an
+  order …); the admin inbox filters by topic
+- On phones, dialogs (quick view, add to basket) open as **bottom sheets**, the **bottom bar** is on every page
+  including the dashboards, and the notification menu fits the screen; buttons show a **spinner** while they work
+
+**Farmer**
+- Register with a 3-step wizard — ① stall name, contact person, contact number, e-mail, password;
+  ② farm address, city, “about your farm”, what they grow/sell (categories) and farming practices;
+  ③ markets they sell at, optional map pin, summary and acceptance of the Terms & Conditions —
+  needs admin approval before listing; until then only the approval status, stall profile and
+  notifications are shown (stock, pre-orders and pickup settings stay locked)
+- Stall profile: bio, categories grown/sold, farming practices, logo and cover photo, markets, operating days, pickup windows, **map pin (lat/lng)**
+- Products: add / edit / delete with name, category, price, **usual price for an offer**, unit, quantity, description, main photo and up to 4 extra photos;
+  **“Write with AI”** writes the description from the product name (Claude with an API key, a built-in writer otherwise)
+- **Inventory**: stock on hand, stock reserved by open pre-orders, stock value, adjustments (harvest / restock, sold at the
+  stall, damaged, count correction) and a full **stock log** of every change
+- **Low-stock alerts**: an alert level per product; e-mail (Nodemailer SMTP) + in-app notification when stock reaches it,
+  and again when it sells out
+- **Sales report**: revenue vs the previous period, best sellers, categories, markets, busiest days and pickup times,
+  returning customers, plain-language insights; printable and exportable
+- **“Generate with AI”** for the “About your farm” text
+- **Recurring weekly stock template** (manual “apply now” or automatic every week) — reserved pre-orders are respected
+- Mark items sold out or temporarily unavailable
+- Pre-orders: accept / decline (with reason) / mark ready / complete; set slot length, slot capacity and order cut-off hours
+- **“I cannot come to the market today”**: customers see it at once and everyone with a pickup today is told
+- **Closed dates** (“not at the market this week”): customers cannot book pickups on those days and the farmer is warned about existing pre-orders on them
+- Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
+- Read and reply to customer reviews (Table or Cards view; reply and report from the table); **“Generate with AI”**
+  writes a warm reply that fits the rating (in English or Urdu)
+- **Search engine (SEO) details per product**: title, description and keywords, “Fill in with AI” and a Google preview
+- **AI product schema**: when a product is added or changed, AI writes its facts for search engines and AI answers
+  (a short answer-first summary, season in Pakistan, storage tip, best uses, the Urdu name, and the storage tip and uses
+  in Urdu). Claude writes it when an API key is set, a built-in writer otherwise; the farmer can edit it and see the
+  JSON-LD it produces
+- **Urdu fields**: the product description and the farm bio can also be written in Urdu (shown on the Urdu site)
+- Weekly stock and pre-orders in **DataTables** (change stock, weekly template and status right in the table)
+
+**Admin** (same login page as everyone at `/login` — the role decides where you land; own back-office layout without the shop navbar)
+- Collapsible sidebar (Reports as the last item), compact dashboard: KPIs, orders/revenue chart, “needs attention”, recent orders, top farmers
+- **DataTables** on every admin table (server-side paging, search, sorting, CSV / Excel / Print) with filters
+  (status, city, market, farmer, category, date ranges, amounts …)
+- Approve / suspend farmers; activate / deactivate customers; **create farmer and customer accounts** (invite e-mail,
+  **“Generate with AI”** for the farm description)
+- **Place an order for a customer** from a dialog (same stock and pickup-slot checks as the checkout)
+- **Customer history**: everything a customer bought, from which farmer, how much, orders per month
+- **Customer purchases** analytics: who buys what from which farmer — charts, heat map, exportable tables
+- Add / edit / remove markets (city dropdown, what is sold there, days, timings, map coordinates, map link, image)
+- **Cities table** used by every city dropdown
+- Moderate product listings and reviews; **content moderation queue** with user reports and reviews held by the
+  word filter (publish, remove, restore, suspend the stall or dismiss)
+- Reports: platform overview, orders summary, revenue by market, most active farmers, sales by category, customer
+  activity, inventory & low stock, cities overview, reviews & moderation (saved, printable, CSV / Excel export)
+- Master data: product categories; publish announcements (site banner + in-app notification) **for a season**:
+  pick the months (or Winter / Spring / Summer / Autumn), so “Mango season is here!” only shows in summer
+- Markets, categories, announcements and **newsletter subscribers** in DataTables (CSV / Excel / Print)
+- Contact-us inbox with a **topic** filter
+- **Farmer rankings** above the farmers table: by revenue, rating, orders, customers or products, for the last 30 or 90 days or all time
+- **Offer banner** for the home page (percent, words in English and Urdu, photo, link, show / hide, live preview)
+- **FAQs**: add, edit, order, hide or delete questions and choose which appear on the home page
+- **“Generate with AI”** in every free-text box where it helps: FAQ answers, market descriptions, announcement
+  messages, suspend reasons and moderation notes (customers get it for reviews and report details, farmers for review
+  replies, decline reasons and the farm description). Claude writes the text when an API key is set, a built-in writer
+  otherwise; the text can be edited before saving
+- Categories have a small round **icon** and a wide **card photo** for the home page
+- **Urdu text** next to the English in the admin forms: FAQs, categories, announcements and market descriptions
+  (typed right to left). The admin area itself stays in English
+
+**SEO:** every public page has its own title, description, **keywords**, canonical link, Open Graph / X preview tags
+(1200 × 630 share picture) and schema.org structured data: Product (price, stock, pickup, reviews, rating), LocalBusiness
+for farmers, Place with opening hours for markets, **BreadcrumbList** on every page, **ItemList** on the shop, category,
+market and farmer lists, **FAQPage**, **HowTo** and **VideoObject** on the home page, Organization (contact point, cities
+served) + site search. Products also carry the **AI product schema** (alternate Urdu name, season, storage, uses as
+`additionalProperty`, country of origin, category path) and a **Quick facts** list on the page. The server writes these
+into the HTML before any JavaScript runs; in the browser the **title, description, keywords, canonical and preview
+tags change with every page** (no reload needed) for products, farmers, markets and lists. Pages are laid out
+semantically (one `h1`, `main`, `article`, titled `section`s, `dl` fact lists, `nav` breadcrumbs) so search engines and
+AI tools can pick out the facts. Unknown addresses get a real **404** page that is not indexed.
+`/sitemap.xml` (every page in English and Urdu, with its **photos**), `/robots.txt` and a web app manifest are served
+live; `npm run seo-files` also writes them (plus `llms.txt`) as static files into `client/public`.
+
+**Urdu (اردو):** a language switch (navbar, phone menu and dashboards) turns the public site and the customer
+and farmer areas into Urdu:
+- every button, label, message, table, chart and e-mail-style notification in correct Urdu, with Urdu punctuation
+  (، ۔ ؟), Nastaliq headings and Naskh for the interface; prices in روپے, Urdu day and month names
+- a **right to left** layout mirrored exactly from the English one (menus, cards, tables, basket sidebar, maps'
+  popups); the English layout is unchanged (checked element by element on every page)
+- Urdu content: product names and descriptions, categories, FAQs, announcements, farm bios, market descriptions,
+  AI product tips and the Terms & Conditions; messages from the server (order and stock notifications, errors) are shown
+  in Urdu too; names, phone numbers, e-mails and order numbers stay as written
+- the **AI assistant** understands Urdu questions (“آم کہاں ملیں گے؟”) and answers in Urdu, and remembers your name
+- **SEO in both languages**: Urdu pages at `?lang=ur` with `<html lang="ur" dir="rtl">`, Urdu title and description,
+  `hreflang` links (en-PK, ur-PK, x-default), `og:locale` ur_PK, both languages in the sitemap. The choice is saved in a
+  cookie, so the server sends the Urdu page right to left from the first paint
+
+**AEO (answer engines such as ChatGPT, Claude, Perplexity and Google AI answers):** every public page also carries its
+main facts as plain, answer-first text with links in the HTML (for crawlers that do not run JavaScript),
+`/llms.txt` and `/llms-full.txt` describe the whole site in Markdown (FAQs, markets with times, farmers, this week's
+prices), robots.txt welcomes the AI crawlers, and FAQ answers start with one short, direct sentence.
+
+**Other:** role-based access control (API + UI), responsive / mobile-friendly UI (laptop layout, slide-in mobile menu,
+app-style bottom navigation bar on phones), Bootstrap icons instead of emoji, About Us and Contact Us
+(static team contact — Aptech Learning Centre, F.B. Area, Karachi — + Google Maps location + contact form).
+Subtle motion: floating produce on the login / sign-up banner (with mouse parallax), scroll-reveal cards,
+counting-up statistics; all animations switch off when the device asks for reduced motion.
+
+---
+
+## 2. Project structure
+
+```
+MarketLink/
+├── client/                 React front-end (Vite)
+│   ├── public/             favicon, brand/ (logo, icons, share image), images/hero (banner photos), media/ (video), manifest,
+│   │                       sitemap.xml, robots.txt, llms.txt (written by npm run seo-files)
+│   └── src/
+│       ├── api/            fetch wrapper for the REST API
+│       ├── components/     layout, cards, maps, charts, chat widget, order widgets
+│       ├── context/        Auth, Cart and Toast providers
+│       ├── i18n/           English / Urdu: t() helper, ur.js (Urdu texts), server.js (server messages)
+│       ├── pages/          public, auth, customer, farmer and admin pages
+│       ├── styles/         Bootstrap SCSS theme + custom styles
+│       └── utils/          formatting helpers
+├── server/                 Express REST API
+│   ├── src/
+│   │   ├── config/         environment + MongoDB connection
+│   │   ├── models/         Mongoose schemas (User, Farmer, Market, Product, Order, Review, …)
+│   │   ├── controllers/    request handlers per area (auth, public, customer, farmer, admin)
+│   │   ├── services/       pickup slots, stock reservation, notifications, e-mail, reports, assistant
+│   │   ├── middleware/     auth / roles, uploads, error handling
+│   │   ├── routes/         all /api routes
+│   │   └── seed/           demo data, seed and export scripts
+│   └── uploads/            images: product photos + credits (uploads/photos), market and farm photos (uploads/places), farmer uploads
+├── database/
+│   ├── marketlink-schema.mongodb.js   collections, JSON-schema validators and indexes (mongosh)
+│   └── sample-data/                   exported demo / test data (JSON, one file per collection)
+├── docs/                   architecture.md, view.md, design.md, task.md, memories.md
+└── package.json            helper scripts for the whole project
+
+(render.yaml, the Render.com deployment blueprint, is in the repository root next to this folder.)
+```
+
+---
+
+## 3. Installation
+
+### Prerequisites
+- **Node.js 20 or newer** (includes npm) — https://nodejs.org
+- **MongoDB** — either
+  - MongoDB Community Server running locally (`mongodb://127.0.0.1:27017`, MongoDB Compass is handy), or
+  - a free **MongoDB Atlas** cluster (copy its connection string)
+
+### Steps
+
+```bash
+# 0. open a terminal inside the MarketLink folder
+cd MarketLink
+
+# 1. install all dependencies (root, server and client)
+npm run install:all
+
+# 2. create the server configuration
+#    Windows:  copy server\.env.example server\.env
+#    Mac/Linux: cp server/.env.example server/.env
+#    then edit MONGO_URI (and JWT_SECRET) in server/.env
+
+# 3. (optional) create collections, validators and indexes
+mongosh "mongodb://127.0.0.1:27017" database/marketlink-schema.mongodb.js
+
+# 4. insert the demo data (deletes existing MarketLink data!)
+npm run seed
+
+# 5. start API (port 5000) + React dev server (port 5173)
+npm run dev
+```
+
+Open **http://localhost:5173**.
+
+**Code quality:** `npm run lint` runs ESLint on the server and the client.
+
+**Urdu:** open any page with `?lang=ur` (for example http://localhost:5173/?lang=ur) or press **اردو** in the navbar.
+
+**Static SEO files:** `npm run seo-files` writes `client/public/sitemap.xml`, `robots.txt`, `llms.txt`
+and `llms-full.txt` from the database, with the public address from `SITE_URL` (else `APP_URL`), for example
+`SITE_URL=https://marketlink.onrender.com npm run seo-files`. The running server always answers the live versions.
+
+**Production build** (one server on port 5000 serves both the API and the React app):
+
+```bash
+npm run build
+npm start          # then open http://localhost:5000
+```
+
+### Configuration (`server/.env`)
+
+| Variable | Purpose |
+| --- | --- |
+| `MONGO_URI` | MongoDB connection string |
+| `JWT_SECRET` | secret used to sign login tokens — use a long random value |
+| `PORT` | API port (default 5000) |
+| `CLIENT_URL` | React dev URL allowed by CORS (default `http://localhost:5173`) |
+| `CURRENCY` | currency symbol used in e-mails / assistant (default `Rs`) |
+| `TZ` | time zone of the markets, used for pickup slots and cut-off times (default `Asia/Karachi`) |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` (or `SMTP_FROM`), `APP_URL` | e-mail settings (Nodemailer). All empty → e-mails are printed to the server console; `SMTP_USER` + `SMTP_PASS` with an empty `SMTP_HOST` → the server is picked from the address (Gmail → `smtp.gmail.com`); `SMTP_HOST=ethereal` → free Ethereal test inbox; `smtp.gmail.com` + port 587 + a Gmail **app password** → real e-mails (see section 6). `APP_URL` is used for the buttons in e-mails |
+| `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | optional: “Write with AI” product descriptions and the AI product schema by Claude (without a key a built-in writer is used) |
+
+The front-end currency symbol can be changed with `VITE_CURRENCY` in `client/.env` (default `Rs`).
+
+---
+
+## 4. Demo user credentials
+
+Created by `npm run seed`:
+
+| Role | E-mail | Password | Login page |
+| --- | --- | --- | --- |
+| Administrator | admin@marketlink.com | Admin@123 | `/login` (one login page for every role) |
+| Farmer (approved) — Malir Green Fields | farmer@marketlink.com | Farmer@123 | `/login` |
+| Farmer (pending approval) — Sunny Acres Poultry | pending.farmer@marketlink.com | Farmer@123 | `/login` |
+| Farmer (suspended) — Old Town Goat Dairy | suspended.farmer@marketlink.com | Farmer@123 | login is blocked |
+| Other approved farmers | orchard@, dairy@, bakery@, herbs@, honey@, grains@, nursery@, lahore.farm@, islamabad.farm@ `marketlink.com` | Farmer@123 | `/login` |
+| Customer — Ayesha Khan (household owner) | customer@marketlink.com | Customer@123 | `/login` |
+| Customer — Omar Khan (family member of Ayesha) | omar@marketlink.com | Customer@123 | `/login` |
+| Other customers | bilal@, sara@, usman@, fatima@, hamza@ `marketlink.com` | Customer@123 | `/login` |
+| Customer (deactivated) | inactive.customer@marketlink.com | Customer@123 | login is blocked |
+
+Demo data: 8 markets (Karachi, Lahore, Islamabad), 8 categories, 12 farmers, 62 products,
+~440 orders over the last 8 weeks (including upcoming pre-orders in every status), ~330 reviews,
+notifications, announcements, a saved report and a closed date for Bloom & Bough Nursery (next Friday).
+
+---
+
+## 5. Database
+
+MongoDB collections: `users`, `farmers`, `markets`, `cities`, `categories`, `products`, `orders`, `reviews`,
+`notifications`, `announcements`, `reports`, `contactmessages`, `assistantchats`.
+
+- `database/marketlink-schema.mongodb.js` — the database definition: every collection with its
+  JSON-schema validator (fields, types, required fields, allowed values) and indexes.
+  It is the MongoDB equivalent of the “.sql table definitions” asked for in the SRS.
+- `database/sample-data/*.json` — the test data used in the project (`npm run export-data`
+  re-creates it from the current database; password hashes are masked).
+- Order items are embedded in each order together with the price at the time of ordering,
+  so order history stays correct when a farmer changes a price later.
+
+---
+
+## 6. Maps, AI assistant and e-mail
+
+- **Maps:** OpenStreetMap tiles through Leaflet — no API key needed. The server sends a
+  `strict-origin-when-cross-origin` Referrer-Policy because the OpenStreetMap tile server
+  rejects tile requests without a Referer (“403 Access blocked”). If OpenStreetMap tiles still
+  fail (network / firewall), the map switches automatically to CARTO tiles, and if no tiles load
+  at all the markers and directions links keep working. “Route from my location”
+  uses the browser’s geolocation and the free OSRM routing service; every map also links to
+  Google Maps / OpenStreetMap directions. The Contact page embeds Google Maps.
+- **AI assistant:** a rule-based assistant built into the API (`server/src/services/assistant.js`).
+  It detects the intent of a question (market timings, farmer availability, pickup windows,
+  product search, payment / delivery / cancellation FAQs, order status) and answers from live
+  database data. No external AI service or key is required. It remembers the conversation
+  (market, farmer, product, day, your name and city) so follow-up questions work; signed-in users'
+  history is saved in the `assistantchats` collection, guests' history stays in the browser, and
+  the chat's Clear chat button deletes both. On the Urdu site it understands Urdu questions
+  (`server/src/services/assistantUrdu.js` turns them into keywords; products are found by their Urdu names)
+  and answers in Urdu.
+- **E-mail:** Nodemailer — order confirmation, status updates (“ready for pickup” with directions),
+  farmer approval, invites for admin-created accounts and password-reset e-mails, in a branded HTML
+  layout with the MarketLink logo and an action button. By default they are printed in the server
+  terminal (the reset link can be copied from there). To send real e-mails with Gmail:
+  1. turn on 2-Step Verification for the Gmail account;
+  2. Google Account → Security → **App passwords** → create one called “MarketLink”;
+  3. in `server/.env` set `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`, `SMTP_USER=your@gmail.com`,
+     `SMTP_PASS=` the 16-letter app password (spaces are fine) and leave `MAIL_FROM` empty
+     (with a Gmail address `SMTP_HOST` may also stay empty — `smtp.gmail.com` is used automatically);
+  4. **restart the server** (`.env` is read only at start-up) and check it: `npm run mail:test -- you@example.com`.
+     The start-up log shows `[mail] SMTP ready …` when the login works.
+  The server also checks the SMTP login when it starts and prints a clear hint if something is wrong.
+  Other providers (Outlook, Zoho, Brevo, Mailtrap …) work the same way with their host, port and login.
+
+---
+
+## 7. Security
+
+bcrypt password hashing · JWT stored in an httpOnly, SameSite cookie · role-based route guards
+on the API and in the UI · farmers must be approved before listing · rate limiting on failed
+logins and forms · Helmet security headers and Content-Security-Policy · NoSQL-operator
+sanitising and escaped search input · image-only uploads (2 MB, random file names) ·
+atomic stock reservation so two customers can never buy the same last item.
+
+---
+
+## 8. Deployment (optional)
+
+1. Create a free MongoDB Atlas cluster, allow network access and copy the connection string.
+2. On Render choose **New → Blueprint** and select this repository — `render.yaml` (repository root) sets up the
+   web service from the `MarketLink` folder (build: `npm run install:all && npm run build`, start: `npm start`).
+   Enter `MONGO_URI` when asked.
+   (Manual setup works too: root directory `MarketLink`, same build/start commands with `NODE_ENV=production`,
+   `TZ=Asia/Karachi`, `MONGO_URI` and a random `JWT_SECRET`.)
+3. Run the seed once from your computer with `MONGO_URI` pointing to Atlas: `npm run seed`.
+
+---
+
+## 9. Assumptions
+
+- Payment is settled in person at pickup; there is no payment gateway (per SRS).
+- Pickup only — no delivery or courier logistics (per SRS).
+- Farmer identity / organic certification is not verified; tags such as “Pesticide-free” are the farmer’s own description.
+- All markets are in one time zone (`TZ`, default Asia/Karachi); pickup slots and cut-off times use it.
+- The e-mail address is the login name (the SRS example table’s `username`).
+- The project uses MongoDB, so the database definition is provided as a mongosh script plus JSON sample data instead of `.sql` files.
+
+---
+
+## 10. Credits & AI tools
+
+- Product photos: real photos from the **Open Images Dataset** (Google), published on Flickr by their
+  authors under **CC BY 2.0**. Every photographer is credited on the website's **Photo credits** page (`/credits`) and in
+  `server/uploads/photos/CREDITS.md`.
+- Banner, market and farm photos: also **Open Images Dataset** (CC BY 2.0); credited on the Photo credits page and in
+  `client/public/images/CREDITS.md` and `server/uploads/places/CREDITS.md`. The site uses no illustrations.
+- Logo: designed in **Canva** by the team and rebuilt as SVG / PNG (`client/public/brand`).
+- Tables: **DataTables** (datatables.net, MIT licence).
+- Map data © OpenStreetMap contributors; routing by OSRM.
+- UI: Bootstrap 5, Bootstrap Icons, Fraunces and Plus Jakarta Sans fonts (SIL Open Font Licence).
+- AI tools used: **Claude Code (Anthropic)** was used as a coding assistant during development.
+  Update this section with any other AI tools your team used, as required by the SRS.

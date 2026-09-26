@@ -1,0 +1,167 @@
+# MarketLink – Design System
+
+Theme: **eGreen Basket** – a calm, fresh farmers-market look: deep forest green, a bright lime
+accent, warm cream paper and real produce photography. The system is written in SCSS on top of
+Bootstrap 5 (`client/src/styles`).
+
+| File | Contains |
+| --- | --- |
+| `_variables.scss` | colour tokens, fonts, Bootstrap overrides, container widths |
+| `_base.scss` | CSS custom properties, typography, buttons, utilities, motion keyframes, scroll reveal |
+| `_components.scss` | navbar, drawer, tab bar, cards, produce tiles, chips, badges, modal, toasts, chat |
+| `_pages.scss` | home hero, auth banner, product / farmer / market pages, cart, checkout, map |
+| `_dashboard.scss` | dashboard layout, collapsible sidebar, compact KPI cards, panels, tables, profile photo, family banner |
+| `_admin.scss` | admin shell (sidebar, top bar, drawer), filter bar, DataTables theme, admin modals, analytics heat map, pending-farmer screens |
+| `_shop.scss` | basket sidebar, quick view, zoom, dropdown search, review badges, compact desktop sizes |
+| `_home.scss` | home banner carousel (photo on the right), search card, video tour, photo mosaic, reviews, newsletter, loading skeletons, season picker, Table / Cards switch, round category photos |
+
+## 1. Colour
+
+| Token | Hex | Used for |
+| --- | --- | --- |
+| `$ml-forest` | `#173b2c` | headings, dark panels, active states, footer |
+| `$ml-forest-2` | `#1f4a37` | gradients on dark panels |
+| `$ml-green` | `#2e7d4f` | primary buttons, links, icons |
+| `$ml-leaf` | `#6dbe45` | hover borders, highlights |
+| `$ml-lime` | `#d4f06e` | accent: "Sell with us" button, active tab pill, announcement bar, numbers on dark |
+| `$ml-cream` | `#faf7f0` | page background |
+| `$ml-sand` | `#f1ebdd` | soft panels, tile backgrounds |
+| `$ml-carrot` | `#f28c38` | basket / notification counters, warnings |
+| `$ml-tomato` | `#e0513a` | danger, sold out |
+| `$ml-honey` | `#f4b93e` | star ratings |
+| `$ml-sky` | `#3c8dbc` | info |
+| `$ml-ink` | `#16211c` | body text |
+| `$ml-muted` | `#66756d` | secondary text |
+| `$ml-line` | `#e7e1d3` | borders and dividers |
+
+Bootstrap theme colours map to these tokens (`primary` = green, `dark` = forest, `danger` = tomato,
+`warning` = honey) and extra utilities exist for `forest`, `lime` and `carrot`.
+Each product category has its own pastel tile colour (stored on the category).
+
+## 2. Typography
+
+- **Headings:** Fraunces Variable (serif, weight 650, forest colour), with italic lime or green
+  accents for a key word ("*reserved* for you", "*one tap away*").
+- **Body:** Plus Jakarta Sans Variable, 0.975 rem, line height 1.6.
+- **Numbers:** `font-variant-numeric: tabular-nums` for stats and prices.
+- Uppercase "eyebrow" labels (0.72 rem, wide letter spacing) introduce sections.
+- Fonts are bundled with `@fontsource-variable`, so no external font request is needed.
+- **Urdu:** Noto Nastaliq Urdu (the usual Urdu style) for headings and reading text, Noto Naskh Arabic for
+  buttons, menus, tables and forms (clearer at small sizes), with a taller line height (1.75 to 1.95).
+  No letter spacing (it breaks joined letters), no italics and no capitals; eyebrow labels keep their size.
+  Numbers stay 0-9; names, e-mails, phone and order numbers stay left to right inside Urdu text.
+
+## 3. Layout
+
+On laptops and desktops (≥ 992 px) the root font size is 15 px and section spacing, page headers and the home hero are tighter, so more fits on one screen; shop grids show four products per row. Scrollbars are thin and green across the site.
+
+
+- Bootstrap breakpoints: sm 576, md 768, **lg 992**, xl 1200, xxl 1400 px.
+- Containers are widened for laptops (lg 1140, xl 1240, xxl 1320 px) with 1.5 rem side padding.
+- Radius: 0.8 rem (inputs), 1.25 rem (cards, `--ml-radius`), 1.75 rem (hero panels, `--ml-radius-lg`).
+- Navbar height `--ml-nav-h: 72px`; mobile tab bar height `--ml-tabbar-h: 64px` (+ safe area).
+- Admin area: 248 px dark sidebar (74 px when collapsed), 60 px top bar, content up to 1680 px wide.
+- Dashboards are compact so the key numbers and charts fit on one laptop screen: headings
+  1.4–1.85 rem, KPI cards with the icon on the left (about 80 px high), panels with 1 rem padding.
+- Below 992 px: the hamburger drawer and bottom tab bar replace the desktop navbar links; the page
+  gets bottom padding so content is never hidden behind the tab bar.
+
+## 4. Components
+
+| Component | Notes |
+| --- | --- |
+| Buttons | `btn-primary` (green), `btn-lime`, `btn-forest`, `btn-soft`, `btn-white`, round `btn-icon`; press feedback `scale(0.98)`; labels never wrap |
+| Chips | `chip`, `chip-soft`, `hero-chip` (on dark), filter chips and day dots (S M T W T F S) |
+| Product card | produce tile (4:3) + category, name, farmer, rating, price per unit, add button; lifts on hover; an orange "N% off" chip and the usual price crossed out during an offer |
+| Home banner | full-width photo, dark green shade on the side of the words (from below on phones), lime label, white title, lime and outline buttons; dots with a filling bar, round arrows and pause |
+| Category card | white card: 4:3 photo on the category colour, name, item count, round arrow; a swipe row on phones |
+| Offers banner | forest panel with the photo fading in from the side, orange "This week's offers" label, big "Up to N% off" title, lime button |
+| Reviews carousel | white card; customers' initials in round tinted faces on an arc over a soft green circle; the current one is larger with a lime ring; the review in large type with stars, Verified badge, name, city and date |
+| Newsletter strip | lime gradient card with a round fruit-basket photo, half over the top of the footer |
+| FAQ accordion | one question open at a time; the answer slides open (grid rows 0fr → 1fr) and fades in |
+| Filter sidebar | white panel sliding in from the right over a dimmed page, sticky head and foot (Clear all, Show results) |
+| Refresh button | small white pill with an arrow that turns while loading and "Updated 10:42" next to it |
+| Produce tile | the product photo fills the tile (object-fit cover); a basket icon when there is no photo |
+| Status badges | orders (placed, accepted, ready, completed, declined, cancelled), accounts (active, pending, suspended, inactive), products (available, sold out, unavailable, removed) |
+| KPI cards | icon on the left, label, value, sub-text (one line on laptops, up to two lines on phones); first card is the dark "lead" card |
+| App shell | one layout for the customer, farmer and admin areas: flat forest sidebar (no gradient) with section labels, lime active marker and counters; icon-only collapsed mode with tooltips |
+| DataTables grid | rounded table, cream header, pill search box, CSV / Excel / Print buttons, forest pagination, responsive child rows on phones |
+| Filter bar | small uppercase labels over compact selects, date and number inputs; "Clear n filters" link |
+| Avatar | round photo (profile upload) or initials; sizes sm / default / lg / xl |
+| Write with AI | pill button with a lime gradient and the `bi-stars` icon next to the label of a free-text box (descriptions, review replies, reviews, reasons, notes, FAQ answers, announcements); "Try another" after the first text |
+| Password field | one eye button inside the field to show or hide the password; the browser's own reveal button is hidden |
+| Product gallery | main photo with arrows and a "1 / 3" counter, thumbnails below, swipe on phones, credit line follows the photo |
+| Report link | small muted "Report" link with a flag icon under reviews, listings and stall pages; opens a reason dialog |
+| Basket sidebar | slides in from the right over a dimmed page; farmer groups, small quantity steppers, cream footer with the total, Checkout and View full basket |
+| Quick view | "Quick view" pill appears on the product photo on hover (always visible on touch screens); dialog with gallery, price, stock, farmer and add to basket |
+| Photo zoom | the product photo is magnified 2× under the mouse; a full-screen viewer opens on click (arrows, Escape) |
+| Dropdown with search | looks like a normal select; opens a small menu with a search box, highlighted option and a tick on the chosen value |
+| Review badges | green "Verified purchase" pill with a check, grey "Unverified" pill |
+| Social links | round icon buttons (Facebook, Instagram, X, YouTube, WhatsApp, LinkedIn) in the footer and on the Contact page |
+| Panels and tables | white panels with 1 px line border; tables scroll sideways on small screens instead of squeezing names |
+| Modal / drawer | backdrop blur, Escape to close; the mobile drawer is portalled to `<body>` so it never sits inside the sticky header |
+| Toasts | top right on laptops, bottom centre above the tab bar on phones; white card with a coloured edge, icon and title per kind (success green, error red, warning amber, info blue), a close button and a time bar that stops under the mouse |
+| Dropdowns | selects and searchable dropdowns share one look: white field, forest chevron, green focus ring, light green hover and a lime tick on the chosen option |
+| Chat widget | forest header, lime "Remembers" strip showing the assistant's memory, product cards, suggestion chips, Clear chat confirmation |
+
+## 5. Logo, icons and imagery
+
+- **Logo:** designed in Canva (design "MarketLink logo", basket with a leaf and handle in a rounded
+  frame) and rebuilt as SVG so it stays sharp: `client/public/brand/marketlink-mark.svg`, favicons,
+  `marketlink-logo.png` / `marketlink-logo-white.png` and the e-mail header logo. Wordmark:
+  bold "Market" in forest `#0d3017` + italic "Link" in leaf green `#268d3a` (lime on dark).
+
+- **Icons:** Bootstrap Icons only. The interface uses no emoji; wherever a symbol is needed
+  (stars, location pins, warnings, success states) a Bootstrap icon is used. The assistant sends
+  `{{icon:name}}` tokens that the chat renders as icons.
+- **Product photos:** real photos from the Open Images Dataset (Flickr, CC BY 2.0), cropped to
+  4:3, 800 × 600 WebP. The photographer is credited on the product page and in
+  `server/uploads/photos/CREDITS.md`. Farmers can upload their own photo instead.
+- **Banner, market and farm photos:** also Open Images (CC BY 2.0), chosen per slide and cropped
+  for their frame: 8 banner photos (1024 px, `client/public/images/hero`), 8 market photos
+  (4:3, 800 px) and 12 farm cover photos (16:9, 1024 px) in `server/uploads/places`. Category icons
+  and farmer logos are round 320 px crops of product photos (`uploads/photos/thumbs`). Each photo
+  shows its photographer; see the two `CREDITS.md` files. Category card photos (800 × 600) are in
+  `server/uploads/photos/categories`, the offers banner and newsletter photos in
+  `client/public/images/banners`.
+- **Video:** `client/public/media/how-it-works.mp4` (29 s, 1280 × 720, about 0.8 MB) with a poster
+  image and English captions (`how-it-works.vtt`). It shows the real website on a phone for the four
+  steps; on the home page it plays by itself (muted, on a loop) while it is on screen, with controls to
+  pause it or turn the sound on.
+- **No illustrations:** every picture is a real photo. Empty states, banners and value cards use
+  Bootstrap Icons in a soft circle (`.empty-icon`, `.banner-icon`, `.value-icon`).
+- **Share picture:** `client/public/brand/og-image.jpg` (1200 × 630) for link previews of pages
+  without their own photo.
+- Farmer pages without a cover photo show three of the farmer's product photos as tilted prints.
+
+## 6. Motion
+
+| Animation | Where |
+| --- | --- |
+| `pageIn` | every route change (fade + rise) |
+| Banner | home banner: slides cross-fade, the text rises and the photo settles from a slight zoom; slides change every 3 s and the active dot fills in 3 s (they keep changing with reduced motion, without the zoom) |
+| Reviews carousel | faces move along the arc and the new review fades up every 5 s |
+| FAQ | the answer opens smoothly (height) and fades in |
+| Scroll reveal (`.reveal` + IntersectionObserver) | cards and section headings fade up when they scroll into view |
+| Count-up | home and About statistics count from 0 when visible |
+| `floaty`, `popIn`, `glowPulse`, `twinkle` | floating produce ring on the auth banner, with mouse parallax |
+| `countPop` | basket and tab-bar counters when the number changes |
+| `drawerIn` | mobile drawer slides in from the right |
+| `shimmer` | loading skeletons |
+| `pulse` | chat launcher ring |
+
+All animations are disabled when the device asks for reduced motion, and scroll-revealed content
+is always visible when printing.
+
+## 7. Accessibility
+
+- Skip-to-content link, visible focus rings, labelled icon buttons (`aria-label`), `aria-expanded`
+  on toggles, dialogs with `aria-modal`.
+- Text colours meet contrast on cream and white; icons are decorative (`aria-hidden`) next to text.
+- Forms show clear validation messages; the farmer wizard returns to the step that has the error.
+
+## 8. Copy style
+
+Short, friendly and practical: "Pre-order. Pick up. Pay in person." Use the user's words
+(basket, pickup, stall, market day), name buttons by what they do ("Add to basket", "Send reset
+link", "Clear chat") and explain errors with the fix ("Please pick a later slot").

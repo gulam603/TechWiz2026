@@ -1,0 +1,21 @@
+flowchart LR
+  subgraph Browser["Web browser (phone, tablet, computer)"]
+    UI["React app<br/>pages, forms, maps, chat"]
+  end
+  subgraph Server["Node.js + Express server"]
+    API["REST API<br/>/api/..."]
+    AUTH["Login check<br/>JWT cookie + roles"]
+    SVC["Services<br/>orders, stock, alerts,<br/>assistant, SEO, e-mail"]
+    SCHED["Scheduler<br/>every hour"]
+  end
+  DB[("MongoDB<br/>19 collections")]
+  FILES[("Uploads folder<br/>photos")]
+  MAIL["SMTP e-mail server"]
+  MAP["OpenStreetMap tiles<br/>OSRM routes"]
+  UI -- "HTTPS JSON" --> API
+  API --> AUTH --> SVC
+  SVC --> DB
+  SVC --> FILES
+  SVC --> MAIL
+  SCHED --> SVC
+  UI -- "map tiles" --> MAP

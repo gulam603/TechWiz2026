@@ -1,0 +1,71 @@
+erDiagram
+  USER ||--o| FARMER : "has a stall"
+  USER ||--o{ ORDER : "places"
+  FARMER ||--o{ PRODUCT : "sells"
+  FARMER }o--o{ MARKET : "sells at"
+  CITY ||--o{ MARKET : "has"
+  CATEGORY ||--o{ PRODUCT : "groups"
+  ORDER }o--|| FARMER : "is for"
+  ORDER }o--|| MARKET : "picked up at"
+  ORDER ||--|{ ORDER_ITEM : "contains"
+  ORDER_ITEM }o--|| PRODUCT : "of"
+  USER ||--o{ REVIEW : "writes"
+  REVIEW }o--o| FARMER : "about"
+  REVIEW }o--o| PRODUCT : "about"
+  USER ||--o{ NOTIFICATION : "receives"
+  PRODUCT ||--o{ STOCK_MOVEMENT : "history"
+  PRODUCT ||--o{ RESTOCK_REQUEST : "waited for"
+  USER ||--o{ CONTACT_MESSAGE : "sends"
+  USER {
+    ObjectId _id
+    string name
+    string email
+    string role
+    string status
+  }
+  FARMER {
+    ObjectId _id
+    ObjectId user
+    string stallName
+    string city
+    array pickupWindows
+    array blockedDates
+    number ratingAvg
+  }
+  MARKET {
+    ObjectId _id
+    string name
+    string city
+    array operatingDays
+    string openTime
+    string closeTime
+  }
+  PRODUCT {
+    ObjectId _id
+    ObjectId farmer
+    ObjectId category
+    string name
+    number price
+    number quantityAvailable
+    string status
+  }
+  ORDER {
+    ObjectId _id
+    string orderNumber
+    ObjectId customer
+    ObjectId farmer
+    string status
+    string pickupDate
+    number totalAmount
+  }
+  ORDER_ITEM {
+    ObjectId product
+    number quantity
+    number price
+  }
+  REVIEW {
+    ObjectId _id
+    number rating
+    string comment
+    boolean verified
+  }

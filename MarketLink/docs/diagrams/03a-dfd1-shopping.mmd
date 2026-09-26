@@ -1,0 +1,28 @@
+flowchart LR
+  C["Customer / Guest"]
+  F["Farmer"]
+  P3(("3 Catalogue and<br/>weekly stock"))
+  P4(("4 Pre-orders<br/>and pickup"))
+  P5(("5 Reviews<br/>and ratings"))
+  P6(("6 Notifications<br/>and e-mail"))
+  D4[("D4 Products")]
+  D5[("D5 Orders")]
+  D6[("D6 Reviews")]
+  D7[("D7 Notifications")]
+  D8[("D8 Restock requests")]
+  F -- "stock, prices, photos" --> P3
+  C -- "search, filters" --> P3
+  P3 --> D4
+  C -- "remind me" --> P3
+  P3 --> D8
+  C -- "basket, pickup slot" --> P4
+  F -- "accept, ready, complete" --> P4
+  P4 --> D5
+  P4 -- "reserve / return stock" --> D4
+  C -- "received?, stars, comment" --> P5
+  P5 --> D6
+  P4 -- "status changes" --> P6
+  P3 -- "back in stock, low stock" --> P6
+  P6 --> D7
+  P6 -- "notification, e-mail" --> C
+  P6 -- "notification, e-mail" --> F

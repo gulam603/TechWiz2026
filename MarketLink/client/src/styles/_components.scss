@@ -57,6 +57,12 @@
       --bs-btn-padding-x: 0.9rem;
     }
   }
+  // The smallest laptops (992-1099px) also fit the language switch
+  @media (min-width: 992px) and (max-width: 1099.98px) {
+    .nav-link {
+      padding: 0.45rem 0.5rem !important;
+    }
+  }
 }
 
 .brand {

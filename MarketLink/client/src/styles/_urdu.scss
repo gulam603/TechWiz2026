@@ -184,6 +184,20 @@ html[lang='ur'] {
   justify-content: center;
 }
 
+// Narrow laptops (992 to 1199 px): the navbar has no room for the word, so the switch shows only its
+// icon (the tooltip and the screen-reader label still name the language)
+@include media-breakpoint-between(lg, xl) {
+  .ml-navbar .nav-lang {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+
+    span:not(.visually-hidden) {
+      display: none;
+    }
+  }
+}
+
 .lang-switch-footer {
   height: 34px;
   background: transparent;

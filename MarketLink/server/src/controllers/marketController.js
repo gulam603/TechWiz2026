@@ -54,7 +54,7 @@ export async function listMarkets(req, res) {
 export async function getMarket(req, res) {
   const market = await findMarket(req.params.idOrSlug);
   const farmers = await Farmer.find({ isActive: true, markets: market._id })
-    .select('stallName slug logo coverImage bio bioUr ratingAvg ratingCount operatingDays pickupWindows latitude longitude address tags')
+    .select('stallName slug logo coverImage bio bioUr ratingAvg ratingCount operatingDays pickupWindows blockedDates latitude longitude address tags')
     .sort({ ratingAvg: -1 })
     .lean();
 

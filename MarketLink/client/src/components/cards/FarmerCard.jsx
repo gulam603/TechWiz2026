@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { TodayBadge } from '../../utils/marketToday';
 import { coverFor } from '../../utils/format';
 import RatingStars from '../common/RatingStars';
 import DayDots from '../common/DayDots';
@@ -22,8 +23,9 @@ export default function FarmerCard({ farmer, showLocation = false }) {
             {farmer.stallName}
           </Link>
         </h3>
-        <div className="mb-2">
+        <div className="mb-2 d-flex align-items-center gap-2 flex-wrap">
           <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
+          <TodayBadge farmer={farmer} />
         </div>
         {showLocation && (farmer.address || farmer.city) && (
           <p className="farmer-place">

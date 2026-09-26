@@ -102,6 +102,33 @@ export async function updatePickupSettings(req, res) {
   res.json({ farmer, status: req.user.status, clashes });
 }
 
+// POST /api/farmer/away-today  { away: true|false }
+// "I can't come to the market today": today becomes a closed date, customers see "Not at the market
+// today" and those with a pickup today are told. Pressing it again (away: false) undoes it.
+export async function setAwayToday(req, res) {
+  const farmer = req.farmer;
+  const today = toDateKey();
+  const away = req.body.away === true || req.body.away === 'true';
+  const dates = new Set(farmer.blockedDates || []);
+  if (away) dates.add(today);
+  else dates.delete(today);
+  farmer.blockedDates = [...dates];
+  await farmer.save();
+  let told = 0;
+  if (away) {
+    const orders = await Order.find({ farmer: farmer._id, status: { $in: OPEN_ORDER_STATUSES }, pickupDate: today }).select('customer orderNumber').lean();
+    for (const o of orders) {
+      await notify(
+        o.customer,
+        { type: 'order', title: `${farmer.stallName} is not at the market today`, message: `${farmer.stallName} cannot be at the market today. They will contact you about pre-order ${o.orderNumber}, or you can change the pickup day.`, link: `/account/orders/${o._id}` },
+        { email: true }
+      );
+      told += 1;
+    }
+  }
+  res.json({ away, blockedDates: farmer.blockedDates, told, message: away ? (told ? `Customers told: ${told}` : 'Customers now see that you are not at the market today') : 'You are back at the market today' });
+}
+
 // ---------------------------------------------------------------- products
 
 /** "fresh mangoes, sindhri" (or an array) -> ['fresh mangoes', 'sindhri']: unique, at most 12. */

@@ -26,7 +26,7 @@ const PRIVATE = /^\/(account|farmer(\/|$)|admin|checkout|cart|reset-password|for
 // Every address the React app has (client/src/App.jsx). Anything else is answered with a 404 page,
 // so search engines do not index made-up addresses as copies of the home page. The signed-in areas
 // show their own "page not found" inside.
-const APP_PAGES = /^\/($|about$|terms$|faq$|contact$|map$|cart$|login$|register(\/farmer)?$|forgot-password$|reset-password\/[^/]+$|unsubscribe$|checkout(\/[A-Za-z0-9+-]+)?$|products$|markets$|farmers$|account(\/|$)|farmer(\/|$)|admin(\/|$))/;
+const APP_PAGES = /^\/($|about$|terms$|faq$|contact$|map$|cart$|login$|register(\/farmer)?$|forgot-password$|reset-password\/[^/]+$|unsubscribe$|checkout(\/[A-Za-z0-9+-]+)?$|products$|best-sellers$|markets$|farmers$|account(\/|$)|farmer(\/|$)|admin(\/|$))/;
 
 const STATIC_PAGES = {
   '/': { title: null, description: DEFAULT_DESCRIPTION },
@@ -35,6 +35,7 @@ const STATIC_PAGES = {
   '/farmers': { title: 'Local farmers', description: 'Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.', keywords: ['local growers', 'farm stalls', 'organic farms'] },
   '/map': { title: 'Market map', description: 'All farmers markets and farmer stalls on one map, with directions and opening days.' },
   '/about': { title: 'About MarketLink', description: 'MarketLink brings local farmers markets online so families can reserve fresh food before market day and farmers waste less. Built by Team Omniverse.' },
+  '/best-sellers': { title: 'Best sellers', description: 'The products customers pre-order most at the farmers markets: the top 5, top 10 and the best sellers at every market.', keywords: ['best selling vegetables', 'popular fruit', 'top products farmers market'] },
   '/faq': { title: 'Frequently asked questions', description: 'Answers about pre-ordering from local farmers on MarketLink: how ordering works, pickup at the market, paying the farmer in cash, changing an order and selling as a farmer.', keywords: ['MarketLink FAQ', 'how to pre-order vegetables', 'farmers market pickup', 'pay at pickup', 'sell produce online Pakistan'] },
   '/contact': { title: 'Contact us', description: 'Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.' },
   '/terms': { title: 'Terms & Conditions', description: 'The terms for using MarketLink as a customer or farmer, and how your personal data is handled.' },
@@ -452,6 +453,7 @@ export async function buildSitemap(origin) {
     { loc: '/products', priority: '0.9', changefreq: 'daily' },
     { loc: '/markets', priority: '0.8', changefreq: 'weekly' },
     { loc: '/farmers', priority: '0.8', changefreq: 'weekly' },
+    { loc: '/best-sellers', priority: '0.7', changefreq: 'weekly' },
     { loc: '/faq', priority: '0.7', changefreq: 'monthly' },
     { loc: '/map', priority: '0.6', changefreq: 'weekly' },
     { loc: '/about', priority: '0.5', changefreq: 'monthly' },

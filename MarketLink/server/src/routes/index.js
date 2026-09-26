@@ -131,6 +131,7 @@ const approvedFarmer = [...farmerOnly, requireApprovedFarmer];
 router.get('/farmer/me', ...farmerOnly, farm.getMyFarm);
 router.put('/farmer/profile', ...farmerOnly, farmerImages.fields([{ name: 'logo', maxCount: 1 }, { name: 'coverImage', maxCount: 1 }]), farm.updateFarmProfile);
 router.put('/farmer/pickup', ...approvedFarmer, farm.updatePickupSettings);
+router.post('/farmer/away-today', ...approvedFarmer, farm.setAwayToday);
 router.get('/farmer/insights', ...farmerOnly, farm.farmerInsights);
 
 router.get('/farmer/products', ...farmerOnly, farm.myProducts);
@@ -161,6 +162,7 @@ const adminOnly = [protect, authorize(ROLES.ADMIN)];
 router.get('/admin/dashboard', ...adminOnly, admin.adminDashboard);
 router.get('/admin/badges', ...adminOnly, admin.adminBadges);
 router.get('/admin/filter-options', ...adminOnly, tools.filterOptions);
+router.get('/admin/farmer-rankings', ...adminOnly, tools.farmerRankings);
 router.post('/admin/tables/:name', ...adminOnly, tools.dataTable); // DataTables server-side processing
 router.delete('/admin/subscribers/:id', ...adminOnly, newsletter.deleteSubscriber);
 router.post('/admin/products/describe', ...adminOnly, tools.writeDescription);

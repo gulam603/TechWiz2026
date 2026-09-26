@@ -422,3 +422,175 @@
     color: $ml-carrot;
   }
 }
+
+// ------------------------------------------------------------------ is the farmer at the market today?
+.today-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  border-radius: 50rem;
+  padding: 0.2rem 0.6rem;
+  background: #f1efe7;
+  color: $ml-muted;
+  .bi {
+    font-size: 0.7rem;
+  }
+  &.is-here {
+    background: #e2f6e4;
+    color: #1d7a3a;
+    .bi {
+      animation: pulseDot 1.6s ease-in-out infinite;
+    }
+  }
+  &.is-later {
+    background: #eef6e8;
+    color: $ml-forest;
+  }
+  &.is-away {
+    background: #fdecea;
+    color: #b3261e;
+  }
+}
+
+@keyframes pulseDot {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.away-today {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.1rem;
+  &.is-away {
+    border-color: #f3b9b3;
+    background: #fff8f7;
+  }
+}
+
+// ------------------------------------------------------------------ best sellers: numbered product cards
+.best-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  .ss-wrap,
+  .search-select {
+    min-width: 220px;
+  }
+}
+
+.best-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+  > li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    > .product-card {
+      flex: 1;
+    }
+  }
+}
+
+.best-rank {
+  position: absolute;
+  z-index: 4;
+  top: -10px;
+  left: -10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $ml-forest;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+  border: 3px solid #fff;
+  &.is-top1 {
+    background: #e8b124;
+  }
+  &.is-top2 {
+    background: #9aa4ad;
+  }
+  &.is-top3 {
+    background: #c07a3e;
+  }
+}
+
+.best-sold {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: $ml-muted;
+  text-align: center;
+}
+
+@include media-breakpoint-down(xl) {
+  .best-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@include media-breakpoint-down(md) {
+  .best-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 0.75rem;
+  }
+  .best-rank {
+    width: 32px;
+    height: 32px;
+    top: -8px;
+    left: -6px;
+    font-size: 0.85rem;
+  }
+}
+
+// ------------------------------------------------------------------ admin: farmer rankings
+.rank-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+.rank-table {
+  tbody.is-loading {
+    opacity: 0.5;
+  }
+  tr.is-first td {
+    background: #fbf7e6;
+  }
+}
+.rank-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #eef1ea;
+  font-weight: 800;
+  font-size: 0.8rem;
+  &.is-top1 {
+    background: #e8b124;
+    color: #fff;
+  }
+  &.is-top2 {
+    background: #9aa4ad;
+    color: #fff;
+  }
+  &.is-top3 {
+    background: #c07a3e;
+    color: #fff;
+  }
+}

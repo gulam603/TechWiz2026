@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import { TodayBadge } from '../../utils/marketToday';
 import useFetch from '../../hooks/useFetch';
 import DirectionsMap from '../../components/map/DirectionsMap';
 import DayDots from '../../components/common/DayDots';
@@ -121,6 +122,7 @@ export default function MarketDetail() {
                   <span className="flex-grow-1 min-w-0">
                     <strong className="d-block">{f.stallName}</strong>
                     <RatingStars value={f.ratingAvg} count={f.ratingCount} />
+                    <TodayBadge farmer={f} marketId={market._id} className="mt-1" />
                     <span className="d-block fs-7 text-muted-2 mt-1">
                       {f.pickupWindows.map((w) => t('{day} {from} to {to}', { day: DAY_SHORT[w.day], from: time12(w.start), to: time12(w.end) })).join(' · ') || t('Sells on {v1}', { v1: listText(f.operatingDays.map((d) => DAY_NAMES[d])) })}
                     </span>

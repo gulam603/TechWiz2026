@@ -2,10 +2,11 @@ import { Farmer, User } from '../models/index.js';
 import { USER_STATUS } from '../utils/constants.js';
 import { isoWeekKey } from '../utils/dates.js';
 import { applyWeeklyTemplate } from './stock.js';
+import { announceMarketsToday } from './customerAlerts.js';
 
 /**
  * Runs once an hour. At the start of every new week it re-applies the weekly stock
- * template for farmers who enabled "auto apply".
+ * template for farmers who enabled "auto apply"; every day it tells customers which markets are open.
  */
 export async function runWeeklyTemplates() {
   const week = isoWeekKey();
@@ -21,7 +22,10 @@ export async function runWeeklyTemplates() {
 }
 
 export function startScheduler() {
-  const run = () => runWeeklyTemplates().catch((err) => console.error('[scheduler]', err.message));
+  const run = () => {
+    runWeeklyTemplates().catch((err) => console.error('[scheduler]', err.message));
+    announceMarketsToday().catch((err) => console.error('[scheduler]', err.message));
+  };
   setTimeout(run, 5000);
   return setInterval(run, 60 * 60 * 1000);
 }

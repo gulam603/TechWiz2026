@@ -20,6 +20,7 @@ const marketSchema = new mongoose.Schema(
     image: { type: String },
     imageCredit: { author: String, source: String, license: String }, // photographer of a licensed stock photo
     isActive: { type: Boolean, default: true },
+    liveNoticeDate: String, // the day customers were last told "open today" (YYYY-MM-DD)
   },
   { timestamps: true }
 );

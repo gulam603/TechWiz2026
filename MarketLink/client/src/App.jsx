@@ -10,6 +10,7 @@ import { PageLoader } from './components/common/Loader';
 // Pages are loaded on demand (code-splitting) so the first visit stays fast.
 const Home = lazy(() => import('./pages/public/Home'));
 const Products = lazy(() => import('./pages/public/Products'));
+const BestSellers = lazy(() => import('./pages/public/BestSellers'));
 const ProductDetail = lazy(() => import('./pages/public/ProductDetail'));
 const Markets = lazy(() => import('./pages/public/Markets'));
 const MarketDetail = lazy(() => import('./pages/public/MarketDetail'));
@@ -77,6 +78,7 @@ export default function App() {
           <Route element={<PublicLayout />}>
             <Route index element={<Home />} />
             <Route path="products" element={<Products />} />
+            <Route path="best-sellers" element={<BestSellers />} />
             <Route path="products/:id" element={<ProductDetail />} />
             <Route path="markets" element={<Markets />} />
             <Route path="markets/:slug" element={<MarketDetail />} />

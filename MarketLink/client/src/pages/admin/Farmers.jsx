@@ -10,6 +10,7 @@ import DayDots from '../../components/common/DayDots';
 import DataGrid from '../../components/admin/DataGrid';
 import AiWriteButton from '../../components/common/AiWriteButton';
 import FilterBar from '../../components/admin/FilterBar';
+import FarmerRankings from '../../components/admin/FarmerRankings';
 import { action, badge, dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { formatDate } from '../../utils/format';
 
@@ -94,6 +95,7 @@ export default function AdminFarmers() {
           </button>
         }
       />
+      <FarmerRankings />
       <div className="table-card">
         <FilterBar fields={FILTERS} value={filters} onChange={setFilters} />
         <DataGrid table="farmers" columns={COLUMNS} filters={filters} order={[[9, 'desc']]} exportName="MarketLink farmers" onAction={onAction} reloadKey={reloadKey + changed} searchPlaceholder="Search stall, contact, e-mail…" />

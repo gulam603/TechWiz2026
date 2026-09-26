@@ -34,6 +34,7 @@ export default function Footer() {
               <ul className="list-unstyled d-grid gap-2 small">
                 <li><Link to="/">{t('Home')}</Link></li>
                 <li><Link to="/products">{t('All products')}</Link></li>
+                <li><Link to="/best-sellers">{t('Best sellers')}</Link></li>
                 <li><Link to="/markets">{t('Markets')}</Link></li>
                 <li><Link to="/farmers">{t('Farmers')}</Link></li>
                 <li><Link to="/map">{t('Market map')}</Link></li>

@@ -11,6 +11,7 @@ import { BarList, ChartCard, TrendChart } from '../../components/charts/Charts';
 import { formatDateKey, money, moneyCompact, ORDER_STATUS_META, time12 } from '../../utils/format';
 import { productName, t, unitName } from '../../i18n';
 import RefreshButton from '../../components/common/RefreshButton';
+import AwayToday from '../../components/farmer/AwayToday';
 
 export function ApprovalBanner({ status }) {
   if (status === 'active') return null;
@@ -58,6 +59,7 @@ function FarmerWaiting({ status }) {
     <>
       <DashHeader title={f?.stallName || t('My stall')} subtitle={suspended ? t('Your stall is suspended.') : t('Your registration is being reviewed by the MarketLink team.')} />
       <ApprovalBanner status={status} />
+      <AwayToday />
       <div className="row g-3">
         <div className="col-lg-7">
           <div className="panel">

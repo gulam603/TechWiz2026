@@ -5,6 +5,7 @@ import ProductCard from '../../components/cards/ProductCard';
 import ReviewItem from '../../components/cards/ReviewItem';
 import DirectionsMap from '../../components/map/DirectionsMap';
 import RatingStars from '../../components/common/RatingStars';
+import { TodayBadge } from '../../utils/marketToday';
 import DayDots from '../../components/common/DayDots';
 import FavButton from '../../components/common/FavButton';
 import WriteReviewButton from '../../components/reviews/WriteReviewButton';
@@ -89,6 +90,7 @@ export default function FarmerDetail() {
           <h1>{farmer.stallName}</h1>
           <div className="d-flex align-items-center gap-3 flex-wrap mt-1">
             <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
+            <TodayBadge farmer={farmer} />
             <span className="small text-muted-2">
               <i className="bi bi-geo-alt" /> {farmer.city ? t(farmer.city) : farmer.address}
             </span>

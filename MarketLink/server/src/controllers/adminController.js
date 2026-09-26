@@ -11,6 +11,7 @@ import {
   Review,
   User,
 } from '../models/index.js';
+import { announceNewFarmer } from '../services/customerAlerts.js';
 import { REPORT_TYPES } from '../models/Report.js';
 import { currentMonth } from '../models/Announcement.js';
 import AppError from '../utils/AppError.js';
@@ -135,6 +136,8 @@ export async function setFarmerStatus(req, res) {
         : `${farmer.stallName} has been re-activated.`
       : `${farmer.stallName} has been suspended by the MarketLink team.${reason}`;
   await notify(user, { type: 'account', title: status === USER_STATUS.ACTIVE ? 'Your stall is approved' : 'Your stall has been suspended', message, link: '/farmer' }, { email: true });
+  // A newly approved stall: customers in its city and at its markets get a "new farmer" notification
+  if (wasPending && status === USER_STATUS.ACTIVE) await announceNewFarmer(farmer);
 
   res.json({ farmer: { ...farmer.toObject(), user: user.toSafeJSON() } });
 }

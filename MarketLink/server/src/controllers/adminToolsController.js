@@ -682,3 +682,33 @@ export async function writeWithAi(req, res) {
   res.json(await writeText(kind, context, { lang: req.body.lang === 'ur' ? 'ur' : 'en', variant: Number(req.body.variant) || 0 }));
 }
 
+
+// GET /api/admin/farmer-rankings?by=revenue|rating|orders|products|customers&days=30&limit=10
+// Leaderboard of active stalls for the chips on the admin Farmers page (days=0: all time)
+export async function farmerRankings(req, res) {
+  const by = ['revenue', 'rating', 'orders', 'products', 'customers'].includes(req.query.by) ? req.query.by : 'revenue';
+  const days = Math.max(0, Math.min(365, toNumber(req.query.days) ?? 30));
+  const limit = Math.max(3, Math.min(50, toNumber(req.query.limit) ?? 10));
+  const farmers = await Farmer.find({ isActive: true }).select('stallName slug logo city ratingAvg ratingCount').lean();
+  const ids = farmers.map((f) => f._id);
+  const since = days ? new Date(Date.now() - days * 24 * 3600 * 1000) : null;
+  const [orders, products] = await Promise.all([
+    Order.find({ farmer: { $in: ids }, status: ORDER_STATUS.COMPLETED, ...(since ? { completedAt: { $gte: since } } : {}) }).select('farmer customer totalAmount').lean(),
+    countBy(Product, 'farmer', ids, { isRemoved: false }),
+  ]);
+  const stats = new Map(farmers.map((f) => [String(f._id), { revenue: 0, orders: 0, customers: new Set() }]));
+  for (const o of orders) {
+    const s = stats.get(String(o.farmer));
+    if (!s) continue;
+    s.revenue += o.totalAmount;
+    s.orders += 1;
+    s.customers.add(String(o.customer));
+  }
+  const rows = farmers.map((f) => {
+    const s = stats.get(String(f._id));
+    return { _id: f._id, stallName: f.stallName, slug: f.slug, logo: f.logo, city: f.city, ratingAvg: f.ratingAvg, ratingCount: f.ratingCount, revenue: round2(s.revenue), orders: s.orders, customers: s.customers.size, products: products.get(String(f._id)) || 0 };
+  });
+  const key = { revenue: (r) => r.revenue, rating: (r) => (r.ratingCount ? r.ratingAvg * 1000 + r.ratingCount : -1), orders: (r) => r.orders, products: (r) => r.products, customers: (r) => r.customers }[by];
+  rows.sort((a, b) => key(b) - key(a));
+  res.json({ by, days, farmers: rows.slice(0, limit).map((r, i) => ({ ...r, rank: i + 1 })) });
+}

@@ -4,6 +4,9 @@ const announcementSchema = new mongoose.Schema(
   {
     title: { type: String, required: [true, 'Title is required'], trim: true, maxlength: 120 },
     message: { type: String, required: [true, 'Message is required'], trim: true, maxlength: 1000 },
+    // The same notice in Urdu (optional; the English text is shown when empty)
+    titleUr: { type: String, trim: true, maxlength: 160 },
+    messageUr: { type: String, trim: true, maxlength: 1200 },
     audience: { type: String, enum: ['all', 'customer', 'farmer'], default: 'all' },
     // Months (1 = January … 12 = December) in which the banner is shown. Empty means all year,
     // so seasonal notices such as "Mango season is here!" only appear in their own season.

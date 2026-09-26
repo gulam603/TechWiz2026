@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { darkCoverFor, time12 } from '../../utils/format';
 import DayDots from '../common/DayDots';
-import { t } from '../../i18n';
+import { categoryName, t } from '../../i18n';
 
 export default function MarketCard({ market }) {
   return (
     <article className="market-card">
       <div className="market-visual" style={{ '--cover': darkCoverFor(market.name) }}>
-        {market.city && <span className="chip city">{market.city}</span>}
+        {market.city && <span className="chip city">{t(market.city)}</span>}
         {market.distanceKm !== undefined && (
           <span className="chip chip-lime distance">
             <i className="bi bi-geo-alt-fill" /> {market.distanceKm} {t('km')}
@@ -28,7 +28,7 @@ export default function MarketCard({ market }) {
         {market.categories?.length > 0 && (
           <div className="meta-line mb-1">
             <i className="bi bi-basket" />
-            <span className="text-truncate">{market.categories.map((c) => c.name).join(' · ')}</span>
+            <span className="text-truncate">{market.categories.map((c) => categoryName(c)).join(' · ')}</span>
           </div>
         )}
         <div className="meta-line mb-3">

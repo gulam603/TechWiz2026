@@ -48,7 +48,7 @@ export async function globalSearch(req, res) {
     Product.find(productFilter)
       .select('name nameUr slug price unit image status quantityAvailable farmer category')
       .populate('farmer', 'stallName slug')
-      .populate('category', 'name color')
+      .populate('category', 'name nameUr slug color')
       .limit(6)
       .lean(),
     Farmer.find(farmerFilter)
@@ -97,7 +97,7 @@ export async function activeAnnouncements(req, res) {
   if (req.user?.role === ROLES.FARMER) audiences.push('farmer');
   // Seasonal notices only show in their months (e.g. mangoes in summer, kinnow in winter)
   const announcements = await Announcement.find({ isActive: true, audience: { $in: audiences }, ...inSeason() })
-    .select('title message audience months link createdAt')
+    .select('title message titleUr messageUr audience months link createdAt')
     .sort({ createdAt: -1 })
     .limit(3)
     .lean();

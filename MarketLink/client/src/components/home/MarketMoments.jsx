@@ -27,8 +27,8 @@ export default function MarketMoments() {
         <div className="moments">
           {PHOTOS.map((p, i) => (
             <Link key={p.src} to={p.to} className={`moment moment-${i + 1}`}>
-              <img src={p.src} alt={p.caption} loading="lazy" />
-              <span className="moment-caption">{p.caption}</span>
+              <img src={p.src} alt={t(p.caption)} loading="lazy" />
+              <span className="moment-caption">{t(p.caption)}</span>
             </Link>
           ))}
         </div>

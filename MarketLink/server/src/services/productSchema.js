@@ -105,6 +105,8 @@ export function builtinSchema({ name, category = '', unit = '', price, stallName
     season: produce?.season || 'All year',
     storage: clip(info.keep, 200),
     uses: clip(firstUpper(info.use), 200),
+    storageUr: clip(info.keepUr, 250),
+    usesUr: clip(info.useUr, 250),
     nameUr: produce?.ur || '',
     metaTitle: clip(`${name}, fresh ${catWord} from ${stallName}`, 70),
     metaDescription: clip(`${name} from ${stallName}${where}: ${info.taste}. Pre-order online and pay at the stall when you pick it up.`, 170),
@@ -125,6 +127,7 @@ async function claudeSchema(details) {
         'You write structured product data for MarketLink, a farmers market pre-order website in Pakistan (customers pay the farmer in cash at pickup). Answer with one JSON object only, no other text, with these keys: ' +
         '"summary" (one answer-first sentence, max 40 words, what it is, who sells it, price and unit if given), "season" (harvest months in Pakistan like "May to August", or "All year"), ' +
         '"storage" (one short storage tip), "uses" (short list of dishes or uses popular in Pakistan), "nameUr" (the product name in correct Urdu script using Urdu letters such as ک ی ہ ے), ' +
+        '"storageUr" and "usesUr" (the storage tip and the uses in correct, natural Urdu script with Urdu punctuation such as ، and ۔), ' +
         '"metaTitle" (max 60 characters), "metaDescription" (max 155 characters), "keywords" (array of up to 10 lowercase search phrases, English and Roman Urdu). No emoji, no health claims.',
       messages: [
         {
@@ -154,6 +157,8 @@ async function claudeSchema(details) {
     season: str(json.season, 80),
     storage: str(json.storage, 200),
     uses: str(json.uses, 200),
+    storageUr: str(json.storageUr, 250),
+    usesUr: str(json.usesUr, 250),
     nameUr: str(json.nameUr, 100),
     metaTitle: str(json.metaTitle, 70),
     metaDescription: str(json.metaDescription, 170),
@@ -167,7 +172,10 @@ async function claudeSchema(details) {
 export async function generateProductSchema(details) {
   if (env.anthropic.apiKey) {
     try {
-      return { ...(await claudeSchema(details)), source: 'claude' };
+      const ai = await claudeSchema(details);
+      // Urdu tips from the built-in writer when Claude left them out
+      const local = builtinSchema(details);
+      return { ...ai, storageUr: ai.storageUr || local.storageUr, usesUr: ai.usesUr || local.usesUr, source: 'claude' };
     } catch (err) {
       console.warn('[ai] Claude product schema failed, using the built-in writer:', err.message);
     }
@@ -200,7 +208,7 @@ async function detailsOf(product) {
 export async function refreshProductSchema(product, { force = false } = {}) {
   if (!force && product.aiSchema?.source === 'farmer' && product.aiSchema?.summary) return product;
   const ai = await generateProductSchema(await detailsOf(product));
-  product.aiSchema = { summary: ai.summary, season: ai.season, storage: ai.storage, uses: ai.uses, source: ai.source, generatedAt: new Date() };
+  product.aiSchema = { summary: ai.summary, season: ai.season, storage: ai.storage, uses: ai.uses, storageUr: ai.storageUr, usesUr: ai.usesUr, source: ai.source, generatedAt: new Date() };
   if (!product.nameUr && ai.nameUr) product.nameUr = ai.nameUr;
   await product.save();
   return product;
@@ -217,7 +225,7 @@ export async function ensureProductSchema(product, { changed = false, background
   if (product.aiSchema?.source === 'farmer' && !missing) return product;
   const details = await detailsOf(product);
   const quick = builtinSchema(details);
-  product.aiSchema = { summary: quick.summary, season: quick.season, storage: quick.storage, uses: quick.uses, source: 'builtin', generatedAt: new Date() };
+  product.aiSchema = { summary: quick.summary, season: quick.season, storage: quick.storage, uses: quick.uses, storageUr: quick.storageUr, usesUr: quick.usesUr, source: 'builtin', generatedAt: new Date() };
   if (!product.nameUr && quick.nameUr) product.nameUr = quick.nameUr;
   await product.save();
   if (background && env.anthropic.apiKey) {

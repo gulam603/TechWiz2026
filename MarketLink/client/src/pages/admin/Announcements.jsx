@@ -20,7 +20,7 @@ const SEASONS = [
   { label: 'Autumn', months: [9, 10, 11] },
 ];
 
-const EMPTY = { title: '', message: '', audience: 'all', months: [], link: '', notify: true };
+const EMPTY = { title: '', message: '', titleUr: '', messageUr: '', audience: 'all', months: [], link: '', notify: true };
 
 const sameMonths = (a, b) => a.length === b.length && a.every((m) => b.includes(m));
 
@@ -69,7 +69,7 @@ export default function AdminAnnouncements() {
 
   function startEdit(a) {
     setEditing(a._id);
-    setForm({ title: a.title, message: a.message, audience: a.audience, months: a.months || [], link: a.link || '', notify: false });
+    setForm({ title: a.title, message: a.message, titleUr: a.titleUr || '', messageUr: a.messageUr || '', audience: a.audience, months: a.months || [], link: a.link || '', notify: false });
     document.getElementById('an-title')?.focus();
   }
 
@@ -134,6 +134,19 @@ export default function AdminAnnouncements() {
               <div>
                 <label className="form-label" htmlFor="an-msg">Message</label>
                 <textarea id="an-msg" className="form-control" rows={4} required maxLength={1000} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
+              </div>
+              <div>
+                <label className="form-label" htmlFor="an-title-ur">
+                  Title in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+                </label>
+                <input id="an-title-ur" className="form-control" dir="rtl" lang="ur" maxLength={160} value={form.titleUr} onChange={(e) => setForm({ ...form, titleUr: e.target.value })} />
+              </div>
+              <div>
+                <label className="form-label" htmlFor="an-msg-ur">
+                  Message in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+                </label>
+                <textarea id="an-msg-ur" className="form-control" dir="rtl" lang="ur" rows={3} maxLength={1200} value={form.messageUr} onChange={(e) => setForm({ ...form, messageUr: e.target.value })} />
+                <div className="form-text">Shown when a visitor switches the site to Urdu.</div>
               </div>
               <div>
                 <label className="form-label" htmlFor="an-aud">Audience</label>

@@ -9,7 +9,7 @@ import { PageLoader } from '../../components/common/Loader';
 import DataGrid from '../../components/admin/DataGrid';
 import { action, badge, display, esc, iconAction, numberInput } from '../../utils/cells';
 
-const EMPTY = { question: '', answer: '', group: 'shopping', showOnHome: false };
+const EMPTY = { question: '', answer: '', questionUr: '', answerUr: '', group: 'shopping', showOnHome: false };
 
 const columns = (groups) => [
   {
@@ -50,7 +50,7 @@ export default function AdminFaqs() {
 
   function startEdit(f) {
     setEditing(f._id);
-    setForm({ question: f.question, answer: f.answer, group: f.group, showOnHome: f.showOnHome });
+    setForm({ question: f.question, answer: f.answer, questionUr: f.questionUr || '', answerUr: f.answerUr || '', group: f.group, showOnHome: f.showOnHome });
     document.getElementById('faq-question')?.focus();
   }
 
@@ -120,6 +120,19 @@ export default function AdminFaqs() {
                 <label className="form-label" htmlFor="faq-answer">Answer</label>
                 <textarea id="faq-answer" className="form-control" rows={6} required maxLength={1500} value={form.answer} onChange={(e) => setForm({ ...form, answer: e.target.value })} />
                 <div className="form-text">Leave an empty line between paragraphs. Lines starting with 1., 2., 3. become a numbered list.</div>
+              </div>
+              <div>
+                <label className="form-label" htmlFor="faq-question-ur">
+                  Question in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+                </label>
+                <input id="faq-question-ur" className="form-control" dir="rtl" lang="ur" maxLength={300} value={form.questionUr} onChange={(e) => setForm({ ...form, questionUr: e.target.value })} placeholder="ادائیگی کیسے کروں؟" />
+              </div>
+              <div>
+                <label className="form-label" htmlFor="faq-answer-ur">
+                  Answer in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+                </label>
+                <textarea id="faq-answer-ur" className="form-control" dir="rtl" lang="ur" rows={5} maxLength={2500} value={form.answerUr} onChange={(e) => setForm({ ...form, answerUr: e.target.value })} />
+                <div className="form-text">Shown when a visitor switches the site to Urdu. Leave empty to show the English text.</div>
               </div>
               <div>
                 <label className="form-label" htmlFor="faq-group">Topic</label>

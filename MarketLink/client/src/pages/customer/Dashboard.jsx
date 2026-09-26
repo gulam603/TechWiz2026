@@ -11,7 +11,7 @@ import { PageLoader } from '../../components/common/Loader';
 import { moneyCompact, timeAgo } from '../../utils/format';
 import { NOTIF_ICONS } from '../../components/layout/NotificationBell';
 import RatingStars from '../../components/common/RatingStars';
-import { t } from '../../i18n';
+import { t, tServer } from '../../i18n';
 
 function greeting() {
   const h = new Date().getHours();
@@ -69,7 +69,7 @@ export default function CustomerDashboard() {
           <KpiCard variant="info" icon="bi-wallet2" label={t('Spent at markets')} value={moneyCompact(stats.totalSpent)} sub={t('paid at pickup')} />
         </div>
         <div className="col-6 col-xl-3">
-          <KpiCard variant="warn" icon="bi-heart" label={t('Favourites')} value={stats.favorites} sub={`${stats.favoriteFarmers ?? 0} farmers · ${stats.savedMarkets} saved markets`} />
+          <KpiCard variant="warn" icon="bi-heart" label={t('Favourites')} value={stats.favorites} sub={t('{farmers} farmers · {markets} saved markets', { farmers: stats.favoriteFarmers ?? 0, markets: stats.savedMarkets })} />
         </div>
       </div>
 
@@ -109,7 +109,7 @@ export default function CustomerDashboard() {
                     <i className={`bi ${NOTIF_ICONS[n.type] || 'bi-bell'}`} />
                   </span>
                   <span className="min-w-0">
-                    <strong className="d-block small text-truncate">{n.title}</strong>
+                    <strong className="d-block small text-truncate">{tServer(n.title)}</strong>
                     <span className="fs-7 text-muted-2">{timeAgo(n.createdAt)}</span>
                   </span>
                 </Link>
@@ -140,7 +140,7 @@ export default function CustomerDashboard() {
                 <span className="flex-grow-1 min-w-0">
                   <strong className="d-block small text-truncate">{f.stallName}</strong>
                   <span className="fs-7 text-muted-2 d-block text-truncate">
-                    <i className="bi bi-geo-alt" /> {f.city} · {t('{n} in stock', { n: f.inStock })}
+                    <i className="bi bi-geo-alt" /> {t(f.city)} · {t('{n} in stock', { n: f.inStock })}
                   </span>
                   <RatingStars value={f.ratingAvg} count={f.ratingCount} />
                 </span>

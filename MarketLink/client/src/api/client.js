@@ -1,11 +1,13 @@
 import { API_BASE } from '../config';
+import { t, tServer } from '../i18n';
 
 /** Error thrown for non-2xx responses. `status` and `details` come from the API. */
 export class ApiError extends Error {
-  constructor(message, status, details) {
+  constructor(message, status, details, original = message) {
     super(message);
     this.status = status;
     this.details = details;
+    this.original = original; // the server's own (English) text
   }
 }
 
@@ -23,10 +25,15 @@ async function request(method, path, body, { isForm = false, signal } = {}) {
     res = await fetch(`${API_BASE}${path}`, options);
   } catch (err) {
     if (err.name === 'AbortError') throw err;
-    throw new ApiError('Cannot reach the server. Please check your connection.', 0);
+    throw new ApiError(t('Cannot reach the server. Please check your connection.'), 0);
   }
   const data = res.status === 204 ? null : await res.json().catch(() => null);
-  if (!res.ok) throw new ApiError(data?.message || `Request failed (${res.status})`, res.status, data?.details);
+  // The server answers in English; known messages are shown in Urdu when the site is in Urdu
+  if (!res.ok) {
+    const message = data?.message || `Request failed (${res.status})`;
+    throw new ApiError(tServer(message), res.status, data?.details, message);
+  }
+  if (data && typeof data.message === 'string') data.message = tServer(data.message);
   return data;
 }
 

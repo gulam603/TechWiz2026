@@ -1,6 +1,12 @@
 import { CONTACT, TEAM_NAME } from '../../config';
+import { isUrdu } from '../../i18n';
+import { TERMS_SECTIONS_UR } from './terms.ur';
 
 export const TERMS_UPDATED = '24 September 2026';
+
+/** The date and sections in the language in use. */
+export const termsUpdated = () => (isUrdu() ? '24 ستمبر 2026' : TERMS_UPDATED);
+export const termsSections = () => (isUrdu() ? TERMS_SECTIONS_UR : TERMS_SECTIONS);
 
 /**
  * MarketLink Terms & Conditions (shown on /terms and in the sign-up dialog).

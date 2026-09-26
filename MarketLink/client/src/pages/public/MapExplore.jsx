@@ -85,7 +85,7 @@ export default function MapExplore() {
         <div className="explore-panel">
           <div className="p-3 border-bottom">
             <h1 className="h4 mb-3">{t('Explore the map')}</h1>
-            <SearchSelect size="sm" className="mb-2" value={activeCity} onChange={setCity} ariaLabel={t('City')} emptyLabel="All cities" disabled={Boolean(me)} options={cities.map((c) => ({ value: c, label: c }))} />
+            <SearchSelect size="sm" className="mb-2" value={activeCity} onChange={setCity} ariaLabel={t('City')} emptyLabel="All cities" disabled={Boolean(me)} options={cities.map((c) => ({ value: c, label: t(c) }))} />
             <div className="search-pill mb-2">
               <i className="bi bi-search" />
               <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Search markets or stalls')} aria-label={t('Search map')} />

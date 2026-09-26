@@ -9,7 +9,7 @@ import Pagination from '../../components/common/Pagination';
 import { PageLoader } from '../../components/common/Loader';
 import { formatDate, timeAgo } from '../../utils/format';
 import { NOTIF_ICONS as ICONS } from '../../components/layout/NotificationBell';
-import { t } from '../../i18n';
+import { t, tServer } from '../../i18n';
 
 
 /** In-app notifications (shared by customers, farmers and admins). */
@@ -57,8 +57,8 @@ export default function Notifications() {
                 <i className={`bi ${ICONS[n.type] || 'bi-bell'}`} />
               </span>
               <button type="button" className="btn p-0 text-start flex-grow-1 border-0" onClick={() => open(n)}>
-                <strong className="d-block small">{n.title}</strong>
-                <span className="d-block small text-muted-2">{n.message}</span>
+                <strong className="d-block small">{tServer(n.title)}</strong>
+                <span className="d-block small text-muted-2">{tServer(n.message)}</span>
                 <span className="fs-7 text-muted-2" title={formatDate(n.createdAt, { time: true })}>
                   {timeAgo(n.createdAt)}
                 </span>

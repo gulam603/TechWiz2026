@@ -45,7 +45,7 @@ export async function salesReport(req, res) {
 
   // Products (with category) sold in the period
   const productIds = [...new Set(sold.flatMap((o) => o.items.map((i) => String(i.product))))];
-  const productDocs = await Product.find({ _id: { $in: productIds } }).populate('category', 'name color').select('category name').lean();
+  const productDocs = await Product.find({ _id: { $in: productIds } }).populate('category', 'name nameUr slug color').select('category name').lean();
   const categoryOf = new Map(productDocs.map((p) => [String(p._id), p.category]));
 
   const byProduct = new Map();
@@ -89,14 +89,14 @@ export async function salesReport(req, res) {
 
     for (const i of o.items) {
       items += i.quantity;
-      const p = byProduct.get(String(i.product)) || { product: i.name, unit: i.unit, quantity: 0, revenue: 0, orders: 0 };
+      const p = byProduct.get(String(i.product)) || { product: i.name, productUr: i.nameUr, unit: i.unit, quantity: 0, revenue: 0, orders: 0 };
       p.quantity += i.quantity;
       p.revenue = round2(p.revenue + i.subtotal);
       p.orders += 1;
       byProduct.set(String(i.product), p);
       const cat = categoryOf.get(String(i.product));
       const ck = String(cat?._id || 'other');
-      const cr = byCategory.get(ck) || { category: cat?.name || 'Other', color: cat?.color, revenue: 0, quantity: 0 };
+      const cr = byCategory.get(ck) || { category: cat?.name || 'Other', categoryUr: cat?.nameUr, slug: cat?.slug, color: cat?.color, revenue: 0, quantity: 0 };
       cr.revenue = round2(cr.revenue + i.subtotal);
       cr.quantity += i.quantity;
       byCategory.set(ck, cr);
@@ -113,14 +113,16 @@ export async function salesReport(req, res) {
   const slots = [...bySlot.values()].sort((a, b) => a.hour.localeCompare(b.hour));
   const peakSlot = [...slots].sort((a, b) => b.orders - a.orders)[0];
 
-  // Short, plain-language insights for the top of the report
+  // Short, plain-language insights for the top of the report. `tpl` + `vars` let the site show them in Urdu too.
   const insights = [];
-  if (products[0]) insights.push({ icon: 'bi-trophy', text: `${products[0].product} is your best seller: ${products[0].quantity} ${products[0].unit} (${products[0].share}% of sales).` });
-  if (busiest?.orders) insights.push({ icon: 'bi-calendar-week', text: `${busiest.day} is your busiest pickup day with ${busiest.orders} completed orders.` });
-  if (peakSlot) insights.push({ icon: 'bi-clock', text: `Most customers pick up around ${peakSlot.hour}:00.` });
-  if (markets[0]) insights.push({ icon: 'bi-geo-alt', text: `${markets[0].market} brings the most sales (${markets.length > 1 ? `${round2((markets[0].revenue / revenue) * 100)}%` : 'all of them'}).` });
-  if (customers.length) insights.push({ icon: 'bi-arrow-repeat', text: `${repeat} of ${customers.length} customers came back more than once.` });
-  if (orders.length && cancelled.length) insights.push({ icon: 'bi-x-circle', text: `${round2((cancelled.length / orders.length) * 100)}% of pre-orders were cancelled or declined.` });
+  const say = (icon, tpl, vars) => insights.push({ icon, tpl, vars, text: tpl.replace(/\{(\w+)\}/g, (m, k) => vars[k]) });
+  if (products[0]) say('bi-trophy', '{product} is your best seller: {quantity} {unit} ({share}% of sales).', { product: products[0].product, productUr: products[0].productUr, quantity: products[0].quantity, unit: products[0].unit, share: products[0].share });
+  if (busiest?.orders) say('bi-calendar-week', '{day} is your busiest pickup day with {orders} completed orders.', { day: busiest.day, dayIndex: byWeekday.indexOf(busiest), orders: busiest.orders });
+  if (peakSlot) say('bi-clock', 'Most customers pick up around {hour}:00.', { hour: peakSlot.hour });
+  if (markets[0] && markets.length > 1) say('bi-geo-alt', '{market} brings the most sales ({share}%).', { market: markets[0].market, share: round2((markets[0].revenue / revenue) * 100) });
+  else if (markets[0]) say('bi-geo-alt', '{market} brings all of your sales.', { market: markets[0].market });
+  if (customers.length) say('bi-arrow-repeat', '{repeat} of {total} customers came back more than once.', { repeat, total: customers.length });
+  if (orders.length && cancelled.length) say('bi-x-circle', '{rate}% of pre-orders were cancelled or declined.', { rate: round2((cancelled.length / orders.length) * 100) });
 
   res.json({
     period: { from: dayKey(from), to: dayKey(to) },

@@ -10,7 +10,7 @@ import { t } from '../../i18n';
 
 const GROUP_ICONS = { shopping: 'bi-basket2', pickup: 'bi-geo-alt', farmers: 'bi-shop', account: 'bi-person-lock' };
 
-const matches = (f, q) => !q || `${f.question} ${f.answer}`.toLowerCase().includes(q);
+const matches = (f, q) => !q || `${f.question} ${f.answer} ${f.questionUr || ''} ${f.answerUr || ''}`.toLowerCase().includes(q);
 
 export default function Faq() {
   const { data, loading, error } = useFetch('/faqs');
@@ -28,7 +28,7 @@ export default function Faq() {
     title: t('Frequently asked questions'),
     description: t('Answers about pre-ordering from local farmers on MarketLink: how ordering works, pickup at the market, paying the farmer in cash, changing an order and selling as a farmer.'),
     keywords: [t('MarketLink FAQ'), t('how to pre-order vegetables'), t('farmers market pickup'), t('pay at pickup'), t('sell produce online Pakistan')],
-    jsonLd: ldGraph(faqLd(faqs), breadcrumbLd([{ name: 'FAQs', path: '/faq' }])),
+    jsonLd: ldGraph(faqLd(faqs), breadcrumbLd([{ name: t('FAQs'), path: '/faq' }])),
   });
 
   return (
@@ -54,7 +54,7 @@ export default function Faq() {
           </button>
           {Object.entries(groups).map(([key, label]) => (
             <button key={key} type="button" className={`chip chip-btn ${group === key ? 'active' : ''}`} aria-pressed={group === key} onClick={() => setGroup(key)}>
-              <i className={`bi ${GROUP_ICONS[key] || 'bi-question-circle'}`} aria-hidden="true" /> {label}
+              <i className={`bi ${GROUP_ICONS[key] || 'bi-question-circle'}`} aria-hidden="true" /> {t(label)}
             </button>
           ))}
         </div>

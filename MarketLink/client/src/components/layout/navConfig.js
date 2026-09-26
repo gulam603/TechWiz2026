@@ -37,3 +37,6 @@ export const MENUS = {
  */
 export const canSell = (user) => user?.role !== 'farmer' || user.status === 'active';
 export const visibleItems = (items, user) => (canSell(user) ? items : items.filter((i) => !i.approved));
+
+// Role names shown on the account chip (translated where they are drawn)
+export const ROLE_LABEL = { customer: 'Customer', farmer: 'Farmer', admin: 'Admin' };

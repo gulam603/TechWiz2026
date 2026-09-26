@@ -117,7 +117,7 @@ function GuestDetails({ onCreated }) {
           </div>
           <div className="col-sm-4">
             <label className="form-label" htmlFor="g-city">{t('City')}</label>
-            <SearchSelect id="g-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose…')} options={(cityData?.cities || []).map((c) => ({ value: c.name, label: c.name, hint: c.province }))} />
+            <SearchSelect id="g-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose…')} options={(cityData?.cities || []).map((c) => ({ value: c.name, label: t(c.name), hint: t(c.province) }))} />
           </div>
           <div className="col-12">
             <TermsCheckbox id="g-terms" checked={form.acceptTerms} onChange={(v) => setForm((f) => ({ ...f, acceptTerms: v }))} />

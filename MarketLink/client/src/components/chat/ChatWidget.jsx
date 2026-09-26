@@ -2,7 +2,7 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
-import { t } from '../../i18n';
+import { getLang, t, tServer } from '../../i18n';
 
 const WELCOME = {
   from: 'bot',
@@ -114,7 +114,7 @@ export default function ChatWidget() {
     setChat((c) => ({ ...c, messages: [...c.messages, { from: 'me', text: message }] }));
     setTyping(true);
     try {
-      const res = await api.post('/assistant', { message, memory: user ? undefined : memory });
+      const res = await api.post('/assistant', { message, memory: user ? undefined : memory, lang: getLang() });
       setChat((c) => ({
         messages: [...c.messages, { from: 'bot', text: res.reply, cards: res.cards, suggestions: res.suggestions }].slice(-HISTORY_LIMIT),
         memory: res.memory || c.memory,
@@ -140,7 +140,7 @@ export default function ChatWidget() {
     setChat({ messages: [], memory: {} });
   }
 
-  const shown = [WELCOME, ...messages];
+  const shown = [{ ...WELCOME, text: t(WELCOME.text) }, ...messages];
   const last = shown[shown.length - 1];
   const chips = memoryChips(memory);
 
@@ -235,7 +235,7 @@ export default function ChatWidget() {
               <div className="suggestions">
                 {last.suggestions.map((s) => (
                   <button type="button" key={s} onClick={() => send(s)}>
-                    {s}
+                    {tServer(s)}
                   </button>
                 ))}
               </div>

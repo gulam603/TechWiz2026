@@ -8,7 +8,7 @@ import EmptyState from '../../components/common/EmptyState';
 import { PageHero } from '../../components/common/PageHeader';
 import { money } from '../../utils/format';
 import { productPath } from '../../utils/links';
-import { productName, t } from '../../i18n';
+import { productName, t, unitName } from '../../i18n';
 
 export default function Cart() {
   useDocumentTitle(t('Your basket'));
@@ -30,7 +30,7 @@ export default function Cart() {
 
   return (
     <>
-      <PageHero crumbs={[{ label: t('Basket') }]} title={t('Your basket')} subtitle={`${cart.count} item${cart.count === 1 ? '' : 's'} from ${cart.groups.length} farmer${cart.groups.length === 1 ? '' : 's'}. Each farmer gets its own pickup slot.`} />
+      <PageHero crumbs={[{ label: t('Basket') }]} title={t('Your basket')} subtitle={t('{items} from {farmers}. Each farmer gets its own pickup slot.', { items: cart.count === 1 ? t('1 item') : t('{n} items', { n: cart.count }), farmers: cart.groups.length === 1 ? t('1 farmer') : t('{n} farmers', { n: cart.groups.length }) })} />
       <div className="container pb-5">
         <div className="row g-4">
           <div className="col-lg-8 d-grid gap-3">
@@ -56,7 +56,7 @@ export default function Cart() {
                         {productName(item)}
                       </Link>
                       <span className="small text-muted-2">
-                        {money(item.price)} / {item.unit}
+                        {money(item.price)} / {unitName(item.unit)}
                       </span>
                     </div>
                     <QuantityStepper value={item.quantity} max={item.maxQty || 999} onChange={(q) => cart.update(item.productId, q)} />

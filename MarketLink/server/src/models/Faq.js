@@ -14,6 +14,9 @@ const faqSchema = new mongoose.Schema(
     question: { type: String, required: [true, 'Question is required'], trim: true, maxlength: 200 },
     // Plain text; a blank line starts a new paragraph. The first sentence is a short, direct answer.
     answer: { type: String, required: [true, 'Answer is required'], trim: true, maxlength: 1500 },
+    // The same question and answer in Urdu (optional; the English text is shown when empty)
+    questionUr: { type: String, trim: true, maxlength: 300 },
+    answerUr: { type: String, trim: true, maxlength: 2500 },
     group: { type: String, enum: Object.keys(FAQ_GROUPS), default: 'shopping' },
     order: { type: Number, default: 0 },
     showOnHome: { type: Boolean, default: false },

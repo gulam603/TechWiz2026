@@ -107,7 +107,7 @@ export default function RegisterFarmer() {
     } catch (err) {
       setError(err.message);
       // Account problems (e.g. e-mail already used) are fixed on the first step
-      if (/e-mail|password|contact|phone/i.test(err.message)) setStep(0);
+      if (/e-mail|password|contact|phone/i.test(err.original || err.message)) setStep(0);
     } finally {
       setBusy(false);
     }
@@ -125,7 +125,7 @@ export default function RegisterFarmer() {
         {STEPS.map((label, i) => (
           <div key={label} className={`wstep ${i === step ? 'current' : ''} ${i < step ? 'done' : ''}`} aria-current={i === step ? 'step' : undefined}>
             <span className="n">{i < step ? <i className="bi bi-check-lg" /> : i + 1}</span>
-            <span className="d-none d-sm-inline">{label}</span>
+            <span className="d-none d-sm-inline">{t(label)}</span>
           </div>
         ))}
       </div>
@@ -172,7 +172,7 @@ export default function RegisterFarmer() {
             </div>
             <div className="col-md-4">
               <label className="form-label" htmlFor="f-city">{t('City *')}</label>
-              <SearchSelect id="f-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose a city')} options={cities.map((c) => ({ value: c, label: c }))} />
+              <SearchSelect id="f-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose a city')} options={cities.map((c) => ({ value: c, label: t(c) }))} />
             </div>
             <div className="col-12">
               <label className="form-label" htmlFor="f-bio">{t('About your farm')}</label>
@@ -207,7 +207,7 @@ export default function RegisterFarmer() {
               <div className="d-flex flex-wrap gap-2 mb-2">
                 {[...PRACTICES, ...form.tags.filter((tx) => !PRACTICES.includes(tx))].map((p) => (
                   <button type="button" key={p} className={`filter-chip ${form.tags.includes(p) ? 'active' : ''}`} onClick={() => toggle('tags', p)} aria-pressed={form.tags.includes(p)}>
-                    {p}
+                    {t(p)}
                   </button>
                 ))}
               </div>
@@ -244,7 +244,7 @@ export default function RegisterFarmer() {
                       <span className="flex-grow-1 min-w-0">
                         <strong className="d-block small">{m.name}</strong>
                         <span className="fs-7 text-muted-2">
-                          {m.city} · {time12(m.openTime)} {t('to')} {time12(m.closeTime)}
+                          {t(m.city)} · {time12(m.openTime)} {t('to')} {time12(m.closeTime)}
                         </span>
                       </span>
                       <span className="d-none d-md-inline-flex">

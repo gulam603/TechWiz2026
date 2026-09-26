@@ -12,7 +12,7 @@ import DataGrid from '../../components/admin/DataGrid';
 import FilterBar from '../../components/admin/FilterBar';
 import { action, dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { money, moneyCompact } from '../../utils/format';
-import { productName, t, unitName } from '../../i18n';
+import { categoryName, productName, t, tServer, unitName } from '../../i18n';
 
 const STATE = {
   ok: ['In stock', 's-available'],
@@ -36,25 +36,25 @@ const TYPE_LABEL = {
 };
 
 const iconAction = (name, label, icon) => `<button type="button" class="btn btn-sm btn-white btn-icon" data-action="${name}" aria-label="${label}" title="${label}"><i class="bi ${icon}"></i></button>`;
-const stateBadge = (s) => `<span class="status-badge ${STATE[s][1]}"><span class="dot"></span>${STATE[s][0]}</span>`;
+const stateBadge = (s) => `<span class="status-badge ${STATE[s][1]}"><span class="dot"></span>${t(STATE[s][0])}</span>`;
 
 const COLUMNS = [
   {
     data: 'name',
     title: 'Product',
     responsivePriority: 1,
-    render: display((v, p) => `<div class="d-flex align-items-center gap-2"><span class="thumb-sm" style="background:${esc(p.category?.color || '#f1ebdd')}"><img src="${esc(p.image || '')}" alt=""></span><div class="min-w-0"><strong class="small d-block">${esc(v)}</strong>${muted(p.category?.name || '')}</div></div>`),
+    render: display((v, p) => `<div class="d-flex align-items-center gap-2"><span class="thumb-sm" style="background:${esc(p.category?.color || '#f1ebdd')}"><img src="${esc(p.image || '')}" alt=""></span><div class="min-w-0"><strong class="small d-block">${esc(productName(p))}</strong>${muted(categoryName(p.category))}</div></div>`),
   },
   {
     data: 'quantityAvailable',
     title: 'In stock',
     className: 'text-end',
     responsivePriority: 2,
-    render: display((v, p) => `<strong class="${p.state === 'low' || p.state === 'out' ? 'text-danger' : ''}">${esc(v)}</strong> <span class="fs-7 text-muted-2">${esc(p.unit)}</span>`),
+    render: display((v, p) => `<strong class="${p.state === 'low' || p.state === 'out' ? 'text-danger' : ''}">${esc(v)}</strong> <span class="fs-7 text-muted-2">${esc(unitName(p.unit))}</span>`),
   },
-  { data: 'reserved', title: 'Reserved', className: 'text-end', render: display((v, p) => (v ? `${esc(v)} <span class="fs-7 text-muted-2">${esc(p.unit)}</span>` : '<span class="text-muted-2">-</span>')) },
-  { data: 'lowStockThreshold', title: 'Alert at', className: 'text-end', render: display((v, p) => `${esc(v)} <span class="fs-7 text-muted-2">${esc(p.unit)}</span>`) },
-  { data: 'state', title: 'Status', responsivePriority: 3, render: display((v) => stateBadge(v), (v) => STATE[v][0]) },
+  { data: 'reserved', title: 'Reserved', className: 'text-end', render: display((v, p) => (v ? `${esc(v)} <span class="fs-7 text-muted-2">${esc(unitName(p.unit))}</span>` : '<span class="text-muted-2">-</span>')) },
+  { data: 'lowStockThreshold', title: 'Alert at', className: 'text-end', render: display((v, p) => `${esc(v)} <span class="fs-7 text-muted-2">${esc(unitName(p.unit))}</span>`) },
+  { data: 'state', title: 'Status', responsivePriority: 3, render: display((v) => stateBadge(v), (v) => t(STATE[v][0])) },
   { data: 'totalSold', title: 'Sold', className: 'text-end' },
   { data: 'value', title: 'Stock value', className: 'text-end', render: display(moneyCell) },
   { data: 'lastMovementAt', title: 'Last change', render: display((v) => dateCell(v, true)) },
@@ -70,12 +70,12 @@ const COLUMNS = [
 
 const LOG_COLUMNS = [
   { data: 'createdAt', title: 'When', render: display((v) => dateCell(v, true)) },
-  { data: 'productName', title: 'Product', render: display((v) => `<strong class="small">${esc(v)}</strong>`) },
-  { data: 'change', title: 'Change', className: 'text-end', render: display((v, m) => `<strong class="${v > 0 ? 'text-success' : 'text-danger'}">${v > 0 ? '+' : ''}${esc(v)}</strong> <span class="fs-7 text-muted-2">${esc(m.unit || '')}</span>`) },
+  { data: 'productName', title: 'Product', render: display((v, m) => `<strong class="small">${esc(productName({ name: v, nameUr: m.productNameUr }))}</strong>`) },
+  { data: 'change', title: 'Change', className: 'text-end', render: display((v, m) => `<strong class="${v > 0 ? 'text-success' : 'text-danger'}">${v > 0 ? '+' : ''}${esc(v)}</strong> <span class="fs-7 text-muted-2">${esc(unitName(m.unit) || '')}</span>`) },
   { data: 'quantityAfter', title: 'Stock after', className: 'text-end' },
-  { data: 'type', title: 'Type', render: display((v) => `<span class="chip chip-soft">${esc(TYPE_LABEL[v] || v)}</span>`, (v) => TYPE_LABEL[v] || v) },
-  { data: 'reason', title: 'Details', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc(v || '-')}</span>`) },
-  { data: 'by', title: 'By', render: display((v) => `<span class="small text-capitalize">${esc(v)}</span>`) },
+  { data: 'type', title: 'Type', render: display((v) => `<span class="chip chip-soft">${esc(t(TYPE_LABEL[v] || v))}</span>`, (v) => t(TYPE_LABEL[v] || v)) },
+  { data: 'reason', title: 'Details', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc(v ? tServer(v) : '-')}</span>`) },
+  { data: 'by', title: 'By', render: display((v) => `<span class="small text-capitalize">${esc(t(v))}</span>`) },
 ];
 
 function AdjustModal({ product, reasons, onClose, onSaved }) {
@@ -139,7 +139,7 @@ function AdjustModal({ product, reasons, onClose, onSaved }) {
         <div className="row g-2">
           <div className="col-5">
             <label className="form-label" htmlFor="adj-qty">
-              {mode === 'set' ? t('New count') : t('Quantity')} ({product.unit})
+              {mode === 'set' ? t('New count') : t('Quantity')} ({unitName(product.unit)})
             </label>
             <input id="adj-qty" type="number" min="0" step="1" className="form-control" required value={quantity} onChange={(e) => setQuantity(e.target.value)} autoFocus />
           </div>
@@ -161,11 +161,11 @@ function AdjustModal({ product, reasons, onClose, onSaved }) {
         <div className={`stock-preview ${after < 0 ? 'is-bad' : after <= product.lowStockThreshold ? 'is-low' : ''}`}>
           <span>{t('Now')}</span>
           <strong>
-            {product.quantityAvailable} {product.unit}
+            {product.quantityAvailable} {unitName(product.unit)}
           </strong>
           <i className="bi bi-arrow-right" aria-hidden="true" />
           <span>{t('After')}</span>
-          <strong>{after < 0 ? t('not enough stock') : `${after} ${product.unit}`}</strong>
+          <strong>{after < 0 ? t('not enough stock') : `${after} ${unitName(product.unit)}`}</strong>
           {after >= 0 && after <= product.lowStockThreshold && <span className="chip chip-warn ms-auto">{t('at alert level')}</span>}
         </div>
         {product.reserved > 0 && (
@@ -298,7 +298,7 @@ export default function FarmerInventory() {
             <strong>
               {lowOnes.length === 1 ? t('1 product is at or below the alert level') : t('{n} products are at or below the alert level', { n: lowOnes.length })}
             </strong>
-            <div className="small text-muted-2">{lowOnes.map((p) => `${p.name} (${p.quantityAvailable} ${p.unit})`).join(' · ')}</div>
+            <div className="small text-muted-2">{lowOnes.map((p) => `${productName(p)} (${p.quantityAvailable} ${unitName(p.unit)})`).join(' · ')}</div>
           </div>
           <button type="button" className="btn btn-forest btn-sm" onClick={() => setAdjusting(lowOnes[0])}>
             {t('Restock {name}', { name: productName(lowOnes[0]) })}

@@ -7,6 +7,8 @@ import { useAuth } from '../../context/AuthContext';
 import { LINKS, MENUS, visibleItems } from './navConfig';
 import Avatar from '../common/Avatar';
 import { t } from '../../i18n';
+import { ROLE_LABEL } from './navConfig';
+import { LanguageSwitch } from '../../i18n/LanguageProvider';
 
 /**
  * Slide-in menu for phones and tablets. It is rendered into <body> (outside the sticky header)
@@ -51,6 +53,7 @@ export default function MobileMenu({ open, onClose }) {
 
         <div className="mobile-menu-body">
           <GlobalSearch className="mb-3" />
+          <LanguageSwitch className="lang-switch-block mb-3" />
 
           {user && (
             <div className="mobile-menu-user">
@@ -59,7 +62,7 @@ export default function MobileMenu({ open, onClose }) {
                 <strong className="d-block text-truncate">{user.name}</strong>
                 <span className="fs-7 text-muted-2 text-truncate d-block">{user.email}</span>
               </div>
-              <span className="chip chip-soft text-capitalize ms-auto">{user.role}</span>
+              <span className="chip chip-soft text-capitalize ms-auto">{t(ROLE_LABEL[user.role] || user.role)}</span>
             </div>
           )}
 

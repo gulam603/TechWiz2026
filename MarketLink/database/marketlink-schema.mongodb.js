@@ -168,7 +168,7 @@ createCollection(
   {
     bsonType: 'object',
     required: ['name', 'slug'],
-    properties: { name: str(60), slug: str(), description: str(300), icon: str(), color: str(), sortOrder: num(), isActive: bool, createdAt: date, updatedAt: date },
+    properties: { name: str(60), nameUr: str(60), slug: str(), description: str(300), icon: str(), color: str(), sortOrder: num(), isActive: bool, createdAt: date, updatedAt: date },
   },
   [[{ name: 1 }, { unique: true }], [{ slug: 1 }, { unique: true }]]
 );
@@ -256,7 +256,7 @@ createCollection(
         items: {
           bsonType: 'object',
           required: ['product', 'name', 'price', 'quantity', 'subtotal'],
-          properties: { product: objectId, name: str(), image: str(), unit: str(), price: num(0), quantity: num(1), subtotal: num(0) },
+          properties: { product: objectId, name: str(), nameUr: str(), image: str(), unit: str(), price: num(0), quantity: num(1), subtotal: num(0) },
         },
       },
       totalAmount: num(0),
@@ -335,6 +335,8 @@ createCollection(
     properties: {
       title: str(120),
       message: str(1000),
+      titleUr: str(160), // the notice in Urdu (optional)
+      messageUr: str(1200),
       audience: { enum: ['all', 'customer', 'farmer'] },
       months: { bsonType: 'array', items: int(1, 12) }, // empty = all year; otherwise shown only in these months
       link: str(200),
@@ -395,6 +397,8 @@ createCollection(
     properties: {
       question: str(200),
       answer: str(1500),
+      questionUr: str(300), // the question and answer in Urdu (optional)
+      answerUr: str(2500),
       group: { enum: ['shopping', 'pickup', 'farmers', 'account'] },
       order: num(),
       showOnHome: bool,

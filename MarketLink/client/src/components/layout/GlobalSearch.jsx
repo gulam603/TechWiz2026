@@ -5,7 +5,7 @@ import useClickOutside from '../../hooks/useClickOutside';
 import useFetch from '../../hooks/useFetch';
 import { money } from '../../utils/format';
 import { productPath } from '../../utils/links';
-import { productName, t } from '../../i18n';
+import { categoryName, productName, t } from '../../i18n';
 
 /**
  * Instant search across products, farmers and markets (debounced).
@@ -20,7 +20,8 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
   const navigate = useNavigate();
   const cats = useFetch(withCategory ? '/categories' : null);
   const categories = cats.data?.categories || [];
-  const categoryName = categories.find((c) => c.slug === category)?.name;
+  const chosen = categories.find((c) => c.slug === category);
+  const catLabel = chosen ? categoryName(chosen) : '';
   useClickOutside(ref, () => setOpen(false), open);
 
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
               <option value="">{t('All categories')}</option>
               {categories.map((c) => (
                 <option key={c._id} value={c.slug}>
-                  {c.name}
+                  {categoryName(c)}
                 </option>
               ))}
             </select>
@@ -80,7 +81,7 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
             if (e.target.value.trim().length < 2) setResults(null);
           }}
           onFocus={() => results && setOpen(true)}
-          placeholder={categoryName ? t('Search in {categoryName}…', { categoryName }) : placeholder}
+          placeholder={catLabel ? t('Search in {categoryName}…', { categoryName: catLabel }) : placeholder}
           id={inputId}
           aria-label={inputId ? undefined : t('Search')}
           autoFocus={autoFocus}
@@ -93,10 +94,10 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
         <div className="search-results">
           {total === 0 && (
             <div className="text-muted-2 small p-3 text-center">
-              {categoryName ? t('No matches for “{q}” in {category}.', { q, category: categoryName }) : t('No matches for “{q}”.', { q })}
+              {catLabel ? t('No matches for “{q}” in {category}.', { q, category: catLabel }) : t('No matches for “{q}”.', { q })}
             </div>
           )}
-          {results.products.length > 0 && <div className="search-group-title">{categoryName ? t('Products in {category}', { category: categoryName }) : t('Products')}</div>}
+          {results.products.length > 0 && <div className="search-group-title">{catLabel ? t('Products in {category}', { category: catLabel }) : t('Products')}</div>}
           {results.products.map((p) => (
             <Link key={p._id} to={productPath(p)} className="search-hit" onClick={close}>
               <img src={p.image} alt="" />
@@ -128,7 +129,7 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
             <button type="button" className="search-see-all" onClick={submit}>
               <span>
                 {t('See all products for')} <strong>“{q.trim()}”</strong>
-                {categoryName ? ` ${t('in {category}', { category: categoryName })}` : ''} </span>
+                {catLabel ? ` ${t('in {category}', { category: catLabel })}` : ''} </span>
               <i className="bi bi-arrow-right" aria-hidden="true" />
             </button>
           )}

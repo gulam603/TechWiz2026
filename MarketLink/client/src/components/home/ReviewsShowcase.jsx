@@ -5,7 +5,7 @@ import Avatar from '../common/Avatar';
 import VerifiedBadge from '../reviews/VerifiedBadge';
 import { formatDate } from '../../utils/format';
 import { productPath } from '../../utils/links';
-import { t } from '../../i18n';
+import { productName, t } from '../../i18n';
 
 function Bars({ stars, count }) {
   return (
@@ -45,7 +45,7 @@ function ReviewCard({ review, copy = false }) {
         <Link to={product ? productPath(product) : `/farmers/${farmer.slug}`} className="rs-product" tabIndex={copy ? -1 : undefined}>
           <img src={product?.image || farmer?.logo} alt="" loading="lazy" />
           <span className="min-w-0">
-            <strong className="d-block text-truncate">{product?.name || farmer?.stallName}</strong>
+            <strong className="d-block text-truncate">{product ? productName(product) : farmer?.stallName}</strong>
             {product && farmer && <span className="d-block text-truncate">{t('from {name}', { name: farmer.stallName })}</span>}
           </span>
         </Link>
@@ -55,7 +55,7 @@ function ReviewCard({ review, copy = false }) {
         <span className="min-w-0">
           <strong className="d-block text-truncate">{customer?.name || t('MarketLink customer')}</strong>
           <span className="rs-meta">
-            {customer?.city && `${customer.city} · `}
+            {customer?.city && `${t(customer.city)} · `}
             <time dateTime={String(review.createdAt).slice(0, 10)}>{formatDate(review.createdAt)}</time>
           </span>
         </span>

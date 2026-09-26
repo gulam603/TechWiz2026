@@ -54,7 +54,7 @@ export function ChartCard({ title, subtitle, table, children, actions }) {
             <thead>
               <tr>
                 {table.columns.map((c) => (
-                  <th key={c}>{c}</th>
+                  <th key={c}>{t(c)}</th>
                 ))}
               </tr>
             </thead>
@@ -95,7 +95,7 @@ export function TrendChart({ data, yKey, name, valueFormatter = compactNumber, h
         <Area
           type="monotone"
           dataKey={yKey}
-          name={name}
+          name={t(name)}
           stroke={SERIES}
           strokeWidth={2}
           fill={`url(#${gradientId})`}
@@ -116,7 +116,7 @@ export function ColumnChart({ data, xKey = 'date', yKey, name, valueFormatter = 
         <XAxis dataKey={xKey} tickFormatter={dateAxis ? shortDate : undefined} tick={AXIS_TEXT} axisLine={{ stroke: GRID }} tickLine={false} minTickGap={16} />
         <YAxis tick={AXIS_TEXT} axisLine={false} tickLine={false} width={36} allowDecimals={false} />
         <Tooltip content={<ChartTooltip valueFormatter={valueFormatter} labelFormatter={dateAxis ? shortDate : undefined} />} cursor={{ fill: 'rgba(212,240,110,.25)' }} />
-        <Bar dataKey={yKey} name={name} fill={SERIES} maxBarSize={24} radius={[4, 4, 0, 0]} />
+        <Bar dataKey={yKey} name={t(name)} fill={SERIES} maxBarSize={24} radius={[4, 4, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -131,7 +131,7 @@ export function BarList({ data, labelKey, valueKey, name, valueFormatter = (v) =
         <XAxis type="number" hide />
         <YAxis type="category" dataKey={labelKey} tick={{ ...AXIS_TEXT, fill: '#16211c' }} axisLine={false} tickLine={false} width={140} />
         <Tooltip content={<ChartTooltip valueFormatter={valueFormatter} />} cursor={{ fill: 'rgba(212,240,110,.2)' }} />
-        <Bar dataKey={valueKey} name={name} fill={SERIES} barSize={18} radius={[0, 4, 4, 0]}>
+        <Bar dataKey={valueKey} name={t(name)} fill={SERIES} barSize={18} radius={[0, 4, 4, 0]}>
           <LabelList dataKey={valueKey} position="right" formatter={valueFormatter} style={{ fill: '#16211c', fontSize: 12, fontWeight: 600 }} />
         </Bar>
       </BarChart>

@@ -19,7 +19,7 @@ import { DAY_NAMES, nextOccurrence, time12 } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 import useSeo from '../../hooks/useSeo';
 import { homeLd } from '../../utils/seo';
-import { t } from '../../i18n';
+import { categoryName, t } from '../../i18n';
 
 /** Finds the market that opens soonest (today counts if it has not closed yet). */
 function useNextMarket(markets) {
@@ -68,7 +68,7 @@ function SearchCard({ stats, next, categories }) {
                   : categories.slice(0, 6).map((c) => (
                       <Link key={c._id} to={`/products?category=${c.slug}`} style={{ '--chip-bg': c.color }}>
                         <img src={c.icon} alt="" />
-                        {c.name}
+                        {categoryName(c)}
                       </Link>
                     ))}
               </div>
@@ -151,7 +151,7 @@ export default function Home() {
               ? categories.map((c) => (
                   <Link key={c._id} to={`/products?category=${c.slug}`} className="category-tile" style={{ '--tile-bg': c.color }}>
                     <img src={c.icon} alt="" />
-                    <strong>{c.name}</strong>
+                    <strong>{categoryName(c)}</strong>
                     <span>{c.productCount} {t('items')}</span>
                   </Link>
                 ))
@@ -237,7 +237,7 @@ export default function Home() {
                   type: 'market',
                   image: m.image,
                   title: m.name,
-                  subtitle: `${time12(m.openTime)} to ${time12(m.closeTime)}`,
+                  subtitle: t('{from} to {to}', { from: time12(m.openTime), to: time12(m.closeTime) }),
                   link: `/markets/${m.slug}`,
                 }))}
               />

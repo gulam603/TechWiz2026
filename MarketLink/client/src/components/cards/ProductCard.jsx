@@ -8,7 +8,7 @@ import ProduceImage from '../common/ProduceImage';
 import RatingStars from '../common/RatingStars';
 import FavButton from '../common/FavButton';
 import { productPath } from '../../utils/links';
-import { productName, t } from '../../i18n';
+import { categoryName, productName, t, unitName } from '../../i18n';
 
 const QuickViewModal = lazy(() => import('../product/QuickViewModal'));
 
@@ -44,7 +44,7 @@ export default function ProductCard({ product }) {
         </button>
       </div>
       <div className="product-body">
-        <span className="product-cat">{product.category?.name}</span>
+        <span className="product-cat">{categoryName(product.category)}</span>
         <h3 className="product-name">
           <Link to={productPath(product)}>{productName(product)}</Link>
         </h3>
@@ -61,7 +61,7 @@ export default function ProductCard({ product }) {
         <div className="product-footer">
           <div className="price">
             {money(product.price)}
-            <span className="unit">/ {product.unit}</span>
+            <span className="unit">/ {unitName(product.unit)}</span>
           </div>
           <button type="button" className="add-btn" onClick={openAdd} disabled={soldOut} aria-haspopup="dialog" aria-label={inCart ? t('Add {name} to basket ({n} already in it)', { name: productName(product), n: inCart.quantity }) : t('Add {name} to basket', { name: productName(product) })} title={t('Choose how many and add to basket')}>
             <i className="bi bi-basket2" aria-hidden="true" />

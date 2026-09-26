@@ -12,7 +12,7 @@ import QuantityStepper from '../common/QuantityStepper';
 import FavButton from '../common/FavButton';
 import { DAY_SHORT, money } from '../../utils/format';
 import { productPath } from '../../utils/links';
-import { categoryName, listText, productName, t, unitName } from '../../i18n';
+import { categoryName, listText, localText, productName, t, unitName } from '../../i18n';
 
 /**
  * Product details in a dialog, opened by a product card's "Quick view" or "Add" button: photos,
@@ -68,7 +68,7 @@ export default function QuickViewModal({ product: summary, onClose, focusAdd = f
           <div className="price mb-2" style={{ fontSize: '1.6rem' }}>
             {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span>
           </div>
-          {product.description && <p className="small text-muted-2 quickview-desc">{product.description}</p>}
+          {localText(product, 'description') && <p className="small text-muted-2 quickview-desc">{localText(product, 'description')}</p>}
           {product.farmer?.slug && (
             <Link to={`/farmers/${product.farmer.slug}`} className="farmer-mini mb-3" onClick={onClose}>
               <span className="logo">{product.farmer.logo ? <img src={product.farmer.logo} alt="" /> : <i className="bi bi-shop" aria-hidden="true" />}</span>

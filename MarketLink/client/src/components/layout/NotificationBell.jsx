@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../api/client';
 import useClickOutside from '../../hooks/useClickOutside';
 import { timeAgo } from '../../utils/format';
-import { t } from '../../i18n';
+import { t, tServer } from '../../i18n';
 
 export const NOTIF_ICONS = { order: 'bi-bag-check', restock: 'bi-arrow-repeat', stock: 'bi-box-seam', announcement: 'bi-megaphone', review: 'bi-star', account: 'bi-person-check', moderation: 'bi-flag', system: 'bi-info-circle' };
 
@@ -76,8 +76,8 @@ export default function NotificationBell({ allLink }) {
                 <i className={`bi ${NOTIF_ICONS[n.type] || 'bi-bell'}`} />
               </span>
               <span className="min-w-0">
-                <strong className="d-block small">{n.title}</strong>
-                <span className="d-block fs-7 text-muted-2">{n.message}</span>
+                <strong className="d-block small">{tServer(n.title)}</strong>
+                <span className="d-block fs-7 text-muted-2">{tServer(n.message)}</span>
                 <span className="fs-7 text-muted-2">{timeAgo(n.createdAt)}</span>
               </span>
             </button>

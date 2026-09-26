@@ -13,7 +13,7 @@ import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, itemListLd, ldGraph } from '../../utils/seo';
-import { t } from '../../i18n';
+import { categoryName, isUrdu, rich, t } from '../../i18n';
 
 const SORTS = [
   { value: 'popular', label: 'Most popular' },
@@ -58,14 +58,14 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
         </button>
         {categories.map((c) => (
           <button type="button" key={c._id} className={`cat-option ${category === c.slug ? 'active' : ''}`} onClick={() => set({ category: c.slug })}>
-            <img src={c.icon} alt="" /> {c.name}
+            <img src={c.icon} alt="" /> {categoryName(c)}
             <span className="n">{c.productCount}</span>
           </button>
         ))}
       </div>
 
       <div className="filter-title">{t('Location')}</div>
-      <SearchSelect className="mb-2" value={params.get('city') || ''} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={cities.map((c) => ({ value: c, label: c }))} />
+      <SearchSelect className="mb-2" value={params.get('city') || ''} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={cities.map((c) => ({ value: c, label: t(c) }))} />
       <SearchSelect
         value={params.get('market') || ''}
         onChange={(v) => set({ market: v })}
@@ -124,7 +124,7 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
       {practices.length > 0 && (
         <>
           <div className="filter-title">{t('Farming practice')}</div>
-          <SearchSelect value={params.get('practice') || ''} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={practices.map((p) => ({ value: p, label: p }))} />
+          <SearchSelect value={params.get('practice') || ''} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={practices.map((p) => ({ value: p, label: t(p) }))} />
         </>
       )}
 
@@ -185,7 +185,7 @@ export default function Products() {
       <PageHero
         crumbs={[{ label: t('Shop') }]}
         title={activeCategory ? activeCategory.name : t('Shop the market')}
-        subtitle={activeCategory?.description || t('Browse this week’s stock from every farmer. Filter by market, day and price, then pre-order for pickup.')}
+        subtitle={(activeCategory && (isUrdu() ? t('Fresh {v1} from local farmers. Pre-order and pick up at the market.', { v1: categoryName(activeCategory) }) : activeCategory.description)) || t('Browse this week’s stock from every farmer. Filter by market, day and price, then pre-order for pickup.')}
       />
       <div className="container pb-5">
         <div className="row g-4">
@@ -203,7 +203,7 @@ export default function Products() {
                   {params.get('search') && (
                     <>
                       {' '}
-                      {t('for “')}<strong>{params.get('search')}</strong>”
+                      {rich('for “<b>{q}</b>”', { q: params.get('search') })}
                     </>
                   )}
                 </span>

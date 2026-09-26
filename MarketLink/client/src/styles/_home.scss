@@ -869,6 +869,7 @@
   padding: 0.75rem 0 0.5rem;
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  /* rtl:ignore */
   direction: ltr; // the rows move the same way in both languages
 }
 
@@ -1597,6 +1598,7 @@ span.bone {
     font-size: 0.75rem;
     border-radius: 0.8rem;
     padding: 0.8rem 1rem;
+    /* rtl:ignore */
     direction: ltr;
     text-align: left;
   }

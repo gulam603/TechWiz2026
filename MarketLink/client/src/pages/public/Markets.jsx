@@ -12,7 +12,7 @@ import { useToast } from '../../context/ToastContext';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
-import { listText, t } from '../../i18n';
+import { categoryName, listText, t } from '../../i18n';
 
 export default function Markets() {
   const [filters, setFilters] = useState({ search: '', city: '', category: '', day: '' });
@@ -55,10 +55,10 @@ export default function Markets() {
               </div>
             </div>
             <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.city} onChange={(v) => setFilters({ ...filters, city: v })} ariaLabel={t('City')} emptyLabel="All cities" options={(data?.cities || []).map((c) => ({ value: c, label: c }))} />
+              <SearchSelect value={filters.city} onChange={(v) => setFilters({ ...filters, city: v })} ariaLabel={t('City')} emptyLabel="All cities" options={(data?.cities || []).map((c) => ({ value: c, label: t(c) }))} />
             </div>
             <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.category} onChange={(v) => setFilters({ ...filters, category: v })} ariaLabel={t('Category')} emptyLabel="All produce" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
+              <SearchSelect value={filters.category} onChange={(v) => setFilters({ ...filters, category: v })} ariaLabel={t('Category')} emptyLabel="All produce" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: categoryName(c) }))} />
             </div>
             <div className="col-4 col-lg-2">
               <SearchSelect value={filters.day} onChange={(v) => setFilters({ ...filters, day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />

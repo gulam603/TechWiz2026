@@ -15,7 +15,7 @@ import { coverFor, DAY_SHORT, formatDateKey, time12 } from '../../utils/format';
 import PhotoCredit from '../../components/common/PhotoCredit';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, farmerLd, ldGraph } from '../../utils/seo';
-import { listText, t } from '../../i18n';
+import { categoryName, isUrdu, listText, localText, t } from '../../i18n';
 
 export default function FarmerDetail() {
   const { slug } = useParams();
@@ -26,8 +26,8 @@ export default function FarmerDetail() {
   useSeo(
     f
       ? {
-          title: `${f.stallName}, local farmer${f.city ? ` in ${f.city}` : ''}`,
-          description: clip(f.bio || t('{stallName} sells fresh produce on MarketLink. See this week\'s stock, pickup times and reviews.', { stallName: f.stallName })),
+          title: f.city ? t('{name}, local farmer in {city}', { name: f.stallName, city: t(f.city) }) : t('{name}, local farmer', { name: f.stallName }),
+          description: clip((!isUrdu() && f.bio) || t('{stallName} sells fresh produce on MarketLink. See this week\'s stock, pickup times and reviews.', { stallName: f.stallName })),
           image: f.coverImage || f.logo,
           type: 'profile',
           jsonLd: ldGraph(farmerLd(f), breadcrumbLd([{ name: 'Farmers', path: '/farmers' }, { name: f.stallName, path: `/farmers/${f.slug}` }])),
@@ -90,7 +90,7 @@ export default function FarmerDetail() {
           <div className="d-flex align-items-center gap-3 flex-wrap mt-1">
             <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
             <span className="small text-muted-2">
-              <i className="bi bi-geo-alt" /> {farmer.city || farmer.address}
+              <i className="bi bi-geo-alt" /> {farmer.city ? t(farmer.city) : farmer.address}
             </span>
             <span className="small text-muted-2">
               <i className="bi bi-basket" /> {t('{n} in stock', { n: inStock })}
@@ -105,13 +105,13 @@ export default function FarmerDetail() {
       <div className="row g-4">
         <div className="col-lg-8">
           <div className="soft-panel mb-4">
-            <p className="mb-3">{farmer.bio}</p>
+            <p className="mb-3">{localText(farmer, 'bio')}</p>
             {farmer.categories?.length > 0 && (
               <div className="d-flex flex-wrap gap-2 mb-2 align-items-center">
                 <span className="small fw-semi text-muted-2">{t('Grows / sells:')}</span>
                 {farmer.categories.map((c) => (
                   <span key={c._id} className="chip" style={{ background: c.color }}>
-                    <img src={c.icon} alt="" width={16} height={16} /> {c.name}
+                    <img src={c.icon} alt="" width={16} height={16} /> {categoryName(c)}
                   </span>
                 ))}
               </div>
@@ -119,7 +119,7 @@ export default function FarmerDetail() {
             <div className="d-flex flex-wrap gap-2">
               {farmer.tags?.map((tx) => (
                 <span key={tx} className="chip chip-soft">
-                  <i className="bi bi-patch-check" /> {tx}
+                  <i className="bi bi-patch-check" /> {t(tx)}
                 </span>
               ))}
             </div>
@@ -136,7 +136,7 @@ export default function FarmerDetail() {
               </button>
               {categories.map((c) => (
                 <button type="button" key={c.slug} className={`filter-chip ${cat === c.slug ? 'active' : ''}`} onClick={() => setCat(c.slug)}>
-                  {c.name}
+                  {categoryName(c)}
                 </button>
               ))}
             </div>

@@ -19,7 +19,7 @@ const ADJUST_REASONS = {
 // GET /api/farmer/inventory  (stock, reserved, alert levels and value of every product)
 export async function inventory(req, res) {
   const products = await Product.find({ farmer: req.farmer._id, deletedByFarmer: { $ne: true } })
-    .populate('category', 'name color')
+    .populate('category', 'name nameUr slug color')
     .sort({ name: 1 })
     .lean();
   const reserved = await reservedByProduct(req.farmer._id);

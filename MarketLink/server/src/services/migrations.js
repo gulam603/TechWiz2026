@@ -1,8 +1,16 @@
 import mongoose from 'mongoose';
+import Announcement from '../models/Announcement.js';
+import Category from '../models/Category.js';
+import Faq from '../models/Faq.js';
+import Farmer from '../models/Farmer.js';
+import Market from '../models/Market.js';
 import Product from '../models/Product.js';
 import Review from '../models/Review.js';
 import { uniqueSlug } from '../utils/slug.js';
 import { ensureProductSchema } from './productSchema.js';
+import { faqs as seedFaqs } from '../content/faqs.js';
+import { announcements as seedAnnouncements, categories as seedCategories, farmers as seedFarmers, markets as seedMarkets, urduDescriptions } from '../seed/data.js';
+import { produceInfo } from './describe.js';
 
 /**
  * Small data fixes that run once at start-up. They only touch documents that still need them,
@@ -26,6 +34,38 @@ export async function runMigrations() {
   const noSchema = await Product.find({ $or: [{ 'aiSchema.summary': { $exists: false } }, { 'aiSchema.summary': '' }] }).limit(500);
   for (const p of noSchema) await ensureProductSchema(p, { background: false });
   if (noSchema.length) console.log(`[db] Wrote the product schema of ${noSchema.length} product(s)`);
+
+  // Databases seeded before the Urdu version get the Urdu texts of the standard categories, FAQs
+  // and notices (only where the English text is still the original one and no Urdu text exists)
+  let urdu = 0;
+  const noUr = { $or: [{ nameUr: { $exists: false } }, { nameUr: '' }] };
+  for (const c of seedCategories) urdu += (await Category.updateOne({ name: c.name, ...noUr }, { $set: { nameUr: c.nameUr } })).modifiedCount;
+  for (const f of seedFaqs) {
+    urdu += (await Faq.updateOne({ question: f.question, $or: [{ questionUr: { $exists: false } }, { questionUr: '' }] }, { $set: { questionUr: f.questionUr, answerUr: f.answerUr } })).modifiedCount;
+  }
+  for (const a of seedAnnouncements) {
+    urdu += (await Announcement.updateOne({ title: a.title, $or: [{ titleUr: { $exists: false } }, { titleUr: '' }] }, { $set: { titleUr: a.titleUr, messageUr: a.messageUr } })).modifiedCount;
+  }
+  // ... the demo farmers' stories, market descriptions and product descriptions (while unchanged)
+  const noText = (field) => ({ $or: [{ [field]: { $exists: false } }, { [field]: '' }] });
+  for (const f of seedFarmers) if (f.bioUr) urdu += (await Farmer.updateOne({ stallName: f.stallName, bio: f.bio, ...noText('bioUr') }, { $set: { bioUr: f.bioUr } })).modifiedCount;
+  for (const m of seedMarkets) if (m.descriptionUr) urdu += (await Market.updateOne({ name: m.name, description: m.description, ...noText('descriptionUr') }, { $set: { descriptionUr: m.descriptionUr } })).modifiedCount;
+  for (const p of seedFarmers.flatMap((f) => f.products || [])) {
+    if (urduDescriptions[p.name]) urdu += (await Product.updateMany({ name: p.name, description: p.desc, ...noText('descriptionUr') }, { $set: { descriptionUr: urduDescriptions[p.name] } })).modifiedCount;
+  }
+  if (urdu) console.log(`[db] Added Urdu texts to ${urdu} record(s) (categories, questions, notices, farmers, markets, products)`);
+
+  // Products whose schema was written before the Urdu tips existed get them from the built-in writer
+  const noTips = await Product.find({ 'aiSchema.summary': { $exists: true, $ne: '' }, 'aiSchema.source': { $ne: 'farmer' }, ...noText('aiSchema.usesUr') })
+    .populate('category', 'name')
+    .select('name category')
+    .limit(1000)
+    .lean();
+  for (const p of noTips) {
+    const info = produceInfo(p.name, p.category?.name);
+    await Product.updateOne({ _id: p._id }, { $set: { 'aiSchema.usesUr': info.useUr, 'aiSchema.storageUr': info.keepUr } });
+  }
+  if (noTips.length) console.log(`[db] Added Urdu tips to the product schema of ${noTips.length} product(s)`);
 }
 
 // Walks every path of a Mongoose schema, including sub-documents and arrays of sub-documents.

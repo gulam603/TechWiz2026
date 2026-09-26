@@ -16,7 +16,7 @@ import useViewMode from '../../hooks/useViewMode';
 import ViewToggle from '../../components/common/ViewToggle';
 import DataGrid from '../../components/admin/DataGrid';
 import { action, dateCell, display, esc } from '../../utils/cells';
-import { t } from '../../i18n';
+import { productName, t } from '../../i18n';
 
 const stars = (n) => `<span class="rating" aria-label="Rated ${n} out of 5">${[1, 2, 3, 4, 5].map((i) => `<i class="bi ${n >= i ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}</span>`;
 
@@ -25,15 +25,15 @@ const COLUMNS = [
   {
     data: 'rating',
     title: 'Rating',
-    render: display((v, r) => `${stars(v)}<div class="mt-1">${r.verified ? '<span class="review-badge is-verified"><i class="bi bi-patch-check-fill"></i> Verified purchase</span>' : '<span class="review-badge"><i class="bi bi-question-circle"></i> Unverified</span>'}</div>`),
+    render: display((v, r) => `${stars(v)}<div class="mt-1">${r.verified ? `<span class="review-badge is-verified"><i class="bi bi-patch-check-fill"></i> ${t('Verified purchase')}</span>` : `<span class="review-badge"><i class="bi bi-question-circle"></i> ${t('Unverified')}</span>`}</div>`),
   },
-  { data: 'type', title: 'About', render: display((v, r) => `<span class="chip chip-soft">${esc(v === 'product' ? r.product?.name || t('Product') : t('Stall review'))}</span>`, (v, r) => (v === 'product' ? r.product?.name : t('Stall'))) },
+  { data: 'type', title: 'About', render: display((v, r) => `<span class="chip chip-soft">${esc(v === 'product' ? productName(r.product) || t('Product') : t('Stall review'))}</span>`, (v, r) => (v === 'product' ? productName(r.product) : t('Stall'))) },
   {
     data: 'comment',
     title: 'Review and your reply',
     orderable: false,
     className: 'dt-comment',
-    render: display((v, r) => `<span class="small">${esc(v || '-')}</span>${r.response?.text ? `<div class="farmer-reply mt-1 fs-7"><strong class="d-block text-success">Your reply</strong>${esc(r.response.text)}</div>` : ''}`),
+    render: display((v, r) => `<span class="small">${esc(v || '-')}</span>${r.response?.text ? `<div class="farmer-reply mt-1 fs-7"><strong class="d-block text-success">${t('Your reply')}</strong>${esc(r.response.text)}</div>` : ''}`),
   },
   { data: 'createdAt', title: 'Date', render: display((v) => dateCell(v)) },
   {
@@ -68,7 +68,7 @@ function ReplyModal({ review, onClose, onSaved }) {
     <Modal
       open
       onClose={onClose}
-      title={`Reply to ${review.customer?.name || t('the customer')}`}
+      title={t('Reply to {name}', { name: review.customer?.name || t('the customer') })}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>

@@ -6,7 +6,7 @@ import { containsRegex, distanceKm, isValidId, toNumber } from '../utils/helpers
 export async function findMarket(idOrSlug, { activeOnly = true } = {}) {
   const filter = isValidId(idOrSlug) ? { _id: idOrSlug } : { slug: String(idOrSlug).toLowerCase() };
   if (activeOnly) filter.isActive = true;
-  const market = await Market.findOne(filter).populate('categories', 'name slug color icon').lean();
+  const market = await Market.findOne(filter).populate('categories', 'name nameUr slug color icon').lean();
   if (!market) throw new AppError('Market not found', 404);
   return market;
 }
@@ -25,7 +25,7 @@ export async function listMarkets(req, res) {
     filter.categories = category?._id || null;
   }
 
-  let markets = await Market.find(filter).populate('categories', 'name slug color icon').sort({ name: 1 }).lean();
+  let markets = await Market.find(filter).populate('categories', 'name nameUr slug color icon').sort({ name: 1 }).lean();
 
   // Number of approved farmers at each market
   const farmers = await Farmer.find({ isActive: true, markets: { $in: markets.map((m) => m._id) } })
@@ -54,7 +54,7 @@ export async function listMarkets(req, res) {
 export async function getMarket(req, res) {
   const market = await findMarket(req.params.idOrSlug);
   const farmers = await Farmer.find({ isActive: true, markets: market._id })
-    .select('stallName slug logo coverImage bio ratingAvg ratingCount operatingDays pickupWindows latitude longitude address tags')
+    .select('stallName slug logo coverImage bio bioUr ratingAvg ratingCount operatingDays pickupWindows latitude longitude address tags')
     .sort({ ratingAvg: -1 })
     .lean();
 
@@ -65,7 +65,7 @@ export async function getMarket(req, res) {
   const [products, productCount] = await Promise.all([
     Product.find(productFilter)
       .populate('farmer', 'stallName slug')
-      .populate('category', 'name slug color')
+      .populate('category', 'name nameUr slug color')
       .sort({ totalSold: -1 })
       .limit(8)
       .lean(),

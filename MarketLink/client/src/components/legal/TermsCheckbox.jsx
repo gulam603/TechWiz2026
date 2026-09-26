@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from '../common/Modal';
 import TermsContent from './TermsContent';
-import { TERMS_UPDATED } from './terms';
+import { termsUpdated } from './terms';
 import { t } from '../../i18n';
 
 /**
@@ -29,7 +29,7 @@ export default function TermsCheckbox({ id, checked, onChange, children }) {
         size="modal-lg terms-modal"
         footer={
           <>
-            <span className="me-auto small text-muted-2 align-self-center">{t('Last updated')} {TERMS_UPDATED}</span>
+            <span className="me-auto small text-muted-2 align-self-center">{t('Last updated')} {termsUpdated()}</span>
             <button type="button" className="btn btn-white" onClick={() => setOpen(false)}>
               {t('Close')}
             </button>

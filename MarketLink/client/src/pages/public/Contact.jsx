@@ -44,7 +44,7 @@ export default function Contact() {
               <ul className="list-unstyled d-grid gap-3 mt-3 mb-0">
                 <li className="d-flex gap-3">
                   <i className="bi bi-geo-alt-fill text-lime fs-5" />
-                  <span>{CONTACT.address}</span>
+                  <span>{t(CONTACT.address)}</span>
                 </li>
                 <li className="d-flex gap-3">
                   <i className="bi bi-envelope-fill text-lime fs-5" />
@@ -54,11 +54,11 @@ export default function Contact() {
                 </li>
                 <li className="d-flex gap-3">
                   <i className="bi bi-telephone-fill text-lime fs-5" />
-                  <span>{CONTACT.phone}</span>
+                  <span><bdi dir="ltr">{CONTACT.phone}</bdi></span>
                 </li>
                 <li className="d-flex gap-3">
                   <i className="bi bi-clock-fill text-lime fs-5" />
-                  <span>{CONTACT.hours}</span>
+                  <span>{t(CONTACT.hours)}</span>
                 </li>
               </ul>
               <div className="mt-3 pt-3 border-top border-light border-opacity-25">

@@ -21,7 +21,7 @@ export default function Logo({ light = false, to = '/' }) {
     <Link to={to} className={`brand ${light ? 'brand-light' : ''}`} aria-label={t('MarketLink home')}>
       <LogoMark />
       <span className="brand-name">
-        {t('Market')}<span>{t('Link')}</span>
+        Market<span>Link</span>
       </span>
     </Link>
   );

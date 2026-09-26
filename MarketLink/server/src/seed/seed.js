@@ -140,6 +140,7 @@ async function main() {
       address: f.address,
       city: f.city,
       bio: f.bio,
+      bioUr: f.bioUr,
       tags: f.tags,
       logo: f.logo,
       coverImage: f.cover,
@@ -169,6 +170,7 @@ async function main() {
         quantityAvailable: p.qty,
         templateQuantity: p.template ?? p.qty,
         description: p.desc,
+        descriptionUr: data.urduDescriptions[p.name],
         keywords: seedKeywords(p.name, categoryByKey[p.cat].name, farmer.city),
         image: PHOTOS[p.name] ? `/uploads/photos/${PHOTOS[p.name].file}` : undefined,
         imageCredit: PHOTOS[p.name] ? { author: PHOTOS[p.name].author, source: PHOTOS[p.name].source, license: PHOTOS[p.name].license } : undefined,
@@ -177,7 +179,7 @@ async function main() {
         days: farmer.operatingDays,
         farmerActive: farmer.isActive,
         // Product schema from the built-in AI writer (Claude writes it for products added later when a key is set)
-        aiSchema: (({ summary, season, storage, uses }) => ({ summary, season, storage, uses, source: 'builtin', generatedAt: new Date() }))(
+        aiSchema: (({ summary, season, storage, uses, storageUr, usesUr }) => ({ summary, season, storage, uses, storageUr, usesUr, source: 'builtin', generatedAt: new Date() }))(
           builtinSchema({ name: p.name, category: categoryByKey[p.cat].name, unit: p.unit, price: p.price, stallName: farmer.stallName, city: farmer.city, practices: farmer.tags })
         ),
       });

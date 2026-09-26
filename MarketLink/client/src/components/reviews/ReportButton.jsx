@@ -60,7 +60,7 @@ export default function ReportButton({ targetType, targetId, label = t('Report')
         <Modal
           open
           onClose={() => setOpen(false)}
-          title={`Report this ${targetType === 'farmer' ? 'stall' : targetType === 'product' ? 'listing' : targetType}`}
+          title={targetType === 'farmer' ? t('Report this stall') : targetType === 'product' ? t('Report this listing') : t('Report review')}
           footer={
             <>
               <button type="button" className="btn btn-white" onClick={() => setOpen(false)}>
@@ -76,7 +76,7 @@ export default function ReportButton({ targetType, targetId, label = t('Report')
             <div className="d-grid gap-1" role="radiogroup" aria-label={t('Reason')}>
               {REASONS.map(([v, l]) => (
                 <label key={v} className="form-check">
-                  <input type="radio" className="form-check-input" name="report-reason" checked={reason === v} onChange={() => setReason(v)} /> <span className="form-check-label small">{l}</span>
+                  <input type="radio" className="form-check-input" name="report-reason" checked={reason === v} onChange={() => setReason(v)} /> <span className="form-check-label small">{t(l)}</span>
                 </label>
               ))}
             </div>

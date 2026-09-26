@@ -10,7 +10,7 @@ export async function recordMovements(entries = []) {
   const list = entries.filter((e) => e && Number(e.change));
   if (!list.length) return;
   const ids = [...new Set(list.map((e) => String(e.product?._id || e.product)))];
-  const products = await Product.find({ _id: { $in: ids } }).select('farmer name unit quantityAvailable').lean();
+  const products = await Product.find({ _id: { $in: ids } }).select('farmer name nameUr unit quantityAvailable').lean();
   const byId = new Map(products.map((p) => [String(p._id), p]));
   const docs = list
     .map((e) => {
@@ -20,6 +20,7 @@ export async function recordMovements(entries = []) {
         farmer: p.farmer,
         product: p._id,
         productName: p.name,
+        productNameUr: p.nameUr,
         unit: p.unit,
         change: Number(e.change),
         quantityAfter: Math.max(0, p.quantityAvailable),

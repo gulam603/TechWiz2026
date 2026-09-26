@@ -9,7 +9,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, TrendChart } from '../../components/charts/Charts';
 import { formatDateKey, money, moneyCompact, ORDER_STATUS_META, time12 } from '../../utils/format';
-import { t } from '../../i18n';
+import { productName, t, unitName } from '../../i18n';
 
 export function ApprovalBanner({ status }) {
   if (status === 'active') return null;
@@ -142,7 +142,7 @@ function FarmerInsights() {
           <KpiCard variant="accent" icon="bi-cash-stack" label={t('Revenue (30 days)')} value={moneyCompact(kpis.revenueMonth)} sub={t('{v1} this week', { v1: money(kpis.revenueWeek) })} />
         </div>
         <div className="col-6 col-xl">
-          <KpiCard icon="bi-receipt" label={t('Total orders')} value={kpis.totalOrders} sub={`${kpis.completedOrders} completed`} />
+          <KpiCard icon="bi-receipt" label={t('Total orders')} value={kpis.totalOrders} sub={t('{n} completed', { n: kpis.completedOrders })} />
         </div>
         <div className="col-6 col-xl">
           <KpiCard variant="warn" icon="bi-hourglass-split" label={t('Pending orders')} value={kpis.pendingOrders} sub={t('{activeOrders} open in total', { activeOrders: kpis.activeOrders })} />
@@ -151,7 +151,7 @@ function FarmerInsights() {
           <KpiCard variant="info" icon="bi-graph-up" label={t('Average order')} value={money(Math.round(kpis.averageOrder))} sub={t('{v1} in total', { v1: money(kpis.revenueTotal) })} />
         </div>
         <div className="col-12 col-xl">
-          <KpiCard icon="bi-star" label={t('Rating')} value={kpis.ratingCount ? `${kpis.rating} / 5` : '-'} sub={`${kpis.ratingCount} reviews`} />
+          <KpiCard icon="bi-star" label={t('Rating')} value={kpis.ratingCount ? `${kpis.rating} / 5` : '-'} sub={t('{n} reviews', { n: kpis.ratingCount })} />
         </div>
       </div>
 
@@ -206,8 +206,8 @@ function FarmerInsights() {
 
       <div className="row g-4 mb-4">
         <div className="col-xl-6">
-          <ChartCard title={t('Best-selling products')} subtitle={t('Units sold in completed orders')} table={{ columns: ['Product', 'Units', 'Revenue'], rows: bestSellers.map((b) => [b.name, `${b.quantity} ${b.unit}`, money(b.revenue)]) }}>
-            {bestSellers.length ? <BarList data={bestSellers} labelKey="name" valueKey="quantity" name="Units sold" /> : <p className="small text-muted-2">{t('No completed sales yet.')}</p>}
+          <ChartCard title={t('Best-selling products')} subtitle={t('Units sold in completed orders')} table={{ columns: ['Product', 'Units', 'Revenue'], rows: bestSellers.map((b) => [productName(b), `${b.quantity} ${unitName(b.unit)}`, money(b.revenue)]) }}>
+            {bestSellers.length ? <BarList data={bestSellers.map((b) => ({ ...b, name: productName(b) }))} labelKey="name" valueKey="quantity" name="Units sold" /> : <p className="small text-muted-2">{t('No completed sales yet.')}</p>}
           </ChartCard>
         </div>
         <div className="col-xl-6">

@@ -6,7 +6,7 @@ import { assertId, pick, requireFields, toBool, toNumber } from '../utils/helper
 /** Active questions in page order (for the FAQ page, the home page, llms.txt and structured data). */
 export async function publicFaqs({ homeOnly = false } = {}) {
   const faqs = await Faq.find({ isActive: true, ...(homeOnly ? { showOnHome: true } : {}) })
-    .select('question answer group order showOnHome')
+    .select('question answer questionUr answerUr group order showOnHome')
     .lean();
   return sortFaqs(faqs);
 }
@@ -18,7 +18,7 @@ export async function listFaqs(req, res) {
 }
 
 function readFaq(body) {
-  const data = pick(body, ['question', 'answer']);
+  const data = pick(body, ['question', 'answer', 'questionUr', 'answerUr']);
   if (body.group !== undefined) {
     if (!FAQ_GROUPS[body.group]) throw new AppError('Please choose a valid group', 400);
     data.group = body.group;

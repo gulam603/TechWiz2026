@@ -17,7 +17,7 @@ import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import FarmerOrderActions from '../farmer/FarmerOrderActions';
 import { formatDate, formatDateKey, money, time12, timeUntil } from '../../utils/format';
-import { productName, rich, t } from '../../i18n';
+import { productName, rich, t, unitName } from '../../i18n';
 
 function ModifyModal({ order, open, onClose, onSaved }) {
   const { toast } = useToast();
@@ -70,7 +70,7 @@ function ModifyModal({ order, open, onClose, onSaved }) {
           <span className="flex-grow-1">
             <strong className="d-block small">{productName(item)}</strong>
             <span className="fs-7 text-muted-2">
-              {money(item.price)} / {item.unit}
+              {money(item.price)} / {unitName(item.unit)}
             </span>
           </span>
           <QuantityStepper value={item.quantity} onChange={(q) => setItems(items.map((x, i) => (i === idx ? { ...x, quantity: q } : x)))} />
@@ -251,7 +251,7 @@ export default function OrderDetail() {
                       </div>
                     </td>
                     <td className="text-end">
-                      {money(i.price)}/{i.unit}
+                      {money(i.price)}/{unitName(i.unit)}
                     </td>
                     <td className="text-end">{i.quantity}</td>
                     <td className="text-end fw-semi">{money(i.subtotal)}</td>

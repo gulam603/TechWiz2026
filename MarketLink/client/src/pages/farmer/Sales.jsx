@@ -9,8 +9,8 @@ import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, ColumnChart, TrendChart } from '../../components/charts/Charts';
 import DataGrid from '../../components/admin/DataGrid';
 import { dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
-import { formatDateKey, money, moneyCompact } from '../../utils/format';
-import { t } from '../../i18n';
+import { DAY_NAMES, DAY_SHORT, formatDateKey, money, moneyCompact } from '../../utils/format';
+import { categoryName, productName, t, unitName } from '../../i18n';
 
 const PRESETS = [
   [7, 'Last 7 days'],
@@ -21,7 +21,7 @@ const PRESETS = [
 
 const PRODUCT_COLUMNS = [
   { data: 'product', title: 'Product', render: display((v) => `<strong class="small">${esc(v)}</strong>`) },
-  { data: 'quantity', title: 'Sold', className: 'text-end', render: display((v, r) => `${esc(v)} <span class="fs-7 text-muted-2">${esc(r.unit)}</span>`) },
+  { data: 'quantity', title: 'Sold', className: 'text-end', render: display((v, r) => `${esc(v)} <span class="fs-7 text-muted-2">${esc(unitName(r.unit))}</span>`) },
   { data: 'orders', title: 'Orders', className: 'text-end' },
   { data: 'revenue', title: 'Revenue', className: 'text-end', render: display(moneyCell) },
   { data: 'share', title: 'Share', className: 'text-end', render: display((v) => `<span class="share-bar" style="--w:${Math.min(100, v)}%">${esc(v)}%</span>`) },
@@ -34,7 +34,11 @@ const CUSTOMER_COLUMNS = [
   { data: 'last', title: 'Last order', render: display((v) => dateCell(v)) },
 ];
 
-const change = (v) => (v === null || v === undefined ? t('no earlier data') : `${v > 0 ? '+' : ''}${v}% vs previous period`);
+const change = (v) => (v === null || v === undefined ? t('no earlier data') : t('{v}% vs previous period', { v: `${v > 0 ? '+' : ''}${v}` }));
+
+// An insight line from the server in the language in use (names, units and days translated too)
+const insightText = (i) =>
+  i.tpl ? t(i.tpl, { ...i.vars, product: productName({ name: i.vars.product, nameUr: i.vars.productUr }), unit: unitName(i.vars.unit), day: i.vars.dayIndex >= 0 ? DAY_NAMES[i.vars.dayIndex] : i.vars.day }) : i.text;
 
 /** Sales insights for the farmer: what sells, where, when and to whom; printable and exportable. */
 export default function FarmerSales() {
@@ -48,7 +52,7 @@ export default function FarmerSales() {
     <div className="sales-report">
       <DashHeader
         title={t('Sales report')}
-        subtitle={data ? `${farmer?.stallName || t('My stall')} · ${formatDateKey(data.period.from, { withYear: true })} to ${formatDateKey(data.period.to, { withYear: true })}` : t('Sales insights for your stall')}
+        subtitle={data ? `${farmer?.stallName || t('My stall')} · ${t('{from} to {to}', { from: formatDateKey(data.period.from, { withYear: true }), to: formatDateKey(data.period.to, { withYear: true }) })}` : t('Sales insights for your stall')}
         actions={
           <button type="button" className="btn btn-white btn-sm d-print-none" onClick={() => window.print()}>
             <i className="bi bi-printer" /> {t('Print report')}
@@ -60,7 +64,7 @@ export default function FarmerSales() {
           <div className="tabs-pill">
             {PRESETS.map(([d, l]) => (
               <button key={d} type="button" className={!range.from && range.days === d ? 'active' : ''} onClick={() => setRange({ days: d, from: '', to: '' })}>
-                {l}
+                {t(l)}
               </button>
             ))}
           </div>
@@ -110,7 +114,7 @@ export default function FarmerSales() {
               <ul className="insight-list">
                 {data.insights.map((i) => (
                   <li key={i.text}>
-                    <i className={`bi ${i.icon}`} aria-hidden="true" /> {i.text}
+                    <i className={`bi ${i.icon}`} aria-hidden="true" /> {insightText(i)}
                   </li>
                 ))}
               </ul>
@@ -124,16 +128,16 @@ export default function FarmerSales() {
               </ChartCard>
             </div>
             <div className="col-xl-4">
-              <ChartCard title={t('Sales by category')} table={{ columns: ['Category', 'Items', 'Revenue'], rows: data.categories.map((c) => [c.category, c.quantity, money(c.revenue)]) }}>
-                {data.categories.length ? <BarList data={data.categories} labelKey="category" valueKey="revenue" name="Revenue" valueFormatter={moneyCompact} /> : <p className="small text-muted-2 mb-0">{t('No sales in this period.')}</p>}
+              <ChartCard title={t('Sales by category')} table={{ columns: ['Category', 'Items', 'Revenue'], rows: data.categories.map((c) => [categoryName({ name: c.category, nameUr: c.categoryUr, slug: c.slug }), c.quantity, money(c.revenue)]) }}>
+                {data.categories.length ? <BarList data={data.categories.map((c) => ({ ...c, category: categoryName({ name: c.category, nameUr: c.categoryUr, slug: c.slug }) }))} labelKey="category" valueKey="revenue" name="Revenue" valueFormatter={moneyCompact} /> : <p className="small text-muted-2 mb-0">{t('No sales in this period.')}</p>}
               </ChartCard>
             </div>
           </div>
 
           <div className="row g-3 mb-3">
             <div className="col-lg-6 col-xl-4">
-              <ChartCard title={t('Pickup days')} subtitle={t('completed orders by weekday')} table={{ columns: ['Day', 'Orders', 'Revenue'], rows: data.weekdays.map((d) => [d.day, d.orders, money(d.revenue)]) }}>
-                <ColumnChart data={data.weekdays.map((d) => ({ ...d, label: d.day.slice(0, 3) }))} xKey="label" yKey="orders" name="Orders" dateAxis={false} height={200} />
+              <ChartCard title={t('Pickup days')} subtitle={t('completed orders by weekday')} table={{ columns: ['Day', 'Orders', 'Revenue'], rows: data.weekdays.map((d, i) => [DAY_NAMES[i], d.orders, money(d.revenue)]) }}>
+                <ColumnChart data={data.weekdays.map((d, i) => ({ ...d, label: DAY_SHORT[i] }))} xKey="label" yKey="orders" name="Orders" dateAxis={false} height={200} />
               </ChartCard>
             </div>
             <div className="col-lg-6 col-xl-4">

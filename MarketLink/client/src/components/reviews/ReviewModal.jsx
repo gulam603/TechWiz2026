@@ -70,7 +70,7 @@ export default function ReviewModal({ target, onClose, onDone }) {
         )}
         <div className="d-flex align-items-center gap-3">
           <StarInput value={rating} onChange={setRating} />
-          <strong className="small">{LABELS[rating]}</strong>
+          <strong className="small">{t(LABELS[rating])}</strong>
         </div>
         <div>
           <label className="form-label" htmlFor="review-comment">{t('Your review (optional)')}</label>

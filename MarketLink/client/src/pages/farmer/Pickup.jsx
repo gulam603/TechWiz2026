@@ -100,7 +100,7 @@ function PickupEditor({ farmer, allMarkets }) {
                   <span className="min-w-0">
                     <strong className="d-block small">{m.name}</strong>
                     <span className="fs-7 text-muted-2 d-block">
-                      {m.city} · {time12(m.openTime)} {t('to')} {time12(m.closeTime)}
+                      {t(m.city)} · {time12(m.openTime)} {t('to')} {time12(m.closeTime)}
                     </span>
                     <DayDots days={m.operatingDays} />
                   </span>

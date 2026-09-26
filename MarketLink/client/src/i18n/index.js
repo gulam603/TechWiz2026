@@ -1,5 +1,6 @@
 import { createElement } from 'react';
 import UR from './ur';
+import SERVER_TEMPLATES from './server';
 
 /**
  * Tiny translation layer. English is the source language: `t('Add to basket')` returns the Urdu text
@@ -32,6 +33,12 @@ function readInitial() {
 }
 
 let current = readInitial();
+// A ?lang= link also becomes the saved choice, so the next pages stay in that language
+try {
+  if (typeof window !== 'undefined' && LANGS[new URLSearchParams(window.location.search).get('lang')]) setStoredLang(current);
+} catch {
+  // ignore
+}
 // Pages that always stay in English (the admin area) set this while they are open
 let forcedEnglish = false;
 
@@ -135,4 +142,49 @@ export function rich(text, vars) {
   return t(text, vars)
     .split(/<b>(.*?)<\/b>/)
     .map((part, i) => (i % 2 ? createElement('strong', { key: i }, part) : part));
+}
+
+// The server templates as patterns: "{name}" matches any text (built on first use)
+let serverPatterns = null;
+function patterns() {
+  if (!serverPatterns) {
+    serverPatterns = SERVER_TEMPLATES.map((tpl) => {
+      const names = [];
+      const source = tpl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\\\{(\w+)\\\}/g, (m, name) => {
+        names.push(name);
+        return '(.+?)';
+      });
+      return { tpl, names, re: new RegExp(`^${source}$`) };
+    });
+    // The longest fixed text first, so "... changed the {what}. Please review ..." wins over "... changed the {what}."
+    const fixed = (p) => p.tpl.replace(/\{\w+\}/g, '').length;
+    serverPatterns.sort((a, b) => fixed(b) - fixed(a));
+  }
+  return serverPatterns;
+}
+
+/**
+ * A text written by the server (notification, message or error) in the language in use. Known
+ * sentences are translated; names, numbers and dates inside them are kept. Each line is looked at
+ * on its own, and unknown text is shown as it is.
+ */
+export function tServer(text) {
+  if (text === undefined || text === null) return '';
+  if (getLang() !== 'ur') return String(text);
+  return String(text)
+    .split('\n')
+    .map((line) => {
+      if (UR[line] !== undefined) return UR[line];
+      for (const p of patterns()) {
+        const m = line.match(p.re);
+        if (!m) continue;
+        const vars = {};
+        p.names.forEach((name, i) => {
+          vars[name] = UR[m[i + 1]] !== undefined ? UR[m[i + 1]] : m[i + 1];
+        });
+        return t(p.tpl, vars);
+      }
+      return line;
+    })
+    .join('\n');
 }

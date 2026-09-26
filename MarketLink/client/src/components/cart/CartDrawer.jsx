@@ -8,7 +8,7 @@ import ProduceImage from '../common/ProduceImage';
 import QuantityStepper from '../common/QuantityStepper';
 import { money } from '../../utils/format';
 import { productPath } from '../../utils/links';
-import { productName, t } from '../../i18n';
+import { productName, t, unitName } from '../../i18n';
 
 /** Basket in a sidebar on the right: lines per farmer, quantities, total, full basket and checkout. */
 export default function CartDrawer() {
@@ -54,7 +54,7 @@ export default function CartDrawer() {
     const lines = cart.items.length;
     cart.clear();
     setConfirmEmpty(false);
-    toast(`Basket emptied (${lines} product${lines === 1 ? '' : 's'} removed)`);
+    toast(lines === 1 ? t('Basket emptied (1 product removed)') : t('Basket emptied ({n} products removed)', { n: lines }));
     panel.current?.focus();
   }
 
@@ -104,7 +104,7 @@ export default function CartDrawer() {
                           {productName(item)}
                         </Link>
                         <span className="fs-7 text-muted-2">
-                          {money(item.price)} / {item.unit}
+                          {money(item.price)} / {unitName(item.unit)}
                         </span>
                         <div className="d-flex align-items-center justify-content-between mt-1">
                           <QuantityStepper value={item.quantity} max={item.maxQty || 999} onChange={(q) => cart.update(item.productId, q)} size="sm" />

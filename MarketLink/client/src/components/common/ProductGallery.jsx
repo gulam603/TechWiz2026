@@ -23,7 +23,7 @@ function Lightbox({ photos, index, setIndex, name, onClose }) {
     };
   }, [count, onClose, setIndex]);
   return createPortal(
-    <div className="pd-lightbox" role="dialog" aria-modal="true" aria-label={`${name} photos`} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="pd-lightbox" role="dialog" aria-modal="true" aria-label={t('{name} photos', { name })} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
       <button type="button" className="pd-lightbox-close" onClick={onClose} aria-label={t('Close')} ref={closeRef}>
         <i className="bi bi-x-lg" />
       </button>

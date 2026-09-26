@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { PageHero } from '../../components/common/PageHeader';
 import TermsContent from '../../components/legal/TermsContent';
-import { TERMS_SECTIONS, TERMS_UPDATED } from '../../components/legal/terms';
+import { termsSections, termsUpdated } from '../../components/legal/terms';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd } from '../../utils/seo';
 import { t } from '../../i18n';
@@ -21,7 +21,7 @@ export default function Terms() {
         subtitle={t('The simple rules that keep MarketLink fair for customers and farmers. Please read them before you create an account.')}
       >
         <span className="chip hero-chip">
-          <i className="bi bi-calendar3" aria-hidden="true" /> {t('Last updated')} {TERMS_UPDATED}
+          <i className="bi bi-calendar3" aria-hidden="true" /> {t('Last updated')} {termsUpdated()}
         </span>
       </PageHero>
       <div className="container pb-5">
@@ -30,7 +30,7 @@ export default function Terms() {
             <nav className="terms-toc" aria-label={t('Sections')}>
               <span className="eyebrow">{t('On this page')}</span>
               <ol>
-                {TERMS_SECTIONS.map((s) => (
+                {termsSections().map((s) => (
                   <li key={s.id}>
                     <a href={`#terms-${s.id}`} onClick={(e) => jump(e, s.id)}>
                       {s.title}
@@ -46,7 +46,7 @@ export default function Terms() {
                 <i className="bi bi-list-ul" aria-hidden="true" /> {t('On this page')}
               </summary>
               <ol>
-                {TERMS_SECTIONS.map((s) => (
+                {termsSections().map((s) => (
                   <li key={s.id}>
                     <a
                       href={`#terms-${s.id}`}

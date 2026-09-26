@@ -10,6 +10,8 @@ import MobileMenu from './MobileMenu';
 import { LINKS, MENUS, visibleItems } from './navConfig';
 import Avatar from '../common/Avatar';
 import { t } from '../../i18n';
+import { ROLE_LABEL } from './navConfig';
+import { LanguageSwitch } from '../../i18n/LanguageProvider';
 
 function UserMenu() {
   const { user, logout } = useAuth();
@@ -36,7 +38,7 @@ function UserMenu() {
           <div className="px-3 py-2">
             <strong className="d-block">{user.name}</strong>
             <span className="fs-7 text-muted-2">{user.email}</span>
-            <span className="chip chip-soft mt-1 text-capitalize">{user.role}</span>
+            <span className="chip chip-soft mt-1 text-capitalize">{t(ROLE_LABEL[user.role] || user.role)}</span>
           </div>
           <hr className="my-1" />
           {visibleItems(MENUS[user.role] || [], user).map((m) => (
@@ -94,6 +96,7 @@ export default function Navbar() {
           <button type="button" className="nav-icon-btn d-none d-sm-inline-flex" onClick={() => setSearchOpen(!searchOpen)} aria-label={t('Search')} aria-expanded={searchOpen}>
             <i className={`bi ${searchOpen ? 'bi-x-lg' : 'bi-search'}`} />
           </button>
+          <LanguageSwitch className="nav-lang d-none d-md-inline-flex" />
           {showCart && (
             <button type="button" className="nav-icon-btn" onClick={openDrawer} aria-label={t('Basket ({count} items)', { count })} aria-haspopup="dialog">
               <i className="bi bi-basket2" />

@@ -37,7 +37,7 @@ export default function SearchSelect({
   const [active, setActive] = useState(0);
   const [pos, setPos] = useState(null);
 
-  const all = useMemo(() => (emptyLabel !== undefined ? [{ value: '', label: emptyLabel }, ...options] : options), [emptyLabel, options]);
+  const all = useMemo(() => (emptyLabel !== undefined ? [{ value: '', label: t(emptyLabel) }, ...options] : options), [emptyLabel, options]);
   const selected = all.find((o) => String(o.value) === String(value ?? ''));
   const shown = useMemo(() => {
     const q = norm(query.trim());
@@ -159,7 +159,7 @@ export default function SearchSelect({
                 type="text"
                 value={query}
                 placeholder={searchPlaceholder}
-                aria-label={`Search ${ariaLabel || 'options'}`}
+                aria-label={ariaLabel ? t('Search {what}', { what: ariaLabel }) : t('Search the options')}
                 aria-controls={listId}
                 aria-activedescendant={shown[active] ? `${listId}-${active}` : undefined}
                 onChange={(e) => {

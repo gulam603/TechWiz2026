@@ -17,6 +17,7 @@ export function toList(value, max = 10) {
 export async function readFarmDetails(body) {
   const data = {};
   if (body.bio !== undefined) data.bio = String(body.bio).trim().slice(0, 1200);
+  if (body.bioUr !== undefined) data.bioUr = String(body.bioUr).trim().slice(0, 1500);
   if (body.tags !== undefined) data.tags = toList(body.tags, 8).map((t) => t.slice(0, 40));
 
   if (body.categories !== undefined) {

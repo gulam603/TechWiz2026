@@ -3,7 +3,7 @@ import { coverFor } from '../../utils/format';
 import RatingStars from '../common/RatingStars';
 import DayDots from '../common/DayDots';
 import FavButton from '../common/FavButton';
-import { t } from '../../i18n';
+import { localText, t } from '../../i18n';
 
 export default function FarmerCard({ farmer }) {
   return (
@@ -14,7 +14,7 @@ export default function FarmerCard({ farmer }) {
           <FavButton type="farmers" id={farmer._id} />
         </div>
       </div>
-      <div className="farmer-logo">{farmer.logo ? <img src={farmer.logo} alt={`${farmer.stallName} logo`} loading="lazy" /> : <i className="bi bi-shop fs-3 text-success" />}</div>
+      <div className="farmer-logo">{farmer.logo ? <img src={farmer.logo} alt={t('{name} logo', { name: farmer.stallName })} loading="lazy" /> : <i className="bi bi-shop fs-3 text-success" />}</div>
       <div className="card-body">
         <h3 className="card-title">
           <Link to={`/farmers/${farmer.slug}`} className="stretched">
@@ -24,15 +24,15 @@ export default function FarmerCard({ farmer }) {
         <div className="mb-2">
           <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
         </div>
-        {farmer.bio && (
+        {localText(farmer, 'bio') && (
           <p className="small text-muted-2 mb-3" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-            {farmer.bio}
+            {localText(farmer, 'bio')}
           </p>
         )}
         <div className="d-flex flex-wrap gap-1 mb-3">
           {(farmer.tags || []).slice(0, 3).map((tx) => (
             <span key={tx} className="chip chip-soft">
-              {tx}
+              {t(tx)}
             </span>
           ))}
         </div>

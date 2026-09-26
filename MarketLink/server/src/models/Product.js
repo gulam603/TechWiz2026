@@ -19,6 +19,7 @@ const productSchema = new Schema(
     lowStockAlertedAt: Date, // set when the alert was sent; cleared again after restocking
     soldOutAlertedAt: Date, // a second alert when the product sells out
     description: { type: String, trim: true, maxlength: 1500 },
+    descriptionUr: { type: String, trim: true, maxlength: 1800 }, // the same text in Urdu (optional)
     // Search engine (SEO) details set by the farmer; empty values fall back to the name and description
     metaTitle: { type: String, trim: true, maxlength: 70 },
     metaDescription: { type: String, trim: true, maxlength: 170 },
@@ -33,6 +34,9 @@ const productSchema = new Schema(
       season: { type: String, trim: true, maxlength: 80 },
       storage: { type: String, trim: true, maxlength: 200 },
       uses: { type: String, trim: true, maxlength: 200 },
+      // What it is best for and how to keep it, in Urdu (the built-in writer / Claude write these too)
+      usesUr: { type: String, trim: true, maxlength: 250 },
+      storageUr: { type: String, trim: true, maxlength: 250 },
       source: { type: String, enum: ['claude', 'builtin', 'farmer'] },
       generatedAt: Date,
     },

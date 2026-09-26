@@ -13,13 +13,13 @@ import ViewToggle from '../../components/common/ViewToggle';
 import DataGrid from '../../components/admin/DataGrid';
 import { badge, dayCell, display, esc, link, linkButton, moneyCell, muted } from '../../utils/cells';
 import { time12 } from '../../utils/format';
-import { t } from '../../i18n';
+import { productName, t, unitName } from '../../i18n';
 
 const COLUMNS = [
-  { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/account/orders/${o._id}`, v)}${o.canModify ? '<div><span class="chip chip-soft">Editable</span></div>' : ''}`) },
+  { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/account/orders/${o._id}`, v)}${o.canModify ? `<div><span class="chip chip-soft">${t('Editable')}</span></div>` : ''}`) },
   { data: 'farmer.stallName', title: 'Farmer', render: display((v, o) => `<span class="small">${esc(v || '')}</span><div>${muted(o.market?.name || '')}</div>`) },
-  { data: 'pickupDate', title: 'Pickup', className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(`${time12(o.pickupSlot?.start)} to ${time12(o.pickupSlot?.end)}`)}</div>`) },
-  { data: 'items', title: 'Items', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc((v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join(' · '))}</span>`, (v) => (v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join('; ')) },
+  { data: 'pickupDate', title: 'Pickup', className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(t('{from} to {to}', { from: time12(o.pickupSlot?.start), to: time12(o.pickupSlot?.end) }))}</div>`) },
+  { data: 'items', title: 'Items', orderable: false, className: 'dt-comment', render: display((v) => `<span class="small">${esc((v || []).map((i) => `${i.quantity} ${unitName(i.unit)} ${productName(i)}`).join(' · '))}</span>`, (v) => (v || []).map((i) => `${i.quantity} ${unitName(i.unit)} ${productName(i)}`).join('; ')) },
   { data: 'totalAmount', title: 'Total', className: 'text-end', render: display((v) => moneyCell(v)) },
   { data: 'status', title: 'Status', responsivePriority: 3, render: display((v) => badge(v)) },
   { data: null, title: '', orderable: false, className: 'text-end no-export', responsivePriority: 2, render: (v, type, o) => linkButton(`/account/orders/${o._id}`, t('View'), 'btn-white') },

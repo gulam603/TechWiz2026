@@ -6,6 +6,7 @@ import Avatar from '../common/Avatar';
 import Logo, { LogoMark } from '../common/Logo';
 import NotificationBell from './NotificationBell';
 import { t } from '../../i18n';
+import { LanguageSwitch } from '../../i18n/LanguageProvider';
 
 const COLLAPSE_KEY = 'ml_sidebar';
 
@@ -123,12 +124,12 @@ export default function AppShell({
       <a href="#app-main" className="skip-link">
         {t('Skip to content')}
       </a>
-      <aside className="app-side" aria-label={`${areaLabel} navigation`}>
+      <aside className="app-side" aria-label={t('{name} navigation', { name: areaLabel })}>
         <div className="app-brand">
           <span className="brand-full">
             <Logo light to={homeTo} />
           </span>
-          <Link to={homeTo} className="brand-mini" aria-label={`${areaLabel} home`}>
+          <Link to={homeTo} className="brand-mini" aria-label={t('{name} home', { name: areaLabel })}>
             <LogoMark size={36} />
           </Link>
           <button type="button" className="app-drawer-close" onClick={() => setDrawerPath(null)} aria-label={t('Close menu')}>
@@ -139,10 +140,10 @@ export default function AppShell({
           {nav.map((item, i) =>
             item.section ? (
               <div key={`s${i}`} className="app-section">
-                <span>{item.section}</span>
+                <span>{t(item.section)}</span>
               </div>
             ) : (
-              <NavLink key={item.to} to={item.to} end={item.end} className="app-link" title={collapsed ? item.label : undefined}>
+              <NavLink key={item.to} to={item.to} end={item.end} className="app-link" title={collapsed ? t(item.label) : undefined}>
                 <i className={`bi ${item.icon}`} aria-hidden="true" />
                 <span className="app-link-label">{t(item.label)}</span>
                 {item.badge && badges[item.badge] > 0 && <span className={`app-badge ${item.badgeTone || ''}`}>{badges[item.badge]}</span>}
@@ -151,6 +152,7 @@ export default function AppShell({
           )}
         </nav>
         {sidebarFooter}
+        {!pathname.startsWith('/admin') && <LanguageSwitch className="lang-switch-block app-lang d-sm-none" />}
         <button type="button" className="app-collapse" onClick={toggleCollapsed} aria-pressed={collapsed} aria-label={collapsed ? t('Expand sidebar') : t('Collapse sidebar')}>
           <i className={`bi ${collapsed ? 'bi-chevron-double-right' : 'bi-chevron-double-left'}`} aria-hidden="true" />
           <span className="app-link-label">{t('Collapse sidebar')}</span>
@@ -169,10 +171,11 @@ export default function AppShell({
           </button>
           <div className="app-title">
             <span className="fs-7 text-muted-2 d-none d-sm-block">{areaLabel}</span>
-            <strong>{title}</strong>
+            <strong>{t(title)}</strong>
           </div>
           <div className="app-top-actions">
             {actions}
+            {!pathname.startsWith('/admin') && <LanguageSwitch className="nav-lang d-none d-sm-inline-flex" />}
             <Link to="/" className="nav-icon-btn d-none d-sm-inline-flex" title={t('View website')} aria-label={t('View website')}>
               <i className="bi bi-globe2" />
             </Link>

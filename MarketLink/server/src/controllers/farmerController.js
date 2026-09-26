@@ -5,7 +5,7 @@ import { getAvailability } from '../services/slots.js';
 import { marketIdsInCity, resolveCategory } from './helpers/category.js';
 
 const PUBLIC_FIELDS =
-  'stallName slug logo coverImage bio tags address city latitude longitude markets operatingDays blockedDates ratingAvg ratingCount createdAt';
+  'stallName slug logo coverImage bio bioUr tags address city latitude longitude markets operatingDays blockedDates ratingAvg ratingCount createdAt';
 
 export async function findActiveFarmer(idOrSlug) {
   const filter = isValidId(idOrSlug) ? { _id: idOrSlug } : { slug: String(idOrSlug).toLowerCase() };
@@ -62,7 +62,7 @@ export async function getFarmer(req, res) {
   ]);
   const [products, reviews] = await Promise.all([
     Product.find({ ...Product.publicFilter(), farmer: farmer._id })
-      .populate('category', 'name slug color')
+      .populate('category', 'name nameUr slug color')
       .sort({ status: 1, name: 1 })
       .lean(),
     Review.find({ farmer: farmer._id, isRemoved: false })

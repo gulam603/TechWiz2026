@@ -13,7 +13,7 @@ const LISTS = {
 // GET /api/customer/favorites
 export async function getFavorites(req, res) {
   const user = await User.findById(req.user._id)
-    .populate({ path: 'favoriteFarmers', match: { isActive: true }, select: 'stallName slug logo coverImage bio ratingAvg ratingCount address operatingDays tags' })
+    .populate({ path: 'favoriteFarmers', match: { isActive: true }, select: 'stallName slug logo coverImage bio bioUr ratingAvg ratingCount address operatingDays tags' })
     .populate({
       path: 'favoriteProducts',
       match: { isRemoved: false, farmerActive: true },
@@ -67,13 +67,13 @@ export async function customerDashboard(req, res) {
   const favIds = req.user.favoriteProducts || [];
   let suggestions = await Product.find({ ...Product.publicFilter(), _id: { $in: favIds }, status: 'available' })
     .populate('farmer', 'stallName slug')
-    .populate('category', 'name slug color')
+    .populate('category', 'name nameUr slug color')
     .limit(4)
     .lean();
   if (suggestions.length < 4) {
     const more = await Product.find({ ...Product.publicFilter(), status: 'available', _id: { $nin: suggestions.map((s) => s._id) } })
       .populate('farmer', 'stallName slug')
-      .populate('category', 'name slug color')
+      .populate('category', 'name nameUr slug color')
       .sort({ totalSold: -1 })
       .limit(4 - suggestions.length)
       .lean();

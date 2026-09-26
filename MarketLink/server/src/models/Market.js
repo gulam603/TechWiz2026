@@ -5,6 +5,7 @@ const marketSchema = new mongoose.Schema(
     name: { type: String, required: [true, 'Market name is required'], trim: true, maxlength: 100 },
     slug: { type: String, required: true, unique: true, lowercase: true },
     description: { type: String, trim: true, maxlength: 1000 },
+    descriptionUr: { type: String, trim: true, maxlength: 1200 }, // the same text in Urdu (optional)
     address: { type: String, required: [true, 'Address is required'], trim: true },
     city: { type: String, trim: true, default: '' }, // name of a city from the cities collection
     // What is sold at this market (chosen from the product categories)

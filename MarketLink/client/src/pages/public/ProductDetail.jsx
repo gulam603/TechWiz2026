@@ -20,7 +20,7 @@ import { DAY_SHORT, money, time12 } from '../../utils/format';
 import { productPath } from '../../utils/links';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, ldGraph, productLd } from '../../utils/seo';
-import { categoryName, isUrdu, listText, productName, t, unitName } from '../../i18n';
+import { categoryName, isUrdu, listText, localText, productName, t, tServer, unitName } from '../../i18n';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -35,13 +35,13 @@ export default function ProductDetail() {
   useSeo(
     p
       ? {
-          // The farmer's own SEO title, description and keywords win (set in the product form)
-          title: p.metaTitle || t('{name}, Rs {price} per {unit} from {stallName}', { name: p.name, price: p.price, unit: p.unit, stallName: p.farmer?.stallName }),
-          description: clip(p.metaDescription || p.description || t('{name} ({name2}) from {stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.', { name: p.name, name2: p.category?.name, stallName: p.farmer?.stallName })),
-          keywords: [...(p.keywords || []), p.name, p.category?.name, p.farmer?.stallName],
+          // The farmer's own SEO title, description and keywords win on the English page (set in the product form)
+          title: (!isUrdu() && p.metaTitle) || t('{name}, Rs {price} per {unit} from {stallName}', { name: productName(p), price: p.price, unit: unitName(p.unit), stallName: p.farmer?.stallName }),
+          description: clip((!isUrdu() && (p.metaDescription || p.description)) || t('{name} ({name2}) from {stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.', { name: productName(p), name2: categoryName(p.category), stallName: p.farmer?.stallName })),
+          keywords: [...(p.keywords || []), p.name, p.nameUr, p.category?.name, categoryName(p.category), p.farmer?.stallName],
           image: p.image,
           type: 'product',
-          jsonLd: ldGraph(productLd(p), breadcrumbLd([{ name: 'Shop', path: '/products' }, { name: p.category?.name || t('Products'), path: `/products?category=${p.category?.slug || ''}` }, { name: p.name, path: `/products/${p.slug}` }])),
+          jsonLd: ldGraph(productLd(p), breadcrumbLd([{ name: 'Shop', path: '/products' }, { name: (p.category && categoryName(p.category)) || t('Products'), path: `/products?category=${p.category?.slug || ''}` }, { name: p.name, path: `/products/${p.slug}` }])),
           canonicalPath: `/products/${p.slug}`,
         }
       : { title: t('Product') }
@@ -91,13 +91,13 @@ export default function ProductDetail() {
   const ai = product.aiSchema || {};
   // Answer-first facts in a definition list: easy to read, and easy for search engines and AI assistants to extract
   const facts = [
-    ['bi-tag', t('Price'), `${money(product.price)} per ${product.unit}`],
-    ['bi-calendar2-week', t('Season'), ai.season],
-    ['bi-egg-fried', t('Best for'), ai.uses],
-    ['bi-snow2', t('How to keep it'), ai.storage],
+    ['bi-tag', t('Price'), t('{price} per {unit}', { price: money(product.price), unit: unitName(product.unit) })],
+    ['bi-calendar2-week', t('Season'), ai.season && tServer(ai.season)],
+    ['bi-egg-fried', t('Best for'), localText(ai, 'uses')],
+    ['bi-snow2', t('How to keep it'), localText(ai, 'storage')],
     ['bi-shop', t('Grown by'), farmer.stallName],
-    ['bi-geo-alt', t('Grown in'), farmer.city],
-    ['bi-flower1', t('Farming practice'), farmer.tags && listText(farmer.tags)],
+    ['bi-geo-alt', t('Grown in'), farmer.city && t(farmer.city)],
+    ['bi-flower1', t('Farming practice'), farmer.tags && listText(farmer.tags.map((tag) => t(tag)))],
     ['bi-cash-coin', t('Payment'), t('Cash to the farmer at pickup')],
     ['bi-hourglass-split', t('Orders close'), t('{orderCutoffHours} hours before your pickup slot', { orderCutoffHours: farmer.orderCutoffHours })],
   ].filter(([, , value]) => value);
@@ -108,7 +108,7 @@ export default function ProductDetail() {
         <ol className="breadcrumb small">
           <li className="breadcrumb-item"><Link to="/">{t('Home')}</Link></li>
           <li className="breadcrumb-item"><Link to="/products">{t('Shop')}</Link></li>
-          <li className="breadcrumb-item"><Link to={`/products?category=${product.category?.slug}`}>{product.category?.name}</Link></li>
+          <li className="breadcrumb-item"><Link to={`/products?category=${product.category?.slug}`}>{categoryName(product.category)}</Link></li>
           <li className="breadcrumb-item active">{productName(product)}</li>
         </ol>
       </nav>
@@ -123,7 +123,7 @@ export default function ProductDetail() {
         </div>
 
         <div className="col-lg-7">
-          <span className="chip chip-soft mb-2">{product.category?.name}</span>
+          <span className="chip chip-soft mb-2">{categoryName(product.category)}</span>
           <h1 id="pd-name" className="display-font mb-2 pd-title">
             {productName(product)}
           </h1>
@@ -134,13 +134,13 @@ export default function ProductDetail() {
           <div className="price mb-2" style={{ fontSize: '1.9rem' }}>
             {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span>
           </div>
-          {product.description && <p className="text-muted-2">{product.description}</p>}
+          {localText(product, 'description') && <p className="text-muted-2">{localText(product, 'description')}</p>}
 
           <div className="soft-panel my-4 pd-buy">
             <div className="d-flex justify-content-between small fw-semi mb-2">
               <span>{t('Available this week')}</span>
               <span>
-                {product.quantityAvailable} {product.unit}
+                {product.quantityAvailable} {unitName(product.unit)}
               </span>
             </div>
             <div className={`stock-meter ${stockPct < 25 ? 'low' : ''}`}>
@@ -208,7 +208,13 @@ export default function ProductDetail() {
           <h2 id="pd-facts-title" className="h4 mb-1">
             {t('Quick facts')}
           </h2>
-          {ai.summary && <p className="pd-facts-summary mb-0">{ai.summary}</p>}
+          {ai.summary && (
+            <p className="pd-facts-summary mb-0">
+              {isUrdu()
+                ? t('{name} from {stall} in {city}, {price} per {unit}. Pre-order on MarketLink and collect it at the market.', { name: productName(product), stall: farmer.stallName, city: t(farmer.city), price: money(product.price), unit: unitName(product.unit) })
+                : ai.summary}
+            </p>
+          )}
         </div>
         <dl className="pd-facts-grid">
           {facts.map(([icon, label, value]) => (
@@ -244,11 +250,11 @@ export default function ProductDetail() {
                   <ProduceImage src={p.image} alt="" color={p.category?.color} />
                   <span className="min-w-0 flex-grow-1">
                     <strong className="d-block small text-truncate">{productName(p)}</strong>
-                    <span className="fs-7 text-muted-2">{p.category?.name}</span>
+                    <span className="fs-7 text-muted-2">{categoryName(p.category)}</span>
                   </span>
                   <span className="small fw-bold text-nowrap">
                     {money(p.price)}
-                    <span className="fs-7 text-muted-2 fw-normal">/{p.unit}</span>
+                    <span className="fs-7 text-muted-2 fw-normal">/{unitName(p.unit)}</span>
                   </span>
                 </Link>
               ))}
@@ -265,7 +271,7 @@ export default function ProductDetail() {
         <section className="section pb-0">
           <div className="section-head">
             <div>
-              <span className="eyebrow">{product.category?.name}</span>
+              <span className="eyebrow">{categoryName(product.category)}</span>
               <h2 className="section-title">{t('You may also like')}</h2>
             </div>
             <Link to={`/products?category=${product.category?.slug}`} className="link-arrow">

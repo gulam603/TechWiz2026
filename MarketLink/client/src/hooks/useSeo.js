@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import { APP_NAME } from '../config';
+import { isUrdu, t } from '../i18n';
 
-const DEFAULT_TITLE = `${APP_NAME} | Fresh from local farmers markets`;
+// Texts in the language in use (English is the default)
+const defaultTitle = () => `${APP_NAME} | ${t('Fresh from local farmers markets')}`;
 const DEFAULT_KEYWORDS = ['farmers market', 'fresh produce', 'local farmers', 'pre-order vegetables', 'fresh fruit', 'organic food', 'Karachi farmers market', 'Pakistan', 'pickup', 'MarketLink'];
 
 /** Page keywords first, then the site keywords (no duplicates, 20 at most). */
 function keywordList(extra = []) {
   const seen = new Set();
-  return [...extra, ...DEFAULT_KEYWORDS]
+  return [...extra, ...DEFAULT_KEYWORDS.map((k) => t(k))]
     .map((k) => String(k || '').trim())
     .filter((k) => k && !seen.has(k.toLowerCase()) && seen.add(k.toLowerCase()))
     .slice(0, 20)
@@ -15,6 +17,20 @@ function keywordList(extra = []) {
 }
 const DEFAULT_DESCRIPTION =
   'MarketLink connects local farmers markets with customers: see what each farmer has in stock this week, pre-order fresh produce and pick it up at the market. Pay at the stall.';
+
+// hreflang links: the English page, the Urdu page (?lang=ur) and the default
+function setAlternates(href) {
+  document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((el) => el.remove());
+  if (!href) return;
+  const urdu = `${href}${href.includes('?') ? '&' : '?'}lang=ur`;
+  for (const [lang, url] of [['en-PK', href], ['ur-PK', urdu], ['x-default', href]]) {
+    const el = document.createElement('link');
+    el.rel = 'alternate';
+    el.hreflang = lang;
+    el.href = url;
+    document.head.appendChild(el);
+  }
+}
 
 function setMeta(attr, key, content) {
   let el = document.head.querySelector(`meta[${attr}="${key}"]`);
@@ -70,14 +86,18 @@ export default function useSeo({ title, description, image, type = 'website', no
   const ld = jsonLd ? JSON.stringify(jsonLd) : '';
   const words = keywordList(keywords || []);
   useEffect(() => {
-    const fullTitle = title ? `${title} · ${APP_NAME}` : DEFAULT_TITLE;
-    const desc = String(description || DEFAULT_DESCRIPTION).replace(/\s+/g, ' ').trim().slice(0, 170);
-    const url = `${window.location.origin}${canonicalPath || window.location.pathname}`;
+    const fullTitle = title ? `${title} · ${APP_NAME}` : defaultTitle();
+    const desc = String(description || t(DEFAULT_DESCRIPTION)).replace(/\s+/g, ' ').trim().slice(0, 170);
+    const base = `${window.location.origin}${canonicalPath || window.location.pathname}`;
+    // Each language version is its own page for search engines: the Urdu one ends in ?lang=ur
+    const url = isUrdu() ? `${base}${base.includes('?') ? '&' : '?'}lang=ur` : base;
     document.title = fullTitle;
     setMeta('name', 'description', desc);
     setMeta('name', 'keywords', words);
     setMeta('name', 'robots', noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1');
     setCanonical(noindex ? null : url);
+    setAlternates(noindex ? null : base);
+    setMeta('property', 'og:locale', isUrdu() ? 'ur_PK' : 'en_PK');
     setMeta('property', 'og:title', fullTitle);
     setMeta('property', 'og:description', desc);
     setMeta('property', 'og:type', type);

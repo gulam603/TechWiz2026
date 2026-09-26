@@ -175,7 +175,7 @@ export async function setCustomerStatus(req, res) {
 // ---------------------------------------------------------------- markets
 
 async function readMarketBody(body, partial) {
-  const data = pick(body, ['name', 'description', 'address', 'mapProvider', 'mapLink', 'openTime', 'closeTime']);
+  const data = pick(body, ['name', 'description', 'descriptionUr', 'address', 'mapProvider', 'mapLink', 'openTime', 'closeTime']);
   // City comes from the cities table (dropdown); categories = what is sold at the market
   if (body.city !== undefined) data.city = await resolveCity(body.city);
   if (body.categories !== undefined) {
@@ -337,7 +337,7 @@ export async function adminCategories(req, res) {
 // POST /api/admin/categories  (multipart: icon)
 export async function createCategory(req, res) {
   requireFields(req.body, ['name']);
-  const data = pick(req.body, ['name', 'description', 'color']);
+  const data = pick(req.body, ['name', 'nameUr', 'description', 'color']);
   const category = await Category.create({
     ...data,
     slug: await uniqueSlug(Category, data.name),
@@ -351,7 +351,7 @@ export async function createCategory(req, res) {
 export async function updateCategory(req, res) {
   const category = await Category.findById(assertId(req.params.id, 'category'));
   if (!category) throw new AppError('Category not found', 404);
-  const data = pick(req.body, ['name', 'description', 'color']);
+  const data = pick(req.body, ['name', 'nameUr', 'description', 'color']);
   if (data.name && data.name !== category.name) category.slug = await uniqueSlug(Category, data.name, category._id);
   Object.assign(category, data);
   if (req.body.sortOrder !== undefined) category.sortOrder = toNumber(req.body.sortOrder, 0);
@@ -399,7 +399,7 @@ function announcementExtras(body) {
 export async function createAnnouncement(req, res) {
   requireFields(req.body, ['title', 'message']);
   const announcement = await Announcement.create({
-    ...pick(req.body, ['title', 'message', 'audience']),
+    ...pick(req.body, ['title', 'message', 'titleUr', 'messageUr', 'audience']),
     ...announcementExtras(req.body),
     isActive: req.body.isActive === undefined ? true : toBool(req.body.isActive),
     createdBy: req.user._id,
@@ -423,7 +423,7 @@ export async function createAnnouncement(req, res) {
 export async function updateAnnouncement(req, res) {
   const announcement = await Announcement.findById(assertId(req.params.id, 'announcement'));
   if (!announcement) throw new AppError('Announcement not found', 404);
-  Object.assign(announcement, pick(req.body, ['title', 'message', 'audience']), announcementExtras(req.body));
+  Object.assign(announcement, pick(req.body, ['title', 'message', 'titleUr', 'messageUr', 'audience']), announcementExtras(req.body));
   if (req.body.isActive !== undefined) announcement.isActive = toBool(req.body.isActive);
   await announcement.save();
   res.json({ announcement });

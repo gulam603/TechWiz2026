@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { localText } from '../../i18n';
 
 /** An answer: paragraphs split on blank lines; lines starting with "1." become a numbered list. */
 export function FaqAnswer({ text }) {
@@ -6,11 +7,11 @@ export function FaqAnswer({ text }) {
     .split(/\n{2,}/)
     .map((block, i) => {
       const lines = block.split('\n').filter(Boolean);
-      if (lines.length > 1 && lines.every((l) => /^\d+\.\s/.test(l))) {
+      if (lines.length > 1 && lines.every((l) => /^\d+[.۔]\s/.test(l))) {
         return (
           <ol key={i}>
             {lines.map((l) => (
-              <li key={l}>{l.replace(/^\d+\.\s/, '')}</li>
+              <li key={l}>{l.replace(/^\d+[.۔]\s/, '')}</li>
             ))}
           </ol>
         );
@@ -38,11 +39,11 @@ export default function FaqList({ faqs, openFirst = false, idPrefix = 'faq' }) {
       {faqs.map((f, i) => (
         <details key={f._id || f.question} className="faq-item" id={`${idPrefix}-${f._id || i}`} open={openFirst && i === 0 ? true : undefined}>
           <summary>
-            <span className="faq-q">{f.question}</span>
+            <span className="faq-q">{localText(f, 'question')}</span>
             <i className="bi bi-plus-lg faq-toggle" aria-hidden="true" />
           </summary>
           <div className="faq-a">
-            <FaqAnswer text={f.answer} />
+            <FaqAnswer text={localText(f, 'answer')} />
           </div>
         </details>
       ))}

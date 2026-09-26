@@ -14,7 +14,7 @@ import { ImageInput } from '../farmer/Products';
 import { DAY_LETTER, DAY_NAMES, time12 } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
 
-const EMPTY = { name: '', description: '', address: '', city: '', categories: [], latitude: '', longitude: '', operatingDays: [], openTime: '07:00', closeTime: '13:00', mapProvider: 'openstreetmap', mapLink: '', isActive: true };
+const EMPTY = { name: '', description: '', descriptionUr: '', address: '', city: '', categories: [], latitude: '', longitude: '', operatingDays: [], openTime: '07:00', closeTime: '13:00', mapProvider: 'openstreetmap', mapLink: '', isActive: true };
 
 const COLUMNS = [
   {
@@ -43,7 +43,7 @@ const COLUMNS = [
 // Rendered with a `key`, so the form starts fresh for every market.
 function MarketForm({ market, onClose, onSaved }) {
   const { toast } = useToast();
-  const [form, setForm] = useState(() => (market ? { ...EMPTY, ...market, mapLink: market.mapLink || '', description: market.description || '', city: market.city || '', categories: (market.categories || []).map((c) => c._id || c) } : EMPTY));
+  const [form, setForm] = useState(() => (market ? { ...EMPTY, ...market, mapLink: market.mapLink || '', description: market.description || '', descriptionUr: market.descriptionUr || '', city: market.city || '', categories: (market.categories || []).map((c) => c._id || c) } : EMPTY));
   const options = useFilterOptions();
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -99,6 +99,12 @@ function MarketForm({ market, onClose, onSaved }) {
           <div className="col-12">
             <label className="form-label" htmlFor="m-desc">Description</label>
             <textarea id="m-desc" name="description" rows={2} className="form-control" value={form.description} onChange={change} />
+          </div>
+          <div className="col-12">
+            <label className="form-label" htmlFor="m-desc-ur">
+              Description in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+            </label>
+            <textarea id="m-desc-ur" name="descriptionUr" rows={2} className="form-control" dir="rtl" lang="ur" value={form.descriptionUr} onChange={change} maxLength={1200} />
           </div>
           <div className="col-12">
             <span className="form-label d-block">What is sold here (categories)</span>

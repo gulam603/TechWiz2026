@@ -6,6 +6,7 @@ import env from '../config/env.js';
 import { publicFaqs } from '../controllers/faqController.js';
 import { DAY, HOW_IT_WORKS, SITE_SUMMARY, esc, pageBody } from './aeo.js';
 import { productJsonLd } from './productSchema.js';
+import { DEFAULT_DESCRIPTION_UR, DEFAULT_TITLE_UR, STATIC_PAGES_UR, categoryPageUr, farmerUr, marketUr, pageLang, productUr } from './urdu.js';
 
 /**
  * Search engines, AI assistants and link previews (WhatsApp, Facebook, X ...) read the HTML before
@@ -85,7 +86,7 @@ const faqPage = (faqs) =>
 
 async function productMeta(slug, origin) {
   const product = await Product.findOne({ slug: slug.toLowerCase(), isRemoved: false, farmerActive: true })
-    .populate('category', 'name slug')
+    .populate('category', 'name nameUr slug')
     .populate('farmer', 'stallName slug city tags pickupWindows markets orderCutoffHours')
     .lean();
   if (!product) return null;
@@ -101,6 +102,7 @@ async function productMeta(slug, origin) {
     keywords: [...(product.keywords || []), product.name, product.category?.name, product.farmer?.stallName, product.farmer?.city && `${product.category?.name} in ${product.farmer.city}`],
     image: images[0] || absolute(origin),
     imageAlt: product.name,
+    ur: productUr(product),
     type: 'product',
     jsonLd: graph(
       productJsonLd(product, origin, { reviews }),
@@ -128,6 +130,7 @@ async function farmerMeta(slug, origin) {
     description: clip(farmer.bio || `${farmer.stallName} sells fresh produce on MarketLink. See this week's stock, pickup times and reviews.`),
     image: absolute(origin, farmer.coverImage || farmer.logo),
     imageAlt: farmer.stallName,
+    ur: farmerUr(farmer),
     type: 'profile',
     jsonLd: graph(
       {
@@ -170,6 +173,7 @@ async function marketMeta(slug, origin) {
     keywords: [market.name, market.city && `farmers market ${market.city}`, 'weekly market'],
     image: absolute(origin, market.image),
     imageAlt: market.name,
+    ur: marketUr(market),
     type: 'website',
     jsonLd: graph(
       {
@@ -237,7 +241,7 @@ async function staticExtras(pathname, req, origin, meta) {
       return { jsonLd: graph(faqPage(faqs), breadcrumbs(origin, [['FAQs', '/faq']])), body: pageBody.faq({ faqs }) };
     }
     case '/products': {
-      const category = req.query.category ? await Category.findOne({ slug: String(req.query.category).toLowerCase() }).select('name slug description').lean().catch(() => null) : null;
+      const category = req.query.category ? await Category.findOne({ slug: String(req.query.category).toLowerCase() }).select('name nameUr slug description').lean().catch(() => null) : null;
       const filter = { ...Product.publicFilter(), ...(category ? { category: category._id } : {}) };
       const [products, categories] = await Promise.all([
         Product.find(filter).populate('farmer', 'stallName slug').populate('category', 'name slug').select('name slug price unit status quantityAvailable farmer category').sort({ totalSold: -1 }).limit(48).lean(),
@@ -245,7 +249,7 @@ async function staticExtras(pathname, req, origin, meta) {
       ]);
       const listName = category ? `${category.name} from local farmers` : 'Fresh produce this week';
       const extra = category
-        ? { title: `${category.name} from local farmers`, description: clip(category.description || `Fresh ${category.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`), keywords: [`fresh ${category.name.toLowerCase()}`, `buy ${category.name.toLowerCase()}`] }
+        ? { ur: categoryPageUr(category), title: `${category.name} from local farmers`, description: clip(category.description || `Fresh ${category.name.toLowerCase()} from local farmers. Pre-order and pick up at the market.`), keywords: [`fresh ${category.name.toLowerCase()}`, `buy ${category.name.toLowerCase()}`] }
         : {};
       const trail = [['Shop', '/products'], ...(category ? [[category.name, `/products?category=${category.slug}`]] : [])];
       return {
@@ -280,13 +284,14 @@ async function staticExtras(pathname, req, origin, meta) {
 /** Title, description, image, structured data and page text for a URL. `notFound` for unknown products, farmers or markets. */
 export async function pageMeta(req) {
   const origin = siteOrigin(req);
+  const lang = pageLang(req);
   const pathname = decodeURIComponent(req.path).replace(/\/+$/, '') || '/';
   const detail = pathname.match(/^\/(products|farmers|markets)\/([^/]+)$/);
   let meta = null;
   if (detail) {
     const [, kind, slug] = detail;
     meta = await (kind === 'products' ? productMeta : kind === 'farmers' ? farmerMeta : marketMeta)(slug, origin).catch(() => null);
-    if (!meta) return { origin, pathname, notFound: true, title: 'Page not found', description: DEFAULT_DESCRIPTION, noindex: true };
+    if (!meta) return { origin, pathname, lang, notFound: true, title: lang === 'ur' ? 'صفحہ نہیں ملا' : 'Page not found', description: lang === 'ur' ? DEFAULT_DESCRIPTION_UR : DEFAULT_DESCRIPTION, noindex: true };
   } else if (STATIC_PAGES[pathname]) {
     meta = { ...STATIC_PAGES[pathname] };
     Object.assign(meta, await staticExtras(pathname, req, origin, meta).catch(() => ({})));
@@ -294,9 +299,19 @@ export async function pageMeta(req) {
     meta = { title: null, description: DEFAULT_DESCRIPTION, noindex: PRIVATE.test(pathname) };
   }
   if (PRIVATE.test(pathname)) meta.noindex = true;
+  // Urdu: the page's own Urdu title and description (the structured data and page text stay English)
+  if (lang === 'ur') {
+    const ur = meta.ur || STATIC_PAGES_UR[pathname] || {};
+    meta.title = ur.title !== undefined ? ur.title : null;
+    meta.description = ur.description || DEFAULT_DESCRIPTION_UR;
+    if (ur.imageAlt) meta.imageAlt = ur.imageAlt;
+  }
   // Filtered and paged shop pages point search engines to the main page (or the category page)
   const canonicalPath = pathname === '/products' && req.query.category ? `/products?category=${encodeURIComponent(String(req.query.category).toLowerCase())}` : pathname;
-  return { origin, pathname, canonical: `${origin}${canonicalPath === '/' ? '/' : canonicalPath}`, ...meta };
+  const canonical = `${origin}${canonicalPath === '/' ? '/' : canonicalPath}`;
+  // Each language is its own address for search engines: the Urdu page ends in ?lang=ur
+  const urduUrl = `${canonical}${canonical.includes('?') ? '&' : '?'}lang=ur`;
+  return { origin, pathname, lang, canonical: lang === 'ur' ? urduUrl : canonical, alternates: { en: canonical, ur: urduUrl }, ...meta };
 }
 
 // Who runs the site and the site search, on every page (absolute URLs as search engines expect)
@@ -328,7 +343,7 @@ function siteJsonLd(origin) {
         '@id': `${origin}/#website`,
         name: SITE,
         url: `${origin}/`,
-        inLanguage: 'en-PK',
+        inLanguage: ['en-PK', 'ur-PK'],
         description: DEFAULT_DESCRIPTION,
         publisher: { '@id': `${origin}/#organization` },
         potentialAction: { '@type': 'SearchAction', target: { '@type': 'EntryPoint', urlTemplate: `${origin}/products?search={search_term_string}` }, 'query-input': 'required name=search_term_string' },
@@ -353,8 +368,9 @@ export function keywordList(extra = []) {
 const ldScript = (id, data) => `<script type="application/ld+json" id="${id}">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 
 function headTags(meta) {
-  const title = meta.title ? `${meta.title} · ${SITE}` : DEFAULT_TITLE;
-  const description = meta.description || DEFAULT_DESCRIPTION;
+  const ur = meta.lang === 'ur';
+  const title = meta.title ? `${meta.title} · ${SITE}` : ur ? DEFAULT_TITLE_UR : DEFAULT_TITLE;
+  const description = meta.description || (ur ? DEFAULT_DESCRIPTION_UR : DEFAULT_DESCRIPTION);
   const image = meta.image || `${meta.origin}${OG_IMAGE}`;
   const brandImage = image.endsWith(OG_IMAGE);
   const tags = [
@@ -363,7 +379,9 @@ function headTags(meta) {
     `<meta name="keywords" content="${esc(keywordList(meta.keywords))}" />`,
     `<meta name="robots" content="${meta.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1'}" />`,
     meta.noindex ? '' : `<link rel="canonical" href="${esc(meta.canonical)}" />`,
-    meta.noindex ? '' : `<link rel="alternate" hreflang="en-PK" href="${esc(meta.canonical)}" />`,
+    meta.noindex ? '' : `<link rel="alternate" hreflang="en-PK" href="${esc(meta.alternates?.en || meta.canonical)}" />`,
+    meta.noindex || !meta.alternates ? '' : `<link rel="alternate" hreflang="ur-PK" href="${esc(meta.alternates.ur)}" />`,
+    meta.noindex || !meta.alternates ? '' : `<link rel="alternate" hreflang="x-default" href="${esc(meta.alternates.en)}" />`,
     `<meta property="og:site_name" content="${SITE}" />`,
     `<meta property="og:type" content="${esc(meta.type || 'website')}" />`,
     `<meta property="og:title" content="${esc(title)}" />`,
@@ -373,7 +391,8 @@ function headTags(meta) {
     brandImage ? '<meta property="og:image:width" content="1200" />' : '',
     brandImage ? '<meta property="og:image:height" content="630" />' : '',
     `<meta property="og:url" content="${esc(meta.canonical || meta.origin + meta.pathname)}" />`,
-    '<meta property="og:locale" content="en_PK" />',
+    `<meta property="og:locale" content="${ur ? 'ur_PK' : 'en_PK'}" />`,
+    `<meta property="og:locale:alternate" content="${ur ? 'en_PK' : 'ur_PK'}" />`,
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${esc(title)}" />`,
     `<meta name="twitter:description" content="${esc(description)}" />`,
@@ -388,8 +407,11 @@ function headTags(meta) {
 export async function sendPage(req, res) {
   const meta = await pageMeta(req);
   let html = readTemplate().replace(/<!--seo:start-->[\s\S]*?<!--seo:end-->/, `<!--seo:start-->\n    ${headTags(meta)}\n    <!--seo:end-->`);
-  if (meta.body && !meta.noindex) html = html.replace(/<!--prerender:start-->[\s\S]*?<!--prerender:end-->/, `<!--prerender:start--><div class="prerender" id="prerender">${meta.body}</div><!--prerender:end-->`);
-  res.status(meta.notFound ? 404 : 200).set('Cache-Control', 'no-cache').type('html').send(html);
+  // Urdu pages are right to left from the first paint; the page text written below stays English
+  if (meta.lang === 'ur') html = html.replace(/<html lang="en"[^>]*>/, '<html lang="ur" dir="rtl">');
+  const textLang = meta.lang === 'ur' ? ' lang="en" dir="ltr"' : '';
+  if (meta.body && !meta.noindex) html = html.replace(/<!--prerender:start-->[\s\S]*?<!--prerender:end-->/, `<!--prerender:start--><div class="prerender" id="prerender"${textLang}>${meta.body}</div><!--prerender:end-->`);
+  res.status(meta.notFound ? 404 : 200).set('Cache-Control', 'no-cache').set('Vary', 'Cookie').type('html').send(html);
 }
 
 let sitemapCache = { at: 0, origin: '', xml: '' };
@@ -421,8 +443,14 @@ export async function buildSitemap(origin) {
     ...markets.map((m) => ({ loc: `/markets/${m.slug}`, lastmod: day(m.updatedAt), priority: '0.7', changefreq: 'weekly', images: photos(m.name, m.image) })),
   ];
   const imageTags = (images = []) => images.map((i) => `<image:image><image:loc>${esc(i.loc)}</image:loc><image:title>${esc(i.title)}</image:title></image:image>`).join('');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls
-    .map((u) => `  <url><loc>${esc(origin + u.loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}<changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority>${imageTags(u.images)}</url>`)
+  // Every page in English and in Urdu (?lang=ur), each listing both language versions (hreflang)
+  const urdu = (loc) => `${loc}${loc.includes('?') ? '&' : '?'}lang=ur`;
+  const langLinks = (loc) =>
+    [['en-PK', loc], ['ur-PK', urdu(loc)], ['x-default', loc]].map(([l, href]) => `<xhtml:link rel="alternate" hreflang="${l}" href="${esc(origin + href)}"/>`).join('');
+  const entry = (u, loc, images) =>
+    `  <url><loc>${esc(origin + loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ''}<changefreq>${u.changefreq}</changefreq><priority>${u.priority}</priority>${langLinks(u.loc)}${imageTags(images)}</url>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls
+    .flatMap((u) => [entry(u, u.loc, u.images), entry(u, urdu(u.loc))])
     .join('\n')}\n</urlset>\n`;
 }
 

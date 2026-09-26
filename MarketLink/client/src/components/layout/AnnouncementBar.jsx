@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { useAuth } from '../../context/AuthContext';
-import { t } from '../../i18n';
+import { localText, t } from '../../i18n';
 
 const KEY = 'marketlink_dismissed_announcements';
 
@@ -35,7 +35,7 @@ export default function AnnouncementBar() {
       <div className="container d-flex align-items-center gap-2 py-2">
         <i className="bi bi-megaphone-fill" />
         <span className="flex-grow-1 text-truncate">
-          <strong>{item.title}</strong> <span className="d-none d-md-inline">{item.message}</span>
+          <strong>{localText(item, 'title')}</strong> <span className="d-none d-md-inline">{localText(item, 'message')}</span>
         </span>
         {item.link && (
           <Link to={item.link} className="announcement-link">

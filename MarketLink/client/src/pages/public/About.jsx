@@ -74,8 +74,8 @@ export default function About() {
                 <span className="value-icon" aria-hidden="true">
                   <i className={`bi ${v.icon}`} />
                 </span>
-                <h5>{v.title}</h5>
-                <p className="small mb-0">{v.text}</p>
+                <h5>{t(v.title)}</h5>
+                <p className="small mb-0">{t(v.text)}</p>
               </div>
             </div>
           ))}
@@ -97,7 +97,7 @@ export default function About() {
             <h3 className="team-banner-name">{TEAM_NAME}</h3>
             <p className="mb-0">
               <i className="bi bi-geo-alt me-1" aria-hidden="true" />
-              {TEAM_PLACE}
+              {t(TEAM_PLACE)}
             </p>
           </div>
           <div className="team-banner-chips">
@@ -114,9 +114,9 @@ export default function About() {
             <div key={m.area} className="col-sm-6 col-lg-3">
               <div className="team-card">
                 <span className="avatar">{m.name ? initials(m.name) : <i className={`bi ${m.icon}`} aria-hidden="true" />}</span>
-                <h5 className="mb-1">{m.name || m.area}</h5>
-                {m.name && <p className="small fw-semi text-forest mb-1">{m.area}</p>}
-                <p className="small text-muted-2 mb-2">{m.role}</p>
+                <h5 className="mb-1">{m.name || t(m.area)}</h5>
+                {m.name && <p className="small fw-semi text-forest mb-1">{t(m.area)}</p>}
+                <p className="small text-muted-2 mb-2">{t(m.role)}</p>
                 <span className="team-tag">{TEAM_NAME}</span>
               </div>
             </div>

@@ -83,7 +83,7 @@ export default function FarmerOrderActions({ order, onChange, compact = false })
     setBusy(action);
     try {
       const updated = await runOrderAction(order, action);
-      toast(ACTION_DONE[action]);
+      toast(t(ACTION_DONE[action]));
       onChange?.(updated);
     } catch (err) {
       toast(err.message, 'error');

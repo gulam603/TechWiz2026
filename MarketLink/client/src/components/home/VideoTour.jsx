@@ -61,9 +61,9 @@ export default function VideoTour() {
                   <span className="how-num">{i + 1}</span>
                   <span>
                     <strong>
-                      <i className={`bi ${s.icon}`} aria-hidden="true" /> {s.title}
+                      <i className={`bi ${s.icon}`} aria-hidden="true" /> {t(s.title)}
                     </strong>
-                    <span className="d-block">{s.text}</span>
+                    <span className="d-block">{t(s.text)}</span>
                   </span>
                 </li>
               ))}

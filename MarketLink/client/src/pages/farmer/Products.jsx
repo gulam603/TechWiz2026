@@ -16,9 +16,9 @@ import { ApprovalBanner } from './Dashboard';
 import { money } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
-import { t } from '../../i18n';
+import { categoryName, productName, t, unitName } from '../../i18n';
 
-const EMPTY = { name: '', nameUr: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', metaTitle: '', metaDescription: '', keywords: '', schemaSummary: '', schemaSeason: '', schemaStorage: '', schemaUses: '' };
+const EMPTY = { name: '', nameUr: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', descriptionUr: '', metaTitle: '', metaDescription: '', keywords: '', schemaSummary: '', schemaSeason: '', schemaStorage: '', schemaUses: '' };
 
 const SCHEMA_KEYS = ['schemaSummary', 'schemaSeason', 'schemaStorage', 'schemaUses'];
 const SOURCE_LABEL = { claude: 'Written by AI (Claude)', builtin: 'Written by the built-in AI', farmer: 'Written by you' };
@@ -114,7 +114,7 @@ function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
           <span className="small text-muted-2">
             {source ? (
               <span className="chip chip-soft">
-                <i className="bi bi-stars" aria-hidden="true" /> {SOURCE_LABEL[source]}
+                <i className="bi bi-stars" aria-hidden="true" /> {t(SOURCE_LABEL[source])}
               </span>
             ) : (
               t('Leave empty: AI writes it when you save.')
@@ -242,6 +242,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
           templateQuantity: product.templateQuantity,
           nameUr: product.nameUr || '',
           description: product.description || '',
+          descriptionUr: product.descriptionUr || '',
           metaTitle: product.metaTitle || '',
           metaDescription: product.metaDescription || '',
           keywords: (product.keywords || []).join(', '),
@@ -374,6 +375,12 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
             <textarea id="pf-desc" name="description" rows={3} className="form-control" value={form.description} onChange={change} maxLength={1500} placeholder={t('Type the product name, then press Write with AI')} />
           </div>
           <div className="col-12">
+            <label className="form-label" htmlFor="pf-desc-ur">
+              {t('Description in Urdu')} <span className="text-muted-2 fw-normal">{t('(optional)')}</span>
+            </label>
+            <textarea id="pf-desc-ur" name="descriptionUr" rows={2} className="form-control" dir="rtl" lang="ur" value={form.descriptionUr} onChange={change} maxLength={1800} />
+          </div>
+          <div className="col-12">
             <SeoFields form={form} setForm={setForm} onAi={writeSeoWithAi} aiBusy={aiBusy} />
           </div>
           <div className="col-12">
@@ -419,17 +426,17 @@ const stockColumns = (approved) => [
     responsivePriority: 1,
     render: display(
       (v, p) =>
-        thumbCell(p.image, v, `${esc(p.category?.name || '')}${p.gallery?.length ? ` · <i class="bi bi-images"></i> ${p.gallery.length + 1} photos` : ''}${p.isRemoved ? `<div class="fs-7 text-danger">Removed: ${esc(p.removedReason)}</div>` : ''}`, {
+        thumbCell(p.image, v, `${esc(categoryName(p.category))}${p.gallery?.length ? ` · <i class="bi bi-images"></i> ${t('{n} photos', { n: p.gallery.length + 1 })}` : ''}${p.isRemoved ? `<div class="fs-7 text-danger">${t('Removed:')} ${esc(p.removedReason)}</div>` : ''}`, {
           bg: p.category?.color,
           cls: imageKind(p.image),
         }),
       (v, p) => `${v} ${p.category?.name || ''}`
     ),
   },
-  { data: 'price', title: t('Price'), className: 'dt-nowrap', render: display((v, p) => `<span class="small fw-semi">${esc(money(v))}/${esc(p.unit)}</span>`) },
+  { data: 'price', title: t('Price'), className: 'dt-nowrap', render: display((v, p) => `<span class="small fw-semi">${esc(money(v))}/${esc(unitName(p.unit))}</span>`) },
   { data: 'quantityAvailable', title: t('In stock'), responsivePriority: 3, render: display((v, p) => numberInput('quantityAvailable', v, t('Stock of {name}', { name: p.name }), !approved)) },
   { data: 'templateQuantity', title: t('Weekly template'), render: display((v, p) => numberInput('templateQuantity', v, t('Weekly template of {name}', { name: p.name }), !approved)) },
-  { data: 'status', title: t('Status'), responsivePriority: 4, render: display((v, p) => selectInput('status', v, STATUS_OPTIONS, t('Status of {name}', { name: p.name }), !approved), (v) => v.replace('_', ' ')) },
+  { data: 'status', title: t('Status'), responsivePriority: 4, render: display((v, p) => selectInput('status', v, STATUS_OPTIONS.map(([k, l]) => [k, t(l)]), t('Status of {name}', { name: productName(p) }), !approved), (v) => v.replace('_', ' ')) },
   { data: 'totalSold', title: t('Sold'), className: 'text-end' },
   {
     data: null,
@@ -437,7 +444,7 @@ const stockColumns = (approved) => [
     orderable: false,
     className: 'text-end text-nowrap no-export',
     responsivePriority: 2,
-    render: (v, type, p) => `${iconAction('edit', `Edit ${p.name}`, 'bi-pencil', 'btn-white', !approved)} ${iconAction('delete', `Delete ${p.name}`, 'bi-trash3', 'btn-white', !approved)}`,
+    render: (v, type, p) => `${iconAction('edit', t('Edit {name}', { name: productName(p) }), 'bi-pencil', 'btn-white', !approved)} ${iconAction('delete', t('Delete {name}?', { name: productName(p) }).replace(/[?؟]$/, ''), 'bi-trash3', 'btn-white', !approved)}`,
   },
 ];
 

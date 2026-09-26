@@ -1,0 +1,256 @@
+// Urdu (right to left). The mirrored layout itself comes from postcss-rtlcss (see vite.config.js);
+// this file sets the Urdu fonts and the few things a mirror cannot know about.
+// Everything here is written for Urdu already, so rtlcss must leave it exactly as it is.
+/* rtl:begin:ignore */
+
+$urdu-ui: 'Plus Jakarta Sans Variable', 'Noto Naskh Arabic Variable', 'Segoe UI', Tahoma, sans-serif;
+$urdu-text: 'Plus Jakarta Sans Variable', 'Noto Nastaliq Urdu Variable', 'Noto Naskh Arabic Variable', serif;
+
+html[lang='ur'] {
+  // Naskh for the interface (buttons, menus, tables, forms): clear and compact
+  body {
+    font-family: $urdu-ui;
+    line-height: 1.75;
+  }
+
+  // Nastaliq, the usual Urdu writing style, for headings and reading text
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6,
+  .display-font,
+  .section-title,
+  .hc-title,
+  .page-hero h1,
+  .lead,
+  blockquote,
+  .rs-card blockquote p,
+  .faq-answer,
+  .terms-body p {
+    font-family: $urdu-text;
+    line-height: 1.95;
+    letter-spacing: 0;
+  }
+
+  h1,
+  .h1,
+  .hc-title {
+    line-height: 1.75;
+  }
+
+  p {
+    line-height: 1.9;
+  }
+
+  // Joined letters must never be spaced out, and Urdu has no italics or capitals
+  *,
+  *::before,
+  *::after {
+    letter-spacing: 0 !important;
+  }
+
+  em,
+  i:not(.bi),
+  .italic-accent,
+  blockquote {
+    font-style: normal;
+  }
+
+  .text-uppercase,
+  .eyebrow {
+    text-transform: none;
+  }
+
+  .eyebrow {
+    font-size: 0.85rem;
+  }
+
+  // Taller letters need a little more room in tight one-line places
+  .btn,
+  .chip,
+  .badge,
+  .form-control,
+  .form-select,
+  .nav-link,
+  .app-link,
+  .filter-chip {
+    line-height: 1.6;
+  }
+
+  .text-truncate {
+    padding-block: 0.12em;
+  }
+
+  // Numbers, e-mails, phone numbers and codes stay left to right inside Urdu text
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
+  input[type='password'],
+  input[type='url'] {
+    direction: ltr;
+    text-align: right;
+  }
+}
+
+[dir='rtl'] {
+  // Arrows and chevrons point the way the text reads (the icon glyph is mirrored, so hover
+  // animations on the element itself keep working)
+  .bi-arrow-right::before,
+  .bi-arrow-left::before,
+  .bi-chevron-right::before,
+  .bi-chevron-left::before,
+  .bi-chevron-double-right::before,
+  .bi-chevron-double-left::before,
+  .bi-caret-right-fill::before,
+  .bi-caret-left-fill::before,
+  .bi-arrow-up-right::before,
+  .bi-box-arrow-up-right::before,
+  .bi-box-arrow-right::before,
+  .bi-box-arrow-in-right::before,
+  .bi-sign-turn-right::before,
+  .bi-reply::before,
+  .bi-send::before,
+  .bi-send-fill::before,
+  .bi-quote::before,
+  .bi-list::before,
+  .bi-layout-sidebar::before,
+  .bi-layout-sidebar-inset::before {
+    display: inline-block;
+    transform: scaleX(-1);
+  }
+
+  // Maps are drawn left to right (tiles, zoom buttons, attribution); popups read right to left
+  .leaflet-container {
+    direction: ltr;
+  }
+
+  .leaflet-popup-content,
+  .leaflet-tooltip {
+    direction: rtl;
+    text-align: right;
+  }
+
+  // DataTables styles come from the library (not mirrored by our build)
+  div.dt-container .dt-search,
+  div.dt-container .dt-paging {
+    text-align: left;
+  }
+
+  div.dt-container .dt-search input {
+    margin-left: 0;
+    margin-right: 0.5em;
+  }
+
+  div.dt-container .dt-length select {
+    margin-right: 0;
+    margin-left: 0.5em;
+  }
+
+  table.dataTable th,
+  table.dataTable td {
+    text-align: right;
+  }
+
+  table.dataTable th.dt-type-numeric,
+  table.dataTable td.dt-type-numeric,
+  table.dataTable .text-end {
+    text-align: left;
+  }
+
+  table.dataTable > thead > tr > th.dt-orderable-asc span.dt-column-order,
+  table.dataTable > thead > tr > th.dt-orderable-desc span.dt-column-order,
+  table.dataTable > thead > tr > th.dt-ordering-asc span.dt-column-order,
+  table.dataTable > thead > tr > th.dt-ordering-desc span.dt-column-order {
+    right: auto;
+    left: 12px;
+  }
+
+  table.dataTable > thead > tr > th.dt-orderable-asc,
+  table.dataTable > thead > tr > th.dt-orderable-desc,
+  table.dataTable > thead > tr > th.dt-ordering-asc,
+  table.dataTable > thead > tr > th.dt-ordering-desc {
+    padding-right: 10px;
+    padding-left: 30px;
+  }
+
+  // Charts (recharts) draw their own axes left to right
+  .recharts-wrapper {
+    direction: ltr;
+  }
+}
+
+// The language switch (navbar, phone menu, dashboards and footer)
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 40px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--ml-border, #e3dccd);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ml-forest, #1f4d36);
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  span[lang='ur'],
+  &[lang='ur'] span:not(.visually-hidden) {
+    font-family: 'Noto Naskh Arabic Variable', sans-serif;
+    font-size: 1rem;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: #f3f7ee;
+    border-color: #b8cfa8;
+  }
+
+  .bi {
+    font-size: 1.05rem;
+  }
+}
+
+.lang-switch-block {
+  width: 100%;
+  justify-content: center;
+}
+
+.lang-switch-footer {
+  height: 34px;
+  background: transparent;
+  color: inherit;
+  border-color: rgba(255, 255, 255, 0.25);
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.45);
+  }
+}
+
+.app-lang {
+  margin: 0.5rem 0.75rem 0;
+  width: auto;
+}
+/* rtl:end:ignore */
+
+/* rtl:begin:ignore */
+// Urdu typed into forms in the (English) admin area
+input[lang='ur'],
+textarea[lang='ur'] {
+  font-family: 'Noto Naskh Arabic Variable', 'Segoe UI', Tahoma, sans-serif;
+  line-height: 1.8;
+}
+/* rtl:end:ignore */

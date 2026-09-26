@@ -1,5 +1,7 @@
 // Structured data (schema.org JSON-LD) for the detail pages. The server builds the same data for the
 // first page load (server/src/services/seo.js); these keep it right while browsing inside the app.
+import { localText } from '../i18n';
+
 const DAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const abs = (url) => (!url ? undefined : /^https?:\/\//.test(url) ? url : `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`);
 const rating = (x) => (x.ratingCount > 0 ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: x.ratingAvg, reviewCount: x.ratingCount, bestRating: 5, worstRating: 1 } } : {});
@@ -93,7 +95,8 @@ export function faqLd(faqs) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: plain(f.answer) } })),
+    // In the language of the page (Urdu questions when the site is in Urdu)
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: localText(f, 'question'), acceptedAnswer: { '@type': 'Answer', text: plain(localText(f, 'answer')) } })),
   };
 }
 

@@ -4,6 +4,7 @@ import SocialLinks from '../common/SocialLinks';
 import NewsletterCta from '../home/NewsletterCta';
 import { CONTACT, TEAM_NAME } from '../../config';
 import { t } from '../../i18n';
+import { LanguageSwitch } from '../../i18n/LanguageProvider';
 
 export default function Footer() {
   // The home page has its own large newsletter block, so the footer form is not repeated there
@@ -59,7 +60,7 @@ export default function Footer() {
             <h6>{t('Contact')}</h6>
             <ul className="list-unstyled d-grid gap-2 small">
               <li><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
-              <li>{CONTACT.phone}</li>
+              <li><bdi dir="ltr">{CONTACT.phone}</bdi></li>
             </ul>
           </div>
         </div>
@@ -72,10 +73,10 @@ export default function Footer() {
           <div className="col-lg-6">
             <h6>{t('Visit us')}</h6>
             <ul className="list-unstyled d-grid gap-2 small mb-0">
-              <li><i className="bi bi-geo-alt me-2" />{CONTACT.address}</li>
+              <li><i className="bi bi-geo-alt me-2" />{t(CONTACT.address)}</li>
               <li className="d-lg-none"><i className="bi bi-envelope me-2" /><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
-              <li className="d-lg-none"><i className="bi bi-telephone me-2" />{CONTACT.phone}</li>
-              <li><i className="bi bi-clock me-2" />{CONTACT.hours}</li>
+              <li className="d-lg-none"><i className="bi bi-telephone me-2" /><bdi dir="ltr">{CONTACT.phone}</bdi></li>
+              <li><i className="bi bi-clock me-2" />{t(CONTACT.hours)}</li>
             </ul>
           </div>
         </div>
@@ -83,6 +84,7 @@ export default function Footer() {
           <span>
             © {new Date().getFullYear()} {t('MarketLink · eGreen Basket · Built by')} <Link to="/about">{TEAM_NAME}</Link> · <Link to="/terms">{t('Terms & Conditions')}</Link>
           </span>
+          <LanguageSwitch className="lang-switch-footer" />
           <span>
             {t('Map data ©')} <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">{t('OpenStreetMap')}</a> {t('· Photos: Open Images (CC BY 2.0)')}
           </span>

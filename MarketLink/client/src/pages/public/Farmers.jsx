@@ -11,7 +11,7 @@ import { DAY_NAMES, DAY_SHORT } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
-import { listText, t } from '../../i18n';
+import { categoryName, listText, t } from '../../i18n';
 
 export default function Farmers() {
   const [filters, setFilters] = useState({ search: '', city: '', market: '', day: '', category: '', rating: '', practice: '', sort: 'rating', page: 1 });
@@ -43,13 +43,13 @@ export default function Farmers() {
               </div>
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.city} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={(marketData?.cities || []).map((c) => ({ value: c, label: c }))} />
+              <SearchSelect value={filters.city} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={(marketData?.cities || []).map((c) => ({ value: c, label: t(c) }))} />
             </div>
             <div className="col-6 col-md-3">
               <SearchSelect value={filters.market} onChange={(v) => set({ market: v })} ariaLabel={t('Market')} emptyLabel="All markets" options={markets.map((m) => ({ value: m._id, label: m.name, hint: m.city }))} />
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.category} onChange={(v) => set({ category: v })} ariaLabel={t('Category')} emptyLabel="All categories" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: c.name }))} />
+              <SearchSelect value={filters.category} onChange={(v) => set({ category: v })} ariaLabel={t('Category')} emptyLabel="All categories" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: categoryName(c) }))} />
             </div>
             <div className="col-6 col-md-3">
               <SearchSelect value={filters.day} onChange={(v) => set({ day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
@@ -62,7 +62,7 @@ export default function Farmers() {
               </select>
             </div>
             <div className="col-6 col-md-3">
-              <SearchSelect value={filters.practice} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={(practiceData?.practices || []).map((p) => ({ value: p, label: p }))} />
+              <SearchSelect value={filters.practice} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={(practiceData?.practices || []).map((p) => ({ value: p, label: t(p) }))} />
             </div>
             <div className="col-12 col-md-6 col-xl-3 d-flex gap-2">
               <select className="form-select" value={filters.sort} onChange={(e) => set({ sort: e.target.value })} aria-label={t('Sort')}>

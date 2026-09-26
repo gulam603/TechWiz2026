@@ -35,6 +35,7 @@ function ProfileEditor({ data, setData }) {
       address: f.address,
       city: f.city || '',
       bio: f.bio || '',
+      bioUr: f.bioUr || '',
       tags: (f.tags || []).join(', '),
       categories: (f.categories || []).map((c) => c._id || c),
     };
@@ -128,7 +129,7 @@ function ProfileEditor({ data, setData }) {
               </div>
               <div className="col-md-4">
                 <label className="form-label" htmlFor="s-city">{t('City')}</label>
-                <SearchSelect id="s-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose a city')} options={(cityData?.cities || []).map((c) => ({ value: c.name, label: c.name, hint: c.province }))} />
+                <SearchSelect id="s-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose a city')} options={(cityData?.cities || []).map((c) => ({ value: c.name, label: t(c.name), hint: t(c.province) }))} />
               </div>
               <div className="col-12">
                 <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
@@ -139,6 +140,13 @@ function ProfileEditor({ data, setData }) {
                 </div>
                 <textarea id="s-bio" name="bio" rows={5} className="form-control" value={form.bio} onChange={change} maxLength={1200} />
                 <span className="fs-7 text-muted-2">{t('The AI uses your stall name, city, categories, practices and markets. Edit the text before saving.')}</span>
+              </div>
+              <div className="col-12">
+                <label className="form-label" htmlFor="s-bio-ur">
+                  {t('About your farm in Urdu')} <span className="text-muted-2 fw-normal">{t('(optional)')}</span>
+                </label>
+                <textarea id="s-bio-ur" name="bioUr" rows={4} className="form-control" dir="rtl" lang="ur" value={form.bioUr} onChange={change} maxLength={1500} />
+                <span className="fs-7 text-muted-2">{t('Shown to visitors who use the site in Urdu. Leave empty to show the text above.')}</span>
               </div>
               <div className="col-12">
                 <span className="form-label d-block">{t('What you grow / sell')}</span>

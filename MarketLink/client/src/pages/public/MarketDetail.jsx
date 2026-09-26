@@ -11,7 +11,7 @@ import { DAY_NAMES, DAY_SHORT, time12 } from '../../utils/format';
 import PhotoCredit from '../../components/common/PhotoCredit';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, ldGraph, marketLd } from '../../utils/seo';
-import { listText, t } from '../../i18n';
+import { isUrdu, listText, localText, t } from '../../i18n';
 
 export default function MarketDetail() {
   const { slug } = useParams();
@@ -20,8 +20,8 @@ export default function MarketDetail() {
   useSeo(
     m
       ? {
-          title: `${m.name}, farmers market${m.city ? ` in ${m.city}` : ''}`,
-          description: clip(m.description || t('{name}, {address}. See the farmers, opening days and pre-order on MarketLink.', { name: m.name, address: m.address })),
+          title: m.city ? t('{name}, farmers market in {city}', { name: m.name, city: t(m.city) }) : t('{name}, farmers market', { name: m.name }),
+          description: clip((!isUrdu() && m.description) || t('{name}, {address}. See the farmers, opening days and pre-order on MarketLink.', { name: m.name, address: m.address })),
           image: m.image,
           jsonLd: ldGraph(marketLd(m), breadcrumbLd([{ name: 'Markets', path: '/markets' }, { name: m.name, path: `/markets/${m.slug}` }])),
           canonicalPath: `/markets/${m.slug}`,
@@ -54,10 +54,10 @@ export default function MarketDetail() {
         <PhotoCredit credit={market.imageCredit} />
         <div style={{ maxWidth: 640 }}>
           <span className="chip chip-lime mb-3">
-            <i className="bi bi-geo-alt-fill" /> {market.city}
+            <i className="bi bi-geo-alt-fill" /> {t(market.city)}
           </span>
           <h1 className="text-balance">{market.name}</h1>
-          <p className="mb-4">{market.description}</p>
+          <p className="mb-4">{localText(market, 'description')}</p>
           <div className="d-flex flex-wrap gap-4 align-items-center mb-4">
             <div>
               <div className="fs-7 text-uppercase ls-wide mb-1" style={{ color: 'rgba(255,255,255,.6)' }}>{t('Open on')}</div>
@@ -91,7 +91,7 @@ export default function MarketDetail() {
               <i className="bi bi-geo-alt" /> {market.address}
               {market.mapLink && (
                 <a href={market.mapLink} target="_blank" rel="noreferrer" className="ms-2 fw-semi">
-                  <i className="bi bi-box-arrow-up-right" /> {t('Open on')} {market.mapProvider === 'google' ? t('Google Maps') : t('OpenStreetMap')}
+                  <i className="bi bi-box-arrow-up-right" /> {market.mapProvider === 'google' ? t('Open in Google Maps') : t('Open in OpenStreetMap')}
                 </a>
               )}
             </p>

@@ -34,6 +34,12 @@ const LANGUAGE = {
   aria: { paginate: { first: 'First page', previous: 'Previous page', next: 'Next page', last: 'Last page' } },
 };
 
+// The texts above in the language in use (the admin area is always English)
+const language = () => ({
+  ...Object.fromEntries(Object.entries(LANGUAGE).map(([k, v]) => [k, typeof v === 'string' ? t(v) : v])),
+  aria: { paginate: Object.fromEntries(Object.entries(LANGUAGE.aria.paginate).map(([k, v]) => [k, t(v)])) },
+});
+
 /**
  * DataTables grid (datatables.net) with the MarketLink look.
  *  - `table`: name of a server-side table (POST /api/admin/tables/:table does paging, search and sorting)
@@ -49,6 +55,8 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
   const navigate = useNavigate();
   const filterKey = JSON.stringify(filters || {});
   const first = useRef(true);
+  // Column headings in the language in use
+  const cols = useMemo(() => columns.map((c) => (c.title ? { ...c, title: t(c.title) } : c)), [columns]);
 
   useEffect(() => {
     filtersRef.current = filters;
@@ -111,7 +119,7 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
         [10, 25, 50, 100, t('All')],
       ],
       searchDelay: 350,
-      language: { ...LANGUAGE, searchPlaceholder: searchPlaceholder || LANGUAGE.searchPlaceholder, ...(emptyText ? { emptyTable: emptyText } : {}) },
+      language: { ...language(), ...(searchPlaceholder ? { searchPlaceholder } : {}), ...(emptyText ? { emptyTable: emptyText } : {}) },
       layout: {
         topStart: ['pageLength', { buttons: ['csv', 'excel', 'print'].map((type) => ({ extend: type === 'csv' ? 'csvHtml5' : type === 'excel' ? 'excelHtml5' : 'print', text: `<i class="bi ${type === 'csv' ? 'bi-filetype-csv' : type === 'excel' ? 'bi-file-earmark-excel' : 'bi-printer'}"></i> ${type === 'csv' ? 'CSV' : type === 'excel' ? t('Excel') : t('Print')}`, className: 'btn btn-sm btn-white', title: exportName, exportOptions: { columns: ':not(.no-export)', orthogonal: 'export' } })) }],
         topEnd: 'search',
@@ -152,7 +160,7 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
 
   return (
     <div className={`data-grid ${className}`} onClick={handleClick} ref={wrap}>
-      <DataTable ref={ref} className="table table-hover align-middle w-100" columns={columns} data={table ? undefined : data} options={options} />
+      <DataTable ref={ref} className="table table-hover align-middle w-100" columns={cols} data={table ? undefined : data} options={options} />
     </div>
   );
 }

@@ -13,11 +13,11 @@ import { PageLoader } from '../../components/common/Loader';
 import ViewToggle from '../../components/common/ViewToggle';
 import DataGrid from '../../components/admin/DataGrid';
 import { action, badge, dayCell, display, esc, link, linkButton, moneyCell, muted } from '../../utils/cells';
-import { time12 } from '../../utils/format';
+import { formatDateKey, time12, toDateKey } from '../../utils/format';
 import FarmerOrderActions, { ACTION_DONE, DeclineModal, ORDER_ACTIONS, runOrderAction } from './FarmerOrderActions';
 import { ApprovalBanner } from './Dashboard';
 import { useAuth } from '../../context/AuthContext';
-import { t } from '../../i18n';
+import { productName, t, unitName } from '../../i18n';
 
 const TABS = [
   { value: 'active', label: 'Open' },
@@ -28,7 +28,7 @@ const TABS = [
 ];
 
 const COLUMNS = [
-  { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/farmer/orders/${o._id}`, v)}<div>${muted(`placed ${new Date(o.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`)}</div>`) },
+  { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/farmer/orders/${o._id}`, v)}<div>${muted(t('placed {date}', { date: formatDateKey(toDateKey(new Date(o.createdAt))) }))}</div>`) },
   {
     data: 'customer.name',
     title: 'Customer',
@@ -40,9 +40,9 @@ const COLUMNS = [
     title: 'Items',
     orderable: false,
     className: 'dt-comment',
-    render: display((v, o) => `<span class="small">${esc((v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join(' · '))}</span>${o.customerNote ? `<div class="fs-7 mt-1"><i class="bi bi-chat-left-text"></i> “${esc(o.customerNote)}”</div>` : ''}`, (v) => (v || []).map((i) => `${i.quantity} ${i.unit} ${i.name}`).join('; ')),
+    render: display((v, o) => `<span class="small">${esc((v || []).map((i) => `${i.quantity} ${unitName(i.unit)} ${productName(i)}`).join(' · '))}</span>${o.customerNote ? `<div class="fs-7 mt-1"><i class="bi bi-chat-left-text"></i> “${esc(o.customerNote)}”</div>` : ''}`, (v) => (v || []).map((i) => `${i.quantity} ${unitName(i.unit)} ${productName(i)}`).join('; ')),
   },
-  { data: 'pickupDate', title: 'Pickup', className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(`${time12(o.pickupSlot?.start)} to ${time12(o.pickupSlot?.end)}`)}</div>`) },
+  { data: 'pickupDate', title: 'Pickup', className: 'dt-nowrap', render: display((v, o) => `${dayCell(v)}<div>${muted(t('{from} to {to}', { from: time12(o.pickupSlot?.start), to: time12(o.pickupSlot?.end) }))}</div>`) },
   { data: 'totalAmount', title: 'Total', className: 'text-end', render: display((v) => moneyCell(v)) },
   { data: 'status', title: 'Status', responsivePriority: 3, render: display((v) => badge(v)) },
   {
@@ -51,7 +51,7 @@ const COLUMNS = [
     orderable: false,
     className: 'text-end no-export',
     responsivePriority: 2,
-    render: (v, type, o) => `<div class="dt-actions">${(ORDER_ACTIONS[o.status] || []).map((a) => action(a.action, a.label, a.cls, a.icon)).join('')}${linkButton(`/farmer/orders/${o._id}`, t('Details'))}</div>`,
+    render: (v, type, o) => `<div class="dt-actions">${(ORDER_ACTIONS[o.status] || []).map((a) => action(a.action, t(a.label), a.cls, a.icon)).join('')}${linkButton(`/farmer/orders/${o._id}`, t('Details'))}</div>`,
   },
 ];
 
@@ -81,7 +81,7 @@ export default function FarmerOrders() {
     }
     try {
       await runOrderAction(order, name);
-      toast(ACTION_DONE[name]);
+      toast(t(ACTION_DONE[name]));
       reload();
     } catch (err) {
       toast(err.message, 'error');
@@ -151,7 +151,7 @@ export default function FarmerOrders() {
                 <div className="d-flex flex-wrap align-items-center gap-2 mt-3 pt-3 border-top">
                   <div className="small flex-grow-1">
                     <i className="bi bi-person" /> <strong>{o.customer?.name}</strong> · <a href={`tel:${o.customer?.phone}`}>{o.customer?.phone}</a>
-                    <div className="fs-7 text-muted-2 mt-1">{o.items.map((i) => `${i.quantity} ${i.unit} ${i.name}`).join(' · ')}</div>
+                    <div className="fs-7 text-muted-2 mt-1">{o.items.map((i) => `${i.quantity} ${unitName(i.unit)} ${productName(i)}`).join(' · ')}</div>
                     {o.customerNote && (
                       <div className="fs-7 mt-1">
                         <i className="bi bi-chat-left-text" /> “{o.customerNote}”

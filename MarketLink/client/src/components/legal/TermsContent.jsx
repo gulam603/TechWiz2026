@@ -1,10 +1,10 @@
-import { TERMS_SECTIONS } from './terms';
+import { termsSections } from './terms';
 
 /** The Terms & Conditions text, numbered, used on /terms and in the sign-up dialog. */
 export default function TermsContent({ compact = false }) {
   return (
     <div className={`terms-content ${compact ? 'is-compact' : ''}`}>
-      {TERMS_SECTIONS.map((s, i) => (
+      {termsSections().map((s, i) => (
         <section key={s.id} id={`terms-${s.id}`} className="terms-section">
           <h2 className="terms-title">
             <span className="terms-icon" aria-hidden="true">

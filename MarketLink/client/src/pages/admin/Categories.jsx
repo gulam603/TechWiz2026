@@ -10,7 +10,7 @@ import { badge, display, esc, iconAction, thumbCell } from '../../utils/cells';
 import { PageLoader } from '../../components/common/Loader';
 import { ImageInput } from '../farmer/Products';
 
-const EMPTY = { name: '', description: '', color: '#E4F3D8', sortOrder: 0, isActive: true };
+const EMPTY = { name: '', nameUr: '', description: '', color: '#E4F3D8', sortOrder: 0, isActive: true };
 
 const COLUMNS = [
   { data: 'name', title: 'Category', responsivePriority: 1, render: display((v, c) => thumbCell(c.icon, v, esc((c.description || '').length > 70 ? `${c.description.slice(0, 68)}…` : c.description || ''), { bg: c.color, href: `/products?category=${c.slug}` })) },
@@ -32,7 +32,7 @@ const COLUMNS = [
 function CategoryForm({ category, onClose, onSaved }) {
   const { toast } = useToast();
   const [form, setForm] = useState(() =>
-    category ? { name: category.name, description: category.description || '', color: category.color || '#E4F3D8', sortOrder: category.sortOrder, isActive: category.isActive } : EMPTY
+    category ? { name: category.name, nameUr: category.nameUr || '', description: category.description || '', color: category.color || '#E4F3D8', sortOrder: category.sortOrder, isActive: category.isActive } : EMPTY
   );
   const [file, setFile] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -57,9 +57,15 @@ function CategoryForm({ category, onClose, onSaved }) {
     <Modal open onClose={onClose} title={category ? `Edit ${category.name}` : 'Add category'}>
       <form onSubmit={save}>
         <div className="row g-3">
-          <div className="col-md-8">
+          <div className="col-md-4">
             <label className="form-label" htmlFor="cat-name">Name</label>
             <input id="cat-name" className="form-control" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          </div>
+          <div className="col-md-4">
+            <label className="form-label" htmlFor="cat-name-ur">
+              Name in Urdu <span className="text-muted-2 fw-normal">(optional)</span>
+            </label>
+            <input id="cat-name-ur" className="form-control" dir="rtl" lang="ur" maxLength={60} value={form.nameUr} onChange={(e) => setForm({ ...form, nameUr: e.target.value })} placeholder="سبزیاں" />
           </div>
           <div className="col-md-4">
             <label className="form-label" htmlFor="cat-order">Sort order</label>

@@ -133,7 +133,8 @@ function readSchemaFields(body) {
 }
 
 function readProductBody(body, { partial = false } = {}) {
-  const data = pick(body, ['name', 'nameUr', 'description', 'unit', 'metaTitle', 'metaDescription']);
+  const data = pick(body, ['name', 'nameUr', 'description', 'descriptionUr', 'unit', 'metaTitle', 'metaDescription']);
+  if (data.descriptionUr !== undefined && String(data.descriptionUr).length > 1800) throw new AppError('The Urdu description can be 1800 characters at most', 400);
   if (data.nameUr !== undefined && String(data.nameUr).length > 100) throw new AppError('The Urdu name can be 100 characters at most', 400);
   if (body.keywords !== undefined) data.keywords = readKeywords(body.keywords);
   if (data.metaTitle && String(data.metaTitle).length > 70) throw new AppError('The SEO title can be 70 characters at most', 400);
@@ -160,7 +161,7 @@ export async function myProducts(req, res) {
   const filter = { farmer: req.farmer._id, deletedByFarmer: { $ne: true } };
   if (req.query.search) filter.name = containsRegex(req.query.search);
   if (Object.values(PRODUCT_STATUS).includes(req.query.status)) filter.status = req.query.status;
-  const products = await Product.find(filter).populate('category', 'name slug color').sort({ createdAt: -1 }).lean();
+  const products = await Product.find(filter).populate('category', 'name nameUr slug color').sort({ createdAt: -1 }).lean();
   res.json({ products, units: UNITS, autoApplyTemplate: req.farmer.autoApplyTemplate, templateLastAppliedWeek: req.farmer.templateLastAppliedWeek });
 }
 
@@ -406,7 +407,7 @@ export async function farmerInsights(req, res) {
   for (const o of completed) {
     for (const item of o.items) {
       const key = String(item.product);
-      const row = sales.get(key) || { productId: key, name: item.name, quantity: 0, revenue: 0, unit: item.unit };
+      const row = sales.get(key) || { productId: key, name: item.name, nameUr: item.nameUr, quantity: 0, revenue: 0, unit: item.unit };
       row.quantity += item.quantity;
       row.revenue = round2(row.revenue + item.subtotal);
       sales.set(key, row);

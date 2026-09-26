@@ -67,7 +67,7 @@ export async function listProducts(req, res) {
   const [products, total] = await Promise.all([
     Product.find(filter)
       .populate('farmer', 'stallName slug logo latitude longitude')
-      .populate('category', 'name slug color')
+      .populate('category', 'name nameUr slug color')
       .sort({ ...sort, _id: 1 })
       .skip(skip)
       .limit(limit)
@@ -83,7 +83,7 @@ export async function getProduct(req, res) {
   const key = String(req.params.id || '').toLowerCase();
   const lookup = isValidId(key) ? { _id: key } : { slug: key };
   const product = await Product.findOne({ ...lookup, isRemoved: false, farmerActive: true })
-    .populate('category', 'name slug color')
+    .populate('category', 'name nameUr slug color')
     .populate({
       path: 'farmer',
       select: 'stallName slug logo address city tags latitude longitude ratingAvg ratingCount operatingDays pickupWindows orderCutoffHours markets',
@@ -92,7 +92,7 @@ export async function getProduct(req, res) {
     .lean();
   if (!product) throw new AppError('Product not found', 404);
 
-  const withRefs = (q) => q.populate('farmer', 'stallName slug').populate('category', 'name slug color');
+  const withRefs = (q) => q.populate('farmer', 'stallName slug').populate('category', 'name nameUr slug color');
   const [reviews, sameCategory, fromFarmer] = await Promise.all([
     Review.find({ product: product._id, type: 'product', isRemoved: false })
       .populate('customer', 'name avatar')
@@ -104,7 +104,7 @@ export async function getProduct(req, res) {
       .limit(12)
       .lean(),
     Product.find({ ...Product.publicFilter(), farmer: product.farmer._id, _id: { $ne: product._id } })
-      .populate('category', 'name slug color')
+      .populate('category', 'name nameUr slug color')
       .select('name nameUr slug image price unit category status quantityAvailable')
       .sort({ totalSold: -1 })
       .limit(4)

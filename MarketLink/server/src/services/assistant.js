@@ -17,12 +17,14 @@ import env from '../config/env.js';
 import { Category, Farmer, Market, Order, Product } from '../models/index.js';
 import { DAY_NAMES, OPEN_ORDER_STATUSES, PRODUCT_STATUS, ROLES } from '../utils/constants.js';
 import { escapeRegex } from '../utils/helpers.js';
+import { timeToMinutes, toDateKey } from '../utils/dates.js';
 import { CATEGORY_UR, CITY_UR, DAY_UR, STATUS_UR, UNIT_UR, isUrduText, urduToEnglish } from './assistantUrdu.js';
+import { ROMAN_STOP_WORDS, romanToEnglish } from './assistantRoman.js';
 
 const STOP_WORDS = new Set(
-  'a an the is are was were be do does did i you me my we our it its of for to in on at by with and or can could would should will what when where which who how any some there here have has get buy find need want show tell about please price cost much many available availability today tomorrow this week market markets bazaar farmer farmers farm stall stalls vendor sell sells selling fresh open time timing timings hours pickup slot slots window windows day days is are im looking near me from have got anyone somebody kg per rate it they them there that those these same more also else stock left still wahan wahaan iska uska unka'.split(
-    ' '
-  )
+  'a an the is are was were be do does did i you me my we our it its of for to in on at by with and or can could would should will what when where which who how any some there here have has get buy find need want show tell about please price cost much many available availability today tomorrow this week market markets bazaar farmer farmers farm stall stalls vendor sell sells selling fresh open time timing timings hours pickup slot slots window windows day days is are im looking near me from have got anyone somebody kg per rate it they them there that those these same more also else stock left still wahan wahaan iska uska unka'
+    .split(' ')
+    .concat(ROMAN_STOP_WORDS)
 );
 
 const NAME_NOISE = new Set(['market', 'farmers', 'farmer', 'farm', 'farms', 'the', 'bazaar', 'fresh', 'weekend', 'sunday', 'friday', 'saturday', 'green', 'organic', 'and', 'co', 'stall', 'fields', 'garden', 'gardens']);
@@ -131,10 +133,10 @@ function nameScore(product, words) {
   }, product.status === PRODUCT_STATUS.AVAILABLE ? 0.5 : 0);
 }
 
-const DEFAULT_SUGGESTIONS = ['Market timings', 'Where can I buy tomatoes?', 'Pickup windows', 'How do I pay?'];
+const DEFAULT_SUGGESTIONS = ['Top rated farmers', 'Markets open now', 'Where can I buy tomatoes?', 'How do I pay?'];
 
 function reply(text, extra = {}) {
-  return { reply: text, cards: extra.cards || [], suggestions: extra.suggestions || DEFAULT_SUGGESTIONS };
+  return { reply: String(text).trim(), cards: extra.cards || [], suggestions: extra.suggestions || DEFAULT_SUGGESTIONS };
 }
 
 async function searchProducts(words, categoryId, farmerId) {
@@ -177,6 +179,339 @@ async function productDetails(productId, focus, mode = 'full') {
   );
 }
 
+// --- questions about the site itself: rankings, best sellers, prices, offers, counts, help ------------
+// Words that only say what kind of list is wanted ("top rated", "cheapest"); what is left names the product
+const ASK_WORDS = new Set(
+  'all best top rated rating ratings highest highly most selling seller sellers bestseller bestsellers sold popular trending cheapest cheap cheaper lowest low budget affordable expensive costliest priciest offer offers discount discounts deal deals sale new newest latest recent recently product products item items thing things list show rank ranked ranking number one reviewed reviews review stars star liked good great which what whats'.split(
+    ' '
+  )
+);
+const FARMER_WORDS = /\b(farmers?|stalls?|vendors?|sellers?|growers?)\b/;
+const MARKET_WORDS = /\b(markets?|bazaars?)\b/;
+const stars = (f) => (f.ratingCount ? L(`{{icon:star-fill}} ${f.ratingAvg} (${f.ratingCount} review${f.ratingCount === 1 ? '' : 's'})`, `{{icon:star-fill}} ${f.ratingAvg} (${f.ratingCount} جائزے)`) : L('no reviews yet', 'ابھی کوئی جائزہ نہیں'));
+const topN = (text, fallback = 5) => Math.min(Math.max(Number(text.match(/\btop (\d{1,2})\b/)?.[1]) || fallback, 1), 10);
+
+/** Is the farmer at the market today? { state: here | later | done | away | off, windows } */
+function farmerToday(farmer, marketId) {
+  const now = new Date();
+  const day = now.getDay();
+  if ((farmer.blockedDates || []).includes(toDateKey(now))) return { state: 'away', windows: [] };
+  const windows = (farmer.pickupWindows || []).filter((w) => w.day === day && (!marketId || String(w.market?._id || w.market) === String(marketId)));
+  if (!windows.length) return { state: 'off', windows };
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const start = Math.min(...windows.map((w) => timeToMinutes(w.start)));
+  const end = Math.max(...windows.map((w) => timeToMinutes(w.end)));
+  return { state: nowMin < start ? 'later' : nowMin <= end ? 'here' : 'done', windows };
+}
+function nextMarketDay(farmer) {
+  const today = new Date().getDay();
+  for (let i = 1; i <= 7; i += 1) {
+    const d = (today + i) % 7;
+    if ((farmer.operatingDays || []).includes(d)) return i === 1 ? L('tomorrow', 'کل') : dayName(d);
+  }
+  return null;
+}
+/** Is the market open right now? */
+function marketNow(m) {
+  const now = new Date();
+  if (!m.operatingDays.includes(now.getDay())) return 'closed';
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  if (nowMin < timeToMinutes(m.openTime)) return 'later';
+  return nowMin <= timeToMinutes(m.closeTime) ? 'open' : 'done';
+}
+
+async function siteAnswer(ctx) {
+  const { text, rest, markets, farmers, categories, market, farmer, category, city, user, focus } = ctx;
+  // Words naming the category or city are filters, not product names
+  const named = new Set([...tokens(category?.name || ''), ...tokens(city || ''), 'city', 'cities', 'category', 'categories', 'week', 'here', 'now']);
+  const words = tokens(rest).filter((w) => w.length > 2 && !STOP_WORDS.has(w) && !ASK_WORDS.has(w) && !named.has(w) && !named.has(w.replace(/s$/, '')) && !DAY_NAMES.some((d) => d.toLowerCase().startsWith(w)));
+  const scope = { ...Product.publicFilter() };
+  if (category) scope.category = category._id;
+  if (farmer) scope.farmer = farmer._id;
+  if (market) scope.markets = market._id;
+  else if (city) scope.markets = { $in: markets.filter((m) => m.city === city).map((m) => m._id) };
+  if (words.length) scope.$or = words.map((w) => ({ name: { $regex: escapeRegex(w.replace(/(es|s)$/, '')), $options: 'i' } }));
+  const where = market ? L(` at ${market.name}`, ` ${market.name} میں`) : city ? L(` in ${city}`, ` ${cityName(city)} میں`) : '';
+  const what = category ? L(category.name.toLowerCase(), categoryName(category)) : L('products', 'اشیاء');
+  const findProducts = (sort, limit = 5, extra = {}) =>
+    Product.find({ ...scope, ...extra })
+      .populate('farmer', 'stallName slug')
+      .sort(sort)
+      .limit(limit)
+      .lean();
+  const productLines = (items, detail) => items.map((p, i) => `${i + 1}. **${productName(p)}** (${p.farmer?.stallName}): ${detail(p)}`).join('\n');
+  const localFarmers = () => {
+    let pool = farmers;
+    if (market) pool = pool.filter((f) => f.markets.some((m) => String(m) === String(market._id)));
+    else if (city) {
+      const ids = markets.filter((m) => m.city === city).map((m) => String(m._id));
+      pool = pool.filter((f) => f.markets.some((m) => ids.includes(String(m))));
+    }
+    return pool;
+  };
+
+  // About MarketLink and the assistant
+  if (/\b(about marketlink|what is marketlink|marketlink kya|about (this|the|your) (site|website|app|platform)|who are you|what (can|do) you do|what are you|how can you help)\b/.test(text)) {
+    return reply(
+      L(
+        `**MarketLink** connects you with the farmers at ${markets.length} local farmers markets. You pre-order this week's fresh produce online, choose a pickup slot, and collect and pay at the farmer's stall.\nI can tell you market timings, which farmer is at the market today, the top rated farmers, best sellers, the cheapest ${'products'}, offers, pickup windows and your order status. I understand English, اردو and Roman Urdu.`,
+        `**MarketLink** آپ کو ${markets.length} مقامی کسان منڈیوں کے کسانوں سے ملاتا ہے۔ آپ اس ہفتے کی تازہ پیداوار آن لائن پیشگی آرڈر کرتے ہیں، وصولی کا وقت چنتے ہیں اور کسان کے اسٹال سے آرڈر لے کر وہیں ادائیگی کرتے ہیں۔\nمیں مارکیٹ کے اوقات، آج کون سا کسان مارکیٹ میں ہے، سب سے اچھی ریٹنگ والے کسان، سب سے زیادہ بکنے والی اشیاء، سستی چیزیں، رعایتیں، وصولی کے اوقات اور آپ کے آرڈر کی صورتحال بتا سکتا ہوں۔ میں انگریزی، اردو اور رومن اردو سمجھتا ہوں۔`
+      ),
+      { suggestions: ['Top rated farmers', 'Best sellers', 'Markets open now', 'Offers this week'] }
+    );
+  }
+
+  // Contact, complaints and market requests
+  if (/\b(contact|complain|complaint|complaints|support|customer care|customer service|helpline|report a problem|request a market|suggest a market|talk to (a )?(human|person|someone)|email you|call you)\b/.test(text)) {
+    return reply(
+      L(
+        'You can reach the MarketLink team from the **Contact** page. Choose a topic (for example *Complaint about a market*, *Complaint about a farmer*, *Request a new market* or *Order problem*) so your message reaches the right person. We usually reply within one working day.\nFor a problem with a pre-order, you can also open the order in **My Orders**.',
+        'MarketLink ٹیم سے **رابطہ** کے صفحے سے بات کریں۔ ایک موضوع چنیں (مثلاً *مارکیٹ کی شکایت*، *کسان کی شکایت*، *نئی مارکیٹ کی درخواست* یا *آرڈر کا مسئلہ*) تاکہ آپ کا پیغام صحیح شخص تک پہنچے۔ ہم عموماً ایک کاروباری دن میں جواب دیتے ہیں۔\nکسی پیشگی آرڈر کے مسئلے کے لیے آپ **میرے آرڈر** میں آرڈر بھی کھول سکتے ہیں۔'
+      ),
+      { cards: [{ kind: 'link', id: 'contact', title: L('Contact us', 'ہم سے رابطہ'), subtitle: L('Questions, complaints and market requests', 'سوالات، شکایات اور مارکیٹ کی درخواستیں'), link: '/contact' }], suggestions: ['Track my order', 'How do I pay?', 'Market timings'] }
+    );
+  }
+
+  // Account help
+  if (/\bpassword\b/.test(text)) {
+    return reply(
+      L(
+        'Forgot your password? On the **Log in** page press **Forgot password?**, type your email and we will send you a link to choose a new one. If you checked out as a guest, your password was emailed to you when the account was made.',
+        'پاس ورڈ بھول گئے؟ **لاگ اِن** کے صفحے پر **پاس ورڈ بھول گئے؟** دبائیں، اپنی ای میل لکھیں اور ہم آپ کو نیا پاس ورڈ بنانے کا لنک بھیج دیں گے۔ اگر آپ نے مہمان کے طور پر آرڈر دیا تھا تو اکاؤنٹ بنتے وقت آپ کا پاس ورڈ ای میل کر دیا گیا تھا۔'
+      ),
+      { cards: [{ kind: 'link', id: 'forgot', title: L('Reset your password', 'پاس ورڈ دوبارہ بنائیں'), subtitle: L('We email you a link', 'ہم آپ کو لنک ای میل کریں گے'), link: '/forgot-password' }] }
+    );
+  }
+  if (/\b(create|make|open|new) (an |a |my )?account\b|\bsign ?up\b|\bcreate account\b|\bregister\b/.test(text) && !/\b(farmer|farm|stall|sell|vendor)\b/.test(text)) {
+    return reply(
+      L(
+        'Press **Sign up** at the top of the page, or simply check out as a guest: we make your account for you and email your password. With an account you can track pre-orders, save favourite farmers and get restock reminders.',
+        'صفحے کے اوپر **سائن اپ** دبائیں، یا مہمان کے طور پر آرڈر مکمل کریں: ہم آپ کا اکاؤنٹ خود بنا کر پاس ورڈ ای میل کر دیتے ہیں۔ اکاؤنٹ سے آپ آرڈر دیکھ سکتے ہیں، پسندیدہ کسان محفوظ کر سکتے ہیں اور دوبارہ دستیابی کی اطلاع لے سکتے ہیں۔'
+      ),
+      { cards: [{ kind: 'link', id: 'register', title: L('Create an account', 'اکاؤنٹ بنائیں'), subtitle: L('Free for customers', 'گاہکوں کے لیے مفت'), link: '/register' }], suggestions: ['How do I order?', 'How do I pay?'] }
+    );
+  }
+
+  // "I did not receive my order"
+  if (/\bnot received\b|\b(didn'?t|did not|never) (receive|get|got|collect)\b|\bmissing order\b/.test(text)) {
+    focus.intent = 'orders';
+    const help = L(
+      'Sorry about that. Open the order in **My Orders** and answer **No, I did not** when we ask whether you received it (you can add a note). The farmer and the MarketLink team are told straight away.',
+      'اس کے لیے معذرت۔ **میرے آرڈر** میں آرڈر کھولیں اور جب ہم پوچھیں کہ کیا آپ کو آرڈر مل گیا تو **نہیں، مجھے نہیں ملا** دبائیں (آپ نوٹ بھی لکھ سکتے ہیں)۔ کسان اور MarketLink ٹیم کو فوراً اطلاع ہو جاتی ہے۔'
+    );
+    if (user?.role === ROLES.CUSTOMER) {
+      const orders = await Order.find({ customer: user._id, status: 'completed', 'receipt.status': { $exists: false } })
+        .populate('farmer', 'stallName')
+        .sort({ completedAt: -1 })
+        .limit(3)
+        .lean();
+      if (orders.length) {
+        return reply(`${help}\n${L('These pickups are waiting for your answer:', 'ان آرڈرز پر آپ کا جواب باقی ہے:')}`, {
+          cards: orders.map((o) => ({ kind: 'order', id: String(o._id), title: o.orderNumber, subtitle: `${o.farmer?.stallName || ''} · ${money(o.totalAmount)}`, link: `/account/orders/${o._id}` })),
+        });
+      }
+    }
+    return reply(help, { suggestions: ['Track my order', 'Contact support'] });
+  }
+
+  // Restock reminders
+  if (/\b(remind|reminder|notify|alert)\b|\bback in stock\b|\brestock|\bwhen (will|is|does) .*\b(available|back)\b/.test(text)) {
+    const soldOut = words.length ? await findProducts({ totalSold: -1 }, 3, { status: PRODUCT_STATUS.SOLD_OUT }) : [];
+    const inStock = words.length && !soldOut.length ? await findProducts({ totalSold: -1 }, 3, { status: PRODUCT_STATUS.AVAILABLE }) : [];
+    return reply(
+      L(
+        'When a product is sold out, press **Remind me** on it (in the shop, quick view or product page). We send you a notification and an email as soon as the farmer restocks it. Guests just type their email.',
+        'جب کوئی چیز ختم ہو جائے تو اس پر **مجھے یاد دلائیں** دبائیں (دکان، فوری جھلک یا چیز کے صفحے پر)۔ کسان کے دوبارہ اسٹاک کرتے ہی ہم آپ کو اطلاع اور ای میل بھیج دیں گے۔ مہمان صرف اپنی ای میل لکھیں۔'
+      ) + (soldOut.length ? `\n${L('Sold out right now:', 'اس وقت ختم:')}` : inStock.length ? `\n${L('Good news: these are in stock now.', 'خوشخبری: یہ اس وقت اسٹاک میں ہیں۔')}` : ''),
+      { cards: [...soldOut, ...inStock].map(productCard) }
+    );
+  }
+
+  // How to leave a review
+  if (/\b(how (to|do i|can i) (review|rate|leave a review|write a review|give)|leave a review|write a review|give (a )?(review|rating)|add a review|how to review)\b/.test(text)) {
+    return reply(
+      L(
+        'After the farmer marks your pre-order as picked up, we ask **Did you receive your order?** Press **Yes** and the review form opens: rate the farmer from 1 to 5 stars and add a comment. You can also review products you have bought from **My Orders**. Only real buyers can review, so the ratings are honest.',
+        'جب کسان آپ کا آرڈر “وصول ہو گیا” کر دے تو ہم پوچھتے ہیں **کیا آپ کو آرڈر مل گیا؟** **جی ہاں** دبائیں تو جائزے کا فارم کھل جاتا ہے: کسان کو 1 سے 5 ستارے دیں اور تبصرہ لکھیں۔ خریدی ہوئی اشیاء کا جائزہ **میرے آرڈر** سے بھی دے سکتے ہیں۔ صرف اصل خریدار جائزہ دے سکتے ہیں، اس لیے ریٹنگ سچی ہوتی ہے۔'
+      ),
+      { suggestions: ['Top rated farmers', 'Track my order'] }
+    );
+  }
+
+  // Counts: "how many farmers / markets / products are there?"
+  const count = text.match(/\bhow many (farmers?|stalls?|vendors?|markets?|bazaars?|products?|items?|categor(?:y|ies)|cit(?:y|ies))\b/);
+  if (count) {
+    const kind = count[1];
+    if (/^(farmer|stall|vendor)/.test(kind)) {
+      const pool = localFarmers();
+      return reply(L(`There are **${pool.length}** approved farmers${where} on MarketLink.`, `MarketLink پر${where} **${pool.length}** منظور شدہ کسان ہیں۔`), { cards: [...pool].sort((a, b) => b.ratingAvg - a.ratingAvg).slice(0, 4).map(farmerCard), suggestions: ['Top rated farmers', 'New farmers'] });
+    }
+    if (/^(market|bazaar)/.test(kind)) {
+      const pool = city ? markets.filter((m) => m.city === city) : markets;
+      return reply(L(`There are **${pool.length}** farmers markets${where}.`, `${where ? `${where} ` : ''}**${pool.length}** کسان منڈیاں ہیں۔`), { cards: pool.slice(0, 4).map(marketCard), suggestions: ['Markets open now', 'Which cities?'] });
+    }
+    if (/^(product|item)/.test(kind)) {
+      const [total, inStock] = await Promise.all([Product.countDocuments(scope), Product.countDocuments({ ...scope, status: PRODUCT_STATUS.AVAILABLE })]);
+      return reply(L(`There are **${total}** ${what}${where} on MarketLink, and **${inStock}** are in stock this week.`, `MarketLink پر${where} **${total}** ${what} ہیں، جن میں سے **${inStock}** اس ہفتے اسٹاک میں ہیں۔`), { suggestions: ['Best sellers', 'Offers this week'] });
+    }
+    if (/^categor/.test(kind)) return reply(L(`There are **${categories.length}** categories: ${list(categories.map(categoryName))}.`, `**${categories.length}** زمرے ہیں: ${list(categories.map(categoryName))}۔`));
+    const cities = [...new Set(markets.map((m) => m.city).filter(Boolean))];
+    return reply(L(`MarketLink has markets in **${cities.length}** cities: ${list(cities)}.`, `MarketLink کی مارکیٹیں **${cities.length}** شہروں میں ہیں: ${list(cities.map(cityName))}۔`));
+  }
+
+  // Cities
+  if (/\b(which|what|all|kaun|konse) cit(y|ies)\b|\bcities\b/.test(text)) {
+    const cities = [...new Set(markets.map((m) => m.city).filter(Boolean))];
+    const lines = cities.map((c) => {
+      const n = markets.filter((m) => m.city === c).length;
+      return L(`• **${c}**: ${n} market${n === 1 ? '' : 's'}`, `• **${cityName(c)}**: ${n} مارکیٹ`);
+    });
+    return reply(L(`MarketLink markets are in these cities:\n${lines.join('\n')}`, `MarketLink کی مارکیٹیں ان شہروں میں ہیں:\n${lines.join('\n')}`), { suggestions: cities.slice(0, 3).map((c) => `Market timings in ${c}`) });
+  }
+
+  // Farmer at the market today / now
+  if (farmer && /\b(today|now|right now|here|come|coming|there today|at the market)\b/.test(text) && !words.length) {
+    Object.assign(focus, { farmer, intent: 'farmer' });
+    const status = farmerToday(farmer, market?._id);
+    const place = list([...new Set(status.windows.map((w) => w.market?.name).filter(Boolean))]) || market?.name || L('the market', 'مارکیٹ');
+    const from = status.windows.length ? status.windows.map((w) => w.start).sort()[0] : '';
+    const until = status.windows.length ? status.windows.map((w) => w.end).sort().at(-1) : '';
+    const next = nextMarketDay(farmer);
+    const nextText = next ? L(` Next market day: ${next}.`, ` اگلا دن: ${next}۔`) : '';
+    const answers = {
+      here: L(`Yes, **${farmer.stallName}** is at ${place} right now, until ${until}.`, `جی ہاں، **${farmer.stallName}** اس وقت ${place} میں ہے، ${until} تک۔`),
+      later: L(`**${farmer.stallName}** will be at ${place} today from ${from} to ${until}.`, `**${farmer.stallName}** آج ${from} سے ${until} تک ${place} میں ہوگا۔`),
+      done: L(`**${farmer.stallName}** was at ${place} today (${from}-${until}) and has packed up.${nextText}`, `**${farmer.stallName}** آج ${place} میں تھا (${hours(from, until)}) اور اب جا چکا ہے۔${nextText}`),
+      away: L(`**${farmer.stallName}** is not at the market today: they told us they cannot come.${nextText}`, `**${farmer.stallName}** آج مارکیٹ میں نہیں ہے: انہوں نے بتایا ہے کہ وہ نہیں آ سکتے۔${nextText}`),
+      off: L(`**${farmer.stallName}** is not at a market today. They sell on ${fmtDays(farmer.operatingDays)}.${nextText}`, `**${farmer.stallName}** آج کسی مارکیٹ میں نہیں ہے۔ فروخت کے دن: ${fmtDays(farmer.operatingDays)}۔${nextText}`),
+    };
+    return reply(answers[status.state], { cards: [farmerCard(farmer)], suggestions: [`Pickup windows for ${farmer.stallName}`, 'Markets open now'] });
+  }
+
+  // Markets open right now
+  if (/\bopen now\b|\b(open|live) (right )?now\b|\bnow open\b|\bmarkets? (open )?(right )?now\b/.test(text) || (/\bnow\b/.test(text) && MARKET_WORDS.test(text) && !market)) {
+    focus.intent = 'markets_list';
+    const pool = city ? markets.filter((m) => m.city === city) : markets;
+    const open = pool.filter((m) => marketNow(m) === 'open');
+    const later = pool.filter((m) => marketNow(m) === 'later');
+    if (open.length) {
+      return reply(L(`Open right now${where}:\n`, `اس وقت${where} کھلی مارکیٹیں:\n`) + open.map((m) => L(`• **${m.name}** until ${m.closeTime}`, `• **${m.name}** ${m.closeTime} تک`)).join('\n'), { cards: open.slice(0, 6).map(marketCard) });
+    }
+    if (later.length) {
+      return reply(L(`No market is open right now${where}. Opening later today:\n`, `اس وقت${where} کوئی مارکیٹ نہیں کھلی۔ آج بعد میں کھلنے والی:\n`) + later.map((m) => L(`• **${m.name}** from ${m.openTime}`, `• **${m.name}** ${m.openTime} سے`)).join('\n'), { cards: later.slice(0, 6).map(marketCard) });
+    }
+    return reply(L(`No market is open right now${where}. Ask me "markets open tomorrow" to plan ahead.`, `اس وقت${where} کوئی مارکیٹ نہیں کھلی۔ آگے کا پروگرام بنانے کے لیے “کل کون سی مارکیٹ کھلی ہے” پوچھیں۔`), { suggestions: ['Markets open tomorrow', 'Market timings'] });
+  }
+
+  // Best sellers
+  if (/\bbest ?-?sell|\bbestsellers?\b|\bmost (sold|popular|ordered|bought|selling)\b|\bpopular\b|\btrending\b|\bsells? (the )?most\b/.test(text)) {
+    focus.intent = 'products_list';
+    const n = topN(text);
+    const items = (await findProducts({ totalSold: -1, ratingAvg: -1 }, n)).filter((p) => p.totalSold > 0);
+    if (!items.length) return reply(L(`Nothing has sold${where} yet.`, `${where ? `${where} ` : ''}ابھی کچھ نہیں بکا۔`));
+    return reply(L(`Top ${items.length} best-selling ${what}${where}:\n`, `${where ? `${where} ` : ''}سب سے زیادہ بکنے والی ${items.length} ${what}:\n`) + productLines(items, (p) => L(`${p.totalSold} sold`, `${p.totalSold} فروخت`)), {
+      cards: [...items.slice(0, 5).map(productCard), { kind: 'link', id: 'best-sellers', title: L('All best sellers', 'تمام بیسٹ سیلر'), subtitle: L('Top 5, 10 and 20 per market', 'ہر مارکیٹ کے ٹاپ 5، 10 اور 20'), link: '/best-sellers' }],
+      suggestions: ['Top rated farmers', 'Cheapest vegetables', 'Offers this week'],
+    });
+  }
+
+  // Top rated farmers / products / markets
+  const rated = /\b(top|best|highest|highly|most) ?-?(rated|rating|reviewed|liked|loved)\b|\btop rated\b/.test(text);
+  if (rated || /\b(best|top|number one|no 1|finest)\b/.test(text)) {
+    const productAsk = (category || words.length || /\b(products?|items?|things?)\b/.test(text)) && !FARMER_WORDS.test(text);
+    if (productAsk) {
+      focus.intent = 'products_list';
+      const n = topN(text);
+      const items = await findProducts({ ratingAvg: -1, ratingCount: -1, totalSold: -1 }, n, { ratingCount: { $gt: 0 } });
+      if (items.length) {
+        return reply(L(`Top rated ${what}${where}:\n`, `${where ? `${where} ` : ''}سب سے اچھی ریٹنگ والی ${what}:\n`) + productLines(items, stars), { cards: items.slice(0, 5).map(productCard), suggestions: ['Best sellers', 'Top rated farmers'] });
+      }
+      if (!rated) return null; // "best mangoes" without reviews: the product search answers
+    } else if (FARMER_WORDS.test(text) || rated || !MARKET_WORDS.test(text)) {
+      focus.intent = 'farmers_list';
+      const n = topN(text);
+      const pool = localFarmers()
+        .filter((f) => f.ratingCount > 0)
+        .sort((a, b) => b.ratingAvg - a.ratingAvg || b.ratingCount - a.ratingCount)
+        .slice(0, n);
+      if (!pool.length) return reply(L(`No farmer${where} has reviews yet.`, `${where ? `${where} ` : ''}ابھی کسی کسان کا جائزہ نہیں۔`));
+      const lines = pool.map((f, i) => `${i + 1}. **${f.stallName}**: ${stars(f)}`).join('\n');
+      const best = pool[0];
+      return reply(
+        L(`The highest rated farmer${where} is **${best.stallName}** with ${best.ratingAvg}/5 from ${best.ratingCount} reviews.\n${lines}`, `${where ? `${where} ` : ''}سب سے اچھی ریٹنگ والا کسان **${best.stallName}** ہے، ${best.ratingCount} جائزوں میں ${best.ratingAvg}/5۔\n${lines}`),
+        { cards: pool.slice(0, 5).map(farmerCard), suggestions: [`Is ${best.stallName} at the market today?`, 'Best sellers', 'New farmers'] }
+      );
+    } else {
+      // "Best market": the markets with the most farmers
+      focus.intent = 'markets_list';
+      const ranked = (city ? markets.filter((m) => m.city === city) : markets)
+        .map((m) => ({ m, n: farmers.filter((f) => f.markets.some((id) => String(id) === String(m._id))).length }))
+        .sort((a, b) => b.n - a.n)
+        .slice(0, 5);
+      return reply(L(`The biggest markets${where} (most farmers):\n`, `${where ? `${where} ` : ''}سب سے بڑی مارکیٹیں (سب سے زیادہ کسان):\n`) + ranked.map(({ m, n }, i) => L(`${i + 1}. **${m.name}**: ${n} farmers`, `${i + 1}. **${m.name}**: ${n} کسان`)).join('\n'), { cards: ranked.map(({ m }) => marketCard(m)) });
+    }
+  }
+
+  // Cheapest / most expensive
+  const cheap = /\b(cheap|cheapest|cheaper|lowest price|low price|budget|affordable|least expensive|sasta|sasti)\b/.test(text);
+  const dear = /\b(most expensive|costliest|priciest|highest price|expensive)\b/.test(text);
+  if (cheap || dear) {
+    focus.intent = 'products_list';
+    const items = await findProducts({ price: cheap ? 1 : -1 }, topN(text), { status: PRODUCT_STATUS.AVAILABLE });
+    if (!items.length) return reply(L(`I couldn't find ${what} in stock${where}.`, `${where ? `${where} ` : ''}اسٹاک میں ${what} نہیں ملیں۔`));
+    const head = cheap ? L(`Cheapest ${what} in stock${where}:\n`, `${where ? `${where} ` : ''}اسٹاک میں سب سے سستی ${what}:\n`) : L(`Most expensive ${what}${where}:\n`, `${where ? `${where} ` : ''}سب سے مہنگی ${what}:\n`);
+    return reply(head + productLines(items, (p) => `${money(p.price)} / ${unitName(p.unit)}`), { cards: items.slice(0, 5).map(productCard), suggestions: ['Offers this week', 'Best sellers'] });
+  }
+
+  // Offers and discounts
+  if (/\b(offer|offers|discount|discounts|deal|deals|sale|promo|promotion|coupon|percent off|% off)\b/.test(text)) {
+    focus.intent = 'products_list';
+    const items = await Product.aggregate([
+      { $match: { ...scope, status: PRODUCT_STATUS.AVAILABLE, $expr: { $gt: ['$compareAtPrice', '$price'] } } },
+      { $addFields: { off: { $round: [{ $multiply: [{ $divide: [{ $subtract: ['$compareAtPrice', '$price'] }, '$compareAtPrice'] }, 100] }, 0] } } },
+      { $sort: { off: -1, totalSold: -1 } },
+      { $limit: 5 },
+    ]);
+    await Product.populate(items, { path: 'farmer', select: 'stallName slug' });
+    if (!items.length) return reply(L(`There are no discounts${where} this week. Farmers set their own prices, so check back after the weekly restock.`, `اس ہفتے${where} کوئی رعایت نہیں۔ کسان اپنی قیمت خود رکھتے ہیں، ہفتہ وار اسٹاک کے بعد دوبارہ دیکھیں۔`), { suggestions: ['Cheapest vegetables', 'Best sellers'] });
+    return reply(L(`This week's offers${where}:\n`, `اس ہفتے${where} کی رعایتیں:\n`) + productLines(items, (p) => L(`${p.off}% off, ${money(p.price)} instead of ${money(p.compareAtPrice)}`, `${p.off}% کم، ${money(p.compareAtPrice)} کے بجائے ${money(p.price)}`)), {
+      cards: items.map(productCard),
+      suggestions: ['Best sellers', 'Cheapest fruits'],
+    });
+  }
+
+  // New farmers and new products
+  const newAsk = /\b(new|newest|latest|recent|recently|just)\b/.test(text);
+  if (newAsk && (FARMER_WORDS.test(text) || /\bjoined\b/.test(text))) {
+    focus.intent = 'farmers_list';
+    const pool = await Farmer.find({ isActive: true, ...(market ? { markets: market._id } : {}) })
+      .select('stallName slug logo operatingDays ratingAvg ratingCount createdAt')
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
+    const joined = (f) => f.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    const lines = pool.map((f) => L(`• **${f.stallName}**: joined ${joined(f)}`, `• **${f.stallName}**: ${joined(f)} کو شامل ہوا`)).join('\n');
+    return reply(L(`The newest farmers${where}:\n${lines}`, `${where ? `${where} ` : ''}نئے کسان:\n${lines}`), { cards: pool.map(farmerCard), suggestions: ['Top rated farmers', 'How many farmers are there?'] });
+  }
+  if (newAsk && (!MARKET_WORDS.test(text) || /\b(products?|items?|arrivals?)\b/.test(text))) {
+    focus.intent = 'products_list';
+    const items = await findProducts({ createdAt: -1 }, 5, { status: PRODUCT_STATUS.AVAILABLE });
+    if (items.length) return reply(L(`Newly added ${what}${where}:\n`, `${where ? `${where} ` : ''}نئی شامل ہونے والی ${what}:\n`) + productLines(items, (p) => `${money(p.price)} / ${unitName(p.unit)}`), { cards: items.map(productCard) });
+  }
+
+  // Categories: "what can I buy?"
+  if (/\bcategor(y|ies)\b|\bwhat (can i buy|do you sell|do they sell|is sold)\b|\b(kinds?|types?) of (products?|things|food)\b/.test(text) && !words.length) {
+    const counts = await Product.aggregate([{ $match: { ...Product.publicFilter(), status: PRODUCT_STATUS.AVAILABLE } }, { $group: { _id: '$category', n: { $sum: 1 } } }]);
+    const n = (c) => counts.find((x) => String(x._id) === String(c._id))?.n || 0;
+    const lines = categories.map((c) => L(`• **${categoryName(c)}**: ${n(c)} in stock`, `• **${categoryName(c)}**: ${n(c)} اسٹاک میں`)).join('\n');
+    return reply(L(`You can pre-order from these categories:\n${lines}`, `آپ ان زمروں سے پیشگی آرڈر دے سکتے ہیں:\n${lines}`), {
+      cards: categories.slice(0, 6).map((c) => ({ kind: 'link', id: String(c._id), title: categoryName(c), subtitle: L(`${n(c)} in stock`, `${n(c)} اسٹاک میں`), link: `/products?category=${c.slug}` })),
+      suggestions: ['Best sellers', 'Offers this week'],
+    });
+  }
+  return null;
+}
+
 /** Answers one message. Returns { reply, cards, suggestions, memory }. */
 export async function answer(rawMessage, user, rawMemory = {}, options = {}) {
   const memory = cleanMemory(rawMemory);
@@ -193,6 +528,8 @@ async function answerIn(rawMessage, user, memory) {
     const products = await Product.find({ ...Product.publicFilter(), nameUr: { $exists: true, $ne: '' } }).select('name nameUr').lean();
     message = urduToEnglish(message, products) || message;
   }
+  // Roman Urdu / Hinglish words ("sab se acha kisan kaunsa hai") become the English keywords the rules read
+  message = romanToEnglish(message) || message;
   const focus = {}; // what this answer is about - becomes the memory for the next question
   const result = await respond(message, user, memory, focus);
   const next = focus.forget ? {} : { ...memory };
@@ -231,6 +568,8 @@ async function respond(message, user, memory, focus) {
   const cities = [...new Set(markets.map((m) => m.city).filter(Boolean))];
   const city = cities.find((c) => new RegExp(`\\b${escapeRegex(c.toLowerCase())}\\b`).test(text));
   if (city) focus.city = city;
+  // "top rated fruits in Karachi" is about the city, not the farmer called "Karachi Artisan Bakehouse"
+  if (farmer && farmer.matchScore === 1 && city && tokens(farmer.stallName).includes(city.toLowerCase())) farmer = null;
   const firstName = memory.name || (user ? user.name.split(' ')[0] : '');
 
   // --- memory: what the user tells the assistant about themselves ----------
@@ -307,6 +646,10 @@ async function respond(message, user, memory, focus) {
     return reply(L(`Hello${firstName ? ` ${firstName}` : ''}! I'm the MarketLink assistant. Ask me about market timings, farmer availability, pickup windows or where to find a product.`, `السلام علیکم${firstName ? ` ${firstName}` : ''}! میں MarketLink کا اسسٹنٹ ہوں۔ مجھ سے مارکیٹ کے اوقات، کسانوں کی دستیابی، وصولی کے اوقات یا کسی چیز کے ملنے کی جگہ کے بارے میں پوچھیں۔`));
   }
   if (has(text, ['thank', 'thanks', 'shukriya'])) return reply(L('You are welcome! Happy shopping at the market.', 'کوئی بات نہیں! مارکیٹ میں خریداری مبارک ہو۔'));
+  // --- site knowledge: rankings, best sellers, prices, offers, counts, account help ---
+  const site = await siteAnswer({ text, rest, markets, farmers, categories, market, farmer, category, city, user, focus });
+  if (site) return site;
+
   if (has(text, ['pay', 'payment', 'cash', 'card', 'online payment'])) {
     return reply(L('MarketLink has no online payment. You pre-order here and pay the farmer in person when you pick up your order at the market (cash or whatever the farmer accepts).', 'MarketLink پر آن لائن ادائیگی نہیں ہوتی۔ آپ یہاں پیشگی آرڈر دیتے ہیں اور مارکیٹ سے آرڈر وصول کرتے وقت کسان کو خود ادائیگی کرتے ہیں (نقد یا جو طریقہ کسان قبول کرے)۔'));
   }
@@ -423,6 +766,8 @@ async function respond(message, user, memory, focus) {
     let sellers = farmers;
     if (market) sellers = sellers.filter((f) => f.markets.some((m) => String(m) === String(market._id)));
     if (day !== null) sellers = sellers.filter((f) => f.operatingDays.includes(day));
+    // Today: leave out the farmers who said they cannot come
+    if (day === new Date().getDay()) sellers = sellers.filter((f) => !(f.blockedDates || []).includes(toDateKey()));
     const where = L(
       [market ? `at ${market.name}` : '', day !== null ? `on ${DAY_NAMES[day]}` : ''].filter(Boolean).join(' '),
       [market ? `${market.name} میں` : '', day !== null ? `${DAY_UR[day]} کو` : ''].filter(Boolean).join(' ')

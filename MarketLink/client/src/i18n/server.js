@@ -71,6 +71,8 @@ const SERVER_TEMPLATES = [
   '{from} to {to}',
   // Assistant suggestions
   'Pickup windows for {name}',
+  'Market timings in {city}',
+  'Is {name} at the market today?',
 ];
 
 export default SERVER_TEMPLATES;

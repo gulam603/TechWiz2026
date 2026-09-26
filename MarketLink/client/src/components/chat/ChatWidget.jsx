@@ -6,8 +6,8 @@ import { getLang, t, tServer } from '../../i18n';
 
 const WELCOME = {
   from: 'bot',
-  text: "Hi! I'm Basket, the MarketLink assistant.\nAsk me about market timings, which farmers are available, pickup windows or where to find a product. I remember our chat, so you can ask follow-up questions.",
-  suggestions: ['Market timings', 'Where can I buy mangoes?', 'Pickup windows', 'How do I pay?'],
+  text: "Hi! I'm Basket, the MarketLink assistant.\nAsk me about market timings, the top rated farmers, best sellers, offers, pickup windows or where to find a product. You can write in English, Urdu or Roman Urdu. I remember our chat, so you can ask follow-up questions.",
+  suggestions: ['Top rated farmers', 'Markets open now', 'Where can I buy mangoes?', 'Offers this week'],
 };
 const GUEST_KEY = 'ml_chat_guest';
 const HISTORY_LIMIT = 60;
@@ -213,7 +213,7 @@ export default function ChatWidget() {
                   <div className="chat-cards">
                     {m.cards.map((c) => (
                       <Link key={c.kind + c.id} to={c.link} className="chat-card" onClick={() => setOpen(false)}>
-                        {c.image ? <img src={c.image} alt="" /> : <i className="bi bi-receipt fs-4 text-success" />}
+                        {c.image ? <img src={c.image} alt="" /> : <i className={`bi ${c.kind === 'link' ? 'bi-arrow-right-circle' : 'bi-receipt'} fs-4 text-success`} />}
                         <span>
                           <strong>{c.title}</strong>
                           <span className="text-muted-2">{c.subtitle}</span>

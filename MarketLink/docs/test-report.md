@@ -157,7 +157,54 @@ automated test that covers the case.
 
 ## 6. Test results
 
-{{RESULTS}}
+The whole set of suites was run on the final build (26 September 2026). The database was seeded again
+before every suite. After the fixes in section 7, every suite passes.
+
+### 6.1 API tests
+
+| Suite | What it covers | Checks | Passed | Failed |
+| --- | --- | --- | --- | --- |
+| smoke | Accounts, markets, farmers, products, basket rules, pre-orders, reviews, favourites, family, RBAC | 69 | 69 | 0 |
+| smoke2 | Filters, search, closed dates, reviews, maps data | 23 | 23 | 0 |
+| audit3 | SRS checklist: registration fields, near me, cut-off, slot capacity, suspend / approve | 32 | 32 | 0 |
+| apitools | Admin tools: cities, markets, categories, accounts, place order, tables | 33 | 33 | 0 |
+| api4 | Inventory, low-stock alerts, sales insights, moderation, reports | 31 | 31 | 0 |
+| r5api | Single login, guest checkout, verified reviews, SEO heads | 25 | 25 | 0 |
+| r6api | Announcements by season, newsletter, FAQs, product SEO fields | 44 | 44 | 0 |
+| r7api | FAQs admin, structured data, llms.txt, robots, sitemap | 63 | 63 | 0 |
+| r8api | Urdu content in the API, server messages in Urdu, assistant memory | 65 | 65 | 0 |
+| **Total** | | **385** | **385** | **0** |
+
+### 6.2 Browser tests
+
+| Suite | What it covers | Checks | Result |
+| --- | --- | --- | --- |
+| e2e | Customer → farmer → admin journey (17 steps: order, accept, ready, complete, review, approval) | 17 steps | Pass |
+| e2e2 | Map, route, city filter, closed dates, phone checks, redirects | 6 steps | Pass |
+| wizard | Farmer sign-up wizard, pending status | journey | Pass |
+| fp | Forgot and reset password with the e-mail link | journey | Pass |
+| r3test, avatartest, adminui | Footer, profile photo, admin shell, place order, CSV export | journeys | Pass |
+| r4test | Password eye, shells, reviews, gallery, inventory, sales, moderation, phones | 111 | 111 passed |
+| r5test | Single login, dropdown search, quick view, basket sidebar, checkout without an account | 45 | 45 passed |
+| r6test | Banner, video, reviews, newsletter, seasonal announcements, DataTables | 64 | 64 passed |
+| r7test | Photos, 3 s banner, Add opens the amount dialog, empty basket, FAQs, SEO on the page | 78 | 78 passed |
+| r8test | Basket speed, reviews, Urdu on every page, a guest pre-order in Urdu | 39 | 39 passed |
+| r9test | Banner autoplay, toasts, category photos, offers, FAQ accordion, filter sidebar | 63 | 63 passed |
+| r10test | Round 10: assistant in 3 languages, offer banner, home layout, credits, reminders, receipt, away today, topics, rankings, live search, phones, Urdu | 88 | 88 passed |
+| dtsweep | Every DataTable at 1440 and 390 px | all tables | No problems |
+| align, emojiscan, sw | Alignment of every page, no emoji, no sideways scrolling at 360 / 390 / 768 / 1024 px when logged in | all pages | No problems (after fix 10) |
+| resp8 (English and Urdu) | Every page at 18 widths, 320 to 1920 px | 567 page views each | The only problems found were fixes 10 to 12; the affected pages were checked again after the fix |
+
+**Total browser checks counted:** 488 checks plus the step-by-step journeys and the sweeps.
+
+### 6.3 Static checks
+
+| Check | Result |
+| --- | --- |
+| ESLint (server and client) | 0 errors |
+| Production build (`vite build`) | Succeeds |
+| Missing Urdu translations (scan of every text in the client) | 0 missing |
+| Database script with validators + demo data | All 19 collections created; the full demo data loads without a validation error |
 
 ## 7. Defects found and fixed
 
@@ -177,6 +224,8 @@ Serious or visible problems found by the tests during development, and how they 
 | 10 | Customer area at 992 to 1199 px: the website links added to the top bar pushed the account menu 69 px off the screen | Responsive sweep (1024 px) | The links show from 1200 px; the sidebar has the same links below that |
 | 11 | Markets page on phones (320 to 412 px): the Filters, Near me and view buttons ran off the left edge when the day filter was on | Responsive sweep | The buttons wrap onto a second line |
 | 12 | Urdu top bar at 768 px was 6 px too wide because of the long Urdu "Sell with us" label | Responsive sweep (Urdu) | Slightly smaller padding for that button in Urdu at tablet widths |
+| 13 | The new offer banner's label style also changed the "% off" tag on product pages (same class name) | r9test (product page offer) | The banner label has its own class |
+| 14 | The toast title "Account created" after a guest checkout stayed in English on the Urdu site | r8test (guest pre-order in Urdu) | Urdu text added |
 
 **Tests changed on purpose** (the behaviour was changed at the customer's request, not a defect):
 
@@ -197,4 +246,9 @@ Serious or visible problems found by the tests during development, and how they 
 
 ## 9. Conclusion
 
-{{CONCLUSION}}
+All 385 API checks and all browser suites pass on the final build, in English and in Urdu, from 320 to
+1920 px wide. Every functional requirement of SRS section 1.6 has at least one passing test case
+(section 5), and the non-functional requirements (responsive design, security through role checks,
+usability) are covered by the sweeps. The testing found and fixed fourteen real problems during the
+project (section 7). The application is ready for the demonstration; the team should still do a short
+manual check in Firefox and Safari and send a real e-mail with their own SMTP details before submission.

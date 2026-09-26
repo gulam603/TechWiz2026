@@ -21,6 +21,8 @@ import {
   Product,
   Report,
   Review,
+  RestockRequest,
+  SiteBanner,
   StockMovement,
   User,
 } from '../models/index.js';
@@ -82,7 +84,7 @@ function orderNumber(date) {
 }
 
 async function clearDatabase() {
-  const models = [Announcement, AssistantChat, Category, City, ContactMessage, ContentFlag, Faq, StockMovement, Farmer, Market, Notification, Order, Product, Report, Review, Subscriber, User];
+  const models = [Announcement, AssistantChat, Category, City, ContactMessage, ContentFlag, Faq, StockMovement, Farmer, Market, Notification, Order, Product, Report, RestockRequest, Review, SiteBanner, Subscriber, User];
   for (const Model of models) {
     await Model.deleteMany({});
     await Model.init(); // make sure indexes exist

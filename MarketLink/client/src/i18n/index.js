@@ -78,7 +78,8 @@ export function t(text, vars) {
   if (getLang() === 'ur') {
     const ur = UR[out];
     if (ur !== undefined) out = ur;
-    else if (/[a-z]/i.test(out)) missing.add(out);
+    // (text that is already in Urdu, e.g. a message translated before it reached a toast, is not missing)
+    else if (/[a-z]/i.test(out) && !/[\u0600-\u06ff]/.test(out)) missing.add(out);
   }
   if (vars) out = out.replace(/\{(\w+)\}/g, (m, k) => (vars[k] !== undefined && vars[k] !== null ? String(vars[k]) : m));
   return out;

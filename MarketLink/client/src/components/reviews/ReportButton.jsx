@@ -60,7 +60,7 @@ export default function ReportButton({ targetType, targetId, label = t('Report')
         <Modal
           open
           onClose={() => setOpen(false)}
-          title={targetType === 'farmer' ? t('Report this stall') : targetType === 'product' ? t('Report this listing') : t('Report review')}
+          title={targetType === 'farmer' ? t('Report this stall') : targetType === 'product' ? t('Report this listing') : t('Report this review')}
           footer={
             <>
               <button type="button" className="btn btn-white" onClick={() => setOpen(false)}>

@@ -37,7 +37,7 @@ export default function OrderCard({ order, to, footer, highlight = false }) {
         </div>
         <div className="order-card-total">
           <div className="fw-bold text-forest">{money(order.totalAmount)}</div>
-          {open && order.pickupAt && <div className="fs-7 text-muted-2">{t('Pickup {when}', { when: timeUntil(order.pickupAt) })}</div>}
+          {open && order.pickupAt && <div className="fs-7 text-muted-2">{t('pickup {when}', { when: timeUntil(order.pickupAt) })}</div>}
         </div>
         {to && (
           <Link to={to} className="btn btn-soft btn-sm order-card-link">

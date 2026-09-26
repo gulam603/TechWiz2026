@@ -571,8 +571,9 @@ export default function FarmerProducts() {
             <div>
               <strong>{t('Recurring weekly stock template')}</strong>
               <div className="small text-muted-2">
-                {t('Set a “weekly template” quantity per product. Applying the template resets available stock to those amounts.')}
-            {data.templateLastAppliedWeek && ` ${t('Last applied: {week}', { week: data.templateLastAppliedWeek })}`}
+                {data.templateLastAppliedWeek
+                  ? t('Set a “weekly template” quantity per product. Applying the template resets available stock to those amounts · last applied {week}.', { week: data.templateLastAppliedWeek })
+                  : t('Set a “weekly template” quantity per product. Applying the template resets available stock to those amounts.')}
               </div>
             </div>
           </div>

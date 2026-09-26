@@ -11,7 +11,7 @@ import 'datatables.net-bs5/css/dataTables.bootstrap5.css';
 import 'datatables.net-responsive-bs5/css/responsive.bootstrap5.css';
 import 'datatables.net-buttons-bs5/css/buttons.bootstrap5.css';
 import { api } from '../../api/client';
-import { t } from '../../i18n';
+import { isUrdu, t } from '../../i18n';
 
 DT.Buttons.jszip(JSZip); // Excel export
 // A DataTables warning is for developers: log it in the console instead of an alert box
@@ -126,9 +126,9 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
         bottomStart: 'info',
         bottomEnd: 'paging',
       },
-      // DataTables labels the page-number bar "pagination" itself; use the page language
+      // DataTables labels the page-number bar "pagination" itself; give it the Urdu label on the Urdu site
       drawCallback(settings) {
-        settings.tableWrapper?.querySelector('nav[aria-label="pagination"]')?.setAttribute('aria-label', t('Pagination'));
+        if (isUrdu()) settings.tableWrapper?.querySelector('nav[aria-label="pagination"]')?.setAttribute('aria-label', t('Pagination'));
       },
       ...(table
         ? {

@@ -17,7 +17,7 @@ import { formatDateKey, time12, toDateKey } from '../../utils/format';
 import FarmerOrderActions, { ACTION_DONE, DeclineModal, ORDER_ACTIONS, runOrderAction } from './FarmerOrderActions';
 import { ApprovalBanner } from './Dashboard';
 import { useAuth } from '../../context/AuthContext';
-import { productName, t, unitName } from '../../i18n';
+import { isUrdu, productName, t, unitName } from '../../i18n';
 
 const TABS = [
   { value: 'active', label: 'Open' },
@@ -28,7 +28,7 @@ const TABS = [
 ];
 
 const COLUMNS = [
-  { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/farmer/orders/${o._id}`, v)}<div>${muted(t('placed {date}', { date: formatDateKey(toDateKey(new Date(o.createdAt))) }))}</div>`) },
+  { data: 'orderNumber', title: 'Order', responsivePriority: 1, className: 'dt-nowrap', render: display((v, o) => `${link(`/farmer/orders/${o._id}`, v)}<div>${muted(t('placed {date}', { date: isUrdu() ? formatDateKey(toDateKey(new Date(o.createdAt))) : new Date(o.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) }))}</div>`) },
   {
     data: 'customer.name',
     title: 'Customer',

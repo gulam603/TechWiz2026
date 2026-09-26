@@ -159,7 +159,7 @@ export default function SearchSelect({
                 type="text"
                 value={query}
                 placeholder={searchPlaceholder}
-                aria-label={ariaLabel ? t('Search {what}', { what: ariaLabel }) : t('Search the options')}
+                aria-label={ariaLabel ? t('Search {what}', { what: ariaLabel }) : t('Search options')}
                 aria-controls={listId}
                 aria-activedescendant={shown[active] ? `${listId}-${active}` : undefined}
                 onChange={(e) => {

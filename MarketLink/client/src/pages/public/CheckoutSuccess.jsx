@@ -1,7 +1,7 @@
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { formatDateKey, money, time12 } from '../../utils/format';
-import { rich, t } from '../../i18n';
+import { isUrdu, rich, t } from '../../i18n';
 
 export default function CheckoutSuccess() {
   useDocumentTitle(t('Pre-order placed'));
@@ -22,8 +22,9 @@ export default function CheckoutSuccess() {
           <div>
             <strong className="d-block">{t('Check your inbox')}</strong>
             <span className="small">
-              {rich('Your MarketLink password was sent to <b>{email}</b>. Use it to log in next time. You can change it here:', { email: state.newAccount.email })}{' '}
+              {rich('Your MarketLink password was sent to <b>{email}</b>. Use it to log in next time and change it in', { email: state.newAccount.email })}{' '}
               <Link to="/account/profile">{t('Profile & family')}</Link>
+              {isUrdu() ? '' : '.'}
             </span>
           </div>
         </div>

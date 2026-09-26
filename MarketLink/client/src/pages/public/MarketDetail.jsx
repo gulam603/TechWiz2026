@@ -91,7 +91,7 @@ export default function MarketDetail() {
               <i className="bi bi-geo-alt" /> {market.address}
               {market.mapLink && (
                 <a href={market.mapLink} target="_blank" rel="noreferrer" className="ms-2 fw-semi">
-                  <i className="bi bi-box-arrow-up-right" /> {market.mapProvider === 'google' ? t('Open in Google Maps') : t('Open in OpenStreetMap')}
+                  <i className="bi bi-box-arrow-up-right" /> {market.mapProvider === 'google' ? t('Open on Google Maps') : t('Open on OpenStreetMap')}
                 </a>
               )}
             </p>

@@ -15,3 +15,4 @@ export { default as StockMovement } from './StockMovement.js';
 export { default as ContentFlag } from './ContentFlag.js';
 export { default as Subscriber } from './Subscriber.js';
 export { default as Faq } from './Faq.js';
+export { default as RestockRequest } from './RestockRequest.js';

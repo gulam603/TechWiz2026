@@ -146,6 +146,45 @@ export async function myOrders(req, res) {
   });
 }
 
+// GET /api/orders/to-confirm  (completed pre-orders of the last 30 days the customer has not confirmed yet)
+export async function ordersToConfirm(req, res) {
+  const since = new Date(Date.now() - 30 * 24 * 3600 * 1000);
+  const orders = await Order.find({ customer: req.user._id, status: ORDER_STATUS.COMPLETED, 'receipt.status': { $exists: false }, completedAt: { $gte: since } })
+    .populate('farmer', 'stallName slug logo')
+    .sort({ completedAt: -1 })
+    .limit(5)
+    .lean();
+  res.json({ orders });
+}
+
+// POST /api/orders/:id/receipt  { received: true|false, note }
+// The customer confirms that they received a pre-order the farmer marked as picked up. "Not received"
+// tells the farmer and the MarketLink team so they can sort it out.
+export async function confirmReceipt(req, res) {
+  const order = await Order.findOne({ _id: assertId(req.params.id, 'order'), customer: req.user._id }).populate('farmer', 'stallName user');
+  if (!order) throw new AppError('Order not found', 404);
+  if (order.status !== ORDER_STATUS.COMPLETED) throw new AppError('You can confirm an order after the farmer marks it as picked up', 400);
+  if (order.receipt?.status) throw new AppError('You already answered for this order', 400);
+  const received = req.body.received === true || req.body.received === 'true';
+  const note = String(req.body.note || '').trim().slice(0, 500);
+  order.receipt = { status: received ? 'received' : 'not_received', note: note || undefined, at: new Date() };
+  await order.save();
+  if (!received) {
+    const alert = {
+      type: 'order',
+      title: `Customer did not receive ${order.orderNumber}`,
+      message: `${req.user.name} says they did not receive pre-order ${order.orderNumber}.${note ? ` Note: ${note}` : ''} Please get in touch with them.`,
+    };
+    if (order.farmer?.user) await notify(order.farmer.user, { ...alert, link: `/farmer/orders?focus=${order._id}` }, { email: true });
+    const admins = await User.find({ role: ROLES.ADMIN }).select('_id').lean();
+    for (const a of admins) await notify(a._id, { ...alert, link: '/admin/orders' });
+  }
+  res.json({
+    order: { _id: order._id, receipt: order.receipt },
+    message: received ? 'Thank you for confirming!' : 'Sorry about that. We told the farmer and the MarketLink team, and they will contact you.',
+  });
+}
+
 // GET /api/orders/:id  (customer who owns it, household member, farmer of the order, or admin)
 export async function getOrder(req, res) {
   assertId(req.params.id, 'order');

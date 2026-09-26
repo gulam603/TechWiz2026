@@ -371,3 +371,54 @@
     }
   }
 }
+
+// ------------------------------------------------------------------ "Remind me when available" on sold-out products
+.remind-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  &.is-on {
+    background: #eef6e8 !important;
+    color: $ml-forest !important;
+    border-color: rgba($ml-green, 0.4) !important;
+  }
+}
+// On a sold-out card the button stays active (the card itself is faded)
+.product-card.is-soldout .add-btn.remind-btn {
+  opacity: 1;
+  background: $ml-carrot;
+  border-color: $ml-carrot;
+  color: #fff;
+  cursor: pointer;
+}
+
+// ------------------------------------------------------------------ "Did you receive your order?"
+.receipt-box {
+  background: #f3fbd8;
+  border: 1px solid rgba($ml-leaf, 0.45);
+  border-radius: 1.1rem;
+  padding: 1rem 1.2rem;
+  > strong .bi {
+    color: $ml-green;
+  }
+}
+
+.receipt-order {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+  background: #fff;
+  border: 1px solid $ml-line;
+  border-radius: 0.8rem;
+  padding: 0.6rem 0.8rem;
+}
+
+.pay-note.is-warn {
+  background: #fff4e5;
+  border-color: #f4c98e;
+  .bi {
+    color: $ml-carrot;
+  }
+}

@@ -1,4 +1,4 @@
-import { Farmer, Product, Review } from '../models/index.js';
+import { Farmer, Product, RestockRequest, Review } from '../models/index.js';
 import { marketIdsInCity, resolveCategory } from './helpers/category.js';
 import AppError from '../utils/AppError.js';
 import { PRODUCT_STATUS } from '../utils/constants.js';
@@ -126,7 +126,29 @@ export async function getProduct(req, res) {
   }
 
   const isFavorite = Boolean(req.user?.favoriteProducts?.some((id) => String(id) === String(product._id)));
-  res.json({ product, reviews, related, fromFarmer, isFavorite });
+  const reminding = req.user ? Boolean(await RestockRequest.exists({ product: product._id, email: req.user.email })) : false;
+  res.json({ product, reviews, related, fromFarmer, isFavorite, reminding });
+}
+
+const EMAIL_RULE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const soldOut = (p) => p.status !== PRODUCT_STATUS.AVAILABLE || p.quantityAvailable <= 0;
+
+// POST /api/products/:id/remind  { email }  "Remind me when it is available" (signed-in customers or guests)
+export async function remindWhenAvailable(req, res) {
+  const product = await Product.findOne({ _id: isValidId(req.params.id) ? req.params.id : null, isRemoved: false, farmerActive: true }).select('name status quantityAvailable').lean();
+  if (!product) throw new AppError('Product not found', 404);
+  if (!soldOut(product)) throw new AppError('This product is in stock: you can pre-order it now', 400);
+  const email = String(req.user?.email || req.body.email || '').trim().toLowerCase();
+  if (!EMAIL_RULE.test(email)) throw new AppError('Please enter a valid e-mail address', 400);
+  await RestockRequest.updateOne({ product: product._id, email }, { $setOnInsert: { product: product._id, email, user: req.user?._id } }, { upsert: true });
+  res.status(201).json({ reminding: true, message: `We will let you know at ${email} when ${product.name} is back` });
+}
+
+// DELETE /api/products/:id/remind  (signed in)
+export async function cancelReminder(req, res) {
+  if (!isValidId(req.params.id)) throw new AppError('Product not found', 404);
+  await RestockRequest.deleteOne({ product: req.params.id, email: req.user.email });
+  res.json({ reminding: false, message: 'Reminder removed' });
 }
 
 // GET /api/products/price-range  (used by the price filter)

@@ -307,6 +307,12 @@ async function main() {
     for (const item of order.items) sold.set(String(item.product), (sold.get(String(item.product)) || 0) + item.quantity);
   }
   for (const [productId, qty] of sold) await Product.updateOne({ _id: productId }, { totalSold: qty });
+  // Customers confirmed receiving their past orders; the demo customer's latest one still asks
+  // "Did you receive it?" so the confirmation can be tried out
+  await Order.updateMany({ status: ORDER_STATUS.COMPLETED }, [{ $set: { receipt: { status: 'received', at: '$completedAt' } } }], { updatePipeline: true });
+  const demoCustomer = await User.findOne({ email: 'customer@marketlink.com' }).select('_id').lean();
+  const latest = demoCustomer && (await Order.findOne({ customer: demoCustomer._id, status: ORDER_STATUS.COMPLETED }).sort({ completedAt: -1 }).select('_id'));
+  if (latest) await Order.updateOne({ _id: latest._id }, { $unset: { receipt: 1 } });
   console.log(`[seed] ${inserted.length} historical orders`);
 
   // ---------------------------------------------------------------- upcoming (open) orders

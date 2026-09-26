@@ -7,6 +7,7 @@ import { money, offerPercent } from '../../utils/format';
 import ProduceImage from '../common/ProduceImage';
 import RatingStars from '../common/RatingStars';
 import FavButton from '../common/FavButton';
+import RemindMeButton from '../product/RemindMeButton';
 import { productPath } from '../../utils/links';
 import { categoryName, productName, t, unitName } from '../../i18n';
 
@@ -37,7 +38,11 @@ export default function ProductCard({ product, layout = 'grid' }) {
       <div className="card-top-badges">
         {off > 0 && !soldOut && <span className="chip chip-deal">{t('{n}% off', { n: off })}</span>}
         {soldOut && <span className="chip chip-dark">{t('Sold out')}</span>}
-        {low && <span className="chip chip-warn">{t('Only')} {product.quantityAvailable} {t('left')}</span>}
+        {low && (
+          <span className="chip chip-warn">
+            {t('Only')} {product.quantityAvailable} {t('left')}
+          </span>
+        )}
       </div>
       <FavButton type="products" id={product._id} className="fav-btn" />
       <div className="product-media">
@@ -72,15 +77,33 @@ export default function ProductCard({ product, layout = 'grid' }) {
               </del>
             )}
           </div>
-          <button type="button" className="add-btn" onClick={openAdd} disabled={soldOut} aria-haspopup="dialog" aria-label={inCart ? t('Add {name} to basket ({n} already in it)', { name: productName(product), n: inCart.quantity }) : t('Add {name} to basket', { name: productName(product) })} title={t('Choose how many and add to basket')}>
-            <i className="bi bi-basket2" aria-hidden="true" />
-            <span className="add-label">{soldOut ? t('Sold out') : t('Add')}</span>
-            {inCart && (
-              <span className="add-count" aria-hidden="true">
-                {inCart.quantity}
-              </span>
-            )}
-          </button>
+          {soldOut ? (
+            <RemindMeButton product={product} compact className="add-btn" />
+          ) : (
+            <button
+              type="button"
+              className="add-btn"
+              onClick={openAdd}
+              aria-haspopup="dialog"
+              aria-label={
+                inCart
+                  ? t('Add {name} to basket ({n} already in it)', {
+                      name: productName(product),
+                      n: inCart.quantity,
+                    })
+                  : t('Add {name} to basket', { name: productName(product) })
+              }
+              title={t('Choose how many and add to basket')}
+            >
+              <i className="bi bi-basket2" aria-hidden="true" />
+              <span className="add-label">{t('Add')}</span>
+              {inCart && (
+                <span className="add-count" aria-hidden="true">
+                  {inCart.quantity}
+                </span>
+              )}
+            </button>
+          )}
         </div>
       </div>
       {quick && (

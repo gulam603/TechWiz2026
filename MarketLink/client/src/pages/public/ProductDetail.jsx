@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import RemindMeButton from '../../components/product/RemindMeButton';
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import ProductGallery from '../../components/common/ProductGallery';
@@ -154,17 +155,23 @@ export default function ProductDetail() {
               <span style={{ width: `${soldOut ? 0 : Math.max(stockPct, 6)}%` }} />
             </div>
             <div className="d-flex align-items-center gap-3 mt-4 flex-wrap">
-              <QuantityStepper value={qty} onChange={setQty} max={Math.max(1, product.quantityAvailable)} size="lg" />
-              <button type="button" className="btn btn-primary btn-lg flex-grow-1" onClick={addToCart} disabled={soldOut}>
-                <i className="bi bi-basket2" /> {soldOut ? t('Sold out') : t('Add to basket · {v1}', { v1: money(product.price * qty) })}
-              </button>
+              {soldOut ? (
+                <RemindMeButton product={product} initial={Boolean(data.reminding)} className="btn btn-primary btn-lg flex-grow-1" />
+              ) : (
+                <>
+                  <QuantityStepper value={qty} onChange={setQty} max={Math.max(1, product.quantityAvailable)} size="lg" />
+                  <button type="button" className="btn btn-primary btn-lg flex-grow-1" onClick={addToCart}>
+                    <i className="bi bi-basket2" /> {t('Add to basket · {v1}', { v1: money(product.price * qty) })}
+                  </button>
+                </>
+              )}
             </div>
             {inCart && (
               <div className="small mt-2 text-success fw-semi">
                 <i className="bi bi-check-circle" /> {t('{n} in your basket', { n: inCart.quantity })} · <Link to="/cart">{t('View basket')}</Link>
               </div>
             )}
-            {soldOut && <div className="small mt-2 text-muted-2">{t('Tip: add it to favourites to get a restock alert.')}</div>}
+            {soldOut && <div className="small mt-2 text-muted-2">{t('Sold out this week. Press "Remind me" and we send a notification and an e-mail when the farmer has it again.')}</div>}
           </div>
 
           <div className="farmer-mini-wrap mb-3">

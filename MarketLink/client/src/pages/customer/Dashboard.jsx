@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
@@ -13,6 +14,7 @@ import { NOTIF_ICONS } from '../../components/layout/NotificationBell';
 import RatingStars from '../../components/common/RatingStars';
 import { t, tServer } from '../../i18n';
 import RefreshButton from '../../components/common/RefreshButton';
+import ReceiptCheck from '../../components/orders/ReceiptCheck';
 
 function greeting() {
   const h = new Date().getHours();
@@ -25,12 +27,43 @@ export default function CustomerDashboard() {
   useDocumentTitle(t('My dashboard'));
   const { user } = useAuth();
   const { data, loading, reload } = useFetch('/customer/dashboard');
+  // Pre-orders the farmer marked as picked up: "Did you receive it?" pops up (once per visit)
+  const toConfirm = useFetch('/orders/to-confirm');
+  const [skipped, setSkipped] = useState(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem('ml_receipt_skipped') || '[]');
+    } catch {
+      return [];
+    }
+  });
+  const skip = (id) => {
+    const next = [...skipped, id];
+    setSkipped(next);
+    try {
+      sessionStorage.setItem('ml_receipt_skipped', JSON.stringify(next));
+    } catch {
+      /* storage blocked */
+    }
+  };
+  const asking = (toConfirm.data?.orders || []).find((o) => !skipped.includes(o._id));
   if (loading && !data) return <PageLoader />;
   const { stats, upcoming, notifications, suggestions, farmers = [] } = data;
   const ready = upcoming.filter((o) => o.status === 'ready');
 
   return (
     <>
+      {asking && (
+        <ReceiptCheck
+          key={asking._id}
+          order={asking}
+          onClose={() => skip(asking._id)}
+          onDone={() => {
+            skip(asking._id);
+            toConfirm.reload();
+            reload();
+          }}
+        />
+      )}
       <DashHeader
         title={t('{greeting}, {name}', { greeting: greeting(), name: user.name.split(' ')[0] })}
         subtitle={t('Here\'s what\'s happening with your market orders.')}

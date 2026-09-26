@@ -84,6 +84,8 @@ router.get('/farmers/:idOrSlug/availability', farmers.getFarmerAvailability);
 router.get('/products', products.listProducts);
 router.get('/products/price-range', products.priceRange);
 router.get('/products/:id', optionalAuth, products.getProduct);
+router.post('/products/:id/remind', aiLimiter, optionalAuth, products.remindWhenAvailable); // "Remind me when available"
+router.delete('/products/:id/remind', protect, products.cancelReminder);
 
 router.get('/reviews', reviews.listReviews);
 router.get('/reviews/eligible', protect, reviews.reviewEligibility);
@@ -113,6 +115,8 @@ router.delete('/customer/family/:memberId', ...customerOnly, customer.removeFami
 router.post('/orders', ...customerOnly, orders.placeOrders);
 router.get('/orders/my', ...customerOnly, orders.myOrders);
 router.get('/orders/family', ...customerOnly, orders.familyOrders);
+router.get('/orders/to-confirm', ...customerOnly, orders.ordersToConfirm);
+router.post('/orders/:id/receipt', ...customerOnly, orders.confirmReceipt);
 router.get('/orders/:id', protect, orders.getOrder);
 router.put('/orders/:id', ...customerOnly, orders.modifyOrder);
 router.post('/orders/:id/cancel', ...customerOnly, orders.cancelOrder);

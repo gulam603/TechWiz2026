@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import RemindMeButton from './RemindMeButton';
 import { Link } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { useCart } from '../../context/CartContext';
@@ -92,10 +93,16 @@ export default function QuickViewModal({ product: summary, onClose, focusAdd = f
               {!soldOut && <strong>{money(product.price * qty)}</strong>}
             </div>
             <div className="d-flex align-items-center gap-2 flex-wrap">
-              <QuantityStepper value={qty} onChange={setQty} max={Math.max(1, product.quantityAvailable)} label={t('How many?')} />
-              <button type="button" ref={addRef} className="btn btn-primary flex-grow-1 qv-add" onClick={add} disabled={soldOut}>
-                <i className="bi bi-basket2" /> {soldOut ? t('Sold out') : t('Add to basket')}
-              </button>
+              {soldOut ? (
+                <RemindMeButton product={product} initial={Boolean(data?.reminding)} className="btn btn-primary flex-grow-1" />
+              ) : (
+                <>
+                  <QuantityStepper value={qty} onChange={setQty} max={Math.max(1, product.quantityAvailable)} label={t('How many?')} />
+                  <button type="button" ref={addRef} className="btn btn-primary flex-grow-1 qv-add" onClick={add}>
+                    <i className="bi bi-basket2" /> {t('Add to basket')}
+                  </button>
+                </>
+              )}
             </div>
             {inCart && (
               <div className="fs-7 mt-2 text-success fw-semi">

@@ -1,9 +1,10 @@
-import { Product, Farmer, Order, User } from '../models/index.js';
+import { Product, Farmer, Order, RestockRequest, User } from '../models/index.js';
 import AppError from '../utils/AppError.js';
 import { OPEN_ORDER_STATUSES, PRODUCT_STATUS } from '../utils/constants.js';
 import { isoWeekKey } from '../utils/dates.js';
 import { round2 } from '../utils/helpers.js';
-import { notifyMany } from './notify.js';
+import { notify, notifyMany } from './notify.js';
+import { sendMail } from './mailer.js';
 import { checkLowStock, recordMovements } from './inventory.js';
 
 /** Merge duplicate lines and validate quantities: [{productId, quantity}] */
@@ -99,18 +100,38 @@ export async function retakeItems(items = []) {
   }
 }
 
-/** Tell customers who favourited a product that it is back in stock. */
+/**
+ * Tell customers that a product is back in stock: an in-app notification for everyone who favourited it,
+ * and a notification plus an e-mail for everyone who pressed "Remind me" (guests get the e-mail only).
+ * Each reminder is sent once and then removed.
+ */
 export async function notifyRestock(product) {
+  const alert = {
+    type: 'restock',
+    title: `${product.name} is back in stock`,
+    message: `Good news! ${product.name} is available again. Pre-order before it sells out.`,
+    link: `/products/${product.slug || product._id}`,
+  };
+  const reminders = await RestockRequest.find({ product: product._id }).lean();
+  const reminded = new Set();
+  for (const r of reminders) {
+    try {
+      if (r.user) {
+        await notify(r.user, alert, { email: true });
+        reminded.add(String(r.user));
+      } else {
+        await sendMail({ to: r.email, subject: alert.title, message: alert.message, link: alert.link, linkLabel: 'Pre-order now' });
+      }
+    } catch (err) {
+      console.error(`[restock] Could not remind ${r.email}: ${err.message}`);
+    }
+  }
+  if (reminders.length) await RestockRequest.deleteMany({ _id: { $in: reminders.map((r) => r._id) } });
   const fans = await User.find({ favoriteProducts: product._id }).select('_id').lean();
   return notifyMany(
-    fans.map((u) => u._id),
-    {
-      type: 'restock',
-      title: `${product.name} is back in stock`,
-      message: `Good news! ${product.name} is available again. Pre-order before it sells out.`,
-      link: `/products/${product.slug || product._id}`,
-    }
-  );
+    fans.map((u) => u._id).filter((id) => !reminded.has(String(id))),
+    alert
+  ) + reminders.length;
 }
 
 /**

@@ -16,6 +16,7 @@ import { StarInput } from '../../components/common/RatingStars';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import FarmerOrderActions from '../farmer/FarmerOrderActions';
+import ReceiptCheck from '../../components/orders/ReceiptCheck';
 import { formatDate, formatDateKey, money, time12, timeUntil } from '../../utils/format';
 import { productName, rich, t, unitName } from '../../i18n';
 
@@ -217,6 +218,18 @@ export default function OrderDetail() {
           <span>
             {rich('You can modify or cancel this order until <b>{date}</b> ({left}).', { date: formatDate(order.cutoffAt, { time: true }), left: timeUntil(order.cutoffAt) })}
           </span>
+        </div>
+      )}
+
+      {isOwner && order.status === 'completed' && !order.receipt?.status && (
+        <div className="mb-4">
+          <ReceiptCheck inline order={order} onDone={(o) => setData((d) => ({ ...d, order: { ...d.order, receipt: o.receipt } }))} />
+        </div>
+      )}
+      {order.receipt?.status && (
+        <div className={`pay-note mb-3 ${order.receipt.status === 'not_received' ? 'is-warn' : ''}`}>
+          <i className={`bi ${order.receipt.status === 'received' ? 'bi-check2-circle' : 'bi-exclamation-triangle'}`} aria-hidden="true" />
+          <span>{order.receipt.status === 'received' ? t('The customer confirmed that they received this order.') : t('The customer said they did not receive this order.')}</span>
         </div>
       )}
 

@@ -52,6 +52,12 @@ const orderSchema = new Schema(
     farmerNote: { type: String, trim: true, maxlength: 500 },
     paymentMethod: { type: String, default: 'pay_at_pickup' }, // no online payment by design
     completedAt: Date,
+    // After the farmer marks it picked up, the customer confirms whether they really received it
+    receipt: {
+      status: { type: String, enum: ['received', 'not_received'] },
+      note: { type: String, trim: true, maxlength: 500 },
+      at: Date,
+    },
   },
   { timestamps: true }
 );

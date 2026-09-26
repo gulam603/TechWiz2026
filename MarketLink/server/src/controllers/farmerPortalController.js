@@ -340,7 +340,7 @@ const CUSTOMER_MESSAGES = {
   accepted: (o, f, note, m) => [`Pre-order ${o.orderNumber} accepted`, `${f.stallName} accepted your pre-order.\n${pickupDetails(o, m)}`],
   declined: (o, f, note) => [`Pre-order ${o.orderNumber} declined`, `${f.stallName} could not fulfil your pre-order.${note ? ` Reason: ${note}` : ''}`],
   ready: (o, f, note, m) => [`Pre-order ${o.orderNumber} is ready for pickup`, `Your order from ${f.stallName} is packed and ready. Please pay at pickup.\n${pickupDetails(o, m)}`],
-  completed: (o, f) => [`Pre-order ${o.orderNumber} completed`, `Thanks for shopping with ${f.stallName}! Share your experience by leaving a review.`],
+  completed: (o, f) => [`Did you receive pre-order ${o.orderNumber}?`, `${f.stallName} marked your pre-order as picked up. Please confirm that you received it, then share your experience with a review.`],
 };
 
 // POST /api/farmer/orders/:id/:action   action = accept | decline | ready | complete
@@ -368,7 +368,7 @@ export async function updateOrderStatus(req, res) {
   const market = await Market.findById(order.market).select('name address latitude longitude').lean();
   const [title, message] = CUSTOMER_MESSAGES[rule.to](order, req.farmer, note, market);
   // E-mail for the important moments: accepted, ready for pickup and declined
-  const email = [ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY, ORDER_STATUS.DECLINED].includes(rule.to);
+  const email = [ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY, ORDER_STATUS.DECLINED, ORDER_STATUS.COMPLETED].includes(rule.to);
   await notify(order.customer, { type: 'order', title, message, link: `/account/orders/${order._id}` }, { email });
 
   await order.populate([

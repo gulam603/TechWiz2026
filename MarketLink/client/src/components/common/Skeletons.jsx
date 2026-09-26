@@ -23,24 +23,21 @@ function CardGrid({ count = 4, height = 280 }) {
   );
 }
 
-/** Shape of the home page: banner, search card, category row and products. */
+/** Shape of the home page: banner, the promises under it, category cards and products. */
 export function HomeSkeleton() {
   return (
     <div className="page-skeleton" role="status" aria-label={t('Loading the home page')}>
       <div className="container">
         <div className="skeleton hero-skeleton" />
-        <div className="skeleton-searchcard">
-          <Bone h={52} r="50rem" />
-          <div className="d-flex gap-3 mt-3 flex-wrap">
-            {[0, 1, 2, 3].map((i) => (
-              <Bone key={i} w={110} h={40} r="0.8rem" />
-            ))}
-          </div>
+        <div className="skeleton-searchcard skeleton-trust">
+          {[0, 1, 2, 3].map((i) => (
+            <Bone key={i} h={44} r="0.8rem" />
+          ))}
         </div>
         <Bone w={260} h={26} className="mt-5 mb-3" />
         <div className="skeleton-rail">
-          {Array.from({ length: 8 }, (_, i) => (
-            <Bone key={i} h={130} r="1.2rem" />
+          {Array.from({ length: 4 }, (_, i) => (
+            <Bone key={i} h={210} r="1.1rem" />
           ))}
         </div>
         <Bone w={220} h={26} className="mt-5 mb-3" />

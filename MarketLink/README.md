@@ -28,12 +28,32 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
 - Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
-- **Home page**: banner carousel with real photos (welcome, what is in season now, pickup, farmers; changes every
-  **3 seconds**, pauses under the mouse), search with a **category drop-down**,
-  next market day and live numbers, a **30-second video tour**, market photos, **customer reviews** (a rating summary
-  card with the average, star bars and the share of verified purchases, and a two-row sliding wall of review cards with
-  product photos and a pause button), **FAQs** and a **newsletter** sign-up (also in the footer, with an unsubscribe page)
-- **FAQ page** (`/faq`): 17 questions in 4 topics with search and topic filters; the admin edits them
+- **Home page** (calm and simple: one dark green, one lime accent, white cards and real photos):
+  - **banner** of full-width photos with the words on them (welcome, what is in season now, pickup, farmers); the
+    slides change by themselves every **3 seconds**, also with “reduce motion” turned on and while the mouse is over
+    them (they stop only with the pause button, while the keyboard is on the controls or when the tab is hidden);
+    four promises under it (fresh every week, pay at pickup, checked farmers, your pickup time)
+  - search with a **category drop-down** and the next market day
+  - **Shop by category** cards with a photo and how many items are in stock (a swipe row on phones)
+  - **Top picks this week**: a grid on laptops, a **row to swipe** on phones
+  - **“Up to 30% off fresh vegetables”** offers banner, worked out from the offers farmers really run this week
+  - **Why choose us**, the **30-second video tour** (plays by itself, muted, while it is on screen), markets with a map,
+    top-rated farmers with **where the farm is**, **From our farms to your table** with the live numbers
+  - **customer reviews** carousel: the customers sit on an arc, their review is shown large next to it and the
+    reviews move on by themselves (waiting while the mouse is on them; pause button and dots)
+  - **FAQs**; a **newsletter** strip just above the footer on every page (with an unsubscribe page)
+- **Footer**: shop, farmer, help and contact links and one line at the bottom:
+  “© 2026 MarketLink · Built by Team Omniverse · Terms & Conditions”
+- **Messages (toasts)** in four kinds, each with its own colour, icon and title: success (“Done”), error (“Something
+  went wrong”), warning (“Please note”, e.g. a missing field or not enough stock) and info (“Good to know”); they close
+  by themselves (the timer stops under the mouse) or with ×
+- **FAQ page** (`/faq`): 17 questions in 4 topics with search and topic filters; **one question open at a time** (opening
+  another closes the first) with a smooth open animation; the admin edits them
+- **Offers**: a farmer can type the usual price next to a lower price; cards and product pages then show
+  “N% off” with the usual price crossed out, and the shop has an **On offer only** filter
+- **Filters on phones and tablets** slide in as a sidebar from the right (from the left in Urdu) with *Clear all* and
+  *Show results*
+- **Refresh** buttons on dashboards and reports update the numbers without reloading the page
 - **Loading skeletons**: on a slow connection the shape of the page appears straight away instead of a blank screen
 - Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
 - Real **product photos** on every card; market, farm and banner photos too (no illustrations)
@@ -69,7 +89,7 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
   needs admin approval before listing; until then only the approval status, stall profile and
   notifications are shown (stock, pre-orders and pickup settings stay locked)
 - Stall profile: bio, categories grown/sold, farming practices, logo and cover photo, markets, operating days, pickup windows, **map pin (lat/lng)**
-- Products: add / edit / delete with name, category, price, unit, quantity, description, main photo and up to 4 extra photos;
+- Products: add / edit / delete with name, category, price, **usual price for an offer**, unit, quantity, description, main photo and up to 4 extra photos;
   **“Write with AI”** writes the description from the product name (Claude with an API key, a built-in writer otherwise)
 - **Inventory**: stock on hand, stock reserved by open pre-orders, stock value, adjustments (harvest / restock, sold at the
   stall, damaged, count correction) and a full **stock log** of every change
@@ -83,7 +103,8 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Pre-orders: accept / decline (with reason) / mark ready / complete; set slot length, slot capacity and order cut-off hours
 - **Closed dates** (“not at the market this week”): customers cannot book pickups on those days and the farmer is warned about existing pre-orders on them
 - Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
-- Read and reply to customer reviews (Table or Cards view; reply and report from the table)
+- Read and reply to customer reviews (Table or Cards view; reply and report from the table); **“Generate with AI”**
+  writes a warm reply that fits the rating (in English or Urdu)
 - **Search engine (SEO) details per product**: title, description and keywords, “Fill in with AI” and a Google preview
 - **AI product schema**: when a product is added or changed, AI writes its facts for search engines and AI answers
   (a short answer-first summary, season in Pakistan, storage tip, best uses, the Urdu name, and the storage tip and uses
@@ -112,6 +133,11 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Markets, categories, announcements and **newsletter subscribers** in DataTables (CSV / Excel / Print)
 - Contact-us inbox
 - **FAQs**: add, edit, order, hide or delete questions and choose which appear on the home page
+- **“Generate with AI”** in every free-text box where it helps: FAQ answers, market descriptions, announcement
+  messages, suspend reasons and moderation notes (customers get it for reviews and report details, farmers for review
+  replies, decline reasons and the farm description). Claude writes the text when an API key is set, a built-in writer
+  otherwise; the text can be edited before saving
+- Categories have a small round **icon** and a wide **card photo** for the home page
 - **Urdu text** next to the English in the admin forms: FAQs, categories, announcements and market descriptions
   (typed right to left). The admin area itself stays in English
 
@@ -128,7 +154,7 @@ AI tools can pick out the facts. Unknown addresses get a real **404** page that 
 `/sitemap.xml` (every page in English and Urdu, with its **photos**), `/robots.txt` and a web app manifest are served
 live; `npm run seo-files` also writes them (plus `llms.txt`) as static files into `client/public`.
 
-**Urdu (اردو):** a language switch (navbar, phone menu, dashboards and footer) turns the public site and the customer
+**Urdu (اردو):** a language switch (navbar, phone menu and dashboards) turns the public site and the customer
 and farmer areas into Urdu:
 - every button, label, message, table, chart and e-mail-style notification in correct Urdu, with Urdu punctuation
   (، ۔ ؟), Nastaliq headings and Naskh for the interface; prices in روپے, Urdu day and month names

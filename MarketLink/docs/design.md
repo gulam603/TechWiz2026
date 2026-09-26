@@ -72,7 +72,15 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
 | --- | --- |
 | Buttons | `btn-primary` (green), `btn-lime`, `btn-forest`, `btn-soft`, `btn-white`, round `btn-icon`; press feedback `scale(0.98)`; labels never wrap |
 | Chips | `chip`, `chip-soft`, `hero-chip` (on dark), filter chips and day dots (S M T W T F S) |
-| Product card | produce tile (4:3) + category, name, farmer, rating, price per unit, add button; lifts on hover |
+| Product card | produce tile (4:3) + category, name, farmer, rating, price per unit, add button; lifts on hover; an orange "N% off" chip and the usual price crossed out during an offer |
+| Home banner | full-width photo, dark green shade on the side of the words (from below on phones), lime label, white title, lime and outline buttons; dots with a filling bar, round arrows and pause |
+| Category card | white card: 4:3 photo on the category colour, name, item count, round arrow; a swipe row on phones |
+| Offers banner | forest panel with the photo fading in from the side, orange "This week's offers" label, big "Up to N% off" title, lime button |
+| Reviews carousel | white card; customers' initials in round tinted faces on an arc over a soft green circle; the current one is larger with a lime ring; the review in large type with stars, Verified badge, name, city and date |
+| Newsletter strip | lime gradient card with a round fruit-basket photo, half over the top of the footer |
+| FAQ accordion | one question open at a time; the answer slides open (grid rows 0fr → 1fr) and fades in |
+| Filter sidebar | white panel sliding in from the right over a dimmed page, sticky head and foot (Clear all, Show results) |
+| Refresh button | small white pill with an arrow that turns while loading and "Updated 10:42" next to it |
 | Produce tile | the product photo fills the tile (object-fit cover); a basket icon when there is no photo |
 | Status badges | orders (placed, accepted, ready, completed, declined, cancelled), accounts (active, pending, suspended, inactive), products (available, sold out, unavailable, removed) |
 | KPI cards | icon on the left, label, value, sub-text (one line on laptops, up to two lines on phones); first card is the dark "lead" card |
@@ -80,7 +88,7 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
 | DataTables grid | rounded table, cream header, pill search box, CSV / Excel / Print buttons, forest pagination, responsive child rows on phones |
 | Filter bar | small uppercase labels over compact selects, date and number inputs; "Clear n filters" link |
 | Avatar | round photo (profile upload) or initials; sizes sm / default / lg / xl |
-| Write with AI | pill button with a lime gradient and the `bi-stars` icon next to the description field (product descriptions and "Generate with AI" farm descriptions) |
+| Write with AI | pill button with a lime gradient and the `bi-stars` icon next to the label of a free-text box (descriptions, review replies, reviews, reasons, notes, FAQ answers, announcements); "Try another" after the first text |
 | Password field | one eye button inside the field to show or hide the password; the browser's own reveal button is hidden |
 | Product gallery | main photo with arrows and a "1 / 3" counter, thumbnails below, swipe on phones, credit line follows the photo |
 | Report link | small muted "Report" link with a flag icon under reviews, listings and stall pages; opens a reason dialog |
@@ -92,7 +100,8 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
 | Social links | round icon buttons (Facebook, Instagram, X, YouTube, WhatsApp, LinkedIn) in the footer and on the Contact page |
 | Panels and tables | white panels with 1 px line border; tables scroll sideways on small screens instead of squeezing names |
 | Modal / drawer | backdrop blur, Escape to close; the mobile drawer is portalled to `<body>` so it never sits inside the sticky header |
-| Toasts | bottom centre, above the tab bar on phones |
+| Toasts | top right on laptops, bottom centre above the tab bar on phones; white card with a coloured edge, icon and title per kind (success green, error red, warning amber, info blue), a close button and a time bar that stops under the mouse |
+| Dropdowns | selects and searchable dropdowns share one look: white field, forest chevron, green focus ring, light green hover and a lime tick on the chosen option |
 | Chat widget | forest header, lime "Remembers" strip showing the assistant's memory, product cards, suggestion chips, Clear chat confirmation |
 
 ## 5. Logo, icons and imagery
@@ -112,10 +121,13 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
   for their frame: 8 banner photos (1024 px, `client/public/images/hero`), 8 market photos
   (4:3, 800 px) and 12 farm cover photos (16:9, 1024 px) in `server/uploads/places`. Category icons
   and farmer logos are round 320 px crops of product photos (`uploads/photos/thumbs`). Each photo
-  shows its photographer; see the two `CREDITS.md` files.
+  shows its photographer; see the two `CREDITS.md` files. Category card photos (800 × 600) are in
+  `server/uploads/photos/categories`, the offers banner and newsletter photos in
+  `client/public/images/banners`.
 - **Video:** `client/public/media/how-it-works.mp4` (29 s, 1280 × 720, about 0.8 MB) with a poster
   image and English captions (`how-it-works.vtt`). It shows the real website on a phone for the four
-  steps; it only downloads when the visitor presses play.
+  steps; on the home page it plays by itself (muted, on a loop) while it is on screen, with controls to
+  pause it or turn the sound on.
 - **No illustrations:** every picture is a real photo. Empty states, banners and value cards use
   Bootstrap Icons in a soft circle (`.empty-icon`, `.banner-icon`, `.value-icon`).
 - **Share picture:** `client/public/brand/og-image.jpg` (1200 × 630) for link previews of pages
@@ -127,7 +139,9 @@ On laptops and desktops (≥ 992 px) the root font size is 15 px and section spa
 | Animation | Where |
 | --- | --- |
 | `pageIn` | every route change (fade + rise) |
-| `hcRise`, `hcZoom` | home banner: text rises, the photo settles from a slight zoom; slides change every 3 s and the active dot fills in 3 s |
+| Banner | home banner: slides cross-fade, the text rises and the photo settles from a slight zoom; slides change every 3 s and the active dot fills in 3 s (they keep changing with reduced motion, without the zoom) |
+| Reviews carousel | faces move along the arc and the new review fades up every 5 s |
+| FAQ | the answer opens smoothly (height) and fades in |
 | Scroll reveal (`.reveal` + IntersectionObserver) | cards and section headings fade up when they scroll into view |
 | Count-up | home and About statistics count from 0 when visible |
 | `floaty`, `popIn`, `glowPulse`, `twinkle` | floating produce ring on the auth banner, with mouse parallax |

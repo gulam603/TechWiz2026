@@ -37,6 +37,10 @@ the code so the same problems are not solved twice.
 | Urdu content stored next to the English (`nameUr`, `descriptionUr`, `bioUr`, `questionUr` …) | admins and farmers write both; the Urdu site falls back to English when a field is empty |
 | Right to left by postcss-rtlcss at build time, not a second stylesheet | one set of SCSS; the Urdu layout is always the mirror of the English one |
 | Admin area stays English | it is a back-office tool; its forms have Urdu fields for the content the public sees |
+| Home banner autoplays even with "reduce motion" and under the mouse | the team saw it standing still: Windows' "animation effects off" turns on reduced motion, and the mouse usually rests on the banner. The pause button, keyboard focus and a hidden tab still stop it; reduced motion only drops the zoom |
+| Offers use `compareAtPrice` (the usual price) next to `price` | orders keep storing the price paid; the "Up to N% off" banner is worked out from real offers, so it never promises a discount nobody gives |
+| "Generate with AI" for free-text boxes goes through one endpoint (`/api/ai/write`) with a list of kinds | each kind says which role may use it, has a Claude prompt and a built-in writer, so the button works without an API key |
+| One reviews carousel instead of two sliding rows | the team found two rows that both stop under the mouse confusing; one large review is easier to read |
 | Urdu page choice in a cookie (`ml_lang`) as well as localStorage | the server can send the Urdu page (lang, dir, title) from the first paint and search engines get `?lang=ur` pages |
 
 ## Conventions
@@ -151,6 +155,16 @@ the code so the same problems are not solved twice.
   before / after a change) and the mirror check (the same page laid out LTR and RTL must be exact mirror images).
 - Urdu fonts: Noto Nastaliq Urdu for headings and reading text, Noto Naskh Arabic for the interface; never
   `letter-spacing` (breaks joined letters), no italics or capitals.
+- postcss-rtlcss mirrors `left` / `right`, margins, borders and `transform-origin`, but **not** gradient angles:
+  a shade that runs `90deg` needs its own `[dir='rtl']` rule with `270deg` (inside `rtl:begin:ignore`).
+- Inline styles are not mirrored either; use logical properties (`insetInlineStart`) or CSS variables that a
+  stylesheet rule turns into `left` (the reviews arc does this).
+- A swipe row with `scroll-snap-type: x mandatory` snaps its first card to the very edge; give it
+  `scroll-padding-inline` equal to its side padding.
+- React sets `muted` on `<video>` as a property, not an attribute; call `play()` from code (here when the
+  video scrolls into view) instead of relying on the `autoplay` attribute alone.
+- Category photos live in `uploads/photos/categories`: the `uploads/categories` folder is for admin uploads and
+  is ignored by git.
 
 ## Useful commands
 

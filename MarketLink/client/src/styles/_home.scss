@@ -300,7 +300,7 @@ span.bone {
 }
 
 .hero-skeleton {
-  height: 430px;
+  height: clamp(400px, 38vw, 500px);
   border-radius: var(--ml-radius-lg);
 }
 
@@ -312,10 +312,11 @@ span.bone {
   padding: 1.25rem 1.5rem;
 }
 
-.skeleton-rail {
+.skeleton-rail,
+.skeleton-trust {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 0.9rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .skeleton-card {
@@ -329,7 +330,8 @@ span.bone {
   .hero-skeleton {
     height: 460px;
   }
-  .skeleton-rail {
+  .skeleton-rail,
+  .skeleton-trust {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

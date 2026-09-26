@@ -122,6 +122,7 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] No em dashes in the interface text
 - [x] Responsive check of every page at 18 screen widths from 320 to 1920 px
 - [x] Round 8 SEO: dynamic meta title, description, keywords, canonical and preview tags on every page change; Product JSON-LD with the AI schema (additionalProperty, alternateName, countryOfOrigin); semantic layout for AI extraction (article, titled sections, dl fact lists); static public/sitemap.xml, robots.txt and llms.txt (`npm run seo-files`); unknown addresses answer 404
+- [x] Round 9 design: calm home page (banner photos with the words on them and working autoplay, category photo cards, "Up to 30% off" offers banner from real offers, Why choose us, Top picks swipe row on phones, farmers with their location, video that plays by itself, reviews carousel on an arc, newsletter strip above the footer, one-line footer), toasts in four kinds, one look for every dropdown, FAQ accordion with one question open, filter sidebar from the right on phones, Refresh buttons on dashboards, "Generate with AI" in the free-text boxes, offers with the usual price crossed out
 - [x] Urdu (اردو): language switch on every page, right to left layout mirrored exactly (English layout unchanged), Urdu fonts, Urdu punctuation, no missing translations, server messages in Urdu, Urdu assistant, Urdu SEO (lang / dir, hreflang, og:locale, sitemap in both languages); admin forms have Urdu fields, the admin area stays English
 
 ## 5. Quality checks (last full run)

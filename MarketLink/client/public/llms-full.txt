@@ -144,7 +144,7 @@ The farmer you order from sees your name and phone number so they can reach you 
 - [Ravi Organic Farm](https://marketlink.onrender.com/farmers/ravi-organic-farm) (Lahore) [Organic practices, Winter crops]: A family farm near Raiwind that follows organic practices, growing strawberries, kinnow and winter vegetables for Lahore families.
 - [Thatta Dairy Collective](https://marketlink.onrender.com/farmers/thatta-dairy-collective) (Karachi) [Cooperative, Grass-fed, Free-range]: A cooperative of twelve small dairy families.
 
-## Products this week (prices in Pakistani rupees, updated 2026-09-25)
+## Products this week (prices in Pakistani rupees, updated 2026-09-26)
 
 ### Vegetables
 - [Broccoli](https://marketlink.onrender.com/products/broccoli): Rs 450 per kg, from Hyderabad Herb Garden

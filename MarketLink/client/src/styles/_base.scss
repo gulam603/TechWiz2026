@@ -66,17 +66,19 @@ img {
   max-width: 100%;
 }
 
+// Hidden above the page (not to one side, so it never sticks out in either reading direction)
 .skip-link {
   position: absolute;
-  left: -999px;
+  left: 12px;
   top: 8px;
   z-index: 2000;
   background: $ml-forest;
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: 50rem;
+  transform: translateY(-300%);
   &:focus {
-    left: 12px;
+    transform: none;
   }
 }
 

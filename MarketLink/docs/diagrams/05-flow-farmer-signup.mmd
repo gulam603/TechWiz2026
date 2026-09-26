@@ -1,0 +1,13 @@
+flowchart TD
+  S([Start]) --> REG[Farmer fills the sign-up wizard<br/>account, stall, farm, markets, pickup days]
+  REG --> VAL{Details valid?}
+  VAL -- No --> REG
+  VAL -- Yes --> PEND[Account made with status Pending<br/>selling features locked]
+  PEND --> NOTE[Admins get a notification]
+  NOTE --> REV{Admin reviews the stall}
+  REV -- Not approved --> REJ[Status Suspended<br/>farmer is notified and e-mailed the reason]
+  REJ --> END([End])
+  REV -- Approve --> ACT[Status Active<br/>farmer is e-mailed]
+  ACT --> ALERT[Customers of that city and market<br/>hear about the new farmer]
+  ALERT --> SELL[Farmer publishes weekly stock,<br/>prices and pickup windows]
+  SELL --> END

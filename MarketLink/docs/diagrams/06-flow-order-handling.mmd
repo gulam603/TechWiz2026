@@ -1,0 +1,14 @@
+flowchart TD
+  S([New pre-order]) --> N[Farmer notified<br/>and e-mailed]
+  N --> D{Accept?}
+  D -- Decline --> DEC[Declined with a reason<br/>stock returned, customer told]
+  DEC --> END([End])
+  D -- Accept --> ACC[Accepted<br/>customer told]
+  ACC --> AWAY{Farmer cannot come<br/>on pickup day?}
+  AWAY -- Yes --> TELL[Farmer presses I cannot come today<br/>customers with a pickup are told]
+  TELL --> END
+  AWAY -- No --> PACK[Farmer packs the order<br/>and presses Ready]
+  PACK --> READY[Ready for pickup<br/>customer told]
+  READY --> DONE[Customer collects and pays<br/>farmer presses Complete]
+  DONE --> ASK[Customer asked:<br/>Did you receive your order?]
+  ASK --> END

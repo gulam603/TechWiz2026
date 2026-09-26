@@ -1,0 +1,20 @@
+flowchart TD
+  S([Start]) --> B[Browse markets, farmers or products<br/>search, filters, map]
+  B --> Q{Product in stock?}
+  Q -- No --> R[Press Remind me<br/>guest types an e-mail]
+  R --> E1([Notification and e-mail<br/>when the farmer restocks])
+  Q -- Yes --> ADD[Add to basket<br/>choose the amount]
+  ADD --> MORE{Buy more?}
+  MORE -- Yes --> B
+  MORE -- No --> CO[Open checkout]
+  CO --> LOG{Logged in?}
+  LOG -- No --> GD[Enter name, e-mail, phone<br/>account made, password e-mailed]
+  LOG -- Yes --> SLOT
+  GD --> SLOT[Choose pickup date and time slot<br/>for each farmer]
+  SLOT --> V{Slot free and before<br/>the farmer's cut-off?}
+  V -- No --> SLOT
+  V -- Yes --> PLACE[Place pre-order<br/>stock reserved]
+  PLACE --> CONF[Page /checkout/order-number<br/>notification and e-mail]
+  CONF --> WAIT[Farmer accepts and packs]
+  WAIT --> PICK[Customer collects at the stall<br/>and pays the farmer]
+  PICK --> END([End])

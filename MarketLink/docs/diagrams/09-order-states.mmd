@@ -1,0 +1,11 @@
+stateDiagram-v2
+  [*] --> placed: customer pre-orders
+  placed --> accepted: farmer accepts
+  placed --> declined: farmer declines
+  placed --> cancelled: customer cancels before cut-off
+  accepted --> ready: farmer packs it
+  accepted --> cancelled: customer cancels before cut-off
+  ready --> completed: customer collects and pays
+  completed --> [*]
+  declined --> [*]
+  cancelled --> [*]

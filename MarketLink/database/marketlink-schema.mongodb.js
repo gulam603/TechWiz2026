@@ -274,6 +274,8 @@ createCollection(
       farmerNote: str(500),
       paymentMethod: { enum: ['pay_at_pickup'] },
       completedAt: date,
+      // the customer's answer to "Did you receive your order?" after the farmer marks it complete
+      receipt: { bsonType: 'object', properties: { status: { enum: ['received', 'not_received'] }, note: str(500), at: date } },
       createdAt: date,
       updatedAt: date,
     },
@@ -416,7 +418,17 @@ createCollection(
   {
     bsonType: 'object',
     required: ['name', 'email', 'message'],
-    properties: { name: str(80), email: str(120), subject: str(150), message: str(2000), status: { enum: ['new', 'read'] }, createdAt: date, updatedAt: date },
+    properties: {
+      name: str(80),
+      email: str(120),
+      subject: str(150),
+      // optional drop-down on the contact page
+      topic: { enum: ['market_request', 'market_complaint', 'farmer_complaint', 'order_help', 'selling', 'feedback', 'other'] },
+      message: str(2000),
+      status: { enum: ['new', 'read'] },
+      createdAt: date,
+      updatedAt: date,
+    },
   }
 );
 
@@ -470,6 +482,46 @@ createCollection(
     },
   },
   [[{ status: 1, createdAt: -1 }], [{ targetType: 1, review: 1, product: 1, farmer: 1 }]]
+);
+
+// restockrequests: "Remind me when it is available" on a sold-out product (customer or guest e-mail)
+createCollection(
+  'restockrequests',
+  {
+    bsonType: 'object',
+    required: ['product', 'email'],
+    properties: { product: objectId, user: objectId, email: str(120), createdAt: date, updatedAt: date },
+  },
+  [[{ product: 1, email: 1 }, { unique: true }]]
+);
+
+// sitebanners: banners the admin edits (the "Up to 30% off" offer banner on the home page, key "home-offer")
+createCollection(
+  'sitebanners',
+  {
+    bsonType: 'object',
+    required: ['key'],
+    properties: {
+      key: str(40),
+      isActive: bool,
+      percent: num(0, 90),
+      autoPercent: bool,
+      tag: str(40),
+      tagUr: str(60),
+      title: str(90),
+      titleUr: str(120),
+      text: str(220),
+      textUr: str(300),
+      buttonLabel: str(30),
+      buttonLabelUr: str(40),
+      link: str(200),
+      image: str(),
+      updatedBy: objectId,
+      createdAt: date,
+      updatedAt: date,
+    },
+  },
+  [[{ key: 1 }, { unique: true }]]
 );
 
 print(`\nDatabase "${dbName}" is ready. Now run "npm run seed" inside /server to insert demo data.`);

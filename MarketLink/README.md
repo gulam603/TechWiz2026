@@ -28,20 +28,26 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Farmers directory with location (city), market, category and day filters, plus a map view of all stalls
 - Farmer profiles: stall name, location, operating days, pickup windows, current weekly stock, reviews
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
-- **Home page** (calm and simple: one dark green, one lime accent, white cards and real photos):
-  - **banner** of full-width photos with the words on them (welcome, what is in season now, pickup, farmers); the
-    slides change by themselves every **3 seconds**, also with “reduce motion” turned on and while the mouse is over
-    them (they stop only with the pause button, while the keyboard is on the controls or when the tab is hidden);
-    four promises under it (fresh every week, pay at pickup, checked farmers, your pickup time)
-  - search with a **category drop-down** and the next market day
-  - **Shop by category** cards with a photo and how many items are in stock (a swipe row on phones)
-  - **Top picks this week**: a grid on laptops, a **row to swipe** on phones
-  - **“Up to 30% off fresh vegetables”** offers banner, worked out from the offers farmers really run this week
-  - **Why choose us**, the **30-second video tour** (plays by itself, muted, while it is on screen), markets with a map,
-    top-rated farmers with **where the farm is**, **From our farms to your table** with the live numbers
+- **Home page** (calm and simple: one dark green, one lime accent, white cards and real photos). The sections
+  take turns between **dark green and light cream**:
+  - a **banner across the whole screen** (1920 px photos on large screens, 1024 px on phones) with the words on
+    them; the slides change by themselves every **3 seconds** (they stop only with the pause button, while the
+    keyboard is on the controls or when the tab is hidden). **No photo credits on the photos**: every photographer
+    is listed on the **Photo credits** page (`/credits`, linked in the footer)
+  - search with a **category drop-down** and the next market day, over the bottom of the banner; four promises
+  - **Shop by category** cards with a photo and how many items are in stock; **View all** opens `/categories`
+  - **Offer banner** (“Up to 30% off fresh vegetables”) that the admin edits in **Admin → Offer banner**: the
+    percent (or “use the biggest real offer this week”), headline, text and button in English and Urdu, the photo
+    and the link, with a live preview; it can be hidden
+  - **Top picks this week** with **category chips** (a grid on laptops, a row to swipe on phones)
+  - the **30-second video tour** with the four steps, **top-rated farmers** as a ranked photo carousel (rank,
+    rating, city, “at the market today”), markets with a map
+  - **From our farms to your table**: photos, the three steps from farm to table and the live numbers
+  - **Be part of your local food market**: an invitation for farmers (“Sell your harvest before you pack the
+    truck”) and for market organisers (“Run a farmers market in your city?” → contact page with the topic chosen)
   - **customer reviews** carousel: the customers sit on an arc, their review is shown large next to it and the
     reviews move on by themselves (waiting while the mouse is on them; pause button and dots)
-  - **FAQs**; a **newsletter** strip just above the footer on every page (with an unsubscribe page)
+  - **Why choose us** (second last) and the **FAQs**; a **newsletter** strip just above the footer on every page
 - **Footer**: shop, farmer, help and contact links and one line at the bottom:
   “© 2026 MarketLink · Built by Team Omniverse · Terms & Conditions”
 - **Messages (toasts)** in four kinds, each with its own colour, icon and title: success (“Done”), error (“Something
@@ -81,6 +87,26 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Optional **family sharing**: linked household members can see each other’s pre-orders
 - **AI assistant** “Basket” (chat widget) answering market timings, farmer availability, pickup windows and product questions from live data,
   with **memory** (follow-up questions such as “which farmers are there?”, your name and city), saved chat history and a **Clear chat** button
+  The assistant understands **English, Urdu and Roman Urdu / Hinglish** (“sab se acha kisan kaunsa hai?”, “tamatar kahan
+  milega”) and answers questions about the whole site: top-rated farmers and products, best sellers, the cheapest items,
+  offers, new farmers, markets open now, whether a farmer is at the market today, how many farmers / markets / products,
+  cities, categories, restock reminders, reviews, account help, contact and missing orders
+- **Search while typing** (no Enter needed) with an **×** to clear it, in the shop, farmers, markets and map pages; the
+  navbar search shows suggestions after a short pause; the shop has **grid and list** views and removable filter chips
+- **Adding to the basket does not open the basket**; a message offers **View basket**
+- **Remind me when it is back** on sold-out products (guests type an e-mail): a notification and an e-mail on restock
+- **“Did you receive your order?”** after the farmer completes it: *Yes* opens the review of the stall, *No* tells the
+  farmer and the MarketLink team
+- **Markets open today** first on the markets page; every farmer shows whether they are **at the market now, later
+  today, gone for the day or not coming**; the farmers at a market sit in a scroll box
+- **Best sellers** page (`/best-sellers`): top 5 / 10 / 20, for every market or one market, and per category
+- Notifications when **a market in your city opens today** and when **a new farmer joins** your market
+- After checkout the page address is **`/checkout/<order number>`**, so it can be bookmarked to follow the order
+- **Phone numbers with a country flag** and dial code (intl-tel-input) in every form; saved as +923001234567
+- Contact page with an optional **topic** (request a new market, complaint about a market or farmer, help with an
+  order …); the admin inbox filters by topic
+- On phones, dialogs (quick view, add to basket) open as **bottom sheets**, the **bottom bar** is on every page
+  including the dashboards, and the notification menu fits the screen; buttons show a **spinner** while they work
 
 **Farmer**
 - Register with a 3-step wizard — ① stall name, contact person, contact number, e-mail, password;
@@ -101,6 +127,7 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - **Recurring weekly stock template** (manual “apply now” or automatic every week) — reserved pre-orders are respected
 - Mark items sold out or temporarily unavailable
 - Pre-orders: accept / decline (with reason) / mark ready / complete; set slot length, slot capacity and order cut-off hours
+- **“I cannot come to the market today”**: customers see it at once and everyone with a pickup today is told
 - **Closed dates** (“not at the market this week”): customers cannot book pickups on those days and the farmer is warned about existing pre-orders on them
 - Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
 - Read and reply to customer reviews (Table or Cards view; reply and report from the table); **“Generate with AI”**
@@ -131,7 +158,9 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Master data: product categories; publish announcements (site banner + in-app notification) **for a season**:
   pick the months (or Winter / Spring / Summer / Autumn), so “Mango season is here!” only shows in summer
 - Markets, categories, announcements and **newsletter subscribers** in DataTables (CSV / Excel / Print)
-- Contact-us inbox
+- Contact-us inbox with a **topic** filter
+- **Farmer rankings** above the farmers table: by revenue, rating, orders, customers or products, for the last 30 or 90 days or all time
+- **Offer banner** for the home page (percent, words in English and Urdu, photo, link, show / hide, live preview)
 - **FAQs**: add, edit, order, hide or delete questions and choose which appear on the home page
 - **“Generate with AI”** in every free-text box where it helps: FAQ answers, market descriptions, announcement
   messages, suspend reasons and moderation notes (customers get it for reviews and report details, farmers for review
@@ -390,9 +419,9 @@ atomic stock reservation so two customers can never buy the same last item.
 ## 10. Credits & AI tools
 
 - Product photos: real photos from the **Open Images Dataset** (Google), published on Flickr by their
-  authors under **CC BY 2.0**. Every photographer is credited on the product page and in
+  authors under **CC BY 2.0**. Every photographer is credited on the website's **Photo credits** page (`/credits`) and in
   `server/uploads/photos/CREDITS.md`.
-- Banner, market and farm photos: also **Open Images Dataset** (CC BY 2.0); credited on the page and in
+- Banner, market and farm photos: also **Open Images Dataset** (CC BY 2.0); credited on the Photo credits page and in
   `client/public/images/CREDITS.md` and `server/uploads/places/CREDITS.md`. The site uses no illustrations.
 - Logo: designed in **Canva** by the team and rebuilt as SVG / PNG (`client/public/brand`).
 - Tables: **DataTables** (datatables.net, MIT licence).

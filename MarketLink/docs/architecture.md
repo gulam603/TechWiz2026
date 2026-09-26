@@ -131,6 +131,8 @@ erDiagram
   CONTENTFLAG }o--o| PRODUCT : reports
   CONTENTFLAG }o--o| FARMER : reports
   CONTENTFLAG }o--o| USER : "reported by"
+  PRODUCT ||--o{ RESTOCKREQUEST : "remind me"
+  RESTOCKREQUEST }o--o| USER : "asked by (empty for guests)"
 ```
 
 | Collection | Key fields |
@@ -141,7 +143,7 @@ erDiagram
 | `cities` | name (unique), slug, province, latitude/longitude (city centre), isActive, sortOrder – source of every city dropdown |
 | `categories` | name, slug, description, color, icon (small round photo), image (wide card photo on the home page), sortOrder, isActive |
 | `products` | farmer, category, name, slug (readable URL `/products/sindhri-mangoes`), description, price, compareAtPrice (the usual price during an offer: "N% off", ended automatically when the price is raised to it), unit, quantityAvailable, templateQuantity, lowStockThreshold (alert level) + lowStockAlertedAt / soldOutAlertedAt, status (available / sold_out / unavailable), metaTitle, metaDescription, keywords (SEO, also used by the search), image (a real photo from `uploads/photos`), imageCredit, gallery (up to 4 extra photos with credits), markets/days (copied for fast filters), rating, totalSold, moderation flags |
-| `orders` | orderNumber, customer, farmer, market, items (product, name, price, unit, quantity – price frozen at order time), totalAmount, pickupDate, pickupSlot, pickupAt, cutoffAt, placedBy (customer / admin), status + statusHistory |
+| `orders` | orderNumber, customer, farmer, market, items (product, name, price, unit, quantity – price frozen at order time), totalAmount, pickupDate, pickupSlot, pickupAt, cutoffAt, placedBy (customer / admin), status + statusHistory, completedAt, receipt (received / not_received, note, at – the answer to "Did you receive your order?") |
 | `reviews` | customer, order (for buyers), verified (true = tied to the customer's completed order), type (product / farmer), product or farmer, rating 1–5, comment, response (farmer reply), isRemoved (moderation) |
 | `notifications` | user, type (order, restock, stock, announcement, review, account, moderation, system), title, message, link, read |
 | `announcements` | title, message, audience, months (1-12, empty = all year; the banner only shows in these months), link, isActive, createdBy (site banner + in-app notification) |
@@ -149,7 +151,9 @@ erDiagram
 | `reports` | reportType (platform_overview, orders_summary, revenue_by_market, top_farmers, sales_by_category, customer_activity, inventory_status, city_overview, reviews_moderation), from/to, data, generatedBy, generatedAt |
 | `stockmovements` | farmer, product, productName, unit, change (+/-), quantityAfter, type (initial, restock, adjustment, waste, stall_sale, correction, template, order_reserved, order_released, order_changed), reason, order + orderNumber, by (farmer / customer / admin / system) – the inventory log |
 | `contentflags` | targetType (review / product / farmer) + the target ids, reason (spam, offensive, misleading, wrong_info, other, auto_language), note, reporter (empty for the word filter), status (open / resolved / dismissed), action (removed, restored, suspended), resolutionNote, resolvedBy, resolvedAt – the moderation queue |
-| `contactmessages` | name, email, subject, message, status |
+| `contactmessages` | name, email, subject, topic (market_request, market_complaint, farmer_complaint, order_help, selling, feedback, other), message, status |
+| `restockrequests` | product, user (empty for guests), email – "Remind me when it is available"; unique per product and e-mail, deleted once the reminder is sent |
+| `sitebanners` | key (`home-offer`), isActive, percent, autoPercent (use the biggest real offer), tag / title / text / buttonLabel in English and Urdu (`{percent}` is replaced by the number), link, image, updatedBy – the home page offer banner edited by the admin |
 | `assistantchats` | user (unique), last 60 messages, memory (market, farmer, product, day, city, name, last intent) |
 
 Validators and indexes for every collection are in `database/marketlink-schema.mongodb.js`.
@@ -171,7 +175,10 @@ Validators and indexes for every collection are in `database/marketlink-schema.m
 | `productSchema.js` | the AI product schema: answer-first summary, season, storage tip, uses, Urdu name and Urdu tips, written by Claude (with a key) or a built-in writer when a product is added or changed; used in the Product JSON-LD and the Quick facts |
 | `urdu.js` | the page language (`?lang=`, cookie `ml_lang`, admin always English) and the Urdu titles and descriptions of every page for the server |
 | `reports.js` | platform-wide admin reports saved to the `reports` collection (printable, CSV / Excel export in the UI); the newer reports return columns + rows + an optional chart so the UI renders them generically |
-| `assistant.js` + `assistantUrdu.js` | rule-based AI assistant with conversation memory, in English and Urdu (see below) |
+| `assistant.js` + `assistantUrdu.js` + `assistantRoman.js` | rule-based AI assistant with conversation memory, in English, Urdu and Roman Urdu (see below) |
+| `customerAlerts.js` | "market open today" notices (hourly scheduler, once a day per city, from an hour before opening) and "new farmer" notices when the admin approves a stall |
+| `stock.js` → `notifyRestock` | when a sold-out product is restocked: notification + e-mail to everyone who pressed Remind me (guests by e-mail only), then the reminders are removed; fans of the product get an in-app notice |
+| `bannerController.js` | the home page offer banner: defaults, the admin's saved text, the "biggest real offer this week" percent |
 | `scheduler.js` | runs hourly; at the start of a new week re-applies the stock template for farmers with auto-apply |
 | `ratings.js` | recalculates product and farmer ratings after reviews change |
 
@@ -219,9 +226,16 @@ stateDiagram-v2
   (`assistantUrdu.js`; products are recognised by their Urdu names), and the answer is written in Urdu
   (Urdu day, unit, status, city and category names). The language of each request is kept in
   AsyncLocalStorage, so the rules pick the Urdu sentence with `L(english, urdu)`.
+- **Roman Urdu / Hinglish** (`assistantRoman.js`): phrases such as "sab se acha", "sab se sasta",
+  "zyada bikne wali", "kab khulti" and words such as "kisan", "mandi", "tamatar", "aaj" are turned into
+  English keywords first; English words pass through, so mixed sentences work too.
 - Intent rules detect timings, pickup windows, farmer availability, product search/details,
   payment/delivery/cancellation FAQs and "my orders"; entities (markets, farmers, categories,
   days, cities) are matched against live data.
+- **Site questions** (`siteAnswer`): top-rated farmers / products / markets, best sellers (top N, per market,
+  city or category), cheapest or most expensive items, offers, new farmers and products, counts, cities,
+  categories, markets open now, whether a farmer is at the market today (pickup windows and closed dates),
+  restock reminders, how to review, account help, contact topics and "I did not receive my order".
 - **Memory:** each answer returns what the conversation is about. Follow-ups such as
   "which farmers are there?", "what about Sunday?", "is it in stock?" use it. The user can say
   "my name is …", "I live in Lahore", "what do you remember?" and "forget everything".

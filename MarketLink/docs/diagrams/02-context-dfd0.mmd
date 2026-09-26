@@ -1,0 +1,19 @@
+flowchart LR
+  C["Customer"]
+  F["Farmer"]
+  A["Administrator"]
+  G["Guest visitor"]
+  E["E-mail service"]
+  M["Map service"]
+  S(("0<br/>MarketLink<br/>system"))
+  G -- "search, browse, guest pre-order" --> S
+  S -- "markets, farmers, products, map" --> G
+  C -- "registration, pre-orders, reviews, receipt answers" --> S
+  S -- "order status, notifications, recommendations" --> C
+  F -- "stall details, weekly stock, pickup windows, order decisions" --> S
+  S -- "pre-orders, alerts, sales reports" --> F
+  A -- "approvals, markets, categories, moderation, banner" --> S
+  S -- "platform reports, rankings, messages" --> A
+  S -- "e-mails" --> E
+  S -- "map requests" --> M
+  M -- "tiles, routes" --> S

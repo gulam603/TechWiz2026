@@ -1,0 +1,12 @@
+flowchart TD
+  S([Farmer marks the order Complete]) --> Q[Customer gets a notification and an e-mail:<br/>Did you receive pre-order ML-...?]
+  Q --> OPEN[Customer opens the dashboard<br/>or the order page]
+  OPEN --> ANS{Received?}
+  ANS -- Yes --> OK[Receipt saved as received]
+  OK --> RV[Review form opens:<br/>1 to 5 stars and a comment]
+  RV --> RATE[Farmer rating updated<br/>shown as verified purchase]
+  RATE --> END([End])
+  ANS -- No --> NOTE[Customer adds a note]
+  NOTE --> TELL[Farmer is e-mailed,<br/>admins are notified]
+  TELL --> FOLLOW[Team follows up with the customer]
+  FOLLOW --> END

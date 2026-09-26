@@ -1,0 +1,24 @@
+flowchart LR
+  G(["Guest"])
+  C(["Customer"])
+  F(["Farmer"])
+  A(["Admin"])
+  subgraph MarketLink
+    U1["Browse markets, farmers, products"]
+    U2["Search and filter, map, directions"]
+    U3["Pre-order for a pickup slot"]
+    U4["Track, change, cancel orders"]
+    U5["Confirm receipt and review"]
+    U6["Remind me when back in stock"]
+    U7["Ask the AI assistant"]
+    U8["Register stall, weekly stock, pickup windows"]
+    U9["Accept, decline, ready, complete orders"]
+    U10["Sales insights, low stock alerts"]
+    U11["Approve farmers, manage markets and categories"]
+    U12["Moderate reviews, offer banner, announcements"]
+    U13["Reports, farmer rankings, messages"]
+  end
+  G --- U1 & U2 & U3 & U6 & U7
+  C --- U1 & U2 & U3 & U4 & U5 & U6 & U7
+  F --- U8 & U9 & U10
+  A --- U11 & U12 & U13

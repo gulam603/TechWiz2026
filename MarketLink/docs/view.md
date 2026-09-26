@@ -29,11 +29,13 @@ sends guests to the right login page and blocks other roles.
 
 | Route | Page | Content |
 | --- | --- | --- |
-| `/` | Home | banner of full-width photos with the words on them (welcome, this season's harvest, pickup, farmers; changes by itself every 3 s, also with reduced motion and under the mouse; pause, dots, arrows, swipe) and four promises under it; search card (category drop-down, next market day); Shop by category cards with photos and item counts; Top picks this week (grid, a swipe row on phones); "Up to 30% off fresh vegetables" offers banner from the real offers; Why choose us; video tour (plays by itself, muted) + 4 steps; markets near you (map); top-rated farmers with their location; From our farms to your table (live numbers, Register your stall); customer reviews carousel (faces on an arc, one large review, moves on by itself); FAQs (6 questions, one open at a time, + link to all); a product card's Add opens the quick view to choose the amount |
-| `/products` | Shop | search, filters (category, city, market, market day, price range, rating, farming practice, in stock, on offer only), sorting, pagination; on phones the filters open as a sidebar from the right |
-| `/products/:slug` | Product detail (readable URL, e.g. `/products/sindhri-mangoes`; old id links redirect) | real product photo with credit (fits the screen, stays in view on laptops), price, unit, stock bar, quantity + add to basket, farmer card, pickup windows, reviews, related products |
-| `/markets` | Markets | search, city dropdown (cities table), produce category dropdown, day filter, "Near me" (distance sort), grid or map view |
-| `/markets/:slug` | Market detail | days, hours, address, map with directions, farmers at this market, save market |
+| `/` | Home | sections take turns dark green / light cream: a banner across the whole screen (1920 px photos on large screens, changes every 3 s; pause, dots, arrows, swipe; no photo credits on it); search card over the banner (category drop-down, next market day) and four promises; Shop by category cards with "View all" → `/categories`; the offer banner the admin edits; Top picks this week with category chips; video tour + 4 steps; top-rated farmers carousel (rank, rating, city, at the market today); markets near you (map); From our farms to your table (photos, 3 steps, live numbers); Be part of your local food market (farmers and market organisers); customer reviews carousel; Why choose us; FAQs |
+| `/products` | Shop | search while typing (× to clear), filters (category, city, market, market day, price range, rating, farming practice, in stock, on offer only) with removable chips, sorting, grid or list view, pagination; on phones the filters open as a sidebar from the right |
+| `/categories` | Shop by category | every category with its photo and number of items; opens the shop filtered by that category |
+| `/best-sellers` | Best sellers | top 5 / 10 / 20, for every market or one market, and per category, with the number sold |
+| `/products/:slug` | Product detail (readable URL, e.g. `/products/sindhri-mangoes`; old id links redirect) | real product photo (fits the screen, stays in view on laptops), price, unit, stock bar, quantity + add to basket, farmer card, pickup windows, reviews, related products |
+| `/markets` | Markets | opens on the markets open today (Open today / Tomorrow / All days), search as you type, city dropdown, produce category, day filter, "Near me" (distance sort), grid or map view |
+| `/markets/:slug` | Market detail | days, hours, address, map with directions, farmers at this market in a scroll box with each farmer's status today (at the market now, later today, gone, not coming), save market |
 | `/farmers` | Farmers | search, city, market, category, day, rating and farming-practice filters, grid or map view |
 | `/farmers/:slug` | Farmer profile | stall name, location, operating days, what they grow, practices, weekly stock, pickup windows, closed dates, map with route, reviews |
 | `/map` | Explore map | full map of markets and stalls with a searchable list, day filter, "near me", routes |
@@ -41,7 +43,8 @@ sends guests to the right login page and blocks other roles.
 | `/terms` | Terms & Conditions | 12 sections (accounts, pre-orders, cancellations, payment, farmers, reviews, AI assistant, privacy …) with a table of contents (a fold-out list on phones); linked from the footer, while the sign-up forms open the same text in a dialog |
 | `/faq` | FAQs | 17 questions in 4 topics (shopping, pickup & payment, farmers, account & privacy) with bigger topic headings, one question open at a time (smooth open animation), search, topic chips, help box; FAQPage structured data |
 | `/unsubscribe?token=` | Unsubscribe | opened from the newsletter e-mail; stops the newsletter for that address |
-| `/contact` | Contact us | static team contact, Google Map, contact form (goes to the admin inbox) |
+| `/contact` | Contact us | static team contact, Google Map, contact form with an optional topic (a link such as `/contact?topic=market_request` chooses it) that goes to the admin inbox |
+| `/credits` | Photo credits | the photographers of the stock photos (banners, markets, farms, products) and their licences |
 | `/cart` | Basket | items grouped by farmer (one pickup per farmer), quantities, totals; the basket icon opens the same basket as a sidebar on the right |
 | `/login`, `/register` | Customer / farmer login, customer sign-up | floating produce banner; sign-up asks name, contact number, e-mail, address and a required "I agree to the Terms & Conditions" (terms open in a dialog) |
 | `/register/farmer` | Farmer sign-up wizard | 3 steps: stall & account → farm details (address, city dropdown, bio, categories, practices) → markets, map pin, Terms & Conditions |
@@ -54,7 +57,7 @@ sends guests to the right login page and blocks other roles.
 | Route | Page | Content |
 | --- | --- | --- |
 | `/checkout` | Checkout (guests too) | guests first give first name, last name, e-mail, number and address (account created, password e-mailed); then pickup date and time slot per farmer (inside the farmer's windows, respecting capacity, cut-off and closed dates), notes, place pre-order (pay at pickup) |
-| `/checkout/success` | Order placed | order numbers and pickup summary |
+| `/checkout/<order number>` | Order placed | order numbers and pickup summary; the address can be bookmarked to follow the order (several orders are joined with +, e.g. `/checkout/ML-1+ML-2`) |
 | `/account` | Dashboard | greeting, ready-for-pickup alert, active and completed counts, upcoming pickups, latest updates, favourite farmers, products picked for you |
 | `/account/orders` | My orders | Active / History / All tabs, reorder |
 | `/account/orders/:id` | Order detail | status timeline, pickup map with directions, modify items or slot, cancel (before cut-off), review product and farmer after completion |
@@ -85,7 +88,7 @@ Every admin table is a DataTables grid (search, sort, paging, CSV / Excel / Prin
 | --- | --- | --- |
 | `/admin` | Dashboard | compact overview: greeting and quick actions, 6 KPI cards, orders/revenue chart (last 30 days), "Needs attention" list, orders by status, recent orders, most active farmers |
 | `/admin/orders`, `/admin/orders/:id` | Orders | all pre-orders; filters: status, city, market, farmer, placed by, pickup and placed date ranges, min/max total; Place order (modal) |
-| `/admin/farmers` | Farmers | approve, suspend or reactivate, details modal, Add farmer (modal); filters: status, city, market, category, joined dates |
+| `/admin/farmers` | Farmers | approve, suspend or reactivate, details modal, Add farmer (modal); filters: status, city, market, category, joined dates; farmer rankings above the table (revenue, rating, orders, customers, products; 30 / 90 days or all time) |
 | `/admin/customers`, `/admin/customers/:id` | Customers + customer history | activate / deactivate, Add customer; History: profile, spend, purchases per farmer (products and quantities), orders per month, full order history grid |
 | `/admin/markets` | Markets | DataTable of markets; add, edit, remove markets (city dropdown, what is sold there, days, timings, coordinates, map link, image) |
 | `/admin/cities` | Cities | cities table: add, edit, hide or delete cities used by every city dropdown |
@@ -94,9 +97,10 @@ Every admin table is a DataTables grid (search, sort, paging, CSV / Excel / Prin
 | `/admin/reviews` | Reviews | remove or restore reviews; filters: visibility, product/farmer, rating, farmer, dates |
 | `/admin/moderation` | Moderation | KPIs, Open / Resolved / Dismissed tabs, reports about reviews, listings and stalls plus reviews held by the word filter; publish, remove, restore, suspend stall, dismiss (with a note) |
 | `/admin/announcements` | Announcements | publish or edit a site banner + in-app notification; season presets or months, optional link; DataTable with Live / Waiting for its season / Hidden |
+| `/admin/offer-banner` | Offer banner | the home page offer banner: show / hide, percent (or the biggest real offer this week), label, headline, text and button in English and Urdu, link and photo, with a live preview |
 | `/admin/faqs` | FAQs | add / edit questions (topic, home page), order numbers in the table, hide, delete, CSV / Excel |
 | `/admin/newsletter` | Newsletter | subscribers in a DataTable (status, where they signed up, dates), remove, CSV / Excel export |
-| `/admin/messages` | Contact messages | inbox from the Contact page (open, mark read, reply by e-mail, delete) |
+| `/admin/messages` | Contact messages | inbox from the Contact page with a topic filter (open, mark read, reply by e-mail, delete) |
 | `/admin/notifications` | Notifications | system notices |
 | `/admin/purchases` | Customer purchases | which customer bought what from which farmer: KPIs, top customers, top farmers, amount per day, customer × farmer heat map, pairs table, most bought products; filters and export |
 | `/admin/reports` | Reports | platform overview, orders summary, revenue by market, most active farmers, sales by category, customer activity, inventory & low stock, cities overview, reviews & moderation; CSV export and print (last item in the sidebar) |

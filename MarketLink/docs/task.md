@@ -125,6 +125,9 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Round 9 design: calm home page (banner photos with the words on them and working autoplay, category photo cards, "Up to 30% off" offers banner from real offers, Why choose us, Top picks swipe row on phones, farmers with their location, video that plays by itself, reviews carousel on an arc, newsletter strip above the footer, one-line footer), toasts in four kinds, one look for every dropdown, FAQ accordion with one question open, filter sidebar from the right on phones, Refresh buttons on dashboards, "Generate with AI" in the free-text boxes, offers with the usual price crossed out
 - [x] Urdu (اردو): language switch on every page, right to left layout mirrored exactly (English layout unchanged), Urdu fonts, Urdu punctuation, no missing translations, server messages in Urdu, Urdu assistant, Urdu SEO (lang / dir, hreflang, og:locale, sitemap in both languages); admin forms have Urdu fields, the admin area stays English
 
+- [x] Round 10: assistant in English, Urdu and Roman Urdu answering questions about the whole site; smooth basket sidebar; restock "Remind me" (notification + e-mail); notifications fit phones; search while typing with a clear button and navbar suggestions; spinners on action buttons; "Did you receive your order?" then the review; admin farmer rankings; markets open today first and "at the market today" status; contact topics; notices for markets open today and new farmers; best sellers page; bottom sheets on phones; shop filters with grid / list; basket does not open by itself; phone numbers with a country flag; guest account toast; `/checkout/<order number>`; navbar in the customer area; bottom bar on every page; home page redesign (full-width banner with 1920 px photos, dark / light sections, admin-edited offer banner, top-rated farmers carousel, farm story, invitation for farmers and market organisers, Why choose us second last, categories page, photo credits page instead of credits on the photos)
+- [x] Round 10 documents: project report, test plan and report, ReadMe with assumptions (Markdown, Word and PDF), diagrams (use cases, DFD level 0 and 1, flowcharts, order states, ER diagram)
+
 ## 5. Quality checks (last full run)
 
 - [x] ESLint (client and server) – no errors
@@ -150,9 +153,9 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 
 - [ ] Add each member's name on the About page (`client/src/config.js` → `TEAM`; the team name Team Omniverse is already shown)
 - [ ] Put real SMTP details (e.g. a Gmail app password) in `server/.env` and run `npm run mail:test`
-- [ ] Project report written by the team: problem definition, design specifications, flowcharts and data-flow diagrams, database design, test data (no source code; the SRS does not allow fully AI-made documentation)
+- [ ] Project report: a draft is in `docs/project-report.md` / `MarketLink-Project-Report.docx`; the team must read it and rewrite it in their own words (the SRS does not allow fully AI-made documentation)
 - [ ] Installation steps and user credentials in the report (see README sections 3 and 4)
-- [ ] ReadMe.doc with the assumptions (start from README section 9)
+- [ ] ReadMe.doc with the assumptions: a draft is in `docs/ReadMe.md` / `ReadMe.docx`; review it
 - [ ] Demo video (.mp4) showing every functional requirement
 - [ ] Host the app and share the URL (render.yaml + MongoDB Atlas)
 - [ ] List every AI tool the team used (README section 10)

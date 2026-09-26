@@ -1,0 +1,28 @@
+flowchart LR
+  C["Customer / Guest"]
+  F["Farmer"]
+  A["Administrator"]
+  P1(("1 Accounts<br/>and login"))
+  P2(("2 Markets<br/>and maps"))
+  P7(("7 Administration<br/>and reports"))
+  P8(("8 AI<br/>assistant"))
+  D1[("D1 Users")]
+  D2[("D2 Farmers")]
+  D3[("D3 Markets, Cities")]
+  D45[("D4 Products, D5 Orders")]
+  C -- "sign-up, login" --> P1
+  F -- "stall sign-up wizard" --> P1
+  P1 --> D1
+  P1 --> D2
+  C -- "city, day, near me" --> P2
+  D3 --> P2
+  P2 -- "markets, map, route" --> C
+  A -- "approve farmers, markets, categories, banner" --> P7
+  P7 --> D2
+  P7 --> D3
+  D45 -- "sales, orders" --> P7
+  P7 -- "reports, rankings" --> A
+  C -- "question in English, Urdu or Roman Urdu" --> P8
+  D45 --> P8
+  D3 --> P8
+  P8 -- "answer, cards" --> C

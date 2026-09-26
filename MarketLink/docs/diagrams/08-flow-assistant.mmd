@@ -1,0 +1,11 @@
+flowchart TD
+  S([Customer types a question]) --> L{Written in Urdu script?}
+  L -- Yes --> U[Urdu words turned into<br/>English keywords]
+  L -- No --> RU[Roman Urdu and Hinglish words<br/>turned into English keywords]
+  U --> I
+  RU --> I[Find what is asked:<br/>timings, top rated, best sellers, cheapest,<br/>offers, farmer today, orders, help...]
+  I --> ENT[Recognise markets, farmers,<br/>categories, cities and days]
+  ENT --> MEM[Add what the chat is about<br/>from memory for follow-ups]
+  MEM --> DB[(Read live data<br/>from MongoDB)]
+  DB --> ANS[Write the answer in the site language<br/>with cards and suggestions]
+  ANS --> END([Answer shown])

@@ -131,6 +131,8 @@ export async function myOrders(req, res) {
   const filter = { customer: req.user._id };
   const status = statusFilter(req.query.status);
   if (status) filter.status = status;
+  // ?numbers=ML-1,ML-2: the orders of one checkout (the confirmation page after a reload or from a bookmark)
+  if (req.query.numbers) filter.orderNumber = { $in: String(req.query.numbers).split(',').map((n) => n.trim()).filter(Boolean).slice(0, 10) };
   const [orders, total] = await Promise.all([
     Order.find(filter).populate(ORDER_POPULATE.slice(0, 2)).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
     Order.countDocuments(filter),

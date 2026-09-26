@@ -78,8 +78,9 @@ export default function AdminFarmers() {
 
   function onAction(name, farmer) {
     if (name === 'view') setViewing(farmer);
-    if (name === 'approve') setFarmerStatus(farmer, 'active');
+    if (name === 'approve') return setFarmerStatus(farmer, 'active'); // the button spins until it is saved
     if (name === 'suspend') setSuspending(farmer);
+    return undefined;
   }
 
   return (

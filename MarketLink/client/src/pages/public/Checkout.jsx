@@ -182,7 +182,7 @@ export default function Checkout() {
       }));
       const res = await api.post('/orders', { groups });
       setPlaced(true);
-      navigate('/checkout/success', { state: { orders: res.orders, newAccount }, replace: true });
+      navigate(`/checkout/${res.orders.map((o) => o.orderNumber).join('+')}`, { state: { orders: res.orders, newAccount }, replace: true });
       cart.clear();
       toast(t('Pre-order placed! Check your e-mail and notifications.'));
     } catch (err) {
@@ -202,7 +202,15 @@ export default function Checkout() {
       <div className="container pb-5">
         <div className="row g-4">
           <div className="col-lg-8 d-grid gap-3">
-            {!user && <GuestDetails onCreated={setNewAccount} />}
+            {!user && (
+              <GuestDetails
+                onCreated={(account) => {
+                  setNewAccount(account);
+                  // Tell the shopper straight away where the password went
+                  toast(t('We created your account and sent your password to {email}.', { email: account.email }), 'success', { title: 'Account created', duration: 9000 });
+                }}
+              />
+            )}
             {newAccount && (
               <div className="account-created">
                 <i className="bi bi-person-check-fill" aria-hidden="true" />

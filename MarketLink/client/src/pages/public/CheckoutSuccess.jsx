@@ -1,12 +1,25 @@
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
+import useFetch from '../../hooks/useFetch';
+import { PageLoader } from '../../components/common/Loader';
+import StatusBadge from '../../components/common/StatusBadge';
 import { formatDateKey, money, time12 } from '../../utils/format';
 import { isUrdu, rich, t } from '../../i18n';
 
+/**
+ * The confirmation after checkout at /checkout/<order numbers>. Right after checkout the orders come
+ * with the page; opened later (bookmark, reload) they are loaded by their numbers, with their status.
+ */
 export default function CheckoutSuccess() {
   useDocumentTitle(t('Pre-order placed'));
   const { state } = useLocation();
-  if (!state?.orders) return <Navigate to="/account/orders" replace />;
+  const { numbers } = useParams();
+  const wanted = numbers && numbers !== 'success' ? numbers.split('+').filter(Boolean) : [];
+  const fetched = useFetch(!state?.orders && wanted.length ? `/orders/my?limit=10&numbers=${encodeURIComponent(wanted.join(','))}` : null);
+  if (!state?.orders && !wanted.length) return <Navigate to="/account/orders" replace />;
+  if (!state?.orders && fetched.loading) return <PageLoader />;
+  const orders = state?.orders || fetched.data?.orders || [];
+  if (!orders.length) return <Navigate to="/account/orders" replace />;
   return (
     <div className="container py-5" style={{ maxWidth: 760 }}>
       <div className="text-center mb-4">
@@ -16,7 +29,7 @@ export default function CheckoutSuccess() {
         <h1 className="display-font">{t('Your pre-order is in!')}</h1>
         <p className="text-muted-2">{t('We\'ve told the farmer and sent a confirmation to your e-mail. You\'ll get an alert when it\'s ready for pickup.')}</p>
       </div>
-      {state.newAccount && (
+      {state?.newAccount && (
         <div className="account-created mb-4">
           <i className="bi bi-envelope-check-fill" aria-hidden="true" />
           <div>
@@ -30,7 +43,7 @@ export default function CheckoutSuccess() {
         </div>
       )}
       <div className="d-grid gap-3 mb-4">
-        {state.orders.map((o) => (
+        {orders.map((o) => (
           <div key={o._id} className="order-card d-flex flex-wrap align-items-center gap-3">
             <div className="flex-grow-1">
               <strong className="d-block">{o.orderNumber}</strong>
@@ -38,6 +51,7 @@ export default function CheckoutSuccess() {
                 {t('Pickup')} {formatDateKey(o.pickupDate)} · {time12(o.pickupSlot.start)} {t('to')} {time12(o.pickupSlot.end)}
               </span>
             </div>
+            {o.status && o.status !== 'placed' && <StatusBadge status={o.status} />}
             <strong>{money(o.totalAmount)}</strong>
             <Link to={`/account/orders/${o._id}`} className="btn btn-soft btn-sm">
               {t('View order')}

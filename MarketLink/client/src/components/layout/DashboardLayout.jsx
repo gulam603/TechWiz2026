@@ -111,6 +111,7 @@ export default function DashboardLayout({ role }) {
       actions={actions}
       menuLinks={MENUS[role]}
       logoutTo="/"
+      siteNav={role === 'customer'}
       outletContext={{ refreshBadges }}
       before={<AnnouncementBar />}
       after={

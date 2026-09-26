@@ -49,9 +49,9 @@ export default function QuickViewModal({ product: summary, onClose, focusAdd = f
     }
     cart.add(product, added);
     if (added < qty) toast(t('Only {n} more could be added: that is all the stock left', { n: added }), 'warning');
-    else toast(t('{qty} × {name} added to your basket', { qty, name: productName(product) }));
+    // The basket stays closed; the message offers to open it
+    else toast(t('{qty} × {name} added to your basket', { qty, name: productName(product) }), 'success', { action: { label: 'View basket', onClick: cart.openDrawer } });
     onClose();
-    cart.openDrawer();
   }
 
   return (

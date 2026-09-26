@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import SearchBox from '../../components/common/SearchBox';
 import useFetch from '../../hooks/useFetch';
 import { toQuery } from '../../api/client';
 import MarketCard from '../../components/cards/MarketCard';
@@ -59,10 +60,7 @@ export default function Markets() {
         <div className="soft-panel mb-4">
           <div className="row g-2 align-items-center">
             <div className="col-12 col-lg-6 col-xl-3">
-              <div className="search-pill">
-                <i className="bi bi-search" />
-                <input placeholder={t('Search market or area')} value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} aria-label={t('Search markets')} />
-              </div>
+              <SearchBox value={filters.search} onSearch={(q) => setFilters((f) => ({ ...f, search: q }))} placeholder={t('Search market or area')} label={t('Search markets')} delay={150} />
             </div>
             {fields.map(({ label, control }) => (
               <div key={label} className="col-lg-2 d-none d-lg-block">

@@ -100,6 +100,8 @@ export default function App() {
             <Route path="checkout" element={<Checkout />} />
             <Route element={<ProtectedRoute roles={['customer']} />}>
               <Route path="checkout/success" element={<CheckoutSuccess />} />
+              {/* /checkout/ML-260926-0001 (several orders: joined with +): can be bookmarked to follow the order */}
+              <Route path="checkout/:numbers" element={<CheckoutSuccess />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

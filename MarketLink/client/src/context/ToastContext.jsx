@@ -46,6 +46,18 @@ function Toast({ toast, onDismiss }) {
       <div className="ml-toast-body">
         <strong>{toast.title ? t(toast.title) : t(kind.title)}</strong>
         <span>{t(toast.message)}</span>
+        {toast.action && (
+          <button
+            type="button"
+            className="ml-toast-action"
+            onClick={() => {
+              toast.action.onClick();
+              onClose();
+            }}
+          >
+            {t(toast.action.label)}
+          </button>
+        )}
       </div>
       <button type="button" className="ml-toast-close" onClick={onClose} aria-label={t('Dismiss')}>
         <i className="bi bi-x-lg" aria-hidden="true" />
@@ -60,7 +72,7 @@ export function ToastProvider({ children }) {
 
   const dismiss = useCallback((id) => setToasts((list) => list.filter((tx) => tx.id !== id)), []);
 
-  /** toast(message, type = 'success', { title, duration }) */
+  /** toast(message, type = 'success', { title, duration, action: { label, onClick } }) */
   const toast = useCallback((message, type = 'success', options = {}) => {
     if (!message) return;
     const id = nextId++;

@@ -25,7 +25,7 @@ export default function MobileMenu({ open, onClose }) {
     const { overflow } = document.body.style;
     document.body.style.overflow = 'hidden'; // keep the page behind the drawer still
     document.addEventListener('keydown', onKey);
-    closeRef.current?.focus();
+    closeRef.current?.focus({ preventScroll: true });
     return () => {
       document.body.style.overflow = overflow;
       document.removeEventListener('keydown', onKey);

@@ -8,10 +8,12 @@ import EmptyState from '../../components/common/EmptyState';
 import ErrorState from '../../components/common/ErrorState';
 import { CardSkeletons } from '../../components/common/Loader';
 import { PageHero } from '../../components/common/PageHeader';
-import { DAY_LETTER, DAY_NAMES } from '../../utils/format';
+import { DAY_LETTER, DAY_NAMES, money } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
 import FilterSidebar from '../../components/common/FilterSidebar';
+import SearchBox from '../../components/common/SearchBox';
+import useViewMode from '../../hooks/useViewMode';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, itemListLd, ldGraph } from '../../utils/seo';
 import { categoryName, isUrdu, rich, t } from '../../i18n';
@@ -31,28 +33,13 @@ const FILTER_KEYS = ['search', 'category', 'city', 'market', 'day', 'minPrice', 
 function Filters({ params, set, categories, markets, cities, practices = [], onDone }) {
   const [minPrice, setMinPrice] = useState(params.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(params.get('maxPrice') || '');
-  const [search, setSearch] = useState(params.get('search') || '');
 
   const category = params.get('category') || '';
   const day = params.get('day') ?? '';
 
   return (
     <div className="filter-panel">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          set({ search });
-          onDone?.();
-        }}
-      >
-        <div className="filter-title">{t('Search')}</div>
-        <div className="search-pill">
-          <i className="bi bi-search" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('Search products')} aria-label={t('Search products')} />
-        </div>
-      </form>
-
-      <div className="filter-title">{t('Category')}</div>
+      <div className="filter-title mt-0">{t('Category')}</div>
       <div className="d-grid gap-1">
         <button type="button" className={`cat-option ${!category ? 'active' : ''}`} onClick={() => set({ category: '' })}>
           <i className="bi bi-grid" style={{ width: 24, textAlign: 'center' }} /> {t('All products')}
@@ -155,6 +142,14 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
 export default function Products() {
   const [params, setParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
+  const [view, setView] = useViewMode('shop', 'grid');
+  const onSearch = useCallback((q) => setParams((prev) => {
+    const next = new URLSearchParams(prev);
+    if (q) next.set('search', q);
+    else next.delete('search');
+    next.delete('page');
+    return next;
+  }), [setParams]);
   const closeFilters = useCallback(() => setShowFilters(false), []);
   const { data: catData } = useFetch('/categories');
   const seoCategory = (catData?.categories || []).find((c) => c.slug === params.get('category'));
@@ -187,6 +182,22 @@ export default function Products() {
   const markets = marketData?.markets || [];
   const activeCategory = categories.find((c) => c.slug === params.get('category'));
   const activeFilters = FILTER_KEYS.filter((k) => !['sort', 'page'].includes(k) && params.get(k));
+  // The filters in use as chips that remove themselves when pressed
+  const chipLabel = (k) => {
+    const v = params.get(k);
+    if (k === 'search') return `“${v}”`;
+    if (k === 'category') return activeCategory ? categoryName(activeCategory) : v;
+    if (k === 'city') return t(v);
+    if (k === 'market') return markets.find((m) => m._id === v)?.name || t('Market');
+    if (k === 'day') return DAY_NAMES[Number(v)];
+    if (k === 'minPrice') return t('From {price}', { price: money(v) });
+    if (k === 'maxPrice') return t('Up to {price}', { price: money(v) });
+    if (k === 'rating') return t('{n}+ stars', { n: v });
+    if (k === 'practice') return t(v);
+    if (k === 'inStock') return t('In stock only');
+    if (k === 'deals') return t('On offer only');
+    return v;
+  };
 
   return (
     <>
@@ -201,44 +212,56 @@ export default function Products() {
             <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} practices={practiceData?.practices} />
           </div>
           <div className="col-lg-9">
-            <div className="results-bar">
-              <div className="d-flex align-items-center gap-2 flex-wrap">
-                <button type="button" className="btn btn-white btn-sm d-lg-none filter-open-btn" onClick={() => setShowFilters(true)}>
-                  <i className="bi bi-sliders" aria-hidden="true" /> {t('Filters')}
-                  {activeFilters.length > 0 && <span className="filter-count">{activeFilters.length}</span>}
-                </button>
-                <span className="small text-muted-2">
-                  <strong className="text-forest">{data?.total ?? '…'}</strong> {t('products')}
-                  {params.get('search') && (
-                    <>
-                      {' '}
-                      {rich('for “<b>{q}</b>”', { q: params.get('search') })}
-                    </>
-                  )}
-                </span>
-                {activeFilters.length > 0 && (
-                  <button type="button" className="btn btn-link btn-sm p-0" onClick={() => setParams({})}>
-                    {t('Clear filters')}
-                  </button>
-                )}
-              </div>
-              <select className="form-select form-select-sm w-auto" value={params.get('sort') || 'popular'} onChange={(e) => set({ sort: e.target.value })} aria-label={t('Sort products')}>
+            <div className="shop-toolbar">
+              <SearchBox value={params.get('search') || ''} onSearch={onSearch} placeholder={t('Search products')} className="shop-search" />
+              <button type="button" className="btn btn-white d-lg-none filter-open-btn" onClick={() => setShowFilters(true)}>
+                <i className="bi bi-sliders" aria-hidden="true" /> {t('Filters')}
+                {activeFilters.length > 0 && <span className="filter-count">{activeFilters.length}</span>}
+              </button>
+              <select className="form-select shop-sort" value={params.get('sort') || 'popular'} onChange={(e) => set({ sort: e.target.value })} aria-label={t('Sort products')}>
                 {SORTS.map((s) => (
                   <option key={s.value} value={s.value}>
                     {t(s.label)}
                   </option>
                 ))}
               </select>
+              <div className="view-toggle shop-view" role="group" aria-label={t('How to show the products')}>
+                <button type="button" className={view === 'grid' ? 'active' : ''} aria-pressed={view === 'grid'} onClick={() => setView('grid')} title={t('Grid view')}>
+                  <i className="bi bi-grid-3x3-gap" aria-hidden="true" />
+                  <span className="visually-hidden">{t('Grid view')}</span>
+                </button>
+                <button type="button" className={view === 'list' ? 'active' : ''} aria-pressed={view === 'list'} onClick={() => setView('list')} title={t('List view')}>
+                  <i className="bi bi-list-ul" aria-hidden="true" />
+                  <span className="visually-hidden">{t('List view')}</span>
+                </button>
+              </div>
+            </div>
+            <div className="results-bar">
+              <span className="small text-muted-2">
+                {rich('Showing <b>{n}</b> products', { n: data?.total ?? '…' })}
+              </span>
+              {activeFilters.length > 0 && (
+                <div className="active-filters" aria-label={t('Filters in use')}>
+                  {activeFilters.map((k) => (
+                    <button key={k} type="button" className="active-filter" onClick={() => set(k === 'city' ? { city: '', market: '' } : { [k]: '' })} aria-label={t('Remove filter: {name}', { name: chipLabel(k) })}>
+                      {chipLabel(k)} <i className="bi bi-x" aria-hidden="true" />
+                    </button>
+                  ))}
+                  <button type="button" className="btn btn-link btn-sm p-0" onClick={() => setParams({})}>
+                    {t('Clear filters')}
+                  </button>
+                </div>
+              )}
             </div>
 
             {error && <ErrorState error={error} onRetry={reload} />}
-            <div className="row g-3">
+            <div className={view === 'list' ? 'product-list' : 'row g-3'}>
               {loading && !data ? (
-                <CardSkeletons count={9} cols="col-6 col-md-4" />
+                <CardSkeletons count={9} cols={view === 'list' ? 'col-12' : 'col-6 col-md-4'} />
               ) : (
                 data?.products.map((p) => (
-                  <div key={p._id} className="col-6 col-md-4 col-xl-3">
-                    <ProductCard product={p} />
+                  <div key={p._id} className={view === 'list' ? 'product-list-item' : 'col-6 col-md-4 col-xl-3'}>
+                    <ProductCard product={p} layout={view} />
                   </div>
                 ))
               )}

@@ -23,6 +23,8 @@
 
 html {
   scroll-behavior: smooth;
+  // Keep room for the scrollbar, so the page does not jump sideways when a sidebar or dialog locks scrolling
+  scrollbar-gutter: stable;
 }
 
 body {

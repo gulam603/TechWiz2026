@@ -49,6 +49,11 @@ export default function Faq() {
             {t('Search the questions')}
           </label>
           <input id="faq-search" type="search" className="form-control" placeholder={t('Search, e.g. payment, cancel, pickup')} value={query} onChange={(e) => setQuery(e.target.value)} maxLength={80} />
+          {query && (
+            <button type="button" className="faq-search-clear" onClick={() => setQuery('')} aria-label={t('Clear search')}>
+              <i className="bi bi-x-lg" aria-hidden="true" />
+            </button>
+          )}
         </div>
       </PageHero>
 

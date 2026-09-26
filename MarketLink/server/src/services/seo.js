@@ -26,7 +26,7 @@ const PRIVATE = /^\/(account|farmer(\/|$)|admin|checkout|cart|reset-password|for
 // Every address the React app has (client/src/App.jsx). Anything else is answered with a 404 page,
 // so search engines do not index made-up addresses as copies of the home page. The signed-in areas
 // show their own "page not found" inside.
-const APP_PAGES = /^\/($|about$|terms$|faq$|contact$|map$|cart$|login$|register(\/farmer)?$|forgot-password$|reset-password\/[^/]+$|unsubscribe$|checkout(\/success)?$|products$|markets$|farmers$|account(\/|$)|farmer(\/|$)|admin(\/|$))/;
+const APP_PAGES = /^\/($|about$|terms$|faq$|contact$|map$|cart$|login$|register(\/farmer)?$|forgot-password$|reset-password\/[^/]+$|unsubscribe$|checkout(\/[A-Za-z0-9+-]+)?$|products$|markets$|farmers$|account(\/|$)|farmer(\/|$)|admin(\/|$))/;
 
 const STATIC_PAGES = {
   '/': { title: null, description: DEFAULT_DESCRIPTION },

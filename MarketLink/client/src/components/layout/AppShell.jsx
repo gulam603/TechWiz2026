@@ -5,6 +5,7 @@ import useClickOutside from '../../hooks/useClickOutside';
 import Avatar from '../common/Avatar';
 import Logo, { LogoMark } from '../common/Logo';
 import NotificationBell from './NotificationBell';
+import { LINKS } from './navConfig';
 import { t } from '../../i18n';
 import { LanguageSwitch } from '../../i18n/LanguageProvider';
 
@@ -91,6 +92,7 @@ export default function AppShell({
   before,
   after,
   sidebarFooter,
+  siteNav = false, // the website's main links (Home, Shop, Markets…) in the top bar, for customers
 }) {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(readCollapsed);
@@ -173,6 +175,15 @@ export default function AppShell({
             <span className="fs-7 text-muted-2 d-none d-sm-block">{areaLabel}</span>
             <strong>{t(title)}</strong>
           </div>
+          {siteNav && (
+            <nav className="app-site-nav" aria-label={t('Website')}>
+              {LINKS.filter((l) => !l.menuOnly && !['/about', '/contact'].includes(l.to)).map((l) => (
+                <NavLink key={l.to} to={l.to} end={l.end}>
+                  {t(l.label)}
+                </NavLink>
+              ))}
+            </nav>
+          )}
           <div className="app-top-actions">
             {actions}
             {!pathname.startsWith('/admin') && <LanguageSwitch className="nav-lang d-none d-sm-inline-flex" />}

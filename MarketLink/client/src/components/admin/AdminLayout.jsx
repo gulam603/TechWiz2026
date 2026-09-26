@@ -4,6 +4,7 @@ import { api } from '../../api/client';
 import AppShell, { titleFromNav } from '../layout/AppShell';
 import AdminOrderModal from './AdminOrderModal';
 import AdminAccountModal from './AdminAccountModal';
+import MobileTabBar from '../layout/MobileTabBar';
 
 // Sidebar of the admin area. Reports is intentionally the last item.
 export const ADMIN_NAV = [
@@ -82,6 +83,8 @@ export default function AdminLayout() {
         <>
           {modal === 'order' && <AdminOrderModal onClose={() => setModal(null)} onPlaced={done} />}
           {(modal === 'farmer' || modal === 'customer') && <AdminAccountModal type={modal} onClose={() => setModal(null)} onCreated={done} />}
+          {/* the same bottom bar as the customer and farmer areas on phones and tablets */}
+          <MobileTabBar />
         </>
       }
     />

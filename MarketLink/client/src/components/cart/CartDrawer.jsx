@@ -37,7 +37,7 @@ export default function CartDrawer() {
     const onKey = (e) => e.key === 'Escape' && closeDrawer();
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
-    panel.current?.focus();
+    panel.current?.focus({ preventScroll: true });
     return () => {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
@@ -55,7 +55,7 @@ export default function CartDrawer() {
     cart.clear();
     setConfirmEmpty(false);
     toast(lines === 1 ? t('Basket emptied (1 product removed)') : t('Basket emptied ({n} products removed)', { n: lines }), 'info');
-    panel.current?.focus();
+    panel.current?.focus({ preventScroll: true });
   }
 
   return createPortal(

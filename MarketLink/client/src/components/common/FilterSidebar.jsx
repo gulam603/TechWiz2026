@@ -19,7 +19,7 @@ function Sheet({ onClose, title = 'Filters', onClear, clearDisabled = false, chi
     const frame = requestAnimationFrame(() => setShown(true));
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    panel.current?.focus();
+    panel.current?.focus({ preventScroll: true });
     const onKey = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
     return () => {

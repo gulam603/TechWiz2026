@@ -59,8 +59,9 @@ export default function AdminCustomers() {
 
   function onAction(name, customer) {
     if (name === 'history') navigate(`/admin/customers/${customer._id}`);
-    if (name === 'activate') setStatus(customer, 'active');
+    if (name === 'activate') return setStatus(customer, 'active'); // the button spins until it is saved
     if (name === 'deactivate') setTarget(customer);
+    return undefined;
   }
 
   return (

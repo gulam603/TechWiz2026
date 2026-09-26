@@ -248,3 +248,20 @@ div.dt-container .dt-length select,
     transform: rotate(360deg);
   }
 }
+
+// A button inside a message (e.g. "View basket" after adding a product)
+.ml-toast-action {
+  margin-top: 0.45rem;
+  padding: 0.25rem 0.8rem;
+  border: 1px solid var(--toast-c, #{$ml-green});
+  border-radius: 50rem;
+  background: #fff;
+  color: var(--toast-c, #{$ml-green});
+  font-size: 0.8rem;
+  font-weight: 700;
+  &:hover,
+  &:focus-visible {
+    background: var(--toast-c, #{$ml-green});
+    color: #fff;
+  }
+}

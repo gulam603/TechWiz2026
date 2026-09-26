@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import SearchBox from '../../components/common/SearchBox';
 import useFetch from '../../hooks/useFetch';
 import { toQuery } from '../../api/client';
 import FarmerCard from '../../components/cards/FarmerCard';
@@ -62,10 +63,7 @@ export default function Farmers() {
         <div className="soft-panel mb-4">
           <div className="row g-2">
             <div className="col-12 col-lg-6 col-xl-3">
-              <div className="search-pill">
-                <i className="bi bi-search" />
-                <input placeholder={t('Search farmer or speciality')} value={filters.search} onChange={(e) => set({ search: e.target.value })} aria-label={t('Search farmers')} />
-              </div>
+              <SearchBox value={filters.search} onSearch={(q) => set({ search: q })} placeholder={t('Search farmer or speciality')} label={t('Search farmers')} delay={250} />
             </div>
             {fields.map(({ label, control }) => (
               <div key={label} className="col-md-3 d-none d-lg-block">

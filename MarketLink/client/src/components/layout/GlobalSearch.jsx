@@ -16,6 +16,8 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
   const [category, setCategory] = useState('');
   const [results, setResults] = useState(null);
   const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const input = useRef(null);
   const ref = useRef(null);
   const navigate = useNavigate();
   const cats = useFetch(withCategory ? '/categories' : null);
@@ -26,7 +28,9 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
 
   useEffect(() => {
     if (q.trim().length < 2) return undefined;
+    // Suggestions appear a moment after the last key press (not on every letter)
     const timer = setTimeout(() => {
+      setBusy(true);
       const params = new URLSearchParams({ q: q.trim() });
       if (category) params.set('category', category);
       api
@@ -35,8 +39,9 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
           setResults(d);
           setOpen(true);
         })
-        .catch(() => {});
-    }, 250);
+        .catch(() => {})
+        .finally(() => setBusy(false));
+    }, 300);
     return () => clearTimeout(timer);
   }, [q, category]);
 
@@ -57,7 +62,7 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
   const total = results ? results.products.length + results.farmers.length + results.markets.length : 0;
 
   return (
-    <div className={`global-search ${withCategory ? 'has-category' : ''} ${size ? `search-${size}` : ''} ${className}`} ref={ref}>
+    <div className={`global-search search-box ${withCategory ? 'has-category' : ''} ${size ? `search-${size}` : ''} ${className}`} ref={ref}>
       <form className="search-pill" onSubmit={submit} role="search">
         {withCategory && (
           <label className="search-cat">
@@ -83,9 +88,26 @@ export default function GlobalSearch({ className = '', placeholder = t('Search p
           onFocus={() => results && setOpen(true)}
           placeholder={catLabel ? t('Search in {categoryName}…', { categoryName: catLabel }) : placeholder}
           id={inputId}
+          ref={input}
           aria-label={inputId ? undefined : t('Search')}
           autoFocus={autoFocus}
         />
+        {busy && <span className="spinner-border spinner-border-sm text-success search-busy" role="status" aria-label={t('Searching…')} />}
+        {q && !busy && (
+          <button
+            type="button"
+            className="search-clear"
+            onClick={() => {
+              setQ('');
+              setResults(null);
+              setOpen(false);
+              input.current?.focus();
+            }}
+            aria-label={t('Clear search')}
+          >
+            <i className="bi bi-x-lg" aria-hidden="true" />
+          </button>
+        )}
         <button type="submit" className="btn btn-primary btn-sm">
           {t('Search')}
         </button>

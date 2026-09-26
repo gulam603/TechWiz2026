@@ -12,7 +12,8 @@ import { categoryName, productName, t, unitName } from '../../i18n';
 
 const QuickViewModal = lazy(() => import('../product/QuickViewModal'));
 
-export default function ProductCard({ product }) {
+/** A product in the shop. `layout="list"` lays it out as a wide row (photo on the side) for the list view. */
+export default function ProductCard({ product, layout = 'grid' }) {
   const cart = useCart();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -32,7 +33,7 @@ export default function ProductCard({ product }) {
   }
 
   return (
-    <article className={`product-card ${soldOut ? 'is-soldout' : ''}`}>
+    <article className={`product-card ${soldOut ? 'is-soldout' : ''} ${layout === 'list' ? 'is-list' : ''}`}>
       <div className="card-top-badges">
         {off > 0 && !soldOut && <span className="chip chip-deal">{t('{n}% off', { n: off })}</span>}
         {soldOut && <span className="chip chip-dark">{t('Sold out')}</span>}

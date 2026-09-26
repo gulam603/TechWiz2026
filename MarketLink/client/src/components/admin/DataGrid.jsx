@@ -159,7 +159,25 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
     // Responsive "child" rows (small screens) belong to the row above them
     if (tr?.classList.contains('child')) tr = tr.previousElementSibling;
     const row = ref.current?.dt()?.row(tr).data();
-    if (row) onAction(btn.getAttribute('data-action'), row, btn);
+    if (!row || btn.classList.contains('is-busy')) return;
+    const result = onAction(btn.getAttribute('data-action'), row, btn);
+    // While an action that talks to the server runs, its button shows a spinner and cannot be pressed again
+    if (result && typeof result.then === 'function') {
+      btn.classList.add('is-busy');
+      btn.setAttribute('aria-busy', 'true');
+      btn.disabled = true;
+      const spin = document.createElement('span');
+      spin.className = 'spinner-border spinner-border-sm btn-spin';
+      spin.setAttribute('aria-hidden', 'true');
+      btn.prepend(spin);
+      result.finally(() => {
+        if (!btn.isConnected) return; // the table was redrawn with the new data
+        spin.remove();
+        btn.classList.remove('is-busy');
+        btn.removeAttribute('aria-busy');
+        btn.disabled = false;
+      });
+    }
   }
 
   return (

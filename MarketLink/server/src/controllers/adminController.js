@@ -334,7 +334,7 @@ export async function adminCategories(req, res) {
   res.json({ categories: categories.map((c, i) => ({ ...c, productCount: counts[i] })) });
 }
 
-// POST /api/admin/categories  (multipart: icon)
+// POST /api/admin/categories  (multipart: icon, image)
 export async function createCategory(req, res) {
   requireFields(req.body, ['name']);
   const data = pick(req.body, ['name', 'nameUr', 'description', 'color']);
@@ -342,7 +342,8 @@ export async function createCategory(req, res) {
     ...data,
     slug: await uniqueSlug(Category, data.name),
     sortOrder: toNumber(req.body.sortOrder, 0),
-    icon: fileUrl('categories', req.file),
+    icon: fileUrl('categories', req.files?.icon?.[0]),
+    image: fileUrl('categories', req.files?.image?.[0]),
   });
   res.status(201).json({ category });
 }
@@ -356,7 +357,8 @@ export async function updateCategory(req, res) {
   Object.assign(category, data);
   if (req.body.sortOrder !== undefined) category.sortOrder = toNumber(req.body.sortOrder, 0);
   if (req.body.isActive !== undefined) category.isActive = toBool(req.body.isActive);
-  if (req.file) category.icon = fileUrl('categories', req.file);
+  if (req.files?.icon?.[0]) category.icon = fileUrl('categories', req.files.icon[0]);
+  if (req.files?.image?.[0]) category.image = fileUrl('categories', req.files.image[0]);
   await category.save();
   res.json({ category });
 }

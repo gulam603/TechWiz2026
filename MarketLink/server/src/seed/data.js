@@ -26,14 +26,14 @@ export const cities = [
 export const admin = { name: 'MarketLink Admin', email: 'admin@marketlink.com', phone: '+92 300 0000000', address: 'MarketLink HQ, F.B. Area, Karachi', city: 'Karachi' };
 
 export const categories = [
-  { key: 'veg', name: 'Vegetables', nameUr: 'سبزیاں', description: 'Seasonal vegetables harvested for market day.', icon: thumb('capsicum-mix'), color: '#E4F3D8', sortOrder: 1 },
-  { key: 'fruit', name: 'Fruits', nameUr: 'پھل', description: 'Orchard-fresh and tree-ripened fruit.', icon: thumb('red-apples'), color: '#FFE4DA', sortOrder: 2 },
-  { key: 'dairy', name: 'Dairy & Eggs', nameUr: 'دودھ اور انڈے', description: 'Fresh milk, cheese, butter and free-range eggs.', icon: thumb('desi-eggs'), color: '#E3EEFB', sortOrder: 3 },
-  { key: 'bakery', name: 'Baked Goods', nameUr: 'بیکری', description: 'Breads and treats baked the morning of the market.', icon: thumb('country-sourdough-loaf'), color: '#F8E8CF', sortOrder: 4 },
-  { key: 'herbs', name: 'Herbs & Greens', nameUr: 'ہرے پتے اور جڑی بوٹیاں', description: 'Leafy greens and fragrant herbs.', icon: thumb('coriander-dhania'), color: '#DAF1E3', sortOrder: 5 },
-  { key: 'honey', name: 'Honey & Preserves', nameUr: 'شہد اور مربے', description: 'Raw honey, jams, chutneys and pickles.', icon: thumb('wild-sidr-honey'), color: '#FFF0C2', sortOrder: 6 },
-  { key: 'grains', name: 'Grains & Pulses', nameUr: 'اناج اور دالیں', description: 'Stone-ground flour, rice, lentils and nuts.', icon: thumb('red-kidney-beans'), color: '#F1EAD6', sortOrder: 7 },
-  { key: 'flowers', name: 'Flowers & Plants', nameUr: 'پھول اور پودے', description: 'Cut flowers and potted plants.', icon: thumb('desi-rose-bouquet'), color: '#FBE1EE', sortOrder: 8 },
+  { key: 'veg', name: 'Vegetables', nameUr: 'سبزیاں', description: 'Seasonal vegetables harvested for market day.', icon: thumb('capsicum-mix'), image: '/uploads/photos/categories/vegetables.webp', color: '#E4F3D8', sortOrder: 1 },
+  { key: 'fruit', name: 'Fruits', nameUr: 'پھل', description: 'Orchard-fresh and tree-ripened fruit.', icon: thumb('red-apples'), image: '/uploads/photos/categories/fruits.webp', color: '#FFE4DA', sortOrder: 2 },
+  { key: 'dairy', name: 'Dairy & Eggs', nameUr: 'دودھ اور انڈے', description: 'Fresh milk, cheese, butter and free-range eggs.', icon: thumb('desi-eggs'), image: '/uploads/photos/categories/dairy-eggs.webp', color: '#E3EEFB', sortOrder: 3 },
+  { key: 'bakery', name: 'Baked Goods', nameUr: 'بیکری', description: 'Breads and treats baked the morning of the market.', icon: thumb('country-sourdough-loaf'), image: '/uploads/photos/categories/baked-goods.webp', color: '#F8E8CF', sortOrder: 4 },
+  { key: 'herbs', name: 'Herbs & Greens', nameUr: 'ہرے پتے اور جڑی بوٹیاں', description: 'Leafy greens and fragrant herbs.', icon: thumb('coriander-dhania'), image: '/uploads/photos/categories/herbs-greens.webp', color: '#DAF1E3', sortOrder: 5 },
+  { key: 'honey', name: 'Honey & Preserves', nameUr: 'شہد اور مربے', description: 'Raw honey, jams, chutneys and pickles.', icon: thumb('wild-sidr-honey'), image: '/uploads/photos/categories/honey-preserves.webp', color: '#FFF0C2', sortOrder: 6 },
+  { key: 'grains', name: 'Grains & Pulses', nameUr: 'اناج اور دالیں', description: 'Stone-ground flour, rice, lentils and nuts.', icon: thumb('red-kidney-beans'), image: '/uploads/photos/categories/grains-pulses.webp', color: '#F1EAD6', sortOrder: 7 },
+  { key: 'flowers', name: 'Flowers & Plants', nameUr: 'پھول اور پودے', description: 'Cut flowers and potted plants.', icon: thumb('desi-rose-bouquet'), image: '/uploads/photos/categories/flowers-plants.webp', color: '#FBE1EE', sortOrder: 8 },
 ];
 
 // Days: 0 = Sunday ... 6 = Saturday
@@ -177,9 +177,9 @@ export const farmers = [
     ],
     cutoff: 12,
     products: [
-      { name: 'Vine Tomatoes', cat: 'veg', price: 180, unit: 'kg', qty: 60, img: 'tomato', desc: 'Juicy red tomatoes ripened on the vine. Perfect for salads, karahi and chutneys.' },
+      { name: 'Vine Tomatoes', cat: 'veg', price: 180, was: 220, unit: 'kg', qty: 60, img: 'tomato', desc: 'Juicy red tomatoes ripened on the vine. Perfect for salads, karahi and chutneys.' },
       { name: 'Sweet Carrots', cat: 'veg', price: 120, unit: 'kg', qty: 45, img: 'carrot', desc: 'Crunchy winter carrots, great for gajar ka halwa or fresh juice.' },
-      { name: 'Farm Potatoes', cat: 'veg', price: 90, unit: 'kg', qty: 80, img: 'potato', desc: 'Versatile all-purpose potatoes, washed and sorted.' },
+      { name: 'Farm Potatoes', cat: 'veg', price: 90, was: 125, unit: 'kg', qty: 80, img: 'potato', desc: 'Versatile all-purpose potatoes, washed and sorted.' },
       { name: 'Red Onions', cat: 'veg', price: 140, unit: 'kg', qty: 70, img: 'onion', desc: 'Sharp, flavourful red onions from our dry fields.' },
       { name: 'Desi Cucumbers', cat: 'veg', price: 100, unit: 'kg', qty: 30, img: 'cucumber', desc: 'Small, crisp cucumbers with thin skin. Great for raita.' },
       { name: 'Purple Brinjal', cat: 'veg', price: 110, unit: 'kg', qty: 25, img: 'eggplant', desc: 'Glossy round brinjals ideal for bharta and baingan fry.' },
@@ -213,7 +213,7 @@ export const farmers = [
       { name: 'Sindhri Mangoes', cat: 'fruit', price: 350, unit: 'kg', qty: 90, img: 'mango', desc: 'The king of fruits. Sweet, fibre-less Sindhri mangoes.' },
       { name: 'Chaunsa Mangoes', cat: 'fruit', price: 400, unit: 'kg', qty: 40, img: 'mango', desc: 'Late-season Chaunsa with rich, honey-like sweetness.' },
       { name: 'Bananas', cat: 'fruit', price: 180, unit: 'dozen', qty: 50, img: 'banana', desc: 'Naturally ripened bananas from our riverside plots.' },
-      { name: 'Watermelon', cat: 'fruit', price: 70, unit: 'kg', qty: 35, img: 'watermelon', desc: 'Crisp and sweet summer watermelons.' },
+      { name: 'Watermelon', cat: 'fruit', price: 70, was: 90, unit: 'kg', qty: 35, img: 'watermelon', desc: 'Crisp and sweet summer watermelons.' },
       { name: 'Cantaloupe Melon', cat: 'fruit', price: 150, unit: 'piece', qty: 20, img: 'melon', desc: 'Fragrant melons, perfect for breakfast.' },
       { name: 'Tender Coconuts', cat: 'fruit', price: 200, unit: 'piece', qty: 15, img: 'coconut', desc: 'Fresh coconuts full of sweet water.' },
       { name: 'Lemons', cat: 'fruit', price: 260, unit: 'kg', qty: 18, img: 'lemon', desc: 'Juicy desi lemons for sikanjabeen.' },
@@ -306,9 +306,9 @@ export const farmers = [
     products: [
       { name: 'Fresh Mint (Podina)', cat: 'herbs', price: 60, unit: 'bunch', qty: 80, img: 'herb', desc: 'Fragrant mint for chutney, raita and mint lemonade.' },
       { name: 'Coriander (Dhania)', cat: 'herbs', price: 50, unit: 'bunch', qty: 90, img: 'herb', desc: 'Tender coriander with roots on for longer freshness.' },
-      { name: 'Baby Spinach', cat: 'herbs', price: 160, unit: 'bunch', qty: 40, img: 'leafy-greens', desc: 'Young spinach leaves, washed and bunched.' },
+      { name: 'Baby Spinach', cat: 'herbs', price: 160, was: 200, unit: 'bunch', qty: 40, img: 'leafy-greens', desc: 'Young spinach leaves, washed and bunched.' },
       { name: 'Iceberg Lettuce', cat: 'herbs', price: 220, unit: 'piece', qty: 20, img: 'leafy-greens', desc: 'Crisp lettuce heads for salads and burgers.' },
-      { name: 'Broccoli', cat: 'veg', price: 450, unit: 'kg', qty: 15, img: 'broccoli', desc: 'Dense green broccoli crowns.' },
+      { name: 'Broccoli', cat: 'veg', price: 450, was: 640, unit: 'kg', qty: 15, img: 'broccoli', desc: 'Dense green broccoli crowns.' },
       { name: 'Button Mushrooms', cat: 'veg', price: 700, unit: 'pack', qty: 0, img: 'mushroom', desc: '400 g pack of white button mushrooms. Sold out this week.', template: 15 },
     ],
   },
@@ -368,7 +368,7 @@ export const farmers = [
       { name: 'Aged Basmati Rice', cat: 'grains', price: 420, unit: 'kg', qty: 100, img: 'rice', desc: 'Two-year aged basmati with long, fragrant grains.' },
       { name: 'Red Kidney Beans', cat: 'grains', price: 480, unit: 'kg', qty: 30, img: 'beans', desc: 'Cleaned rajma beans.' },
       { name: 'Roasted Peanuts', cat: 'grains', price: 600, unit: 'kg', qty: 25, img: 'peanuts', desc: 'Sand-roasted peanuts, a winter favourite.' },
-      { name: 'Green Peas (Matar)', cat: 'veg', price: 220, unit: 'kg', qty: 35, img: 'peas', desc: 'Sweet green peas in the pod.' },
+      { name: 'Green Peas (Matar)', cat: 'veg', price: 220, was: 260, unit: 'kg', qty: 35, img: 'peas', desc: 'Sweet green peas in the pod.' },
     ],
   },
   {
@@ -426,7 +426,7 @@ export const farmers = [
       { name: 'Strawberries', cat: 'fruit', price: 600, unit: 'box', qty: 30, img: 'strawberry', desc: '500 g box of sweet Lahore strawberries.' },
       { name: 'Kinnow Oranges', cat: 'fruit', price: 320, unit: 'dozen', qty: 40, img: 'orange', desc: 'Juicy kinnow straight from Sargodha partners.' },
       { name: 'Sweet Potatoes', cat: 'veg', price: 160, unit: 'kg', qty: 35, img: 'sweet-potato', desc: 'Roast them on coals for the perfect winter snack.' },
-      { name: 'Sweet Corn', cat: 'veg', price: 80, unit: 'piece', qty: 50, img: 'corn', desc: 'Tender sweet corn cobs.' },
+      { name: 'Sweet Corn', cat: 'veg', price: 80, was: 100, unit: 'piece', qty: 50, img: 'corn', desc: 'Tender sweet corn cobs.' },
       { name: 'Garlic', cat: 'veg', price: 600, unit: 'kg', qty: 20, img: 'garlic', desc: 'Pungent desi garlic bulbs.' },
       { name: 'Fresh Ginger', cat: 'veg', price: 700, unit: 'kg', qty: 15, img: 'ginger', desc: 'Aromatic ginger root.' },
     ],
@@ -453,7 +453,7 @@ export const farmers = [
     ],
     cutoff: 12,
     products: [
-      { name: 'Red Apples', cat: 'fruit', price: 380, unit: 'kg', qty: 60, img: 'apple', desc: 'Crisp red apples from Swat.' },
+      { name: 'Red Apples', cat: 'fruit', price: 380, was: 450, unit: 'kg', qty: 60, img: 'apple', desc: 'Crisp red apples from Swat.' },
       { name: 'Green Apples', cat: 'fruit', price: 420, unit: 'kg', qty: 30, img: 'green-apple', desc: 'Tart green apples for baking and snacking.' },
       { name: 'Peaches', cat: 'fruit', price: 450, unit: 'kg', qty: 25, img: 'peach', desc: 'Soft, fragrant hill peaches.' },
       { name: 'Cherries', cat: 'fruit', price: 1200, unit: 'kg', qty: 10, img: 'cherries', desc: 'Dark sweet cherries, short season only.' },

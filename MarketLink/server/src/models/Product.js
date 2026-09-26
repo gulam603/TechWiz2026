@@ -11,6 +11,8 @@ const productSchema = new Schema(
     slug: { type: String, trim: true, lowercase: true }, // readable URL: /products/sindhri-mangoes
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: [true, 'Category is required'] },
     price: { type: Number, required: [true, 'Price is required'], min: [0, 'Price cannot be negative'] },
+    // The usual price when the farmer runs an offer (shown struck through with the % off); empty = no offer
+    compareAtPrice: { type: Number, min: [0, 'Price cannot be negative'] },
     unit: { type: String, enum: UNITS, default: 'kg' },
     quantityAvailable: { type: Number, default: 0, min: [0, 'Quantity cannot be negative'] },
     templateQuantity: { type: Number, default: 0, min: 0 }, // weekly recurring stock
@@ -72,6 +74,11 @@ const productSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// An offer ends when the price is raised to (or above) the usual price
+productSchema.pre('save', function endOffer() {
+  if (this.compareAtPrice != null && !(this.compareAtPrice > this.price)) this.compareAtPrice = undefined;
+});
 
 productSchema.index({ slug: 1 });
 productSchema.index({ farmer: 1, isRemoved: 1 });

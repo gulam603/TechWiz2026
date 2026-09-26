@@ -5,7 +5,8 @@ import DayDots from '../common/DayDots';
 import FavButton from '../common/FavButton';
 import { localText, t } from '../../i18n';
 
-export default function FarmerCard({ farmer }) {
+/** A farmer's stall. `showLocation` (home page) shows where the farm is instead of the description. */
+export default function FarmerCard({ farmer, showLocation = false }) {
   return (
     <article className="farmer-card">
       <div className="cover" style={{ '--cover': coverFor(farmer.stallName) }}>
@@ -24,7 +25,13 @@ export default function FarmerCard({ farmer }) {
         <div className="mb-2">
           <RatingStars value={farmer.ratingAvg} count={farmer.ratingCount} />
         </div>
-        {localText(farmer, 'bio') && (
+        {showLocation && (farmer.address || farmer.city) && (
+          <p className="farmer-place">
+            <i className="bi bi-geo-alt-fill" aria-hidden="true" />
+            <span>{farmer.address && farmer.city && !farmer.address.includes(farmer.city) ? `${farmer.address}, ${t(farmer.city)}` : farmer.address || t(farmer.city)}</span>
+          </p>
+        )}
+        {!showLocation && localText(farmer, 'bio') && (
           <p className="small text-muted-2 mb-3" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {localText(farmer, 'bio')}
           </p>

@@ -13,12 +13,12 @@ import { imageKind } from '../../utils/images';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { ApprovalBanner } from './Dashboard';
-import { money } from '../../utils/format';
+import { money, offerPercent } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
 import { categoryName, productName, t, unitName } from '../../i18n';
 
-const EMPTY = { name: '', nameUr: '', category: '', price: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', descriptionUr: '', metaTitle: '', metaDescription: '', keywords: '', schemaSummary: '', schemaSeason: '', schemaStorage: '', schemaUses: '' };
+const EMPTY = { name: '', nameUr: '', category: '', price: '', compareAtPrice: '', unit: 'kg', quantityAvailable: '', templateQuantity: '', description: '', descriptionUr: '', metaTitle: '', metaDescription: '', keywords: '', schemaSummary: '', schemaSeason: '', schemaStorage: '', schemaUses: '' };
 
 const SCHEMA_KEYS = ['schemaSummary', 'schemaSeason', 'schemaStorage', 'schemaUses'];
 const SOURCE_LABEL = { claude: 'Written by AI (Claude)', builtin: 'Written by the built-in AI', farmer: 'Written by you' };
@@ -241,6 +241,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
           name: product.name,
           category: product.category?._id || '',
           price: product.price,
+          compareAtPrice: product.compareAtPrice || '',
           unit: product.unit,
           quantityAvailable: product.quantityAvailable,
           templateQuantity: product.templateQuantity,
@@ -368,6 +369,15 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
           <div className="col-6 col-md-3">
             <label className="form-label" htmlFor="pf-tpl">{t('Weekly template')}</label>
             <input id="pf-tpl" name="templateQuantity" type="number" min="0" className="form-control" value={form.templateQuantity} onChange={change} placeholder={t('same as stock')} />
+          </div>
+          <div className="col-md-6">
+            <label className="form-label" htmlFor="pf-was">
+              {t('Usual price, for an offer')} <span className="text-muted-2 fw-normal">{t('(optional)')}</span>
+            </label>
+            <input id="pf-was" name="compareAtPrice" type="number" min="0" step="0.01" className="form-control" value={form.compareAtPrice} onChange={change} aria-describedby="pf-was-help" />
+            <div id="pf-was-help" className="form-text">
+              {offerPercent(form) > 0 ? t('Customers see {old} crossed out and "{n}% off".', { old: money(form.compareAtPrice), n: offerPercent(form) }) : t('Selling for less this week? Type the usual price here. Leave it empty when there is no offer.')}
+            </div>
           </div>
           <div className="col-12">
             <div className="d-flex align-items-end justify-content-between gap-2 mb-1">

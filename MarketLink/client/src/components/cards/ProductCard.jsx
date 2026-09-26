@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import { money } from '../../utils/format';
+import { money, offerPercent } from '../../utils/format';
 import ProduceImage from '../common/ProduceImage';
 import RatingStars from '../common/RatingStars';
 import FavButton from '../common/FavButton';
@@ -18,6 +18,7 @@ export default function ProductCard({ product }) {
   const { toast } = useToast();
   const soldOut = product.status !== 'available' || product.quantityAvailable <= 0;
   const low = !soldOut && product.quantityAvailable <= 5;
+  const off = offerPercent(product);
   // null (closed), 'view' (Quick view) or 'add' (the Add button: choose how many, then add)
   const [quick, setQuick] = useState(null);
   const inCart = cart.items.find((i) => i.productId === product._id);
@@ -33,6 +34,7 @@ export default function ProductCard({ product }) {
   return (
     <article className={`product-card ${soldOut ? 'is-soldout' : ''}`}>
       <div className="card-top-badges">
+        {off > 0 && !soldOut && <span className="chip chip-deal">{t('{n}% off', { n: off })}</span>}
         {soldOut && <span className="chip chip-dark">{t('Sold out')}</span>}
         {low && <span className="chip chip-warn">{t('Only')} {product.quantityAvailable} {t('left')}</span>}
       </div>
@@ -62,6 +64,12 @@ export default function ProductCard({ product }) {
           <div className="price">
             {money(product.price)}
             <span className="unit">/ {unitName(product.unit)}</span>
+            {off > 0 && (
+              <del className="price-was">
+                <span className="visually-hidden">{t('Usual price')} </span>
+                {money(product.compareAtPrice)}
+              </del>
+            )}
           </div>
           <button type="button" className="add-btn" onClick={openAdd} disabled={soldOut} aria-haspopup="dialog" aria-label={inCart ? t('Add {name} to basket ({n} already in it)', { name: productName(product), n: inCart.quantity }) : t('Add {name} to basket', { name: productName(product) })} title={t('Choose how many and add to basket')}>
             <i className="bi bi-basket2" aria-hidden="true" />

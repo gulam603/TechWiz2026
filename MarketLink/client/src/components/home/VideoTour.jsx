@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { t } from '../../i18n';
 
 const STEPS = [
@@ -8,15 +8,27 @@ const STEPS = [
   { icon: 'bi-bag-check', title: 'Collect and pay', text: 'We tell you when it is packed. Collect at the stall and pay the farmer.' },
 ];
 
-/** "How it works" with a short video tour of the website next to the four steps. */
+/**
+ * "How it works" with a short video tour of the website next to the four steps. The video plays by
+ * itself (muted, on a loop) while it is on screen and stops when it is scrolled away; the controls let
+ * people pause it or turn the sound on.
+ */
 export default function VideoTour() {
   const video = useRef(null);
-  const [started, setStarted] = useState(false);
 
-  function play() {
-    setStarted(true);
-    video.current?.play().catch(() => {});
-  }
+  useEffect(() => {
+    const el = video.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.35 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section className="section bg-sand" id="how-it-works" aria-labelledby="how-title">
@@ -30,28 +42,12 @@ export default function VideoTour() {
         </div>
         <div className="row g-4 align-items-center">
           <div className="col-lg-7">
-            <div className={`video-tour ${started ? 'is-started' : ''}`}>
-              <video
-                ref={video}
-                poster="/media/how-it-works.jpg"
-                preload="none"
-                playsInline
-                controls={started}
-                onPlay={() => setStarted(true)}
-                aria-label={t('Video: how to pre-order on MarketLink')}
-              >
+            <div className="video-tour is-started">
+              <video ref={video} poster="/media/how-it-works.jpg" preload="metadata" muted loop playsInline autoPlay controls aria-label={t('Video: how to pre-order on MarketLink')}>
                 <source src="/media/how-it-works.webm" type="video/webm" />
                 <source src="/media/how-it-works.mp4" type="video/mp4" />
                 <track kind="captions" src="/media/how-it-works.vtt" srcLang="en" label={t('English')} default />
               </video>
-              {!started && (
-                <button type="button" className="video-play" onClick={play} aria-label={t('Play the video tour')}>
-                  <span className="video-play-btn">
-                    <i className="bi bi-play-fill" aria-hidden="true" />
-                  </span>
-                  <span className="video-play-label">{t('Watch the tour · 0:30')}</span>
-                </button>
-              )}
             </div>
           </div>
           <div className="col-lg-5">

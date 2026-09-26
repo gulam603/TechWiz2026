@@ -26,6 +26,13 @@ export function monthsLabel(months = []) {
 }
 
 // A non-breaking space keeps "Rs 1,200" on one line inside tables and cards (Urdu: "1,200 روپے")
+/** The saving of an offer in whole percent (0 when the product is not on offer). */
+export function offerPercent(product) {
+  const was = Number(product?.compareAtPrice);
+  const now = Number(product?.price);
+  return was > now && now > 0 ? Math.round((1 - now / was) * 100) : 0;
+}
+
 export function money(value) {
   const n = Number(value) || 0;
   const amount = n.toLocaleString('en-US', { maximumFractionDigits: 2 });

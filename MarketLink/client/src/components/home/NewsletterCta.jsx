@@ -3,15 +3,12 @@ import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
 import { t } from '../../i18n';
 
-/**
- * "Subscribe to our newsletter" form. `variant="band"` is the large home page block,
- * `variant="footer"` the compact form in the footer.
- */
-export default function NewsletterCta({ variant = 'band', source = 'home' }) {
+/** "Subscribe to our newsletter": the strip just above the footer on every public page. */
+export default function NewsletterCta({ source = 'home' }) {
   const { user } = useAuth();
   const [email, setEmail] = useState('');
   const [state, setState] = useState({ busy: false, done: '', error: '' });
-  const id = `newsletter-${variant}`;
+  const id = 'newsletter-email';
 
   async function submit(e) {
     e.preventDefault();
@@ -52,33 +49,17 @@ export default function NewsletterCta({ variant = 'band', source = 'home' }) {
     </form>
   );
 
-  if (variant === 'footer') {
-    return (
-      <div className="nl-footer">
-        <h6>{t('Weekly harvest e-mail')}</h6>
-        <p className="small mb-2">{t('What is fresh, what is in season and new farmers near you. Once a week, no spam.')}</p>
-        {form}
-      </div>
-    );
-  }
-
   return (
-    <section className="section pt-0" aria-labelledby="nl-title">
+    <section className="nl-strip-wrap" aria-labelledby="nl-title">
       <div className="container">
-        <div className="nl-band">
-          <div className="nl-photos" aria-hidden="true">
-            {['strawberries', 'kinnow-oranges', 'vine-tomatoes'].map((name) => (
-              <img key={name} src={`/uploads/photos/thumbs/${name}.webp`} alt="" loading="lazy" />
-            ))}
+        <div className="nl-strip">
+          <img className="nl-strip-photo" src="/images/banners/fruit-basket.webp" alt={t('A basket of fresh fruit')} loading="lazy" width="640" height="640" />
+          <div className="nl-strip-copy">
+            <span className="eyebrow">{t('Newsletter')}</span>
+            <h2 id="nl-title">{t('Get the weekly harvest list in your inbox')}</h2>
+            <p className="mb-0">{t('Once a week: what the markets will have, seasonal picks and new farmers. Unsubscribe with one click.')}</p>
           </div>
-          <div className="row align-items-center g-4 position-relative">
-            <div className="col-lg-6">
-              <span className="eyebrow">{t('Newsletter')}</span>
-              <h2 id="nl-title" className="section-title mt-2">{t('Get the weekly harvest list in your inbox')}</h2>
-              <p className="mb-0">{t('Once a week: what the markets will have, seasonal picks and new farmers. Unsubscribe with one click.')}</p>
-            </div>
-            <div className="col-lg-6">{form}</div>
-          </div>
+          <div className="nl-strip-form">{form}</div>
         </div>
       </div>
     </section>

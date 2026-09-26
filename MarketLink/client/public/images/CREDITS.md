@@ -15,3 +15,5 @@ They were cropped and resized to WebP for the website.
 | Home banner: pickup | `pickup.webp` | Aivar Ruukel | [Flickr](https://www.flickr.com/photos/soomaa/11202779944) |
 | Home banner: farmers | `farmers.webp` | U.S. Department of Agriculture | [Flickr](https://www.flickr.com/photos/usdagov/10547052435) |
 | Home banner: cta-farmer | `cta-farmer.webp` | Alana King | [Flickr](https://www.flickr.com/photos/buking2010/5082580472) |
+| Offers banner | `banners/deal-vegetables.webp` | Mayda Sanchez-Shingler | [Flickr](https://www.flickr.com/photos/maydaohio/8064217445) |
+| Newsletter strip | `banners/fruit-basket.webp` | giorgio winklers | [Flickr](https://www.flickr.com/photos/winklers68/3056578130/) |

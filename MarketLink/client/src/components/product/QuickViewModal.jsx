@@ -11,6 +11,7 @@ import StatusBadge from '../common/StatusBadge';
 import QuantityStepper from '../common/QuantityStepper';
 import FavButton from '../common/FavButton';
 import { DAY_SHORT, money } from '../../utils/format';
+import OfferTag from '../common/OfferTag';
 import { productPath } from '../../utils/links';
 import { categoryName, listText, localText, productName, t, unitName } from '../../i18n';
 
@@ -72,7 +73,7 @@ export default function QuickViewModal({ product: summary, onClose, focusAdd = f
             <StatusBadge status={soldOut ? 'sold_out' : 'available'} label={soldOut ? t('Sold out') : t('{n} {unit} available', { n: product.quantityAvailable, unit: unitName(product.unit) })} />
           </div>
           <div className="price mb-2" style={{ fontSize: '1.6rem' }}>
-            {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span>
+            {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span> <OfferTag product={product} />
           </div>
           {localText(product, 'description') && <p className="small text-muted-2 quickview-desc">{localText(product, 'description')}</p>}
           {product.farmer?.slug && (

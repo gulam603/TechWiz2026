@@ -166,6 +166,7 @@ async function main() {
         slug: await uniqueSlug(Product, p.name),
         category: categoryByKey[p.cat]._id,
         price: p.price,
+        compareAtPrice: p.was, // the usual price of this week's offers
         unit: p.unit,
         quantityAvailable: p.qty,
         templateQuantity: p.template ?? p.qty,

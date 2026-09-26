@@ -28,11 +28,11 @@ html[lang='ur'] {
   .h6,
   .display-font,
   .section-title,
-  .hc-title,
+  .hb-title,
   .page-hero h1,
   .lead,
   blockquote,
-  .rs-card blockquote p,
+  .tm-quote blockquote p,
   .faq-answer,
   .terms-body p {
     font-family: $urdu-text;
@@ -42,7 +42,7 @@ html[lang='ur'] {
 
   h1,
   .h1,
-  .hc-title {
+  .hb-title {
     line-height: 1.75;
   }
 
@@ -198,19 +198,6 @@ html[lang='ur'] {
   }
 }
 
-.lang-switch-footer {
-  height: 34px;
-  background: transparent;
-  color: inherit;
-  border-color: rgba(255, 255, 255, 0.25);
-
-  &:hover,
-  &:focus-visible {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.45);
-  }
-}
-
 .app-lang {
   margin: 0.5rem 0.75rem 0;
   width: auto;
@@ -238,15 +225,6 @@ textarea[lang='ur'] {
   }
 }
 
-// Urdu headings are shorter; keep the newsletter band as tall as the English one so the photos stay clear of the form
-html[lang='ur'] .nl-band {
-  min-height: 236px;
-  display: flex;
-  align-items: center;
-  > .row {
-    flex: 1;
-  }
-}
 /* rtl:end:ignore */
 
 /* rtl:begin:ignore */
@@ -267,6 +245,19 @@ html[lang='ur'] .nl-band {
   }
   .pd-count {
     translate: 50% 0;
+  }
+}
+/* rtl:end:ignore */
+
+/* rtl:begin:ignore */
+// Urdu letters reach higher: a little more room under the banner label and the offer label
+html[lang='ur'] {
+  .hb-eyebrow,
+  .deal-tag {
+    margin-bottom: 1.5rem;
+  }
+  .hb-title {
+    font-size: clamp(1.9rem, 3.8vw, 3rem);
   }
 }
 /* rtl:end:ignore */

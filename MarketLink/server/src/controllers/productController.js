@@ -50,6 +50,8 @@ export async function buildProductFilter(query) {
     const ids = farmers.map((f) => String(f._id));
     filter.farmer = filter.farmer ? (ids.includes(String(filter.farmer)) ? filter.farmer : null) : { $in: farmers.map((f) => f._id) };
   }
+  // This week's offers: products with a usual price above today's price
+  if (toBool(query.deals)) filter.$expr = { $gt: ['$compareAtPrice', '$price'] };
   if (toBool(query.inStock)) {
     filter.status = PRODUCT_STATUS.AVAILABLE;
     filter.quantityAvailable = { $gt: 0 };

@@ -25,7 +25,7 @@ const SORTS = [
   { value: 'name', label: 'Name A to Z' },
 ];
 
-const FILTER_KEYS = ['search', 'category', 'city', 'market', 'day', 'minPrice', 'maxPrice', 'rating', 'practice', 'inStock', 'sort', 'page'];
+const FILTER_KEYS = ['search', 'category', 'city', 'market', 'day', 'minPrice', 'maxPrice', 'rating', 'practice', 'inStock', 'deals', 'sort', 'page'];
 
 // Rendered with key={params.toString()} so the text boxes reset when the URL filters change.
 function Filters({ params, set, categories, markets, cities, practices = [], onDone }) {
@@ -140,6 +140,12 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
         />
         <label className="form-check-label small fw-semi" htmlFor="inStock">
           {t('In stock only')}
+        </label>
+      </div>
+      <div className="form-check form-switch mt-2">
+        <input className="form-check-input" type="checkbox" role="switch" id="deals" checked={params.get('deals') === 'true'} onChange={(e) => set({ deals: e.target.checked ? 'true' : '' })} />
+        <label className="form-check-label small fw-semi" htmlFor="deals">
+          {t('On offer only')}
         </label>
       </div>
     </div>

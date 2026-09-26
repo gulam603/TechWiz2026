@@ -149,6 +149,14 @@ function readProductBody(body, { partial = false } = {}) {
       data[key] = key === 'price' ? round2(n) : Math.floor(n);
     }
   }
+  // Offer: the usual price, shown struck through next to the lower price (empty or 0 ends the offer)
+  if (body.compareAtPrice !== undefined) {
+    const was = toNumber(body.compareAtPrice);
+    if (body.compareAtPrice === '' || !was) data.compareAtPrice = null;
+    else if (was < 0) throw new AppError('The price before the offer must be a positive number', 400);
+    else if (data.price !== undefined && was <= data.price) throw new AppError('The price before the offer must be higher than the price', 400);
+    else data.compareAtPrice = round2(was);
+  }
   if (!partial) {
     for (const key of ['name', 'category', 'price']) if (data[key] === undefined) throw new AppError(`Please provide the product ${key}`, 400);
   }

@@ -45,5 +45,6 @@ $theme-colors: map-merge($theme-colors, $theme-colors-extra);
 @import './admin';
 @import './shop';
 @import './home';
+@import './homepage';
 @import './polish';
 @import './urdu';

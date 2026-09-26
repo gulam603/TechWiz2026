@@ -14,7 +14,22 @@ export async function publicStats(req, res) {
     User.countDocuments({ role: ROLES.CUSTOMER, status: USER_STATUS.ACTIVE }),
     Order.countDocuments({ status: ORDER_STATUS.COMPLETED }),
   ]);
-  res.json({ markets, farmers, products, customers, ordersCompleted });
+  res.json({ markets, farmers, products, customers, ordersCompleted, deals: await dealSummary() });
+}
+
+/**
+ * This week's offers for the "Up to N% off" banner: how many products are on offer, the biggest
+ * saving and the category where it is (null when no farmer runs an offer).
+ */
+async function dealSummary() {
+  const offers = await Product.find({ ...Product.publicFilter(), quantityAvailable: { $gt: 0 }, $expr: { $gt: ['$compareAtPrice', '$price'] } })
+    .select('price compareAtPrice category')
+    .populate('category', 'name nameUr slug')
+    .lean();
+  if (!offers.length) return null;
+  const percent = (p) => Math.round((1 - p.price / p.compareAtPrice) * 100);
+  const best = offers.reduce((a, b) => (percent(b) > percent(a) ? b : a));
+  return { count: offers.length, maxPercent: percent(best), category: best.category ? { name: best.category.name, nameUr: best.category.nameUr, slug: best.category.slug } : null };
 }
 
 // GET /api/practices  (farming practices used by approved farmers, for the filter dropdowns)

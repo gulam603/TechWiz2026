@@ -35,13 +35,14 @@ function CategoryForm({ category, onClose, onSaved }) {
     category ? { name: category.name, nameUr: category.nameUr || '', description: category.description || '', color: category.color || '#E4F3D8', sortOrder: category.sortOrder, isActive: category.isActive } : EMPTY
   );
   const [file, setFile] = useState(null);
+  const [photo, setPhoto] = useState(null);
   const [busy, setBusy] = useState(false);
 
   async function save(e) {
     e.preventDefault();
     setBusy(true);
     try {
-      const fd = toFormData(form, { icon: file });
+      const fd = toFormData(form, { icon: file, image: photo });
       if (category) await api.upload('PUT', `/admin/categories/${category._id}`, fd);
       else await api.upload('POST', '/admin/categories', fd);
       toast(category ? 'Category updated' : 'Category added');
@@ -86,8 +87,11 @@ function CategoryForm({ category, onClose, onSaved }) {
               <option value="false">Hidden</option>
             </select>
           </div>
-          <div className="col-12">
-            <ImageInput label="Icon" current={category?.icon} file={file} onFile={setFile} />
+          <div className="col-md-6">
+            <ImageInput label="Icon (small round photo)" current={category?.icon} file={file} onFile={setFile} />
+          </div>
+          <div className="col-md-6">
+            <ImageInput label="Card photo (home page, landscape)" current={category?.image} file={photo} onFile={setPhoto} />
           </div>
         </div>
         <div className="d-flex justify-content-end gap-2 mt-4">

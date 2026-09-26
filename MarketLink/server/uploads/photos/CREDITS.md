@@ -186,3 +186,18 @@ The photos were cropped to 4:3 and resized to 800 x 600 WebP for the website.
 | Pears | gallery/pears-3.webp | Stefan | https://www.flickr.com/photos/92703742@N04/8426126549 | CC BY 2.0 |
 | Goat Milk | gallery/goat-milk-2.webp | Helga Birna Jónasdóttir | https://www.flickr.com/photos/helgabj/2629361722/ | CC BY 2.0 |
 | Goat Milk | gallery/goat-milk-3.webp | Mark Morgan | https://www.flickr.com/photos/markmorgantrinidad/16559405934 | CC BY 2.0 |
+
+## Category card photos
+
+Wide photos on the home page category cards (`categories/*.webp`, 800 x 600 WebP), same licence (CC BY 2.0).
+
+| Category | Photo file | Author | Original |
+| --- | --- | --- | --- |
+| Vegetables | `categories/vegetables.webp` | Le living and co | [Flickr](https://www.flickr.com/photos/lelivingandco/13677166343) |
+| Fruits | `categories/fruits.webp` | ~Pawsitive~Candie_N | [Flickr](https://www.flickr.com/photos/scjn/5211082131) |
+| Dairy & Eggs | `categories/dairy-eggs.webp` | Victoria Rachitzky Hoch | [Flickr](https://www.flickr.com/photos/viclic/272759452) |
+| Baked Goods | `categories/baked-goods.webp` | Eric | [Flickr](https://www.flickr.com/photos/53344429@N05/4978358333) |
+| Herbs & Greens | `categories/herbs-greens.webp` | Qfamily | [Flickr](https://www.flickr.com/photos/dasqfamily/2648343226) |
+| Grains & Pulses | `categories/grains-pulses.webp` | ilovebutter | [Flickr](https://www.flickr.com/photos/jdickert/393625084) |
+| Flowers & Plants | `categories/flowers-plants.webp` | ppc1337 | [Flickr](https://www.flickr.com/photos/wihel/16525204202) |
+| Honey & Preserves | `categories/honey-preserves.webp` | J.H. Fearless | [Flickr](https://www.flickr.com/photos/jessicareeder/3881377113) |

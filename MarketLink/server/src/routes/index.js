@@ -43,7 +43,7 @@ const productImage = imageUpload('products', 6);
 const productPhotos = productImage.fields([{ name: 'image', maxCount: 1 }, { name: 'gallery', maxCount: 4 }]); // main photo + up to 4 more
 const farmerImages = imageUpload('farmers');
 const marketImage = imageUpload('markets');
-const categoryIcon = imageUpload('categories');
+const categoryPhotos = imageUpload('categories').fields([{ name: 'icon', maxCount: 1 }, { name: 'image', maxCount: 1 }]); // round icon + wide card photo
 const avatarImage = imageUpload('avatars');
 
 // ---------- Auth ----------
@@ -189,8 +189,8 @@ router.patch('/admin/moderation/:id', ...adminOnly, moderation.resolveFlag);
 router.post('/admin/farmers/describe', ...adminOnly, tools.writeFarmBio);
 
 router.get('/admin/categories', ...adminOnly, admin.adminCategories);
-router.post('/admin/categories', ...adminOnly, categoryIcon.single('icon'), admin.createCategory);
-router.put('/admin/categories/:id', ...adminOnly, categoryIcon.single('icon'), admin.updateCategory);
+router.post('/admin/categories', ...adminOnly, categoryPhotos, admin.createCategory);
+router.put('/admin/categories/:id', ...adminOnly, categoryPhotos, admin.updateCategory);
 router.delete('/admin/categories/:id', ...adminOnly, admin.deleteCategory);
 
 router.get('/admin/announcements', ...adminOnly, admin.adminAnnouncements);

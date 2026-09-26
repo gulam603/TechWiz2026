@@ -8,6 +8,14 @@ const DELAY = 3000; // ms each slide stays on screen
 
 const prefersReducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+// Why people can trust the market, shown under the banner
+const TRUST = [
+  { icon: 'bi-basket2', title: 'Fresh every week', text: 'Picked for market day' },
+  { icon: 'bi-cash-coin', title: 'Pay at pickup', text: 'No online payment' },
+  { icon: 'bi-patch-check', title: 'Checked farmers', text: 'Every stall is approved' },
+  { icon: 'bi-clock', title: 'Your pickup time', text: 'Choose a time slot' },
+];
+
 /** Scrolls to a section of the home page for links such as "/#how-it-works". */
 function scrollToHash(e, to) {
   const hash = to.startsWith('/#') ? to.slice(1) : null;
@@ -26,19 +34,21 @@ function SlideLink({ link, className }) {
 }
 
 /**
- * Home page banner carousel: slides change every few seconds, pause while the pointer or the
- * keyboard focus is on them, can be swiped on phones and have dots, arrows and a pause button.
+ * Home page banner: full-width photos with the words on them. The slides change by themselves every
+ * few seconds (also with "reduce motion" turned on, then without the zoom) and keep going while the
+ * mouse is over them; they stop only with the pause button, while a keyboard user is on the controls
+ * or while the browser tab is hidden. Phones can swipe.
  */
 export default function HeroCarousel() {
   const { user } = useAuth();
   const slides = useMemo(() => heroSlides(), []);
   const [index, setIndex] = useState(0);
-  const [hovered, setHovered] = useState(false);
-  const [stopped, setStopped] = useState(prefersReducedMotion);
+  const [stopped, setStopped] = useState(false);
+  const [keyboard, setKeyboard] = useState(false);
   const [hidden, setHidden] = useState(false);
   const swipe = useRef(null);
   const count = slides.length;
-  const playing = !stopped && !hovered && !hidden;
+  const playing = !stopped && !keyboard && !hidden;
 
   const go = useCallback((step) => setIndex((i) => (i + step + count) % count), [count]);
 
@@ -60,15 +70,14 @@ export default function HeroCarousel() {
   }
 
   return (
-    <section className="hero-carousel" aria-roledescription="carousel" aria-label={t('Highlights')}>
+    <section className="hero-banner" aria-roledescription="carousel" aria-label={t('Highlights')}>
       <div className="container">
         <div
-          className={`hc-frame theme-${slides[index].theme}`}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          onFocus={() => setHovered(true)}
-          onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setHovered(false)}
+          className="hb-frame"
           onKeyDown={onKeyDown}
+          // Only keyboard focus pauses the slides (a mouse click on a dot does not)
+          onFocus={(e) => setKeyboard(e.target.matches(':focus-visible'))}
+          onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setKeyboard(false)}
           onPointerDown={(e) => {
             swipe.current = { x: e.clientX, y: e.clientY };
           }}
@@ -85,64 +94,67 @@ export default function HeroCarousel() {
             const Heading = i === 0 ? 'h1' : 'h2';
             const primary = s.primary.guestOnly && user ? s.secondary : s.primary;
             return (
-              <div
-                key={s.id}
-                className={`hc-slide theme-${s.theme} ${active ? 'is-active' : ''}`}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`${i + 1} of ${count}`}
-                aria-hidden={!active}
-                inert={!active}
-              >
-                <div className="hc-copy">
-                  <span className="hc-eyebrow">{s.eyebrow}</span>
-                  <Heading className="hc-title text-balance">{s.title}</Heading>
-                  <p className="hc-text">{s.text}</p>
-                  <div className="hc-actions">
-                    <SlideLink link={primary} className="btn btn-lg hc-primary" />
-                    {primary !== s.secondary && <SlideLink link={s.secondary} className="btn btn-lg hc-secondary" />}
+              <div key={s.id} className={`hb-slide ${active ? 'is-active' : ''}`} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} aria-hidden={!active} inert={!active}>
+                <img className="hb-img" src={s.photo.src} alt={s.photo.alt} style={{ objectPosition: s.photo.focus }} loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : undefined} draggable="false" />
+                <div className="hb-copy">
+                  <span className="hb-eyebrow">
+                    {s.badge && <i className={`bi ${s.badge.icon}`} aria-hidden="true" />} {s.eyebrow}
+                  </span>
+                  <Heading className="hb-title text-balance">{s.title}</Heading>
+                  <p className="hb-text">{s.text}</p>
+                  <div className="hb-actions">
+                    <SlideLink link={primary} className="btn btn-lime btn-lg" />
+                    {primary !== s.secondary && <SlideLink link={s.secondary} className="btn btn-lg hb-ghost" />}
                   </div>
                 </div>
-                <figure className="hc-photo">
-                  <img src={s.photo.src} alt={s.photo.alt} style={{ objectPosition: s.photo.focus }} loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : undefined} draggable="false" />
-                  {s.badge && (
-                    <span className="hc-badge">
-                      <i className={`bi ${s.badge.icon}`} aria-hidden="true" /> {s.badge.text}
-                    </span>
-                  )}
-                  {s.photo.credit && (
-                    <figcaption className="hc-credit">
-                      {t('Photo:')}{' '}
-                      <a href={s.photo.credit.source} target="_blank" rel="noreferrer">
-                        {s.photo.credit.author}
-                      </a>{' '}
-                      {t('(CC BY 2.0)')}
-                    </figcaption>
-                  )}
-                </figure>
+                {s.photo.credit && (
+                  <small className="hb-credit">
+                    {t('Photo:')}{' '}
+                    <a href={s.photo.credit.source} target="_blank" rel="noreferrer">
+                      {s.photo.credit.author}
+                    </a>{' '}
+                    {t('(CC BY 2.0)')}
+                  </small>
+                )}
               </div>
             );
           })}
 
-          <div className="hc-controls">
-            <button type="button" className="hc-arrow" onClick={() => go(-1)} aria-label={t('Previous slide')}>
-              <i className="bi bi-chevron-left" aria-hidden="true" />
-            </button>
-            <div className="hc-dots" role="group" aria-label={t('Choose a slide')}>
+          <div className="hb-controls">
+            <div className="hb-dots" role="group" aria-label={t('Choose a slide')}>
               {slides.map((s, i) => (
-                <button key={s.id} type="button" className={`hc-dot ${i === index ? 'active' : ''}`} onClick={() => setIndex(i)} aria-label={t('Slide {v1}: {eyebrow}', { v1: i + 1, eyebrow: s.eyebrow })} aria-current={i === index ? 'true' : undefined}>
-                  {i === index && <span key={index} className={`hc-dot-fill ${playing ? '' : 'is-paused'}`} style={{ animationDuration: `${DELAY}ms` }} />}
+                <button key={s.id} type="button" className={`hb-dot ${i === index ? 'active' : ''}`} onClick={() => setIndex(i)} aria-label={t('Slide {v1}: {eyebrow}', { v1: i + 1, eyebrow: s.eyebrow })} aria-current={i === index ? 'true' : undefined}>
+                  {i === index && <span key={index} className={`hb-dot-fill ${playing ? '' : 'is-paused'}`} style={{ animationDuration: `${DELAY}ms` }} />}
                 </button>
               ))}
             </div>
-            <button type="button" className="hc-arrow" onClick={() => go(1)} aria-label={t('Next slide')}>
-              <i className="bi bi-chevron-right" aria-hidden="true" />
-            </button>
-            <button type="button" className="hc-arrow hc-pause" onClick={() => setStopped((v) => !v)} aria-label={stopped ? t('Play the slides') : t('Pause the slides')} aria-pressed={stopped}>
-              <i className={`bi ${stopped ? 'bi-play-fill' : 'bi-pause-fill'}`} aria-hidden="true" />
-            </button>
+            <div className="hb-buttons">
+              <button type="button" className="hb-arrow" onClick={() => go(-1)} aria-label={t('Previous slide')}>
+                <i className="bi bi-chevron-left" aria-hidden="true" />
+              </button>
+              <button type="button" className="hb-arrow" onClick={() => setStopped((v) => !v)} aria-label={stopped ? t('Play the slides') : t('Pause the slides')} aria-pressed={stopped}>
+                <i className={`bi ${stopped ? 'bi-play-fill' : 'bi-pause-fill'}`} aria-hidden="true" />
+              </button>
+              <button type="button" className="hb-arrow" onClick={() => go(1)} aria-label={t('Next slide')}>
+                <i className="bi bi-chevron-right" aria-hidden="true" />
+              </button>
+            </div>
           </div>
         </div>
+
+        <ul className="trust-row" aria-label={t('Why shop at MarketLink')}>
+          {TRUST.map((item) => (
+            <li key={item.title}>
+              <span className="trust-icon">
+                <i className={`bi ${item.icon}`} aria-hidden="true" />
+              </span>
+              <span>
+                <strong>{t(item.title)}</strong>
+                <span>{t(item.text)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

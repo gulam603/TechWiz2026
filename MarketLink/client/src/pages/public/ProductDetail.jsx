@@ -17,6 +17,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { DAY_SHORT, money, time12 } from '../../utils/format';
+import OfferTag from '../../components/common/OfferTag';
 import { productPath } from '../../utils/links';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, ldGraph, productDescription, productLd } from '../../utils/seo';
@@ -138,7 +139,7 @@ export default function ProductDetail() {
             <StatusBadge status={soldOut ? 'sold_out' : 'available'} label={soldOut ? t('Sold out') : t('In stock')} />
           </div>
           <div className="price mb-2" style={{ fontSize: '1.9rem' }}>
-            {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span>
+            {money(product.price)} <span className="unit">{t('per')} {unitName(product.unit)}</span> <OfferTag product={product} />
           </div>
           {localText(product, 'description') && <p className="text-muted-2">{localText(product, 'description')}</p>}
 

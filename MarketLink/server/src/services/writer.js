@@ -30,15 +30,16 @@ export const KINDS = {
     local: (c, v, ur) => {
       const name = first(c.customerName);
       const about = clean(c.about, 60) || (ur ? 'ہماری اشیاء' : 'our produce');
+      const the = c.about ? `the ${about}` : about; // "the tomatoes" or "our produce"
       const r = Number(c.rating) || 5;
       if (ur) {
         if (r >= 4) return pick([`بہت شکریہ ${name}! ہمیں خوشی ہے کہ آپ کو ${about} پسند آئے۔ آپ کے الفاظ ہمارے لیے بہت اہم ہیں۔ اگلے مارکیٹ کے دن ملاقات ہو گی!`, `${name}، آپ کے پیارے جائزے کا شکریہ! ہم ہر ہفتے تازہ ترین فصل لانے کی کوشش کرتے ہیں۔ جلد دوبارہ ملیں گے!`, `شکریہ ${name}! یہ جان کر بہت اچھا لگا کہ آپ کا آرڈر وقت پر تیار تھا اور ${about} تازہ تھے۔ دوبارہ تشریف لائیں!`], v);
         if (r === 3) return pick([`${name}، آپ کی سچی رائے کا شکریہ۔ ہم اگلی بار اور بہتر کرنے کی پوری کوشش کریں گے۔ اسٹال پر آ کر ضرور بتائیں کہ ہم کیا بہتر کر سکتے ہیں۔`, `شکریہ ${name}۔ ہم آپ کی بات پر غور کر رہے ہیں تاکہ اگلا آرڈر بالکل ٹھیک ہو۔`], v);
         return pick([`${name}، ہمیں افسوس ہے کہ ${about} معیار پر پورے نہیں اترے۔ بتانے کا شکریہ۔ اگلے مارکیٹ کے دن اسٹال پر آئیں، ہم اس کی تلافی کریں گے۔`, `معذرت ${name}۔ یہ ہمارے معیار کے مطابق نہیں تھا۔ براہِ کرم اسٹال پر ہم سے ملیں تاکہ ہم اسے ٹھیک کر سکیں۔`], v);
       }
-      if (r >= 4) return pick([`Thank you so much, ${name}! We're glad you enjoyed the ${about}. Your kind words mean a lot to all of us at ${c.stallName || 'the stall'}. See you at the market next week!`, `Thanks for the lovely review, ${name}! We pick fresh for every market day, so it's great to hear it showed. Hope to see you again soon.`, `Thank you, ${name}! Happy to hear your order was ready on time and the ${about} was fresh. Come back anytime!`], v);
+      if (r >= 4) return pick([`Thank you so much, ${name}! We're glad you enjoyed ${the}. Your kind words mean a lot to all of us at ${c.stallName || 'the stall'}. See you at the market next week!`, `Thanks for the lovely review, ${name}! We pick fresh for every market day, so it's great to hear it showed. Hope to see you again soon.`, `Thank you, ${name}! Happy to hear your ${c.about ? `${about} ` : ''}order was ready on time and fresh. Come back anytime!`], v);
       if (r === 3) return pick([`Thank you for the honest feedback, ${name}. We'll work on doing better next time. Please tell us at the stall what we can improve.`, `Thanks, ${name}. We hear you and we're looking at how to make your next order just right.`], v);
-      return pick([`We're sorry the ${about} wasn't up to the mark, ${name}. Thank you for telling us. Please come by the stall on your next market day and we'll make it right.`, `Sorry about this, ${name}. It's not the standard we aim for. Please see us at the stall so we can put it right.`], v);
+      return pick([`We're sorry your ${c.about ? `${about} ` : ''}order wasn't up to the mark, ${name}. Thank you for telling us. Please come by the stall on your next market day and we'll make it right.`, `Sorry about this, ${name}. It's not the standard we aim for. Please see us at the stall so we can put it right.`], v);
     },
   },
   review: {
@@ -46,7 +47,8 @@ export const KINDS = {
     words: 50,
     prompt: 'Write a short, honest customer review of a farmers market product or stall, matching the star rating given. First person, plain words, 2 sentences. No exaggeration, no emoji.',
     local: (c, v, ur) => {
-      const name = clean(c.about, 60) || (ur ? 'یہ چیز' : 'the produce');
+      const name = clean(c.about, 60) || (ur ? 'یہ چیز' : '');
+      const what = name || 'produce'; // sentences below avoid "was / were" so plural names read right
       const r = Number(c.rating) || 5;
       const stall = c.type === 'farmer';
       if (ur) {
@@ -55,10 +57,10 @@ export const KINDS = {
         if (r === 3) return `${name} ٹھیک تھے۔ کچھ بہت تازہ تھے، کچھ کم۔ وصولی ٹھیک رہی۔`;
         return `اس بار ${name} توقع کے مطابق تازہ نہیں تھے۔ امید ہے اگلا آرڈر بہتر ہو گا۔`;
       }
-      if (r >= 5) return pick([stall ? `${name} is a great stall. My order was ready on time and everything was really fresh.` : `The ${name} was really fresh and full of flavour. Pickup at the stall was quick and easy, I will order again.`, stall ? `Friendly people and excellent quality. I'll keep buying here every week.` : `Excellent quality! The ${name} was very fresh and neatly packed.`], v);
-      if (r === 4) return `Good ${stall ? 'stall' : 'quality'}: the ${name} was fresh and pickup was smooth. A little more variety would make it perfect.`;
-      if (r === 3) return `The ${name} was okay. Some of it was very fresh, some less so. Pickup went fine.`;
-      return `Not happy with the ${name} this time: it wasn't as fresh as I expected. I hope the next order is better.`;
+      if (r >= 5) return pick([stall ? `${name || 'This'} is a great stall. My order was ready on time and everything was really fresh.` : `Really fresh ${what}, full of flavour. Pickup at the stall was quick and easy, I will order again.`, stall ? `Friendly people and excellent quality. I'll keep buying here every week.` : `Excellent quality! Very fresh ${what}, neatly packed.`], v);
+      if (r === 4) return `Good ${stall ? 'stall' : 'quality'}: fresh ${stall ? 'produce' : what} and a smooth pickup. A little more variety would make it perfect.`;
+      if (r === 3) return `Okay overall${name && !stall ? ` for the ${name}` : ''}. Some of it was very fresh, some less so. Pickup went fine.`;
+      return `Not happy with this order${name && !stall ? ` of ${name}` : ''}: it wasn't as fresh as I expected. I hope the next order is better.`;
     },
   },
   'decline-reason': {
@@ -68,7 +70,7 @@ export const KINDS = {
     local: (c, v, ur) => {
       const item = clean(c.items, 60).split(',')[0] || (ur ? 'یہ چیز' : 'this item');
       if (ur) return pick([`معذرت، اس ہفتے ${item} کی فصل توقع سے کم ہوئی اور یہ ختم ہو گئی۔ براہِ کرم اگلے ہفتے دوبارہ آرڈر دیں۔`, `معذرت، ہم یہ پیشگی آرڈر پورا نہیں کر سکتے کیونکہ ${item} کا اسٹاک ختم ہو گیا ہے۔ اگلے مارکیٹ کے دن کے لیے دوبارہ آرڈر دیں۔`, `ہمیں افسوس ہے، اس دن ہم مارکیٹ نہیں آ سکیں گے۔ کوئی اور دن چن کر دوبارہ آرڈر دیں۔`], v);
-      return pick([`Sorry, our ${item} harvest this week was smaller than expected and it has sold out. Please order again next week.`, `Sorry, we can't fill this pre-order because the ${item} has sold out. Please order again for the next market day.`, `We're sorry, we can't be at the market on that day. Please choose another day and order again.`], v);
+      return pick([`Sorry, our ${item} harvest this week was smaller than expected and we have sold out. Please order again next week.`, `Sorry, we can't fill this pre-order because we have sold out of ${item}. Please order again for the next market day.`, `We're sorry, we can't be at the market on that day. Please choose another day and order again.`], v);
     },
   },
   'report-note': {

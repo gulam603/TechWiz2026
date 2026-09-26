@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { CONTACT_TOPICS } from '../../utils/contactTopics';
 import { PageHero } from '../../components/common/PageHeader';
 import { api } from '../../api/client';
@@ -14,7 +15,10 @@ export default function Contact() {
   useSeo({ title: t('Contact us'), description: t('Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.'), jsonLd: breadcrumbLd([{ name: 'Contact us', path: '/contact' }]) });
   const { user } = useAuth();
   const { toast } = useToast();
-  const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', subject: '', topic: '', message: '' });
+  // "/contact?topic=market_request" (e.g. from the home page) chooses the topic already
+  const [params] = useSearchParams();
+  const startTopic = CONTACT_TOPICS.some((x) => x.value === params.get('topic')) ? params.get('topic') : '';
+  const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', subject: '', topic: startTopic, message: '' });
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });

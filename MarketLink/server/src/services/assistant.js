@@ -265,8 +265,8 @@ async function siteAnswer(ctx) {
   if (/\b(contact|complain|complaint|complaints|support|customer care|customer service|helpline|report a problem|request a market|suggest a market|talk to (a )?(human|person|someone)|email you|call you)\b/.test(text)) {
     return reply(
       L(
-        'You can reach the MarketLink team from the **Contact** page. Choose a topic (for example *Complaint about a market*, *Complaint about a farmer*, *Request a new market* or *Order problem*) so your message reaches the right person. We usually reply within one working day.\nFor a problem with a pre-order, you can also open the order in **My Orders**.',
-        'MarketLink ٹیم سے **رابطہ** کے صفحے سے بات کریں۔ ایک موضوع چنیں (مثلاً *مارکیٹ کی شکایت*، *کسان کی شکایت*، *نئی مارکیٹ کی درخواست* یا *آرڈر کا مسئلہ*) تاکہ آپ کا پیغام صحیح شخص تک پہنچے۔ ہم عموماً ایک کاروباری دن میں جواب دیتے ہیں۔\nکسی پیشگی آرڈر کے مسئلے کے لیے آپ **میرے آرڈر** میں آرڈر بھی کھول سکتے ہیں۔'
+        'You can reach the MarketLink team from the **Contact** page. Choose a topic (for example *Complaint about a market*, *Complaint about a farmer*, *Request a new market* or *Help with an order*) so your message reaches the right person. We usually reply within one working day.\nFor a problem with a pre-order, you can also open the order in **My Orders**.',
+        'MarketLink ٹیم سے **رابطہ** کے صفحے سے بات کریں۔ ایک موضوع چنیں (مثلاً *مارکیٹ کی شکایت*، *کسان کی شکایت*، *نئی مارکیٹ کی درخواست* یا *آرڈر میں مدد*) تاکہ آپ کا پیغام صحیح شخص تک پہنچے۔ ہم عموماً ایک کاروباری دن میں جواب دیتے ہیں۔\nکسی پیشگی آرڈر کے مسئلے کے لیے آپ **میرے آرڈر** میں آرڈر بھی کھول سکتے ہیں۔'
       ),
       { cards: [{ kind: 'link', id: 'contact', title: L('Contact us', 'ہم سے رابطہ'), subtitle: L('Questions, complaints and market requests', 'سوالات، شکایات اور مارکیٹ کی درخواستیں'), link: '/contact' }], suggestions: ['Track my order', 'How do I pay?', 'Market timings'] }
     );

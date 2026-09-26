@@ -9,7 +9,6 @@ import RatingStars from '../../components/common/RatingStars';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { DAY_NAMES, DAY_SHORT, time12 } from '../../utils/format';
-import PhotoCredit from '../../components/common/PhotoCredit';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, ldGraph, marketLd } from '../../utils/seo';
 import { isUrdu, listText, localText, t } from '../../i18n';
@@ -52,7 +51,6 @@ export default function MarketDetail() {
 
       <div className="market-hero mb-4">
         {market.image && <img className="market-photo" src={market.image} alt={market.name} />}
-        <PhotoCredit credit={market.imageCredit} />
         <div style={{ maxWidth: 640 }}>
           <span className="chip chip-lime mb-3">
             <i className="bi bi-geo-alt-fill" /> {t(market.city)}

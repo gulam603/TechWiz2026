@@ -13,7 +13,6 @@ import ReportButton from '../../components/reviews/ReportButton';
 import EmptyState from '../../components/common/EmptyState';
 import { PageLoader } from '../../components/common/Loader';
 import { coverFor, DAY_SHORT, formatDateKey, time12 } from '../../utils/format';
-import PhotoCredit from '../../components/common/PhotoCredit';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, farmerLd, ldGraph } from '../../utils/seo';
 import { categoryName, isUrdu, listText, localText, t } from '../../i18n';
@@ -66,7 +65,6 @@ export default function FarmerDetail() {
         {farmer.coverImage ? (
           <>
             <img className="cover-photo" src={farmer.coverImage} alt={t('{stallName}: the farm', { stallName: farmer.stallName })} />
-            <PhotoCredit credit={farmer.coverCredit} />
           </>
         ) : (
           <>

@@ -11,6 +11,8 @@ import { PageLoader } from './components/common/Loader';
 const Home = lazy(() => import('./pages/public/Home'));
 const Products = lazy(() => import('./pages/public/Products'));
 const BestSellers = lazy(() => import('./pages/public/BestSellers'));
+const PhotoCredits = lazy(() => import('./pages/public/PhotoCredits'));
+const Categories = lazy(() => import('./pages/public/Categories'));
 const ProductDetail = lazy(() => import('./pages/public/ProductDetail'));
 const Markets = lazy(() => import('./pages/public/Markets'));
 const MarketDetail = lazy(() => import('./pages/public/MarketDetail'));
@@ -58,6 +60,7 @@ const AdminProducts = lazy(() => import('./pages/admin/Products'));
 const AdminReviews = lazy(() => import('./pages/admin/Reviews'));
 const AdminCategories = lazy(() => import('./pages/admin/Categories'));
 const AdminAnnouncements = lazy(() => import('./pages/admin/Announcements'));
+const AdminOfferBanner = lazy(() => import('./pages/admin/OfferBanner'));
 const AdminReports = lazy(() => import('./pages/admin/Reports'));
 const AdminOrders = lazy(() => import('./pages/admin/Orders'));
 const AdminMessages = lazy(() => import('./pages/admin/Messages'));
@@ -79,6 +82,8 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="products" element={<Products />} />
             <Route path="best-sellers" element={<BestSellers />} />
+            <Route path="credits" element={<PhotoCredits />} />
+            <Route path="categories" element={<Categories />} />
             <Route path="products/:id" element={<ProductDetail />} />
             <Route path="markets" element={<Markets />} />
             <Route path="markets/:slug" element={<MarketDetail />} />
@@ -162,6 +167,7 @@ export default function App() {
               <Route path="reviews" element={<AdminReviews />} />
               <Route path="moderation" element={<AdminModeration />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
+              <Route path="offer-banner" element={<AdminOfferBanner />} />
               <Route path="messages" element={<AdminMessages />} />
               <Route path="newsletter" element={<AdminNewsletter />} />
               <Route path="faqs" element={<AdminFaqs />} />

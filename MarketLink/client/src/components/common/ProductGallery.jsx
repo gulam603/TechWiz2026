@@ -48,24 +48,6 @@ function Lightbox({ photos, index, setIndex, name, onClose }) {
   );
 }
 
-function Credit({ credit }) {
-  if (!credit?.author) return null;
-  return (
-    <p className="photo-credit">
-      <i className="bi bi-camera" /> {t('Photo:')} {credit.author}
-      {credit.source && (
-        <>
-          {' '}
-          ·{' '}
-          <a href={credit.source} target="_blank" rel="noreferrer">
-            {t('source')}
-          </a>
-        </>
-      )}
-      {credit.license && <> · {credit.license}</>}
-    </p>
-  );
-}
 
 /**
  * Product photos: the main image plus the farmer's extra pictures. Thumbnails, arrows,
@@ -150,7 +132,6 @@ export default function ProductGallery({ product, children, zoom = true }) {
           ))}
         </div>
       )}
-      <Credit credit={current.credit} />
       {viewer && <Lightbox photos={photos} index={Math.min(index, count - 1)} setIndex={setIndex} name={productName(product)} onClose={closeViewer} />}
     </div>
   );

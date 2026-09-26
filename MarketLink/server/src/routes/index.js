@@ -22,6 +22,7 @@ import * as notifications from '../controllers/notificationController.js';
 import * as farm from '../controllers/farmerPortalController.js';
 import * as admin from '../controllers/adminController.js';
 import * as assistant from '../controllers/assistantController.js';
+import * as banners from '../controllers/bannerController.js';
 
 const router = Router();
 
@@ -45,6 +46,7 @@ const farmerImages = imageUpload('farmers');
 const marketImage = imageUpload('markets');
 const categoryPhotos = imageUpload('categories').fields([{ name: 'icon', maxCount: 1 }, { name: 'image', maxCount: 1 }]); // round icon + wide card photo
 const avatarImage = imageUpload('avatars');
+const bannerImage = imageUpload('banners');
 
 // ---------- Auth ----------
 router.post('/auth/quick-account', formLimiter, auth.quickAccount); // checkout without an account
@@ -70,6 +72,8 @@ router.get('/map', pub.mapData);
 router.get('/testimonials', pub.testimonials);
 router.get('/faqs', faq.listFaqs);
 router.get('/announcements/active', optionalAuth, pub.activeAnnouncements);
+router.get('/banners/home-offer', banners.getHomeOffer);
+router.get('/credits', pub.photoCredits);
 router.post('/contact', formLimiter, pub.submitContact);
 router.post('/newsletter', formLimiter, newsletter.subscribe);
 router.post('/newsletter/unsubscribe', formLimiter, newsletter.unsubscribe);
@@ -199,6 +203,7 @@ router.post('/admin/categories', ...adminOnly, categoryPhotos, admin.createCateg
 router.put('/admin/categories/:id', ...adminOnly, categoryPhotos, admin.updateCategory);
 router.delete('/admin/categories/:id', ...adminOnly, admin.deleteCategory);
 
+router.put('/admin/banners/home-offer', ...adminOnly, bannerImage.single('image'), banners.updateHomeOffer);
 router.get('/admin/announcements', ...adminOnly, admin.adminAnnouncements);
 router.post('/admin/announcements', ...adminOnly, admin.createAnnouncement);
 router.put('/admin/announcements/:id', ...adminOnly, admin.updateAnnouncement);

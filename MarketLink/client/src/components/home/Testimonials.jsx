@@ -37,7 +37,7 @@ export default function Testimonials({ data, loading }) {
   const review = reviews[index % Math.max(count, 1)];
 
   return (
-    <section className="section testimonials" aria-labelledby="reviews-title">
+    <section className="home-band is-light testimonials" aria-labelledby="reviews-title">
       <div className="container">
         <div className="section-head">
           <div>

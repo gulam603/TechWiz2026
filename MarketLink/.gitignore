@@ -9,4 +9,5 @@ server/uploads/farmers/*
 server/uploads/markets/*
 server/uploads/categories/*
 server/uploads/avatars/*
+server/uploads/banners/*
 !server/uploads/**/.gitkeep

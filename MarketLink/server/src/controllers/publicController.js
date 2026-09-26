@@ -183,3 +183,21 @@ export async function submitContact(req, res) {
   );
   res.status(201).json({ message: 'Thank you! Our team will get back to you soon.' });
 }
+
+// GET /api/credits  -> who took the licensed stock photos (listed on the Photo credits page, not on the photos)
+export async function photoCredits(req, res) {
+  const [products, farmers, markets] = await Promise.all([
+    Product.find({ ...Product.publicFilter(), $or: [{ 'imageCredit.author': { $exists: true, $ne: '' } }, { 'gallery.credit.author': { $exists: true, $ne: '' } }] })
+      .select('name nameUr slug imageCredit gallery.credit')
+      .sort({ name: 1 })
+      .lean(),
+    Farmer.find({ isActive: true, 'coverCredit.author': { $exists: true, $ne: '' } }).select('stallName slug coverCredit').sort({ stallName: 1 }).lean(),
+    Market.find({ isActive: true, 'imageCredit.author': { $exists: true, $ne: '' } }).select('name slug imageCredit').sort({ name: 1 }).lean(),
+  ]);
+  const credits = (list) => list.filter((c) => c?.author).map((c) => pick(c, ['author', 'source', 'license']));
+  res.json({
+    products: products.map((p) => ({ name: p.name, nameUr: p.nameUr, link: `/products/${p.slug || p._id}`, credits: credits([p.imageCredit, ...(p.gallery || []).map((g) => g.credit)]) })),
+    farmers: farmers.map((f) => ({ name: f.stallName, link: `/farmers/${f.slug}`, credits: credits([f.coverCredit]) })),
+    markets: markets.map((m) => ({ name: m.name, link: `/markets/${m.slug}`, credits: credits([m.imageCredit]) })),
+  });
+}

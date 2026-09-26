@@ -31,7 +31,7 @@ export default function VideoTour() {
   }, []);
 
   return (
-    <section className="section bg-sand" id="how-it-works" aria-labelledby="how-title">
+    <section className="home-band is-dark" id="how-it-works" aria-labelledby="how-title">
       <div className="container">
         <div className="text-center mb-4 mb-lg-5">
           <span className="eyebrow">{t('How MarketLink works')}</span>

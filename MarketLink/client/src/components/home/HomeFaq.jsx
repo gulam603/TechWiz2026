@@ -7,7 +7,7 @@ import { t } from '../../i18n';
 export default function HomeFaq({ faqs, loading }) {
   if (!loading && !faqs?.length) return null;
   return (
-    <section className="section pt-0" aria-labelledby="home-faq-title">
+    <section className="home-band is-light" aria-labelledby="home-faq-title">
       <div className="container">
         <div className="row g-4 align-items-start">
           <div className="col-lg-4">

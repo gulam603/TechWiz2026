@@ -23,6 +23,7 @@ export const ADMIN_NAV = [
   { to: '/admin/moderation', icon: 'bi-shield-check', label: 'Moderation', badge: 'openFlags', badgeTone: 'warn' },
   { section: 'Communication' },
   { to: '/admin/announcements', icon: 'bi-megaphone', label: 'Announcements' },
+  { to: '/admin/offer-banner', icon: 'bi-percent', label: 'Offer banner' },
   { to: '/admin/messages', icon: 'bi-envelope', label: 'Contact messages', badge: 'newMessages', badgeTone: 'warn' },
   { to: '/admin/newsletter', icon: 'bi-envelope-paper-heart', label: 'Newsletter' },
   { to: '/admin/faqs', icon: 'bi-question-circle', label: 'FAQs' },

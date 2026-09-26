@@ -4,6 +4,7 @@ import { containsRegex, pick, requireFields, toNumber } from '../utils/helpers.j
 import { notifyMany } from '../services/notify.js';
 import { inSeason } from '../models/Announcement.js';
 import { resolveCategory } from './helpers/category.js';
+import { CONTACT_TOPICS } from '../models/ContactMessage.js';
 
 // GET /api/stats  -> numbers shown on the home page
 export async function publicStats(req, res) {
@@ -172,7 +173,9 @@ export async function testimonials(req, res) {
 // POST /api/contact
 export async function submitContact(req, res) {
   requireFields(req.body, ['name', 'email', 'message']);
-  const msg = await ContactMessage.create(pick(req.body, ['name', 'email', 'subject', 'message']));
+  const data = pick(req.body, ['name', 'email', 'subject', 'message']);
+  if (CONTACT_TOPICS.includes(req.body.topic)) data.topic = req.body.topic; // optional
+  const msg = await ContactMessage.create(data);
   const admins = await User.find({ role: ROLES.ADMIN }).select('_id').lean();
   await notifyMany(
     admins.map((a) => a._id),

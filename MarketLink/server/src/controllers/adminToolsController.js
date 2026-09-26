@@ -607,7 +607,7 @@ const TABLES = {
     dataTableQuery({
       req,
       Model: ContactMessage,
-      filter: (f) => ({ ...(['new', 'read'].includes(f.status) ? { status: f.status } : {}), ...dateRange('createdAt', f.from, f.to) }),
+      filter: (f) => ({ ...(['new', 'read'].includes(f.status) ? { status: f.status } : {}), ...(f.topic ? { topic: String(f.topic) } : {}), ...dateRange('createdAt', f.from, f.to) }),
       search: (text) => REGEX_FIELDS(['name', 'email', 'subject', 'message'], text),
       sortable: { name: 'name', createdAt: 'createdAt', status: 'status', subject: 'subject' },
     }),

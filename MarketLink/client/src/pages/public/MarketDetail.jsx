@@ -106,9 +106,13 @@ export default function MarketDetail() {
         </div>
         <div className="col-lg-5">
           <div className="soft-panel h-100">
-            <h2 className="h4 mb-3">{t('Farmers at this market')}</h2>
+            <h2 className="h4 mb-3 d-flex align-items-center gap-2">
+              {t('Farmers at this market')}
+              {farmers.length > 0 && <span className="chip chip-soft">{farmers.length}</span>}
+            </h2>
             {farmers.length === 0 && <p className="text-muted-2">{t('No farmers have joined this market yet.')}</p>}
-            <div className="d-grid gap-2">
+            {/* A long list scrolls inside its box, so the page stays short */}
+            <div className="d-grid gap-2 market-farmers-list" tabIndex={farmers.length > 5 ? 0 : undefined} aria-label={t('Farmers at this market')}>
               {farmers.map((f) => (
                 <Link key={f._id} to={`/farmers/${f.slug}`} className="farmer-mini">
                   <span className="logo">

@@ -12,6 +12,7 @@ export default function NotificationBell({ allLink }) {
   const [open, setOpen] = useState(false);
   const [unread, setUnread] = useState(0);
   const [items, setItems] = useState([]);
+  const [top, setTop] = useState(null); // phones: where the full-width list starts (under the bell)
   const ref = useRef(null);
   const navigate = useNavigate();
   useClickOutside(ref, () => setOpen(false), open);
@@ -29,6 +30,7 @@ export default function NotificationBell({ allLink }) {
   async function toggle() {
     const next = !open;
     setOpen(next);
+    if (next) setTop(Math.round(ref.current.getBoundingClientRect().bottom + 8));
     if (next) {
       const data = await api.get('/notifications?limit=8').catch(() => null);
       if (data) {
@@ -60,7 +62,7 @@ export default function NotificationBell({ allLink }) {
         {unread > 0 && <span className="count">{unread > 9 ? '9+' : unread}</span>}
       </button>
       {open && (
-        <div className="ml-dropdown-menu notif-menu">
+        <div className="ml-dropdown-menu notif-menu" style={{ '--notif-top': top ? `${top}px` : undefined }}>
           <div className="d-flex align-items-center justify-content-between px-2 py-1">
             <strong>{t('Notifications')}</strong>
             {unread > 0 && (

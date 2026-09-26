@@ -56,14 +56,14 @@ export default function Notifications() {
               <span className="notif-icon">
                 <i className={`bi ${ICONS[n.type] || 'bi-bell'}`} />
               </span>
-              <button type="button" className="btn p-0 text-start flex-grow-1 border-0" onClick={() => open(n)}>
+              <button type="button" className="notif-open" onClick={() => open(n)}>
                 <strong className="d-block small">{tServer(n.title)}</strong>
                 <span className="d-block small text-muted-2">{tServer(n.message)}</span>
-                <span className="fs-7 text-muted-2" title={formatDate(n.createdAt, { time: true })}>
+                <span className="fs-7 text-muted-2 d-inline-flex align-items-center gap-2 mt-1" title={formatDate(n.createdAt, { time: true })}>
                   {timeAgo(n.createdAt)}
+                  {!n.read && <span className="chip chip-lime">{t('New')}</span>}
                 </span>
               </button>
-              {!n.read && <span className="chip chip-lime">{t('New')}</span>}
               <button type="button" className="btn btn-sm btn-icon btn-white" onClick={() => remove(n._id)} aria-label={t('Delete notification')}>
                 <i className="bi bi-trash3" />
               </button>

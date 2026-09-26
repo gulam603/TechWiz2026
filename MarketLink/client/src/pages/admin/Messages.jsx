@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CONTACT_TOPICS, topicLabel } from '../../utils/contactTopics';
 import { useOutletContext } from 'react-router-dom';
 import useDocumentTitle from '../../hooks/useDocumentTitle';
 import { api } from '../../api/client';
@@ -12,13 +13,14 @@ import { formatDate } from '../../utils/format';
 
 const FILTERS = [
   { name: 'status', label: 'Status', options: [{ value: 'new', label: 'New' }, { value: 'read', label: 'Read' }] },
+  { name: 'topic', label: 'Topic', options: CONTACT_TOPICS },
   { name: 'from', label: 'From', type: 'date' },
   { name: 'to', label: 'To', type: 'date' },
 ];
 
 const COLUMNS = [
   { data: 'name', title: 'From', responsivePriority: 1, render: display((v, m) => `<strong class="small d-block">${esc(v)}</strong>${muted(m.email)}`) },
-  { data: 'subject', title: 'Subject', render: display((v, m) => `<span class="small ${m.status === 'new' ? 'fw-bold' : ''}">${esc(v || '(no subject)')}</span><div class="fs-7 text-muted-2 dt-clip">${esc(m.message)}</div>`) },
+  { data: 'subject', title: 'Subject', render: display((v, m) => `${m.topic ? `<span class="chip chip-soft me-1">${esc(topicLabel(m.topic))}</span>` : ''}<span class="small ${m.status === 'new' ? 'fw-bold' : ''}">${esc(v || '(no subject)')}</span><div class="fs-7 text-muted-2 dt-clip">${esc(m.message)}</div>`) },
   { data: 'status', title: 'Status', render: display((v) => (v === 'new' ? '<span class="chip chip-lime">New</span>' : '<span class="chip chip-soft">Read</span>')) },
   { data: 'createdAt', title: 'Received', render: display((v) => dateCell(v, true)) },
   {
@@ -35,7 +37,7 @@ export default function AdminMessages() {
   useDocumentTitle('Contact messages');
   const { toast } = useToast();
   const { refreshBadges } = useOutletContext();
-  const [filters, setFilters] = useState({ status: '', from: '', to: '' });
+  const [filters, setFilters] = useState({ status: '', topic: '', from: '', to: '' });
   const [reloadKey, setReloadKey] = useState(0);
   const [open, setOpen] = useState(null);
   const refresh = () => {

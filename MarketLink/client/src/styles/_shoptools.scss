@@ -106,6 +106,13 @@
       flex: 1;
       min-width: 0;
     }
+    .filter-open-btn {
+      flex: 0 0 auto;
+      padding: 0.45rem 0.75rem;
+    }
+    .shop-view button {
+      width: 34px;
+    }
   }
 }
 
@@ -236,6 +243,131 @@
     display: flex;
     + .app-top-actions {
       margin-left: 0.75rem;
+    }
+  }
+}
+
+// ------------------------------------------------------------------ phones: dialogs slide up from the bottom as a sheet
+@include media-breakpoint-down(md) {
+  .ml-modal-backdrop,
+  .ml-modal-backdrop:has(.quickview-modal) {
+    align-items: flex-end;
+    padding: 0;
+    overflow: hidden;
+  }
+  .ml-modal {
+    display: flex;
+    flex-direction: column;
+    max-width: none !important;
+    max-height: 88dvh;
+    border-radius: 1.4rem 1.4rem 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    animation: sheetUp 0.32s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+    // a small grab handle, like other apps' bottom sheets
+    &::before {
+      content: '';
+      flex-shrink: 0;
+      align-self: center;
+      width: 42px;
+      height: 5px;
+      border-radius: 50rem;
+      background: #d9d6cc;
+      margin-top: 0.55rem;
+    }
+    .ml-modal-header {
+      flex-shrink: 0;
+      padding: 0.6rem 1.1rem 0.4rem;
+      h5 {
+        font-size: 1.15rem;
+      }
+    }
+    .ml-modal-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 0.75rem 1.1rem 1rem;
+    }
+    .ml-modal-footer {
+      flex-shrink: 0;
+      padding: 0.6rem 1.1rem 0.9rem;
+      border-top: 1px solid $ml-line;
+      .btn {
+        flex: 1;
+      }
+    }
+  }
+  // Quick view: a shorter photo so the price and "Add to basket" show without scrolling
+  .quickview-modal {
+    .pd-visual {
+      aspect-ratio: auto;
+      height: min(32vh, 240px);
+    }
+    .pd-thumbs {
+      display: none;
+    }
+    h3 {
+      font-size: 1.25rem;
+    }
+    .row.g-4 {
+      --bs-gutter-y: 0.75rem;
+    }
+  }
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+// ------------------------------------------------------------------ market page: long list of farmers scrolls in its box
+.market-farmers-list {
+  max-height: 440px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.35rem;
+  margin-right: -0.35rem;
+  scrollbar-width: thin;
+  // a soft fade at the bottom shows there is more to scroll
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), transparent);
+  padding-bottom: 1.25rem;
+}
+
+// ------------------------------------------------------------------ notifications on phones
+// The text of a notification is a plain block (not a one-line button), so it wraps normally
+.notif-open {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: start;
+  color: inherit;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@include media-breakpoint-down(md) {
+  // The bell's list opens as a full-width panel under the top bar instead of running off the screen
+  .notif-menu {
+    position: fixed !important;
+    left: 0.6rem !important;
+    right: 0.6rem !important;
+    top: var(--notif-top, calc(var(--ml-nav-h, 72px) + 0.6rem)) !important;
+    width: auto;
+    max-height: min(70dvh, 520px);
+    transform: none !important;
+    translate: none !important;
+  }
+  .notif-item {
+    align-items: flex-start !important;
+    .notif-icon {
+      flex-shrink: 0;
     }
   }
 }

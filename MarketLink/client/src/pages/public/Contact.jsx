@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CONTACT_TOPICS } from '../../utils/contactTopics';
 import { PageHero } from '../../components/common/PageHeader';
 import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
@@ -13,7 +14,7 @@ export default function Contact() {
   useSeo({ title: t('Contact us'), description: t('Questions about an order, joining as a farmer or partnering with a market? Contact the MarketLink team.'), jsonLd: breadcrumbLd([{ name: 'Contact us', path: '/contact' }]) });
   const { user } = useAuth();
   const { toast } = useToast();
-  const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: user?.name || '', email: user?.email || '', subject: '', topic: '', message: '' });
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,7 +26,7 @@ export default function Contact() {
       const res = await api.post('/contact', form);
       toast(res.message);
       setSent(true);
-      setForm({ ...form, subject: '', message: '' });
+      setForm({ ...form, subject: '', topic: '', message: '' });
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -98,7 +99,20 @@ export default function Contact() {
                   <label className="form-label" htmlFor="c-email">{t('E-mail')}</label>
                   <input id="c-email" name="email" type="email" className="form-control" required value={form.email} onChange={change} />
                 </div>
-                <div className="col-12">
+                <div className="col-md-5">
+                  <label className="form-label" htmlFor="c-topic">
+                    {t('Topic')} <span className="text-muted-2 fw-normal">{t('(optional)')}</span>
+                  </label>
+                  <select id="c-topic" name="topic" className="form-select" value={form.topic} onChange={change}>
+                    <option value="">{t('Choose a topic')}</option>
+                    {CONTACT_TOPICS.map((x) => (
+                      <option key={x.value} value={x.value}>
+                        {t(x.label)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-7">
                   <label className="form-label" htmlFor="c-subject">{t('Subject')}</label>
                   <input id="c-subject" name="subject" className="form-control" value={form.subject} onChange={change} maxLength={150} />
                 </div>

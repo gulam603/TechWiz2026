@@ -17,7 +17,9 @@ import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
 import { categoryName, listText, t } from '../../i18n';
 
 export default function Markets() {
-  const [filters, setFilters] = useState({ search: '', city: '', category: '', day: '' });
+  // Markets open today come first: the page starts on today's day ("All days" shows every market)
+  const todayDay = String(new Date().getDay());
+  const [filters, setFilters] = useState({ search: '', city: '', category: '', day: todayDay });
   const { data: catData } = useFetch('/categories');
   const [location, setLocation] = useState(null);
   const [view, setView] = useState('grid');
@@ -96,6 +98,19 @@ export default function Markets() {
           ))}
         </FilterSidebar>
 
+        <div className="when-chips" role="group" aria-label={t('Market day')}>
+          <button type="button" className={`filter-chip ${filters.day === todayDay ? 'active' : ''}`} aria-pressed={filters.day === todayDay} onClick={() => setFilters((f) => ({ ...f, day: todayDay }))}>
+            <i className="bi bi-broadcast" aria-hidden="true" /> {t('Open today')}
+          </button>
+          <button type="button" className={`filter-chip ${filters.day === String((Number(todayDay) + 1) % 7) ? 'active' : ''}`} aria-pressed={filters.day === String((Number(todayDay) + 1) % 7)} onClick={() => setFilters((f) => ({ ...f, day: String((Number(todayDay) + 1) % 7) }))}>
+            {t('Tomorrow')}
+          </button>
+          <button type="button" className={`filter-chip ${!filters.day ? 'active' : ''}`} aria-pressed={!filters.day} onClick={() => setFilters((f) => ({ ...f, day: '' }))}>
+            {t('All days')}
+          </button>
+          {data && <span className="small text-muted-2 ms-1">{t('{n} markets', { n: markets.length })}</span>}
+        </div>
+
         {view === 'map' ? (
           <MapView
             height={560}
@@ -124,7 +139,19 @@ export default function Markets() {
             )}
           </div>
         )}
-        {data && markets.length === 0 && <EmptyState title={t('No markets found')} message={t('Try a different day, city or produce type.')} />}
+        {data && markets.length === 0 && (
+          <EmptyState
+            title={filters.day === todayDay ? t('No market is open today') : t('No markets found')}
+            message={t('Try a different day, city or produce type.')}
+            action={
+              filters.day && (
+                <button type="button" className="btn btn-primary" onClick={() => setFilters((f) => ({ ...f, day: '' }))}>
+                  {t('Show all days')}
+                </button>
+              )
+            }
+          />
+        )}
       </div>
     </>
   );

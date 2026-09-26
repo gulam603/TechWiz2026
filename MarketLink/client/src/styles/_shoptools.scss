@@ -594,3 +594,34 @@
     color: #fff;
   }
 }
+
+// Markets page: open today / tomorrow / all days
+.when-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: -0.5rem 0 1.1rem;
+}
+
+// ------------------------------------------------------------------ phone number with country flag (intl-tel-input)
+.iti.ml-phone {
+  display: block;
+  width: 100%;
+  .iti__selected-country {
+    border-radius: 0.85rem 0 0 0.85rem;
+  }
+  .iti__dropdown-content {
+    border-radius: 0.8rem;
+    border: 1px solid $ml-line;
+    box-shadow: $box-shadow;
+    z-index: 1100;
+  }
+}
+/* rtl:begin:ignore */
+// The number itself is always written left to right, also on the Urdu site
+[dir='rtl'] .iti.ml-phone {
+  direction: ltr;
+  text-align: left;
+}
+/* rtl:end:ignore */

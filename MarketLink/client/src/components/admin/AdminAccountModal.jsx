@@ -4,6 +4,7 @@ import { useToast } from '../../context/ToastContext';
 import Modal from '../common/Modal';
 import { resetFilterOptions, useFilterOptions } from './FilterBar';
 import SearchSelect from '../common/SearchSelect';
+import PhoneInput from '../common/PhoneInput';
 
 const EMPTY = {
   farmer: { stallName: '', contactPerson: '', phone: '', email: '', address: '', city: '', bio: '', categories: [], markets: [], status: 'active', password: '' },
@@ -100,7 +101,7 @@ export default function AdminAccountModal({ type = 'farmer', onClose, onCreated 
           </div>
           <div className="col-md-6">
             <label className="form-label" htmlFor="a-phone">Contact number</label>
-            <input id="a-phone" name="phone" type="tel" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" placeholder="+92 300 1234567" value={form.phone} onChange={change} />
+            <PhoneInput id="a-phone" required value={form.phone} onChange={change} />
           </div>
           <div className="col-md-8">
             <label className="form-label" htmlFor="a-address">Address</label>

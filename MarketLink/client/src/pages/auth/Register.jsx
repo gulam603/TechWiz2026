@@ -7,6 +7,7 @@ import TermsCheckbox from '../../components/legal/TermsCheckbox';
 import PasswordInput from '../../components/common/PasswordInput';
 import useSeo from '../../hooks/useSeo';
 import { t } from '../../i18n';
+import PhoneInput from '../../components/common/PhoneInput';
 
 export const PASSWORD_HINT = 'At least 8 characters with letters and numbers';
 export const passwordOk = (p) => /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/.test(p);
@@ -59,7 +60,7 @@ export default function Register() {
           </div>
           <div className="col-md-6">
             <label className="form-label" htmlFor="r-phone">{t('Contact number')}</label>
-            <input id="r-phone" name="phone" type="tel" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title={t('7-20 digits, spaces, +, - or brackets')} value={form.phone} onChange={change} autoComplete="tel" placeholder="+92 300 1234567" />
+            <PhoneInput id="r-phone" required value={form.phone} onChange={change} />
           </div>
           <div className="col-md-8">
             <label className="form-label" htmlFor="r-address">{t('Address')}</label>

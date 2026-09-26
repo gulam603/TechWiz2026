@@ -14,6 +14,7 @@ import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { categoryName, listText, t } from '../../i18n';
 import { api } from '../../api/client';
+import PhoneInput from '../../components/common/PhoneInput';
 
 const STEPS = ['Stall & account', 'Farm details', 'Markets & location'];
 const PRACTICES = ['Pesticide-free', 'Organic practices', 'Family farm', 'Free-range', 'Grass-fed', 'Hydroponic', 'Heirloom seeds', 'Picked daily', 'Small batch'];
@@ -165,7 +166,7 @@ export default function RegisterFarmer() {
             </div>
             <div className="col-md-6">
               <label className="form-label" htmlFor="f-phone">{t('Contact number *')}</label>
-              <input id="f-phone" name="phone" type="tel" className="form-control" value={form.phone} onChange={change} autoComplete="tel" placeholder="+92 300 1234567" />
+              <PhoneInput id="f-phone" value={form.phone} onChange={change} />
             </div>
             <div className="col-12">
               <label className="form-label" htmlFor="f-email">{t('E-mail *')}</label>

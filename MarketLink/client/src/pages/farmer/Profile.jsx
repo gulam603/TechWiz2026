@@ -13,6 +13,7 @@ import ProfilePhoto from '../../components/common/ProfilePhoto';
 import { ApprovalBanner } from './Dashboard';
 import SearchSelect from '../../components/common/SearchSelect';
 import { categoryName, t } from '../../i18n';
+import PhoneInput from '../../components/common/PhoneInput';
 
 export default function FarmerProfile() {
   useDocumentTitle(t('Stall profile'));
@@ -117,7 +118,7 @@ function ProfileEditor({ data, setData }) {
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="s-phone">{t('Contact number')}</label>
-                <input id="s-phone" name="phone" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title={t('7-20 digits, spaces, +, - or brackets')} value={form.phone} onChange={change} />
+                <PhoneInput id="s-phone" required value={form.phone} onChange={change} />
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="s-email">{t('E-mail')}</label>

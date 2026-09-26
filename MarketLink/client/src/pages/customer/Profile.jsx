@@ -10,6 +10,7 @@ import Avatar from '../../components/common/Avatar';
 import ProfilePhoto from '../../components/common/ProfilePhoto';
 import PasswordInput from '../../components/common/PasswordInput';
 import { t } from '../../i18n';
+import PhoneInput from '../../components/common/PhoneInput';
 
 export function PasswordForm() {
   const { toast } = useToast();
@@ -215,7 +216,7 @@ export default function Profile() {
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="p-phone">{t('Contact number')}</label>
-                <input id="p-phone" name="phone" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title={t('7-20 digits, spaces, +, - or brackets')} value={form.phone} onChange={change} />
+                <PhoneInput id="p-phone" required value={form.phone} onChange={change} />
               </div>
               <div className="col-md-6">
                 <label className="form-label" htmlFor="p-city">{t('City')}</label>

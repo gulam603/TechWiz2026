@@ -12,6 +12,7 @@ import { PageHero } from '../../components/common/PageHeader';
 import { formatDateKey, money, time12 } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
 import { listText, productName, rich, t } from '../../i18n';
+import PhoneInput from '../../components/common/PhoneInput';
 
 function FarmerCheckout({ group, value, onChange }) {
   const handlePickup = useCallback((pickup) => onChange({ ...value, ...pickup }), [value, onChange]);
@@ -109,7 +110,7 @@ function GuestDetails({ onCreated }) {
           </div>
           <div className="col-sm-6">
             <label className="form-label" htmlFor="g-phone">{t('Contact number')}</label>
-            <input id="g-phone" name="phone" type="tel" className="form-control" required pattern="\+?[\d\s\(\)\-]{7,20}" title={t('7-20 digits, spaces, +, - or brackets')} placeholder="+92 300 1234567" autoComplete="tel" value={form.phone} onChange={change} />
+            <PhoneInput id="g-phone" required value={form.phone} onChange={change} />
           </div>
           <div className="col-sm-8">
             <label className="form-label" htmlFor="g-address">{t('Address')}</label>

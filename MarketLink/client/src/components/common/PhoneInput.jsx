@@ -13,10 +13,16 @@ export default function PhoneInput({ id, name = 'phone', value = '', onChange, r
   const iti = useRef(null);
   const latest = useRef(onChange);
   // The whole number with the country code (+923001234567); the box itself shows the dial code separately
+  // (getNumber() needs the number rules, which load a moment after the page; until then the typed text is used)
   const fullNumber = () => {
     const el = input.current;
     if (!el?.value.trim()) return '';
-    return iti.current?.getNumber() || el.value.trim();
+    if (!intlTelInput.utils) return el.value.trim();
+    try {
+      return iti.current?.getNumber() || el.value.trim();
+    } catch {
+      return el.value.trim();
+    }
   };
   useEffect(() => {
     latest.current = onChange;

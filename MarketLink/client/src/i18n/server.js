@@ -73,6 +73,26 @@ const SERVER_TEMPLATES = [
   'Pickup windows for {name}',
   'Market timings in {city}',
   'Is {name} at the market today?',
+  // Round 10: restock, receipt, market open today, new farmer, not at the market
+  '{n} markets are open today in {city}',
+  '{name} is open today from {from} to {to}. Pre-order now and pick up at the stall.',
+  '{name} is open today',
+  'Open today: {list}.',
+  'New farmer at {where}: {stall}',
+  'New farmer in {city}: {stall}',
+  'New farmer: {stall}',
+  '{stall} just joined MarketLink at {where}. See what they grow and pre-order for pickup.',
+  '{stall} just joined MarketLink in {city}. See what they grow and pre-order for pickup.',
+  '{stall} just joined MarketLink. See what they grow and pre-order for pickup.',
+  'Customer did not receive {n}',
+  '{name} says they did not receive pre-order {n}. Note: {note} Please get in touch with them.',
+  '{name} says they did not receive pre-order {n}. Please get in touch with them.',
+  'Did you receive pre-order {n}?',
+  '{stall} marked your pre-order as picked up. Please confirm that you received it, then share your experience with a review.',
+  'We will let you know at {email} when {name} is back',
+  '{stall} is not at the market today',
+  '{stall} cannot be at the market today. They will contact you about pre-order {n}, or you can change the pickup day.',
+  'Customers told: {n}',
 ];
 
 export default SERVER_TEMPLATES;

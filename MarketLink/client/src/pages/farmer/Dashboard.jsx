@@ -89,7 +89,7 @@ function FarmerWaiting({ status }) {
               </h5>
               {checks.length > 0 && (
                 <span className="chip chip-soft">
-                  {done}/{checks.length} {t('done')}
+                  <bdi dir="ltr">{done}/{checks.length}</bdi> {t('done')}
                 </span>
               )}
             </div>
@@ -151,7 +151,7 @@ function FarmerInsights() {
           <KpiCard variant="info" icon="bi-graph-up" label={t('Average order')} value={money(Math.round(kpis.averageOrder))} sub={t('{v1} in total', { v1: money(kpis.revenueTotal) })} />
         </div>
         <div className="col-12 col-xl">
-          <KpiCard icon="bi-star" label={t('Rating')} value={kpis.ratingCount ? `${kpis.rating} / 5` : '-'} sub={t('{n} reviews', { n: kpis.ratingCount })} />
+          <KpiCard icon="bi-star" label={t('Rating')} value={kpis.ratingCount ? <bdi dir="ltr">{kpis.rating} / 5</bdi> : '-'} sub={t('{n} reviews', { n: kpis.ratingCount })} />
         </div>
       </div>
 

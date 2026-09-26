@@ -31,7 +31,7 @@ export default function CustomerDashboard() {
   return (
     <>
       <DashHeader
-        title={`${greeting()}, ${user.name.split(' ')[0]}`}
+        title={t('{greeting}, {name}', { greeting: greeting(), name: user.name.split(' ')[0] })}
         subtitle={t('Here\'s what\'s happening with your market orders.')}
         actions={
           <Link to="/products" className="btn btn-primary">

@@ -10,7 +10,7 @@ export default function FarmerCard({ farmer }) {
     <article className="farmer-card">
       <div className="cover" style={{ '--cover': coverFor(farmer.stallName) }}>
         {(farmer.coverImage || farmer.logo) && <img className="cover-photo" src={farmer.coverImage || farmer.logo} alt="" loading="lazy" />}
-        <div className="position-absolute" style={{ top: 12, right: 12, zIndex: 3 }}>
+        <div className="position-absolute" style={{ top: 12, insetInlineEnd: 12, zIndex: 3 }}>
           <FavButton type="farmers" id={farmer._id} />
         </div>
       </div>

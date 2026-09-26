@@ -12,7 +12,7 @@ import { PasswordForm } from '../customer/Profile';
 import ProfilePhoto from '../../components/common/ProfilePhoto';
 import { ApprovalBanner } from './Dashboard';
 import SearchSelect from '../../components/common/SearchSelect';
-import { t } from '../../i18n';
+import { categoryName, t } from '../../i18n';
 
 export default function FarmerProfile() {
   useDocumentTitle(t('Stall profile'));
@@ -161,7 +161,7 @@ function ProfileEditor({ data, setData }) {
                         aria-pressed={on}
                         onClick={() => setForm({ ...form, categories: on ? form.categories.filter((x) => x !== c._id) : [...form.categories, c._id] })}
                       >
-                        <img src={c.icon} alt="" /> {c.name}
+                        <img src={c.icon} alt="" /> {categoryName(c)}
                         <i className="bi bi-check-circle-fill check" />
                       </button>
                     );

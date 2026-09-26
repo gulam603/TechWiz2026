@@ -752,7 +752,9 @@
   &::before {
     content: '';
     position: absolute;
-    inset: 0 auto 0 0;
+    top: 0;
+    bottom: 0;
+    left: 0; // longhand, so the Urdu (right-to-left) layout mirrors it
     width: var(--w, 0%);
     border-radius: 0.4rem;
     background: rgba($ml-lime, 0.7);

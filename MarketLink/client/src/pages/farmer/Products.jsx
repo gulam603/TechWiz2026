@@ -332,7 +332,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
   }
 
   return (
-    <Modal open onClose={onClose} title={product ? t('Edit {name}', { name: product.name }) : t('Add a product')} size="modal-lg">
+    <Modal open onClose={onClose} title={product ? t('Edit {name}', { name: productName(product) }) : t('Add a product')} size="modal-lg">
       <form onSubmit={submit}>
         <div className="row g-3">
           <div className="col-md-4">
@@ -426,7 +426,7 @@ const stockColumns = (approved) => [
     responsivePriority: 1,
     render: display(
       (v, p) =>
-        thumbCell(p.image, v, `${esc(categoryName(p.category))}${p.gallery?.length ? ` · <i class="bi bi-images"></i> ${t('{n} photos', { n: p.gallery.length + 1 })}` : ''}${p.isRemoved ? `<div class="fs-7 text-danger">${t('Removed:')} ${esc(p.removedReason)}</div>` : ''}`, {
+        thumbCell(p.image, productName(p), `${esc(categoryName(p.category))}${p.gallery?.length ? ` · <i class="bi bi-images"></i> ${t('{n} photos', { n: p.gallery.length + 1 })}` : ''}${p.isRemoved ? `<div class="fs-7 text-danger">${t('Removed:')} ${esc(p.removedReason)}</div>` : ''}`, {
           bg: p.category?.color,
           cls: imageKind(p.image),
         }),
@@ -434,8 +434,8 @@ const stockColumns = (approved) => [
     ),
   },
   { data: 'price', title: t('Price'), className: 'dt-nowrap', render: display((v, p) => `<span class="small fw-semi">${esc(money(v))}/${esc(unitName(p.unit))}</span>`) },
-  { data: 'quantityAvailable', title: t('In stock'), responsivePriority: 3, render: display((v, p) => numberInput('quantityAvailable', v, t('Stock of {name}', { name: p.name }), !approved)) },
-  { data: 'templateQuantity', title: t('Weekly template'), render: display((v, p) => numberInput('templateQuantity', v, t('Weekly template of {name}', { name: p.name }), !approved)) },
+  { data: 'quantityAvailable', title: t('In stock'), responsivePriority: 3, render: display((v, p) => numberInput('quantityAvailable', v, t('Stock of {name}', { name: productName(p) }), !approved)) },
+  { data: 'templateQuantity', title: t('Weekly template'), render: display((v, p) => numberInput('templateQuantity', v, t('Weekly template of {name}', { name: productName(p) }), !approved)) },
   { data: 'status', title: t('Status'), responsivePriority: 4, render: display((v, p) => selectInput('status', v, STATUS_OPTIONS.map(([k, l]) => [k, t(l)]), t('Status of {name}', { name: productName(p) }), !approved), (v) => v.replace('_', ' ')) },
   { data: 'totalSold', title: t('Sold'), className: 'text-end' },
   {

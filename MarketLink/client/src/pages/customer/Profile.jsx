@@ -112,7 +112,7 @@ function FamilyPanel() {
           <p>{t('Link family members’ accounts so everyone in the household can see each other’s pre-orders and pickups.')}</p>
         </div>
         <span className="family-banner-count">
-          <strong>{members.length}</strong> {members.length === 1 ? 'member' : 'members'}
+          <strong>{members.length}</strong> {members.length === 1 ? t('member') : t('members')}
         </span>
       </div>
 

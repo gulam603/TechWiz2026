@@ -112,7 +112,7 @@ function AdjustModal({ product, reasons, onClose, onSaved }) {
     <Modal
       open
       onClose={onClose}
-      title={t('Adjust stock: {name}', { name: product.name })}
+      title={t('Adjust stock: {name}', { name: productName(product) })}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>
@@ -185,7 +185,7 @@ function AlertModal({ product, onClose, onSaved }) {
     e.preventDefault();
     try {
       await api.put(`/farmer/inventory/${product._id}/threshold`, { lowStockThreshold: Number(level) });
-      toast(t('Alert level for {name} saved', { name: product.name }));
+      toast(t('Alert level for {name} saved', { name: productName(product) }));
       onSaved();
     } catch (err) {
       toast(err.message, 'error');
@@ -195,7 +195,7 @@ function AlertModal({ product, onClose, onSaved }) {
     <Modal
       open
       onClose={onClose}
-      title={t('Low-stock alert: {name}', { name: product.name })}
+      title={t('Low-stock alert: {name}', { name: productName(product) })}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>
@@ -229,7 +229,7 @@ export default function FarmerInventory() {
   const [alerting, setAlerting] = useState(null);
   const logFields = useMemo(
     () => [
-      { name: 'product', label: t('Product'), options: (data?.products || []).map((p) => ({ value: p._id, label: p.name })) },
+      { name: 'product', label: t('Product'), options: (data?.products || []).map((p) => ({ value: p._id, label: productName(p) })) },
       { name: 'type', label: t('Type'), options: Object.entries(TYPE_LABEL).map(([value, label]) => ({ value, label })) },
       { name: 'from', label: t('From'), type: 'date' },
       { name: 'to', label: t('To'), type: 'date' },

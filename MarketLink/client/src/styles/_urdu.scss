@@ -138,49 +138,6 @@ html[lang='ur'] {
     text-align: right;
   }
 
-  // DataTables styles come from the library (not mirrored by our build)
-  div.dt-container .dt-search,
-  div.dt-container .dt-paging {
-    text-align: left;
-  }
-
-  div.dt-container .dt-search input {
-    margin-left: 0;
-    margin-right: 0.5em;
-  }
-
-  div.dt-container .dt-length select {
-    margin-right: 0;
-    margin-left: 0.5em;
-  }
-
-  table.dataTable th,
-  table.dataTable td {
-    text-align: right;
-  }
-
-  table.dataTable th.dt-type-numeric,
-  table.dataTable td.dt-type-numeric,
-  table.dataTable .text-end {
-    text-align: left;
-  }
-
-  table.dataTable > thead > tr > th.dt-orderable-asc span.dt-column-order,
-  table.dataTable > thead > tr > th.dt-orderable-desc span.dt-column-order,
-  table.dataTable > thead > tr > th.dt-ordering-asc span.dt-column-order,
-  table.dataTable > thead > tr > th.dt-ordering-desc span.dt-column-order {
-    right: auto;
-    left: 12px;
-  }
-
-  table.dataTable > thead > tr > th.dt-orderable-asc,
-  table.dataTable > thead > tr > th.dt-orderable-desc,
-  table.dataTable > thead > tr > th.dt-ordering-asc,
-  table.dataTable > thead > tr > th.dt-ordering-desc {
-    padding-right: 10px;
-    padding-left: 30px;
-  }
-
   // Charts (recharts) draw their own axes left to right
   .recharts-wrapper {
     direction: ltr;
@@ -252,5 +209,50 @@ input[lang='ur'],
 textarea[lang='ur'] {
   font-family: 'Noto Naskh Arabic Variable', 'Segoe UI', Tahoma, sans-serif;
   line-height: 1.8;
+}
+/* rtl:end:ignore */
+
+/* rtl:begin:ignore */
+[dir='rtl'] {
+  // Photos that fade into the green panel: the fade is on the inner edge, which is now the right one
+  @include media-breakpoint-up(lg) {
+    .market-hero .market-photo,
+    .cta-band .cta-photo {
+      -webkit-mask-image: linear-gradient(to left, transparent 0, #000 38%);
+      mask-image: linear-gradient(to left, transparent 0, #000 38%);
+    }
+  }
+}
+
+// Urdu headings are shorter; keep the newsletter band as tall as the English one so the photos stay clear of the form
+html[lang='ur'] .nl-band {
+  min-height: 236px;
+  display: flex;
+  align-items: center;
+  > .row {
+    flex: 1;
+  }
+}
+/* rtl:end:ignore */
+
+/* rtl:begin:ignore */
+// Centred with `left: 50%` + the `translate` property: the mirror moves `left` to `right`, so the
+// shift goes the other way too (the `translate` property itself is not mirrored by the build)
+[dir='rtl'] {
+  .quickview-btn {
+    translate: 50% 0.4rem;
+  }
+  .product-card:hover .quickview-btn,
+  .quickview-btn:focus-visible {
+    translate: 50% 0;
+  }
+  @media (hover: none) {
+    .quickview-btn {
+      translate: 50% 0;
+    }
+  }
+  .pd-count {
+    translate: 50% 0;
+  }
 }
 /* rtl:end:ignore */

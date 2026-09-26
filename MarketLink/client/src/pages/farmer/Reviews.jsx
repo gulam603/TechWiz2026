@@ -18,7 +18,7 @@ import DataGrid from '../../components/admin/DataGrid';
 import { action, dateCell, display, esc } from '../../utils/cells';
 import { productName, t } from '../../i18n';
 
-const stars = (n) => `<span class="rating" aria-label="Rated ${n} out of 5">${[1, 2, 3, 4, 5].map((i) => `<i class="bi ${n >= i ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}</span>`;
+const stars = (n) => `<span class="rating" aria-label="${t('Rated {value} out of 5', { value: n })}">${[1, 2, 3, 4, 5].map((i) => `<i class="bi ${n >= i ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}</span>`;
 
 const COLUMNS = [
   { data: 'customer.name', title: 'Customer', responsivePriority: 1, render: display((v) => `<strong class="small">${esc(v || t('Customer'))}</strong>`) },

@@ -74,7 +74,7 @@ function ModifyModal({ order, open, onClose, onSaved }) {
             </span>
           </span>
           <QuantityStepper value={item.quantity} onChange={(q) => setItems(items.map((x, i) => (i === idx ? { ...x, quantity: q } : x)))} />
-          <button type="button" className="btn btn-sm btn-icon btn-white" disabled={items.length === 1} onClick={() => setItems(items.filter((_, i) => i !== idx))} aria-label={t('Remove {name}', { name: item.name })}>
+          <button type="button" className="btn btn-sm btn-icon btn-white" disabled={items.length === 1} onClick={() => setItems(items.filter((_, i) => i !== idx))} aria-label={t('Remove {name}', { name: productName(item) })}>
             <i className="bi bi-trash3" />
           </button>
         </div>

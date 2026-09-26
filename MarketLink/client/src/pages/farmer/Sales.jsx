@@ -28,7 +28,7 @@ const PRODUCT_COLUMNS = [
 ];
 
 const CUSTOMER_COLUMNS = [
-  { data: 'customer', title: 'Customer', render: display((v, r) => `<strong class="small d-block">${esc(v)}</strong>${muted(r.city)}`) },
+  { data: 'customer', title: 'Customer', render: display((v, r) => `<strong class="small d-block">${esc(v)}</strong>${muted(r.city ? t(r.city) : '')}`) },
   { data: 'orders', title: 'Orders', className: 'text-end' },
   { data: 'revenue', title: 'Spent', className: 'text-end', render: display(moneyCell) },
   { data: 'last', title: 'Last order', render: display((v) => dateCell(v)) },

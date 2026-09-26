@@ -234,14 +234,14 @@ async function respond(message, user, memory, focus) {
   const firstName = memory.name || (user ? user.name.split(' ')[0] : '');
 
   // --- memory: what the user tells the assistant about themselves ----------
-  const nameMatch = message.match(/\b(?:my name is|my name's|call me|mera naam)\s+([a-z][a-z'-]{1,20}(?:\s[a-z][a-z'-]{1,20})?)/i);
+  const nameMatch = message.match(/\b(?:my name is|my name's|call me|mera naam)\s+([a-z\u0600-\u06ff][a-z\u0600-\u06ff'-]{1,20}(?:\s[a-z\u0600-\u06ff][a-z\u0600-\u06ff'-]{1,20})?)/i);
   if (nameMatch) {
     focus.name = title(nameMatch[1].replace(/\s+(hai|he|and|aur)$/i, ''));
     focus.intent = 'memory';
     return reply(L(`Nice to meet you, ${focus.name}! I'll remember your name while we chat.`, `آپ سے مل کر خوشی ہوئی، ${focus.name}! بات چیت کے دوران مجھے آپ کا نام یاد رہے گا۔`), { suggestions: ['Market timings', 'What do you remember?'] });
   }
   if (/\b(what('| i)?s my name|do you know my name|who am i)\b/.test(text)) {
-    return reply(firstName ? L(`You're ${firstName}.`, `آپ ${firstName} ہیں۔`) : L("You haven't told me your name yet. Say \"My name is ...\" and I'll remember it.", 'آپ نے ابھی تک اپنا نام نہیں بتایا۔ “My name is ...” لکھیں، مجھے یاد رہے گا۔'));
+    return reply(firstName ? L(`You're ${firstName}.`, `آپ ${firstName} ہیں۔`) : L("You haven't told me your name yet. Say \"My name is ...\" and I'll remember it.", 'آپ نے ابھی تک اپنا نام نہیں بتایا۔ “میرا نام ... ہے” لکھیں، مجھے یاد رہے گا۔'));
   }
   if (/\b(forget (everything|me|it all|what i said)|clear (your )?memory|reset (your )?memory)\b/.test(text)) {
     focus.forget = true;

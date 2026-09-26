@@ -37,7 +37,9 @@ function Lightbox({ photos, index, setIndex, name, onClose }) {
             <i className="bi bi-chevron-right" />
           </button>
           <span className="pd-count">
-            {index + 1} / {count}
+            <bdi dir="ltr">
+              {index + 1} / {count}
+            </bdi>
           </span>
         </>
       )}
@@ -131,7 +133,9 @@ export default function ProductGallery({ product, children, zoom = true }) {
               <i className="bi bi-chevron-right" />
             </button>
             <span className="pd-count" aria-live="polite">
+              <bdi dir="ltr">
               {index + 1} / {count}
+            </bdi>
             </span>
           </>
         )}

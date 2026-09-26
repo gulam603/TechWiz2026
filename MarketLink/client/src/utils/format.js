@@ -143,11 +143,11 @@ export const ORDER_STATUS_META = bilingual(
     cancelled: { label: 'Cancelled', icon: 'bi-slash-circle' },
   },
   {
-    placed: { label: 'موصول', icon: 'bi-receipt' },
+    placed: { label: 'دیا گیا', icon: 'bi-receipt' },
     accepted: { label: 'منظور', icon: 'bi-hand-thumbs-up' },
-    ready: { label: 'لینے کے لیے تیار', icon: 'bi-bag-check' },
+    ready: { label: 'وصولی کے لیے تیار', icon: 'bi-bag-check' },
     completed: { label: 'مکمل', icon: 'bi-check2-circle' },
-    declined: { label: 'نامنظور', icon: 'bi-x-circle' },
+    declined: { label: 'مسترد', icon: 'bi-x-circle' },
     cancelled: { label: 'منسوخ', icon: 'bi-slash-circle' },
   }
 );

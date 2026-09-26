@@ -31,13 +31,13 @@ const LANGUAGE = {
   zeroRecords: 'No matching rows',
   processing: '<span class="spinner-border spinner-border-sm text-success"></span> Loading…',
   paginate: { first: '«', previous: '‹', next: '›', last: '»' },
-  aria: { paginate: { first: 'First page', previous: 'Previous page', next: 'Next page', last: 'Last page' } },
+  aria: { paging: 'Pagination', paginate: { first: 'First page', previous: 'Previous page', next: 'Next page', last: 'Last page' } },
 };
 
 // The texts above in the language in use (the admin area is always English)
 const language = () => ({
   ...Object.fromEntries(Object.entries(LANGUAGE).map(([k, v]) => [k, typeof v === 'string' ? t(v) : v])),
-  aria: { paginate: Object.fromEntries(Object.entries(LANGUAGE.aria.paginate).map(([k, v]) => [k, t(v)])) },
+  aria: { paging: t(LANGUAGE.aria.paging), paginate: Object.fromEntries(Object.entries(LANGUAGE.aria.paginate).map(([k, v]) => [k, t(v)])) },
 });
 
 /**
@@ -125,6 +125,10 @@ export default function DataGrid({ table, data, columns, filters, order = [[0, '
         topEnd: 'search',
         bottomStart: 'info',
         bottomEnd: 'paging',
+      },
+      // DataTables labels the page-number bar "pagination" itself; use the page language
+      drawCallback(settings) {
+        settings.tableWrapper?.querySelector('nav[aria-label="pagination"]')?.setAttribute('aria-label', t('Pagination'));
       },
       ...(table
         ? {

@@ -408,7 +408,7 @@ export async function sendPage(req, res) {
   const meta = await pageMeta(req);
   let html = readTemplate().replace(/<!--seo:start-->[\s\S]*?<!--seo:end-->/, `<!--seo:start-->\n    ${headTags(meta)}\n    <!--seo:end-->`);
   // Urdu pages are right to left from the first paint; the page text written below stays English
-  if (meta.lang === 'ur') html = html.replace(/<html lang="en"[^>]*>/, '<html lang="ur" dir="rtl">');
+  if (meta.lang === 'ur') html = html.replace(/<html lang="en"[^>]*>/, '<html lang="ur" dir="rtl">').replace('title="MarketLink for AI assistants"', 'title="اے آئی اسسٹنٹس کے لیے MarketLink"');
   const textLang = meta.lang === 'ur' ? ' lang="en" dir="ltr"' : '';
   if (meta.body && !meta.noindex) html = html.replace(/<!--prerender:start-->[\s\S]*?<!--prerender:end-->/, `<!--prerender:start--><div class="prerender" id="prerender"${textLang}>${meta.body}</div><!--prerender:end-->`);
   res.status(meta.notFound ? 404 : 200).set('Cache-Control', 'no-cache').set('Vary', 'Cookie').type('html').send(html);

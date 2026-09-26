@@ -111,7 +111,7 @@ export default function CartDrawer() {
                           <strong className="small">{money(item.price * item.quantity)}</strong>
                         </div>
                       </div>
-                      <button type="button" className="cart-drawer-remove" onClick={() => cart.remove(item.productId)} aria-label={t('Remove {name}', { name: item.name })} title={t('Remove')}>
+                      <button type="button" className="cart-drawer-remove" onClick={() => cart.remove(item.productId)} aria-label={t('Remove {name}', { name: productName(item) })} title={t('Remove')}>
                         <i className="bi bi-x-lg" />
                       </button>
                     </div>

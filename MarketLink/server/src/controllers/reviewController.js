@@ -138,7 +138,7 @@ async function reviewableOrders(customerId) {
       const pid = String(i.product);
       if (reviewedProducts.has(pid) || seen.has(`p${pid}`)) continue;
       seen.add(`p${pid}`);
-      pending.push({ type: 'product', orderId: o._id, orderNumber: o.orderNumber, completedAt: o.completedAt || o.updatedAt, farmer: o.farmer, product: { _id: i.product, name: i.name, image: i.image, unit: i.unit } });
+      pending.push({ type: 'product', orderId: o._id, orderNumber: o.orderNumber, completedAt: o.completedAt || o.updatedAt, farmer: o.farmer, product: { _id: i.product, name: i.name, nameUr: i.nameUr, image: i.image, unit: i.unit } });
     }
   }
   return pending;

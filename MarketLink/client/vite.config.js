@@ -2,15 +2,22 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import postcssRTLCSS from 'postcss-rtlcss';
 
-// Urdu is written right to left. postcss-rtlcss adds [dir="rtl"] rules that mirror our own styles
-// (margins, padding, left / right, text-align ...); in "override" mode the normal (left to right)
-// CSS stays exactly as it was. Library styles (maps, tables) are left alone.
-const rtl = postcssRTLCSS({ mode: 'override' });
+// Urdu is written right to left. postcss-rtlcss mirrors our own styles (margins, padding, left / right,
+// text-align ...): each left / right declaration is split into an English and an Urdu rule, chosen by
+// the dir attribute on <html>. The rules use :where(), which adds no specificity, so the same rules
+// win in both languages, exactly as in the source. The DataTables styles are mirrored the same way;
+// the maps (Leaflet) stay left to right.
+const rtl = postcssRTLCSS({
+  mode: 'combined',
+  ltrPrefix: ':where(html:not([dir="rtl"]))',
+  rtlPrefix: ':where(html[dir="rtl"])',
+  bothPrefix: ':where(html)',
+});
 const rtlForOurStyles = {
   postcssPlugin: 'marketlink-rtl',
   Once(root, helpers) {
     const file = root.source?.input?.file || '';
-    if (/[\\/]src[\\/]styles[\\/]/.test(file)) return rtl.Once(root, helpers);
+    if (/[\\/]src[\\/]styles[\\/]|[\\/]node_modules[\\/]datatables\.net-[\w-]+[\\/]css[\\/]/.test(file)) return rtl.Once(root, helpers);
     return undefined;
   },
 };

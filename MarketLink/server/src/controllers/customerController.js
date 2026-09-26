@@ -17,10 +17,10 @@ export async function getFavorites(req, res) {
     .populate({
       path: 'favoriteProducts',
       match: { isRemoved: false, farmerActive: true },
-      select: 'name price unit image status quantityAvailable ratingAvg ratingCount farmer category',
+      select: 'name nameUr slug price unit image status quantityAvailable ratingAvg ratingCount farmer category',
       populate: [
         { path: 'farmer', select: 'stallName slug' },
-        { path: 'category', select: 'name slug color' },
+        { path: 'category', select: 'name nameUr slug color' },
       ],
     })
     .populate({ path: 'savedMarkets', match: { isActive: true }, select: 'name slug address city latitude longitude operatingDays openTime closeTime image' })

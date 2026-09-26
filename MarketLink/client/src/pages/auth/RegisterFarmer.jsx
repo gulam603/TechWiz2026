@@ -195,7 +195,7 @@ export default function RegisterFarmer() {
                   const on = form.categories.includes(c._id);
                   return (
                     <button type="button" key={c._id} className={`choice-tile ${on ? 'active' : ''}`} onClick={() => toggle('categories', c._id)} aria-pressed={on}>
-                      <img src={c.icon} alt="" /> {c.name}
+                      <img src={c.icon} alt="" /> {categoryName(c)}
                       <i className="bi bi-check-circle-fill check" />
                     </button>
                   );

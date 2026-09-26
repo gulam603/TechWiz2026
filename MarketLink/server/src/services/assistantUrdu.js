@@ -74,6 +74,12 @@ export function urduToEnglish(message, products = []) {
   const text = ` ${String(message).replace(/ي/g, 'ی').replace(/ك/g, 'ک').replace(/[؟?!۔،,.:؛]/g, ' ')} `;
   const out = [];
   if (/^\s*(السلام|اسلام|سلام|آداب|ہیلو|ہائے)/.test(text)) out.push('hello');
+  // "میرا نام کیا ہے؟" asks for the name; "میرا نام علی ہے" tells it
+  if (/میرا نام کیا/.test(text)) out.push("what's my name");
+  else {
+    const name = text.match(/میرا نام\s+([\u0600-\u06ff]+(?:\s[\u0600-\u06ff]+)?)\s+ہے/);
+    if (name) return `my name is ${name[1]}`;
+  }
   for (const [words, keyword] of KEYWORDS) if (words.some((w) => text.includes(w))) out.push(keyword);
   for (const [ur, en] of DAYS) if (text.includes(ur)) out.push(en);
   if (/(ہفتے|ہفتہ) (کو|کے دن)/.test(text) || (/ہفتہ/.test(text) && !/اس ہفت/.test(text))) out.push('saturday');

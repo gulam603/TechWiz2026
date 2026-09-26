@@ -3,7 +3,7 @@ import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import Modal from '../common/Modal';
 import { StarInput } from '../common/RatingStars';
-import { rich, t } from '../../i18n';
+import { productName, rich, t } from '../../i18n';
 
 const LABELS = ['', 'Poor', 'Not great', 'Okay', 'Good', 'Excellent'];
 
@@ -43,7 +43,7 @@ export default function ReviewModal({ target, onClose, onDone }) {
     <Modal
       open
       onClose={onClose}
-      title={isProduct ? t('Review {name}', { name: target.name }) : t('Review {name}', { name: target.name })}
+      title={t('Review {name}', { name: isProduct ? productName(target) : target.name })}
       footer={
         <>
           <button type="button" className="btn btn-white" onClick={onClose}>

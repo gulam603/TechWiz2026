@@ -63,7 +63,7 @@ export default function Cart() {
                     <strong className="d-none d-sm-block text-end" style={{ minWidth: 90 }}>
                       {money(item.price * item.quantity)}
                     </strong>
-                    <button type="button" className="btn btn-sm btn-icon btn-white" onClick={() => cart.remove(item.productId)} aria-label={t('Remove {name}', { name: item.name })}>
+                    <button type="button" className="btn btn-sm btn-icon btn-white" onClick={() => cart.remove(item.productId)} aria-label={t('Remove {name}', { name: productName(item) })}>
                       <i className="bi bi-trash3" />
                     </button>
                   </div>

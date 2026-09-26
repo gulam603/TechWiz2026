@@ -33,6 +33,7 @@ export async function inventory(req, res) {
     return {
       _id: p._id,
       name: p.name,
+      nameUr: p.nameUr,
       slug: p.slug,
       image: p.image,
       category: p.category,

@@ -300,7 +300,7 @@ function ProductForm({ product, categories, units, onClose, onSaved }) {
 
   // "Write with AI": a description from the product name, category, unit and the farm's practices
   async function writeDescription() {
-    if (form.name.trim().length < 2) return toast(t('Type the product name first'), 'error');
+    if (form.name.trim().length < 2) return toast(t('Type the product name first'), 'warning');
     setWriting(true);
     try {
       const res = await api.post('/farmer/products/describe', { name: form.name, category: form.category, unit: form.unit, variant });
@@ -520,7 +520,7 @@ export default function FarmerProducts() {
     try {
       await api.put('/farmer/template', { autoApplyTemplate: checked });
       setData((d) => ({ ...d, autoApplyTemplate: checked }));
-      toast(checked ? t('Weekly stock will refresh automatically every week') : t('Automatic weekly refresh turned off'));
+      toast(checked ? t('Weekly stock will refresh automatically every week') : t('Automatic weekly refresh turned off'), checked ? 'success' : 'info');
     } catch (err) {
       toast(err.message, 'error');
     }

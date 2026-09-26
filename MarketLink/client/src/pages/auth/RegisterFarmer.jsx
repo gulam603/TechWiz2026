@@ -13,6 +13,7 @@ import PasswordInput from '../../components/common/PasswordInput';
 import SearchSelect from '../../components/common/SearchSelect';
 import useSeo from '../../hooks/useSeo';
 import { categoryName, listText, t } from '../../i18n';
+import { api } from '../../api/client';
 
 const STEPS = ['Stall & account', 'Farm details', 'Markets & location'];
 const PRACTICES = ['Pesticide-free', 'Organic practices', 'Family farm', 'Free-range', 'Grass-fed', 'Hydroponic', 'Heirloom seeds', 'Picked daily', 'Small batch'];
@@ -67,6 +68,8 @@ export default function RegisterFarmer() {
   const [form, setForm] = useState(EMPTY);
   const [customTag, setCustomTag] = useState('');
   const [busy, setBusy] = useState(false);
+  const [writing, setWriting] = useState(false);
+  const [variant, setVariant] = useState(0);
   const [error, setError] = useState('');
 
   if (user && !busy) return <Navigate to={homeFor(user)} replace />;
@@ -80,6 +83,23 @@ export default function RegisterFarmer() {
     setError('');
     setForm((f) => ({ ...f, [key]: f[key].includes(value) ? f[key].filter((v) => v !== value) : [...f[key], value] }));
   };
+
+  // "Generate with AI" for "About your farm": uses the stall name, city, crops and practices typed so far
+  async function writeBio() {
+    if (form.stallName.trim().length < 2) return toast(t('Type the stall / farm name first'), 'warning');
+    setWriting(true);
+    try {
+      const res = await api.post('/ai/farm-bio', { stallName: form.stallName, contactPerson: form.contactPerson, city: form.city, categories: form.categories, tags: form.tags, markets: form.markets, variant });
+      setForm((f) => ({ ...f, bio: res.description.slice(0, 1200) }));
+      setVariant((v) => v + 1);
+      toast(res.source === 'claude' ? t('Written by AI (Claude). Check it and save.') : t('Written by the built-in AI. Check it and save.'), res.source === 'claude' ? 'success' : 'info');
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      setWriting(false);
+    }
+    return undefined;
+  }
 
   function next() {
     const problem = validate(step, form);
@@ -175,7 +195,12 @@ export default function RegisterFarmer() {
               <SearchSelect id="f-city" value={form.city} onChange={(v) => setForm((f) => ({ ...f, city: v }))} ariaLabel={t('City')} placeholder={t('Choose a city')} options={cities.map((c) => ({ value: c, label: t(c) }))} />
             </div>
             <div className="col-12">
-              <label className="form-label" htmlFor="f-bio">{t('About your farm')}</label>
+              <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+                <label className="form-label mb-0" htmlFor="f-bio">{t('About your farm')}</label>
+                <button type="button" className="btn btn-sm btn-ai" onClick={writeBio} disabled={writing}>
+                  {writing ? <span className="spinner-border spinner-border-sm" aria-hidden="true" /> : <i className="bi bi-stars" aria-hidden="true" />} {variant ? t('Try another') : t('Generate with AI')}
+                </button>
+              </div>
               <textarea
                 id="f-bio"
                 name="bio"

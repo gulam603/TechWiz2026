@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { toQuery } from '../../api/client';
@@ -11,6 +11,7 @@ import { PageHero } from '../../components/common/PageHeader';
 import { DAY_LETTER, DAY_NAMES } from '../../utils/format';
 import { CURRENCY } from '../../config';
 import SearchSelect from '../../components/common/SearchSelect';
+import FilterSidebar from '../../components/common/FilterSidebar';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, clip, itemListLd, ldGraph } from '../../utils/seo';
 import { categoryName, isUrdu, rich, t } from '../../i18n';
@@ -148,6 +149,7 @@ function Filters({ params, set, categories, markets, cities, practices = [], onD
 export default function Products() {
   const [params, setParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
+  const closeFilters = useCallback(() => setShowFilters(false), []);
   const { data: catData } = useFetch('/categories');
   const seoCategory = (catData?.categories || []).find((c) => c.slug === params.get('category'));
   const { data: marketData } = useFetch('/markets');
@@ -195,8 +197,9 @@ export default function Products() {
           <div className="col-lg-9">
             <div className="results-bar">
               <div className="d-flex align-items-center gap-2 flex-wrap">
-                <button type="button" className="btn btn-white btn-sm d-lg-none" onClick={() => setShowFilters(true)}>
-                  <i className="bi bi-sliders" /> {t('Filters')} {activeFilters.length > 0 && `(${activeFilters.length})`}
+                <button type="button" className="btn btn-white btn-sm d-lg-none filter-open-btn" onClick={() => setShowFilters(true)}>
+                  <i className="bi bi-sliders" aria-hidden="true" /> {t('Filters')}
+                  {activeFilters.length > 0 && <span className="filter-count">{activeFilters.length}</span>}
                 </button>
                 <span className="small text-muted-2">
                   <strong className="text-forest">{data?.total ?? '…'}</strong> {t('products')}
@@ -251,20 +254,9 @@ export default function Products() {
         </div>
       </div>
 
-      {showFilters && (
-        <>
-          <div className="offcanvas offcanvas-start show" style={{ visibility: 'visible' }} tabIndex={-1} aria-label={t('Filters')}>
-            <div className="offcanvas-header">
-              <h5 className="offcanvas-title">{t('Filters')}</h5>
-              <button type="button" className="btn-close" onClick={() => setShowFilters(false)} aria-label={t('Close')} />
-            </div>
-            <div className="offcanvas-body">
-              <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} practices={practiceData?.practices} onDone={() => setShowFilters(false)} />
-            </div>
-          </div>
-          <div className="offcanvas-backdrop fade show" onClick={() => setShowFilters(false)} />
-        </>
-      )}
+      <FilterSidebar open={showFilters} onClose={closeFilters} onClear={() => setParams({})} clearDisabled={activeFilters.length === 0}>
+        <Filters key={params.toString()} params={params} set={set} categories={categories} markets={markets} cities={marketData?.cities || []} practices={practiceData?.practices} onDone={closeFilters} />
+      </FilterSidebar>
     </>
   );
 }

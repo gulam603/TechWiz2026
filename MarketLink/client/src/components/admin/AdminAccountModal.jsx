@@ -25,7 +25,7 @@ export default function AdminAccountModal({ type = 'farmer', onClose, onCreated 
 
   // "Generate with AI": an "about the farm" text from the stall name, city, categories and markets
   async function writeBio() {
-    if (form.stallName.trim().length < 2) return toast('Type the stall / farm name first', 'error');
+    if (form.stallName.trim().length < 2) return toast('Type the stall / farm name first', 'warning');
     setWriting(true);
     try {
       const res = await api.post('/admin/farmers/describe', { stallName: form.stallName, contactPerson: form.contactPerson, city: form.city, categories: form.categories, markets: form.markets, variant });

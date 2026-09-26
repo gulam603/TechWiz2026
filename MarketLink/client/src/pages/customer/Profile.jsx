@@ -18,7 +18,7 @@ export function PasswordForm() {
 
   async function submit(e) {
     e.preventDefault();
-    if (form.newPassword !== form.confirm) return toast(t('New passwords do not match'), 'error');
+    if (form.newPassword !== form.confirm) return toast(t('New passwords do not match'), 'warning');
     setBusy(true);
     try {
       const res = await api.put('/auth/password', form);

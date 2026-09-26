@@ -10,6 +10,7 @@ import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, TrendChart } from '../../components/charts/Charts';
 import { formatDateKey, money, moneyCompact, ORDER_STATUS_META, time12 } from '../../utils/format';
 import { productName, t, unitName } from '../../i18n';
+import RefreshButton from '../../components/common/RefreshButton';
 
 export function ApprovalBanner({ status }) {
   if (status === 'active') return null;
@@ -114,7 +115,7 @@ function FarmerInsights() {
   useDocumentTitle(t('Farmer dashboard'));
   const { farmer } = useAuth();
   const [days, setDays] = useState(30);
-  const { data, loading } = useFetch(`/farmer/insights?days=${days}`);
+  const { data, loading, reload } = useFetch(`/farmer/insights?days=${days}`);
   if (loading && !data) return <PageLoader />;
   const { kpis, series, bestSellers, statusCounts, upcoming, status } = data;
   const statusRows = Object.entries(statusCounts).map(([s, n]) => ({ label: ORDER_STATUS_META[s].label, value: n }));
@@ -126,6 +127,7 @@ function FarmerInsights() {
         subtitle={t('Sales, orders and insights for your stall.')}
         actions={
           <>
+            <RefreshButton onRefresh={reload} loading={loading} />
             <Link to="/farmer/orders" className="btn btn-white">
               <i className="bi bi-receipt" /> {t('Pre-orders')} {kpis.pendingOrders > 0 && <span className="badge bg-carrot">{kpis.pendingOrders}</span>}
             </Link>

@@ -4,6 +4,7 @@ import { api } from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Modal from '../common/Modal';
+import AiWriteButton from '../common/AiWriteButton';
 import { t } from '../../i18n';
 
 const REASONS = [
@@ -81,7 +82,10 @@ export default function ReportButton({ targetType, targetId, label = t('Report')
               ))}
             </div>
             <div>
-              <label className="form-label" htmlFor="report-note">{t('Details (optional)')}</label>
+              <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+                <label className="form-label mb-0" htmlFor="report-note">{t('Details (optional)')}</label>
+                <AiWriteButton kind="report-note" context={() => ({ reason: t(REASONS.find(([v]) => v === reason)?.[1] || ''), targetType })} onText={(text) => setNote(text.slice(0, 500))} />
+              </div>
               <textarea id="report-note" className="form-control" rows={2} maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} />
             </div>
             <p className="fs-7 text-muted-2 mb-0">{t('The MarketLink team checks every report. The person you report is not told who sent it.')}</p>

@@ -54,7 +54,7 @@ export default function CartDrawer() {
     const lines = cart.items.length;
     cart.clear();
     setConfirmEmpty(false);
-    toast(lines === 1 ? t('Basket emptied (1 product removed)') : t('Basket emptied ({n} products removed)', { n: lines }));
+    toast(lines === 1 ? t('Basket emptied (1 product removed)') : t('Basket emptied ({n} products removed)', { n: lines }), 'info');
     panel.current?.focus();
   }
 

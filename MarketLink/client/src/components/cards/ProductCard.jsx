@@ -24,7 +24,7 @@ export default function ProductCard({ product }) {
 
   function openAdd() {
     if (user && user.role !== 'customer') {
-      toast(t('Only customer accounts can place pre-orders'), 'error');
+      toast(t('Only customer accounts can place pre-orders'), 'warning');
       return;
     }
     setQuick('add');

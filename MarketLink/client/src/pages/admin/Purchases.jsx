@@ -10,6 +10,7 @@ import DataGrid from '../../components/admin/DataGrid';
 import FilterBar from '../../components/admin/FilterBar';
 import { dateCell, display, esc, link, moneyCell, muted } from '../../utils/cells';
 import { formatDateKey, money, moneyCompact, ORDER_STATUS_META } from '../../utils/format';
+import RefreshButton from '../../components/common/RefreshButton';
 
 const FILTERS = [
   {
@@ -83,11 +84,11 @@ function Matrix({ matrix }) {
 export default function AdminPurchases() {
   useDocumentTitle('Customer purchases');
   const [filters, setFilters] = useState({ status: '', from: '', to: '', city: '', market: '', farmer: '', category: '' });
-  const { data, loading } = useFetch(`/admin/analytics/purchases${toQuery(filters)}`);
+  const { data, loading, reload } = useFetch(`/admin/analytics/purchases${toQuery(filters)}`);
 
   return (
     <>
-      <DashHeader title="Customer purchases" subtitle="Which customer bought what from which farmer, how often and for how much." />
+      <DashHeader title="Customer purchases" subtitle="Which customer bought what from which farmer, how often and for how much." actions={<RefreshButton onRefresh={reload} loading={loading} className="btn-sm" />} />
       <div className="table-card mb-3">
         <FilterBar fields={FILTERS} value={filters} onChange={setFilters} />
       </div>

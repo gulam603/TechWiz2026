@@ -7,6 +7,7 @@ import { DashHeader } from '../../components/common/PageHeader';
 import { PageLoader } from '../../components/common/Loader';
 import { MONTHS, monthsLabel } from '../../utils/format';
 import DataGrid from '../../components/admin/DataGrid';
+import AiWriteButton from '../../components/common/AiWriteButton';
 import { action, badge, dateCell, display, esc, iconAction } from '../../utils/cells';
 
 const AUDIENCE = { all: 'Everyone', customer: 'Customers', farmer: 'Farmers' };
@@ -88,7 +89,7 @@ export default function AdminAnnouncements() {
         toast('Announcement updated');
       } else {
         const res = await api.post('/admin/announcements', form);
-        if (!res.inSeason) toast(`Saved. It will show in ${monthsLabel(res.announcement.months)}.`);
+        if (!res.inSeason) toast(`Saved. It will show in ${monthsLabel(res.announcement.months)}.`, 'info');
         else toast(`Published${res.delivered ? ` and sent to ${res.delivered} users` : ''}`);
       }
       setEditing(null);
@@ -132,7 +133,10 @@ export default function AdminAnnouncements() {
                 <input id="an-title" className="form-control" required maxLength={120} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
               </div>
               <div>
-                <label className="form-label" htmlFor="an-msg">Message</label>
+                <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+                  <label className="form-label mb-0" htmlFor="an-msg">Message</label>
+                  <AiWriteButton kind="announcement" english context={() => ({ title: form.title })} missing={(c) => (!c.title.trim() ? 'Type the title first' : '')} onText={(text) => setForm((f) => ({ ...f, message: text.slice(0, 1000) }))} />
+                </div>
                 <textarea id="an-msg" className="form-control" rows={4} required maxLength={1000} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
               </div>
               <div>

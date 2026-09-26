@@ -18,8 +18,8 @@ export default function ProfilePhoto({ subtitle }) {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    if (!TYPES.includes(file.type)) return toast(t('Please choose a JPG, PNG or WEBP image'), 'error');
-    if (file.size > MAX_MB * 1024 * 1024) return toast(t('The photo must be smaller than {MAX_MB} MB', { MAX_MB }), 'error');
+    if (!TYPES.includes(file.type)) return toast(t('Please choose a JPG, PNG or WEBP image'), 'warning');
+    if (file.size > MAX_MB * 1024 * 1024) return toast(t('The photo must be smaller than {MAX_MB} MB', { MAX_MB }), 'warning');
     setBusy('upload');
     try {
       await uploadAvatar(file);

@@ -8,6 +8,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import { PageLoader } from '../../components/common/Loader';
 import { BarList, ChartCard, ColumnChart, TrendChart } from '../../components/charts/Charts';
 import { formatDate, formatDateKey, money, moneyCompact, ORDER_STATUS_META, timeAgo } from '../../utils/format';
+import RefreshButton from '../../components/common/RefreshButton';
 
 function greeting() {
   const h = new Date().getHours();
@@ -20,7 +21,7 @@ export default function AdminDashboard() {
   const { user } = useAuth();
   const { openModal, changed } = useOutletContext();
   const [metric, setMetric] = useState('orders');
-  const { data, loading } = useFetch(`/admin/dashboard?v=${changed}`);
+  const { data, loading, reload } = useFetch(`/admin/dashboard?v=${changed}`);
   if (loading && !data) return <PageLoader />;
   const { totals, last30, topFarmers, recentOrders, pendingFarmers } = data;
   const statusRows = Object.entries(last30.byStatus).map(([s, n]) => ({ label: ORDER_STATUS_META[s].label, value: n }));
@@ -40,6 +41,7 @@ export default function AdminDashboard() {
           <p>{formatDate(new Date())} · here is what is happening on MarketLink</p>
         </div>
         <div className="d-flex gap-2 flex-wrap">
+          <RefreshButton onRefresh={reload} loading={loading} className="btn-sm" />
           <button type="button" className="btn btn-sm btn-white" onClick={() => openModal('customer')}>
             <i className="bi bi-person-add" /> Add customer
           </button>

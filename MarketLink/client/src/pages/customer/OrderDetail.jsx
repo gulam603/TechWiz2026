@@ -27,7 +27,7 @@ function ModifyModal({ order, open, onClose, onSaved }) {
   const total = items.reduce((s, i) => s + i.price * i.quantity, 0);
 
   async function save() {
-    if (!pickup.slotStart) return toast(t('Please choose a pickup slot'), 'error');
+    if (!pickup.slotStart) return toast(t('Please choose a pickup slot'), 'warning');
     setBusy(true);
     try {
       const res = await api.put(`/orders/${order._id}`, {
@@ -160,9 +160,10 @@ export default function OrderDetail() {
       const res = await api.get(`/orders/${order._id}/reorder`);
       const available = res.items.filter((i) => i.available);
       available.forEach((i) => cart.add(i.product, i.quantity));
-      if (!available.length) toast(t('These items are not available right now'), 'error');
+      if (!available.length) toast(t('These items are not available right now'), 'warning');
       else {
-        toast(`${available.length} item(s) added to your basket${available.length < res.items.length ? t(' (some are sold out)') : ''}`);
+        if (available.length < res.items.length) toast(t('{n} item(s) added to your basket', { n: available.length }) + t(' (some are sold out)'), 'warning');
+        else toast(t('{n} item(s) added to your basket', { n: available.length }));
         navigate('/cart');
       }
     } catch (err) {

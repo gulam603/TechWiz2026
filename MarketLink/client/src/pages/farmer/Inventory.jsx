@@ -13,6 +13,7 @@ import FilterBar from '../../components/admin/FilterBar';
 import { action, dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { money, moneyCompact } from '../../utils/format';
 import { categoryName, productName, t, tServer, unitName } from '../../i18n';
+import RefreshButton from '../../components/common/RefreshButton';
 
 const STATE = {
   ok: ['In stock', 's-available'],
@@ -263,9 +264,19 @@ export default function FarmerInventory() {
         title={t('Inventory')}
         subtitle={t('Stock on hand, what open pre-orders have reserved, alert levels and every stock change.')}
         actions={
-          <Link to="/farmer/products" className="btn btn-white btn-sm">
-            <i className="bi bi-basket" /> {t('Weekly stock & prices')}
-          </Link>
+          <>
+            <RefreshButton
+              onRefresh={() => {
+                reload();
+                reloadLog();
+              }}
+              loading={loading}
+              className="btn-sm"
+            />
+            <Link to="/farmer/products" className="btn btn-white btn-sm">
+              <i className="bi bi-basket" /> {t('Weekly stock & prices')}
+            </Link>
+          </>
         }
       />
       <div className="row g-2 g-xl-3 mb-3 kpi-row">

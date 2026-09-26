@@ -65,6 +65,15 @@ export function CartProvider({ children }) {
     );
   }, []);
 
+  // How many more of a product fit in the basket (the farmer's stock minus what is already in it)
+  const roomFor = useCallback(
+    (product) => {
+      const inBasket = items.find((i) => i.productId === String(product._id))?.quantity || 0;
+      return Math.max(0, (product.quantityAvailable ?? 999) - inBasket);
+    },
+    [items]
+  );
+
   const remove = useCallback((productId) => setItems((list) => list.filter((i) => i.productId !== productId)), []);
   const removeFarmer = useCallback((farmerId) => setItems((list) => list.filter((i) => i.farmer._id !== farmerId)), []);
   const clear = useCallback(() => setItems([]), []);
@@ -86,6 +95,7 @@ export function CartProvider({ children }) {
       count: items.reduce((s, i) => s + i.quantity, 0),
       total: items.reduce((s, i) => s + i.price * i.quantity, 0),
       add,
+      roomFor,
       update,
       remove,
       removeFarmer,
@@ -95,7 +105,7 @@ export function CartProvider({ children }) {
       openDrawer,
       closeDrawer,
     };
-  }, [items, add, update, remove, removeFarmer, clear, drawerOpen, openDrawer, closeDrawer]);
+  }, [items, add, roomFor, update, remove, removeFarmer, clear, drawerOpen, openDrawer, closeDrawer]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

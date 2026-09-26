@@ -37,6 +37,7 @@ const authLimiter = rateLimit({
 // Spam protection for sign-up and contact forms
 const formLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 40, standardHeaders: true, legacyHeaders: false, message: { message: 'Too many requests. Please try again later.' } });
 const chatLimiter = rateLimit({ windowMs: 60 * 1000, limit: 30, message: { message: 'You are sending messages too quickly.' } });
+const aiLimiter = rateLimit({ windowMs: 60 * 1000, limit: 30, standardHeaders: true, legacyHeaders: false, message: { message: 'Too many AI requests. Please wait a minute.' } });
 
 const productImage = imageUpload('products', 6);
 const productPhotos = productImage.fields([{ name: 'image', maxCount: 1 }, { name: 'gallery', maxCount: 4 }]); // main photo + up to 4 more
@@ -88,6 +89,8 @@ router.get('/reviews', reviews.listReviews);
 router.get('/reviews/eligible', protect, reviews.reviewEligibility);
 router.post('/flags', protect, formLimiter, reviews.reportContent); // report a review, listing or stall
 router.post('/assistant', chatLimiter, optionalAuth, assistant.chat);
+router.post('/ai/write', aiLimiter, protect, tools.writeWithAi); // "Generate with AI" in text boxes (review replies, reviews, reasons, FAQs ...)
+router.post('/ai/farm-bio', aiLimiter, tools.writeFarmBio); // "Generate with AI" for "About your farm" while signing up
 router.get('/assistant/history', optionalAuth, assistant.history);
 router.delete('/assistant/history', optionalAuth, assistant.clearHistory);
 

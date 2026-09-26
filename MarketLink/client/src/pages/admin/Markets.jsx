@@ -8,6 +8,7 @@ import { DashHeader } from '../../components/common/PageHeader';
 import Modal, { ConfirmModal } from '../../components/common/Modal';
 import LocationPicker from '../../components/map/LocationPicker';
 import DataGrid from '../../components/admin/DataGrid';
+import AiWriteButton from '../../components/common/AiWriteButton';
 import { badge, dayDotsCell, display, esc, iconAction, muted, thumbCell } from '../../utils/cells';
 import { PageLoader } from '../../components/common/Loader';
 import { ImageInput } from '../farmer/Products';
@@ -53,7 +54,7 @@ function MarketForm({ market, onClose, onSaved }) {
 
   async function submit(e) {
     e.preventDefault();
-    if (form.latitude === '' || form.longitude === '') return toast('Please set the market location on the map', 'error');
+    if (form.latitude === '' || form.longitude === '') return toast('Please set the market location on the map', 'warning');
     setBusy(true);
     try {
       const body = { ...form, operatingDays: form.operatingDays.join(','), categories: form.categories.join(',') };
@@ -97,7 +98,24 @@ function MarketForm({ market, onClose, onSaved }) {
             <input id="m-address" name="address" className="form-control" required value={form.address} onChange={change} />
           </div>
           <div className="col-12">
-            <label className="form-label" htmlFor="m-desc">Description</label>
+            <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+              <label className="form-label mb-0" htmlFor="m-desc">Description</label>
+              <AiWriteButton
+                kind="market-description"
+                english
+                context={() => ({
+                  name: form.name,
+                  address: form.address,
+                  city: form.city,
+                  days: form.operatingDays.map((d) => DAY_NAMES[d]).join(', '),
+                  openTime: time12(form.openTime),
+                  closeTime: time12(form.closeTime),
+                  categories: options.categories.filter((c) => form.categories.includes(c._id)).map((c) => c.name).join(', '),
+                })}
+                missing={(c) => (!c.name.trim() ? 'Type the market name first' : '')}
+                onText={(text) => setForm((f) => ({ ...f, description: text }))}
+              />
+            </div>
             <textarea id="m-desc" name="description" rows={2} className="form-control" value={form.description} onChange={change} />
           </div>
           <div className="col-12">

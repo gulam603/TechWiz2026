@@ -17,6 +17,17 @@ import ViewToggle from '../../components/common/ViewToggle';
 import DataGrid from '../../components/admin/DataGrid';
 import { action, dateCell, display, esc } from '../../utils/cells';
 import { productName, t } from '../../i18n';
+import AiWriteButton from '../../components/common/AiWriteButton';
+import { useAuth } from '../../context/AuthContext';
+
+// What "Generate with AI" needs to write a reply to a review
+const replyContext = (review, farmer) => ({
+  rating: review.rating,
+  comment: review.comment,
+  customerName: review.customer?.name,
+  stallName: farmer?.stallName,
+  about: review.type === 'product' ? productName(review.product) : '',
+});
 
 const stars = (n) => `<span class="rating" aria-label="${t('Rated {value} out of 5', { value: n })}">${[1, 2, 3, 4, 5].map((i) => `<i class="bi ${n >= i ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}</span>`;
 
@@ -48,6 +59,7 @@ const COLUMNS = [
 
 /** Reply to a review from the table view. */
 function ReplyModal({ review, onClose, onSaved }) {
+  const { farmer } = useAuth();
   const { toast } = useToast();
   const [text, setText] = useState(review.response?.text || '');
   const [busy, setBusy] = useState(false);
@@ -82,7 +94,10 @@ function ReplyModal({ review, onClose, onSaved }) {
     >
       <form id="reply-form" onSubmit={send}>
         {review.comment && <blockquote className="small text-muted-2 border-start ps-2">“{review.comment}”</blockquote>}
-        <label className="form-label" htmlFor="reply-text">{t('Your reply')}</label>
+        <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+          <label className="form-label mb-0" htmlFor="reply-text">{t('Your reply')}</label>
+          <AiWriteButton kind="review-reply" context={() => replyContext(review, farmer)} onText={setText} />
+        </div>
         <textarea id="reply-text" className="form-control" rows={3} value={text} onChange={(e) => setText(e.target.value)} maxLength={1000} required autoFocus placeholder={t('Write a friendly reply…')} />
       </form>
     </Modal>
@@ -91,6 +106,7 @@ function ReplyModal({ review, onClose, onSaved }) {
 
 function ReplyBox({ review, onSaved }) {
   const { toast } = useToast();
+  const { farmer } = useAuth();
   const [text, setText] = useState(review.response?.text || '');
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -117,14 +133,17 @@ function ReplyBox({ review, onSaved }) {
       </button>
     );
   return (
-    <form className="d-flex gap-2 mt-2 flex-grow-1" onSubmit={send}>
-      <input className="form-control form-control-sm" value={text} onChange={(e) => setText(e.target.value)} placeholder={t('Write a friendly reply…')} maxLength={1000} required aria-label={t('Reply')} autoFocus />
-      <button type="submit" className="btn btn-primary btn-sm" disabled={busy}>
-        {t('Post')}
-      </button>
-      <button type="button" className="btn btn-white btn-sm" onClick={() => setOpen(false)}>
-        {t('Cancel')}
-      </button>
+    <form className="reply-box mt-2 flex-grow-1" onSubmit={send}>
+      <textarea className="form-control form-control-sm" rows={2} value={text} onChange={(e) => setText(e.target.value)} placeholder={t('Write a friendly reply…')} maxLength={1000} required aria-label={t('Reply')} autoFocus />
+      <div className="d-flex gap-2 flex-wrap mt-2">
+        <AiWriteButton kind="review-reply" context={() => replyContext(review, farmer)} onText={setText} />
+        <button type="submit" className="btn btn-primary btn-sm ms-auto" disabled={busy}>
+          {t('Post')}
+        </button>
+        <button type="button" className="btn btn-white btn-sm" onClick={() => setOpen(false)}>
+          {t('Cancel')}
+        </button>
+      </div>
     </form>
   );
 }

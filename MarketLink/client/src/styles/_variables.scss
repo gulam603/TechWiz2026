@@ -78,6 +78,11 @@ $input-border-radius: 0.85rem;
 $input-border-radius-lg: 1rem;
 $input-bg: #fff;
 $input-border-color: #ddd6c6;
+
+// Dropdowns (select): a clear, slightly heavier chevron in the forest colour
+$form-select-indicator-color: $ml-forest;
+$form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$form-select-indicator-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='m3.5 6 4.5 4.5L12.5 6'/></svg>");
+$form-select-bg-size: 14px 12px;
 $input-padding-y: 0.6rem;
 $input-padding-x: 0.9rem;
 $input-focus-border-color: $ml-leaf;

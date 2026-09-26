@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { api } from '../../api/client';
 import { useToast } from '../../context/ToastContext';
 import Modal from '../../components/common/Modal';
-import { t } from '../../i18n';
+import AiWriteButton from '../../components/common/AiWriteButton';
+import { productName, t } from '../../i18n';
 
 export const ORDER_ACTIONS = {
   placed: [
@@ -65,7 +66,10 @@ export function DeclineModal({ order, onClose, onDone }) {
       }
     >
       <p className="small text-muted-2">{t('The reserved stock goes back to your inventory and the customer receives an e-mail with your reason.')}</p>
-      <label className="form-label" htmlFor="decline-reason">{t('Reason (shown to the customer)')}</label>
+      <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+        <label className="form-label mb-0" htmlFor="decline-reason">{t('Reason (shown to the customer)')}</label>
+        <AiWriteButton kind="decline-reason" context={{ items: (order.items || []).map(productName).join(', ') }} onText={(text) => setReason(text.slice(0, 300))} />
+      </div>
       <textarea id="decline-reason" className="form-control" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t('e.g. Harvest was smaller than expected this week')} maxLength={300} />
     </Modal>
   );

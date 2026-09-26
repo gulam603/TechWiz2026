@@ -12,6 +12,7 @@ import { moneyCompact, timeAgo } from '../../utils/format';
 import { NOTIF_ICONS } from '../../components/layout/NotificationBell';
 import RatingStars from '../../components/common/RatingStars';
 import { t, tServer } from '../../i18n';
+import RefreshButton from '../../components/common/RefreshButton';
 
 function greeting() {
   const h = new Date().getHours();
@@ -23,7 +24,7 @@ function greeting() {
 export default function CustomerDashboard() {
   useDocumentTitle(t('My dashboard'));
   const { user } = useAuth();
-  const { data, loading } = useFetch('/customer/dashboard');
+  const { data, loading, reload } = useFetch('/customer/dashboard');
   if (loading && !data) return <PageLoader />;
   const { stats, upcoming, notifications, suggestions, farmers = [] } = data;
   const ready = upcoming.filter((o) => o.status === 'ready');
@@ -34,9 +35,12 @@ export default function CustomerDashboard() {
         title={t('{greeting}, {name}', { greeting: greeting(), name: user.name.split(' ')[0] })}
         subtitle={t('Here\'s what\'s happening with your market orders.')}
         actions={
-          <Link to="/products" className="btn btn-primary">
-            <i className="bi bi-basket" /> {t('Shop this week\'s harvest')}
-          </Link>
+          <>
+            <RefreshButton onRefresh={reload} loading={loading} />
+            <Link to="/products" className="btn btn-primary">
+              <i className="bi bi-basket" /> {t('Shop this week\'s harvest')}
+            </Link>
+          </>
         }
       />
 

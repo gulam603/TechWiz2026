@@ -50,7 +50,7 @@ function ProfileEditor({ data, setData }) {
 
   // "Generate with AI": a short "about the farm" text from the stall details
   async function writeBio() {
-    if (form.stallName.trim().length < 2) return toast(t('Type the stall / farm name first'), 'error');
+    if (form.stallName.trim().length < 2) return toast(t('Type the stall / farm name first'), 'warning');
     setWriting(true);
     try {
       const res = await api.post('/farmer/describe', {

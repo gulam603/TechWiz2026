@@ -11,6 +11,7 @@ import DataGrid from '../../components/admin/DataGrid';
 import { dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { DAY_NAMES, DAY_SHORT, formatDateKey, money, moneyCompact } from '../../utils/format';
 import { categoryName, productName, t, unitName } from '../../i18n';
+import RefreshButton from '../../components/common/RefreshButton';
 
 const PRESETS = [
   [7, 'Last 7 days'],
@@ -46,7 +47,7 @@ export default function FarmerSales() {
   const { farmer } = useAuth();
   const [range, setRange] = useState({ days: 30, from: '', to: '' });
   const query = range.from && range.to ? { from: range.from, to: range.to } : { days: range.days };
-  const { data, loading } = useFetch(`/farmer/reports/sales${toQuery(query)}`);
+  const { data, loading, reload } = useFetch(`/farmer/reports/sales${toQuery(query)}`);
 
   return (
     <div className="sales-report">
@@ -54,9 +55,12 @@ export default function FarmerSales() {
         title={t('Sales report')}
         subtitle={data ? `${farmer?.stallName || t('My stall')} · ${t('{from} to {to}', { from: formatDateKey(data.period.from, { withYear: true }), to: formatDateKey(data.period.to, { withYear: true }) })}` : t('Sales insights for your stall')}
         actions={
-          <button type="button" className="btn btn-white btn-sm d-print-none" onClick={() => window.print()}>
-            <i className="bi bi-printer" /> {t('Print report')}
-          </button>
+          <>
+            <RefreshButton onRefresh={reload} loading={loading} className="btn-sm d-print-none" />
+            <button type="button" className="btn btn-white btn-sm d-print-none" onClick={() => window.print()}>
+              <i className="bi bi-printer" /> {t('Print report')}
+            </button>
+          </>
         }
       />
       <div className="panel mb-3 d-print-none">

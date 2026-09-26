@@ -8,6 +8,7 @@ import { DashHeader } from '../../components/common/PageHeader';
 import KpiCard from '../../components/common/KpiCard';
 import Modal from '../../components/common/Modal';
 import DataGrid from '../../components/admin/DataGrid';
+import AiWriteButton from '../../components/common/AiWriteButton';
 import FilterBar from '../../components/admin/FilterBar';
 import { action, badge, dateCell, display, esc, link, muted } from '../../utils/cells';
 import { productPath } from '../../utils/links';
@@ -140,9 +141,12 @@ function ResolveModal({ job, onClose, onDone }) {
       <form id="resolve-form" onSubmit={submit} className="d-grid gap-3">
         <p className="small text-muted-2 mb-0">{meta.hint} Other open reports about the same content are closed too.</p>
         <div>
-          <label className="form-label" htmlFor="resolve-note">
-            {job.action === 'dismiss' || job.action === 'restore' ? 'Note (optional)' : 'Reason'}
-          </label>
+          <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+            <label className="form-label mb-0" htmlFor="resolve-note">
+              {job.action === 'dismiss' || job.action === 'restore' ? 'Note (optional)' : 'Reason'}
+            </label>
+            <AiWriteButton kind="moderation-note" english context={{ action: job.action, reason: REASON_LABEL[job.flag.reason] || '' }} onText={(text) => setNote(text.slice(0, 300))} />
+          </div>
           <textarea
             id="resolve-note"
             className="form-control"

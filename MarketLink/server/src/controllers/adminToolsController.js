@@ -11,6 +11,7 @@ import { createPreOrders } from './orderController.js';
 import { sendMail } from '../services/mailer.js';
 import { notify } from '../services/notify.js';
 import { describeFarm, describeProduct } from '../services/describe.js';
+import { KINDS as WRITE_KINDS, writeText } from '../services/writer.js';
 
 const PASSWORD_RULE = /^(?=.*[A-Za-z])(?=.*\d).{8,64}$/;
 const OPEN_STATUSES = [ORDER_STATUS.PLACED, ORDER_STATUS.ACCEPTED, ORDER_STATUS.READY];
@@ -670,3 +671,14 @@ export async function writeFarmBio(req, res) {
     })
   );
 }
+
+// POST /api/ai/write  { kind, context, lang, variant }  ("Generate with AI" in text boxes)
+export async function writeWithAi(req, res) {
+  const kind = String(req.body.kind || '');
+  const spec = WRITE_KINDS[kind];
+  if (!spec) throw new AppError('Unknown kind of text', 400);
+  if (!spec.roles.includes(req.user.role)) throw new AppError('You cannot write this kind of text', 403);
+  const context = req.body.context && typeof req.body.context === 'object' && !Array.isArray(req.body.context) ? req.body.context : {};
+  res.json(await writeText(kind, context, { lang: req.body.lang === 'ur' ? 'ur' : 'en', variant: Number(req.body.variant) || 0 }));
+}
+

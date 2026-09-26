@@ -8,6 +8,7 @@ import StatusBadge from '../../components/common/StatusBadge';
 import Modal from '../../components/common/Modal';
 import DayDots from '../../components/common/DayDots';
 import DataGrid from '../../components/admin/DataGrid';
+import AiWriteButton from '../../components/common/AiWriteButton';
 import FilterBar from '../../components/admin/FilterBar';
 import { action, badge, dateCell, display, esc, moneyCell, muted } from '../../utils/cells';
 import { formatDate } from '../../utils/format';
@@ -156,7 +157,10 @@ export default function AdminFarmers() {
         }
       >
         <p className="small text-muted-2">The farmer can no longer log in and all their products are hidden from customers.</p>
-        <label className="form-label" htmlFor="suspend-reason">Reason (e-mailed to the farmer)</label>
+        <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+          <label className="form-label mb-0" htmlFor="suspend-reason">Reason (e-mailed to the farmer)</label>
+          <AiWriteButton kind="moderation-note" english context={{ action: 'suspend' }} onText={setReason} />
+        </div>
         <textarea id="suspend-reason" className="form-control" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
       </Modal>
     </>

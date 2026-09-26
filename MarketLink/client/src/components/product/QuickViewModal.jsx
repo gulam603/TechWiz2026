@@ -38,11 +38,17 @@ export default function QuickViewModal({ product: summary, onClose, focusAdd = f
 
   function add() {
     if (user && user.role !== 'customer') {
-      toast(t('Only customer accounts can place pre-orders'), 'error');
+      toast(t('Only customer accounts can place pre-orders'), 'warning');
       return;
     }
-    cart.add(product, qty);
-    toast(t('{qty} × {name} added to your basket', { qty, name: productName(product) }));
+    const added = Math.min(qty, cart.roomFor(product));
+    if (!added) {
+      toast(t('You already have all of the {name} in stock in your basket', { name: productName(product) }), 'warning');
+      return;
+    }
+    cart.add(product, added);
+    if (added < qty) toast(t('Only {n} more could be added: that is all the stock left', { n: added }), 'warning');
+    else toast(t('{qty} × {name} added to your basket', { qty, name: productName(product) }));
     onClose();
     cart.openDrawer();
   }

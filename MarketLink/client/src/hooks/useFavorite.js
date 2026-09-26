@@ -23,19 +23,19 @@ export default function useFavorite(type, id) {
     event?.preventDefault();
     event?.stopPropagation();
     if (!user) {
-      toast(t('Please log in as a customer to save favourites'), 'error');
+      toast(t('Please log in as a customer to save favourites'), 'warning');
       navigate('/login', { state: { from: location.pathname } });
       return;
     }
     if (user.role !== 'customer') {
-      toast(t('Favourites are available for customer accounts'), 'error');
+      toast(t('Favourites are available for customer accounts'), 'warning');
       return;
     }
     setBusy(true);
     try {
       const res = await api.post(`/customer/favorites/${type}/${id}`);
       setUser((u) => ({ ...u, [field]: res.ids }));
-      toast(t(SAVED[type][res.saved ? 0 : 1]));
+      toast(t(SAVED[type][res.saved ? 0 : 1]), res.saved ? 'success' : 'info');
     } catch (err) {
       toast(err.message, 'error');
     } finally {

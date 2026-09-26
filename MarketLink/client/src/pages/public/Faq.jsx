@@ -23,6 +23,11 @@ export default function Faq() {
   const sections = Object.keys(groups)
     .map((key) => ({ key, label: groups[key], items: shown.filter((f) => f.group === key) }))
     .filter((s) => s.items.length);
+  // One question open on the whole page: the one in the link (#faq-...), else the first one
+  const [openFaq, setOpenFaq] = useState(undefined);
+  const linked = typeof window !== 'undefined' ? window.location.hash.slice(1) : '';
+  const firstId = sections[0] && !q ? `faq-${sections[0].items[0]._id}` : null;
+  const currentOpen = openFaq === undefined ? (faqs.some((f) => `faq-${f._id}` === linked) ? linked : firstId) : openFaq;
 
   useSeo({
     title: t('Frequently asked questions'),
@@ -78,12 +83,12 @@ export default function Faq() {
                 </button>
               </div>
             )}
-            {sections.map((s, i) => (
+            {sections.map((s) => (
               <section key={s.key} className="faq-section" aria-labelledby={`faq-group-${s.key}`}>
                 <h2 id={`faq-group-${s.key}`} className="faq-group-title">
                   <i className={`bi ${GROUP_ICONS[s.key] || 'bi-question-circle'}`} aria-hidden="true" /> {t(s.label)}
                 </h2>
-                <FaqList faqs={s.items} openFirst={i === 0 && !q} />
+                <FaqList faqs={s.items} openId={currentOpen} onToggle={setOpenFaq} />
               </section>
             ))}
           </div>

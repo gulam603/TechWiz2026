@@ -12,6 +12,7 @@ import DataGrid from '../../components/admin/DataGrid';
 import FilterBar from '../../components/admin/FilterBar';
 import { badge, dateCell, dayCell, display, esc, link, moneyCell } from '../../utils/cells';
 import { formatDate, money, moneyCompact, MONTHS, ORDER_STATUS_META } from '../../utils/format';
+import RefreshButton from '../../components/common/RefreshButton';
 
 const ORDER_COLUMNS = [
   { data: 'orderNumber', title: 'Order', responsivePriority: 1, render: display((v, o) => link(`/admin/orders/${o._id}`, v, 'fw-semi text-nowrap')) },
@@ -49,7 +50,7 @@ const monthLabel = (key) => {
 export default function AdminCustomerDetail() {
   const { id } = useParams();
   const { changed } = useOutletContext();
-  const { data, loading, error } = useFetch(`/admin/customers/${id}/overview`);
+  const { data, loading, error, reload } = useFetch(`/admin/customers/${id}/overview`);
   const [filters, setFilters] = useState({ status: '', farmer: '', from: '', to: '' });
   const [openFarmer, setOpenFarmer] = useState(null);
   useDocumentTitle(data?.customer?.name || 'Customer');
@@ -64,9 +65,12 @@ export default function AdminCustomerDetail() {
         title={customer.name}
         subtitle="Order history and purchases from each farmer."
         actions={
-          <Link to="/admin/customers" className="btn btn-white btn-sm">
-            <i className="bi bi-arrow-left" /> All customers
-          </Link>
+          <>
+            <RefreshButton onRefresh={reload} loading={loading} className="btn-sm" />
+            <Link to="/admin/customers" className="btn btn-white btn-sm">
+              <i className="bi bi-arrow-left" /> All customers
+            </Link>
+          </>
         }
       />
       <div className="row g-3 mb-3">

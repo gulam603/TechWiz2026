@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import { toQuery } from '../../api/client';
 import FarmerCard from '../../components/cards/FarmerCard';
@@ -9,9 +9,13 @@ import { CardSkeletons } from '../../components/common/Loader';
 import { PageHero } from '../../components/common/PageHeader';
 import { DAY_NAMES, DAY_SHORT } from '../../utils/format';
 import SearchSelect from '../../components/common/SearchSelect';
+import FilterSidebar from '../../components/common/FilterSidebar';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
 import { categoryName, listText, t } from '../../i18n';
+
+// Filters the sidebar's "Clear all" empties (search and sort stay)
+const EMPTY_FILTERS = { city: '', market: '', day: '', category: '', rating: '', practice: '' };
 
 export default function Farmers() {
   const [filters, setFilters] = useState({ search: '', city: '', market: '', day: '', category: '', rating: '', practice: '', sort: 'rating', page: 1 });
@@ -23,6 +27,27 @@ export default function Farmers() {
   const { data: catData } = useFetch('/categories');
   const set = (changes) => setFilters((f) => ({ ...f, ...changes, page: changes.page || 1 }));
   const markets = (marketData?.markets || []).filter((m) => !filters.city || m.city === filters.city);
+  const [showFilters, setShowFilters] = useState(false);
+  const closeFilters = useCallback(() => setShowFilters(false), []);
+  const activeCount = Object.keys(EMPTY_FILTERS).filter((k) => filters[k]).length;
+  // The same controls sit in one row on laptops and in the filter sidebar on phones and tablets
+  const fields = [
+    { label: 'City', control: <SearchSelect value={filters.city} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={(marketData?.cities || []).map((c) => ({ value: c, label: t(c) }))} /> },
+    { label: 'Market', control: <SearchSelect value={filters.market} onChange={(v) => set({ market: v })} ariaLabel={t('Market')} emptyLabel="All markets" options={markets.map((m) => ({ value: m._id, label: m.name, hint: m.city }))} /> },
+    { label: 'Category', control: <SearchSelect value={filters.category} onChange={(v) => set({ category: v })} ariaLabel={t('Category')} emptyLabel="All categories" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: categoryName(c) }))} /> },
+    { label: 'Market day', control: <SearchSelect value={filters.day} onChange={(v) => set({ day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} /> },
+    {
+      label: 'Rating',
+      control: (
+        <select className="form-select" value={filters.rating} onChange={(e) => set({ rating: e.target.value })} aria-label={t('Rating')}>
+          <option value="">{t('Any rating')}</option>
+          <option value="4">{t('4 stars and up')}</option>
+          <option value="3">{t('3 stars and up')}</option>
+        </select>
+      ),
+    },
+    { label: 'Farming practice', control: <SearchSelect value={filters.practice} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={(practiceData?.practices || []).map((p) => ({ value: p, label: t(p) }))} /> },
+  ];
   useSeo({
     title: t('Local farmers'),
     description: t('Meet the local farmers and stalls on MarketLink: what they grow, where they sell, ratings and their weekly stock.'),
@@ -36,35 +61,22 @@ export default function Farmers() {
       <div className="container pb-5">
         <div className="soft-panel mb-4">
           <div className="row g-2">
-            <div className="col-12 col-md-6 col-xl-3">
+            <div className="col-12 col-lg-6 col-xl-3">
               <div className="search-pill">
                 <i className="bi bi-search" />
                 <input placeholder={t('Search farmer or speciality')} value={filters.search} onChange={(e) => set({ search: e.target.value })} aria-label={t('Search farmers')} />
               </div>
             </div>
-            <div className="col-6 col-md-3">
-              <SearchSelect value={filters.city} onChange={(v) => set({ city: v, market: '' })} ariaLabel={t('City')} emptyLabel="All cities" options={(marketData?.cities || []).map((c) => ({ value: c, label: t(c) }))} />
-            </div>
-            <div className="col-6 col-md-3">
-              <SearchSelect value={filters.market} onChange={(v) => set({ market: v })} ariaLabel={t('Market')} emptyLabel="All markets" options={markets.map((m) => ({ value: m._id, label: m.name, hint: m.city }))} />
-            </div>
-            <div className="col-6 col-md-3">
-              <SearchSelect value={filters.category} onChange={(v) => set({ category: v })} ariaLabel={t('Category')} emptyLabel="All categories" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: categoryName(c) }))} />
-            </div>
-            <div className="col-6 col-md-3">
-              <SearchSelect value={filters.day} onChange={(v) => set({ day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
-            </div>
-            <div className="col-6 col-md-3">
-              <select className="form-select" value={filters.rating} onChange={(e) => set({ rating: e.target.value })} aria-label={t('Rating')}>
-                <option value="">{t('Any rating')}</option>
-                <option value="4">{t('4 stars and up')}</option>
-                <option value="3">{t('3 stars and up')}</option>
-              </select>
-            </div>
-            <div className="col-6 col-md-3">
-              <SearchSelect value={filters.practice} onChange={(v) => set({ practice: v })} ariaLabel={t('Farming practice')} emptyLabel="Any practice" options={(practiceData?.practices || []).map((p) => ({ value: p, label: t(p) }))} />
-            </div>
-            <div className="col-12 col-md-6 col-xl-3 d-flex gap-2">
+            {fields.map(({ label, control }) => (
+              <div key={label} className="col-md-3 d-none d-lg-block">
+                {control}
+              </div>
+            ))}
+            <div className="col-12 col-lg-6 col-xl-3 d-flex gap-2">
+              <button type="button" className="btn btn-white filter-open-btn d-lg-none flex-shrink-0" onClick={() => setShowFilters(true)}>
+                <i className="bi bi-sliders" aria-hidden="true" /> {t('Filters')}
+                {activeCount > 0 && <span className="filter-count">{activeCount}</span>}
+              </button>
               <select className="form-select" value={filters.sort} onChange={(e) => set({ sort: e.target.value })} aria-label={t('Sort')}>
                 <option value="rating">{t('Top rated')}</option>
                 <option value="name">{t('Name A to Z')}</option>
@@ -81,6 +93,15 @@ export default function Farmers() {
             </div>
           </div>
         </div>
+
+        <FilterSidebar open={showFilters} onClose={closeFilters} onClear={() => set(EMPTY_FILTERS)} clearDisabled={activeCount === 0}>
+          {fields.map(({ label, control }) => (
+            <div key={label}>
+              <span className="filter-sheet-label">{t(label)}</span>
+              {control}
+            </div>
+          ))}
+        </FilterSidebar>
 
         {view === 'map' ? (
           <MapView

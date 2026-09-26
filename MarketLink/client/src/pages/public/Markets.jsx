@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import { toQuery } from '../../api/client';
 import MarketCard from '../../components/cards/MarketCard';
@@ -10,6 +10,7 @@ import { getCurrentPosition } from '../../components/map/DirectionsMap';
 import { DAY_NAMES, DAY_SHORT, time12 } from '../../utils/format';
 import { useToast } from '../../context/ToastContext';
 import SearchSelect from '../../components/common/SearchSelect';
+import FilterSidebar from '../../components/common/FilterSidebar';
 import useSeo from '../../hooks/useSeo';
 import { breadcrumbLd, itemListLd, ldGraph } from '../../utils/seo';
 import { categoryName, listText, t } from '../../i18n';
@@ -20,8 +21,17 @@ export default function Markets() {
   const [location, setLocation] = useState(null);
   const [view, setView] = useState('grid');
   const [locating, setLocating] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const closeFilters = useCallback(() => setShowFilters(false), []);
+  const activeCount = ['city', 'category', 'day'].filter((k) => filters[k]).length;
   const { toast } = useToast();
   const { data, loading } = useFetch(`/markets${toQuery({ ...filters, lat: location?.lat, lng: location?.lng })}`);
+  // The same controls sit in one row on laptops and in the filter sidebar on phones and tablets
+  const fields = [
+    { label: 'City', control: <SearchSelect value={filters.city} onChange={(v) => setFilters({ ...filters, city: v })} ariaLabel={t('City')} emptyLabel="All cities" options={(data?.cities || []).map((c) => ({ value: c, label: t(c) }))} /> },
+    { label: 'Category', control: <SearchSelect value={filters.category} onChange={(v) => setFilters({ ...filters, category: v })} ariaLabel={t('Category')} emptyLabel="All produce" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: categoryName(c) }))} /> },
+    { label: 'Market day', control: <SearchSelect value={filters.day} onChange={(v) => setFilters({ ...filters, day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} /> },
+  ];
   const markets = data?.markets || [];
   useSeo({
     title: t('Farmers markets'),
@@ -34,7 +44,7 @@ export default function Markets() {
     setLocating(true);
     try {
       setLocation(await getCurrentPosition());
-      toast(t('Showing markets closest to you'));
+      toast(t('Showing markets closest to you'), 'info');
     } catch (err) {
       toast(err.message, 'error');
     } finally {
@@ -54,16 +64,16 @@ export default function Markets() {
                 <input placeholder={t('Search market or area')} value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} aria-label={t('Search markets')} />
               </div>
             </div>
-            <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.city} onChange={(v) => setFilters({ ...filters, city: v })} ariaLabel={t('City')} emptyLabel="All cities" options={(data?.cities || []).map((c) => ({ value: c, label: t(c) }))} />
-            </div>
-            <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.category} onChange={(v) => setFilters({ ...filters, category: v })} ariaLabel={t('Category')} emptyLabel="All produce" options={(catData?.categories || []).map((c) => ({ value: c.slug, label: categoryName(c) }))} />
-            </div>
-            <div className="col-4 col-lg-2">
-              <SearchSelect value={filters.day} onChange={(v) => setFilters({ ...filters, day: v })} ariaLabel={t('Market day')} emptyLabel="Any day" options={DAY_NAMES.map((d, i) => ({ value: String(i), label: d }))} />
-            </div>
+            {fields.map(({ label, control }) => (
+              <div key={label} className="col-lg-2 d-none d-lg-block">
+                {control}
+              </div>
+            ))}
             <div className="col-12 col-xl-3 d-flex gap-2 justify-content-end">
+              <button type="button" className="btn btn-white filter-open-btn d-lg-none flex-shrink-0 me-auto" onClick={() => setShowFilters(true)}>
+                <i className="bi bi-sliders" aria-hidden="true" /> {t('Filters')}
+                {activeCount > 0 && <span className="filter-count">{activeCount}</span>}
+              </button>
               <button type="button" className={`btn text-nowrap flex-shrink-0 ${location ? 'btn-forest' : 'btn-white'}`} onClick={location ? () => setLocation(null) : nearMe} disabled={locating}>
                 {locating ? <span className="spinner-border spinner-border-sm" /> : <i className={`bi ${location ? 'bi-check2-circle' : 'bi-crosshair'}`} />} {t('Near me')}
               </button>
@@ -78,6 +88,15 @@ export default function Markets() {
             </div>
           </div>
         </div>
+
+        <FilterSidebar open={showFilters} onClose={closeFilters} onClear={() => setFilters({ ...filters, city: '', category: '', day: '' })} clearDisabled={activeCount === 0}>
+          {fields.map(({ label, control }) => (
+            <div key={label}>
+              <span className="filter-sheet-label">{t(label)}</span>
+              {control}
+            </div>
+          ))}
+        </FilterSidebar>
 
         {view === 'map' ? (
           <MapView

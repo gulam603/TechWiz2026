@@ -4,6 +4,7 @@ import { useToast } from '../../context/ToastContext';
 import Modal from '../common/Modal';
 import { StarInput } from '../common/RatingStars';
 import { productName, rich, t } from '../../i18n';
+import AiWriteButton from '../common/AiWriteButton';
 
 const LABELS = ['', 'Poor', 'Not great', 'Okay', 'Good', 'Excellent'];
 
@@ -73,7 +74,10 @@ export default function ReviewModal({ target, onClose, onDone }) {
           <strong className="small">{t(LABELS[rating])}</strong>
         </div>
         <div>
-          <label className="form-label" htmlFor="review-comment">{t('Your review (optional)')}</label>
+          <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+            <label className="form-label mb-0" htmlFor="review-comment">{t('Your review (optional)')}</label>
+            <AiWriteButton kind="review" context={() => ({ rating, about: target.name, type: isProduct ? 'product' : 'farmer' })} onText={setComment} />
+          </div>
           <textarea id="review-comment" className="form-control" rows={3} maxLength={1000} value={comment} onChange={(e) => setComment(e.target.value)} placeholder={t('What did you like? Anything the farmer could do better?')} />
         </div>
         <p className="fs-7 text-muted-2 mb-0">{t('Reviews are public. Please keep them honest and friendly; reviews with offensive words are checked by our team first.')}</p>

@@ -1745,16 +1745,25 @@
 }
 
 .faq-group-title {
-  font-size: 1.1rem;
+  font-size: 1.45rem;
   font-family: $font-family-sans-serif;
   font-weight: 800;
+  letter-spacing: -0.01em;
   color: $ml-forest;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.9rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
   .bi {
-    color: $ml-green;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($ml-lime, 0.55);
+    color: $ml-forest;
+    font-size: 1.1rem;
   }
 }
 
@@ -1767,22 +1776,33 @@
   background: #fff;
   border: 1px solid $ml-line;
   border-radius: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
   scroll-margin-top: calc(var(--ml-nav-h) + 1rem);
-  summary {
-    list-style: none;
-    cursor: pointer;
+  .faq-heading {
+    margin: 0;
+    font-size: inherit;
+    font-family: $font-family-sans-serif;
+    font-weight: 700;
+    line-height: inherit;
+  }
+  .faq-summary {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     padding: 1rem 1.15rem;
-    font-weight: 700;
-    color: $ml-ink;
+    border: 0;
     border-radius: 1rem;
-    &::-webkit-details-marker {
-      display: none;
-    }
+    background: none;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.45;
+    color: $ml-ink;
+    cursor: pointer;
     &:hover .faq-q {
       color: $ml-green;
     }
@@ -1801,9 +1821,11 @@
     justify-content: center;
     background: $ml-sand;
     color: $ml-forest;
-    transition: transform 0.25s ease, background-color 0.2s ease;
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1),
+      background-color 0.25s ease;
   }
-  &[open] {
+  &.is-open {
     border-color: rgba($ml-leaf, 0.55);
     box-shadow: 0 10px 24px -18px rgba(23, 59, 44, 0.45);
     .faq-toggle {
@@ -1813,11 +1835,34 @@
   }
 }
 
+// The answer slides open: its row grows from 0 to its full height
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.2, 0.8, 0.3, 1);
+  .faq-item.is-open & {
+    grid-template-rows: 1fr;
+  }
+}
+
+.faq-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .faq-a {
   padding: 0 1.15rem 1.05rem;
   color: $ml-muted;
   font-size: 0.95rem;
-  animation: fadeIn 0.2s ease both;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s ease;
+  .faq-item.is-open & {
+    opacity: 1;
+    transform: none;
+  }
   p:last-child,
   ol:last-child {
     margin-bottom: 0;

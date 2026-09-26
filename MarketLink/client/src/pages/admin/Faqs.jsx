@@ -7,6 +7,7 @@ import { useToast } from '../../context/ToastContext';
 import { DashHeader } from '../../components/common/PageHeader';
 import { PageLoader } from '../../components/common/Loader';
 import DataGrid from '../../components/admin/DataGrid';
+import AiWriteButton from '../../components/common/AiWriteButton';
 import { action, badge, display, esc, iconAction, numberInput } from '../../utils/cells';
 
 const EMPTY = { question: '', answer: '', questionUr: '', answerUr: '', group: 'shopping', showOnHome: false };
@@ -117,7 +118,10 @@ export default function AdminFaqs() {
                 <input id="faq-question" className="form-control" required maxLength={200} value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} placeholder="How do I pay?" />
               </div>
               <div>
-                <label className="form-label" htmlFor="faq-answer">Answer</label>
+                <div className="d-flex align-items-end justify-content-between gap-2 mb-1">
+                  <label className="form-label mb-0" htmlFor="faq-answer">Answer</label>
+                  <AiWriteButton kind="faq-answer" english context={() => ({ question: form.question })} missing={(c) => (!c.question.trim() ? 'Type the question first' : '')} onText={(text) => setForm((f) => ({ ...f, answer: text.slice(0, 1500) }))} />
+                </div>
                 <textarea id="faq-answer" className="form-control" rows={6} required maxLength={1500} value={form.answer} onChange={(e) => setForm({ ...form, answer: e.target.value })} />
                 <div className="form-text">Leave an empty line between paragraphs. Lines starting with 1., 2., 3. become a numbered list.</div>
               </div>

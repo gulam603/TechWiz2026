@@ -174,6 +174,9 @@ Serious or visible problems found by the tests during development, and how they 
 | 7 | Map tiles were blocked (HTTP 403) | Manual check | Correct referrer policy and a second tile server as fallback |
 | 8 | The home banner did not change by itself | Manual check (round 9) | Autoplay timer fixed; it pauses only with the pause button or keyboard focus |
 | 9 | Farmer inventory page failed with a database error on an older database | API test against MongoDB | Query rewritten to work with the stored data |
+| 10 | Customer area at 992 to 1199 px: the website links added to the top bar pushed the account menu 69 px off the screen | Responsive sweep (1024 px) | The links show from 1200 px; the sidebar has the same links below that |
+| 11 | Markets page on phones (320 to 412 px): the Filters, Near me and view buttons ran off the left edge when the day filter was on | Responsive sweep | The buttons wrap onto a second line |
+| 12 | Urdu top bar at 768 px was 6 px too wide because of the long Urdu "Sell with us" label | Responsive sweep (Urdu) | Slightly smaller padding for that button in Urdu at tablet widths |
 
 **Tests changed on purpose** (the behaviour was changed at the customer's request, not a defect):
 

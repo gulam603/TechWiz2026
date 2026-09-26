@@ -19,7 +19,7 @@ import { useToast } from '../../context/ToastContext';
 import { DAY_SHORT, money, time12 } from '../../utils/format';
 import { productPath } from '../../utils/links';
 import useSeo from '../../hooks/useSeo';
-import { breadcrumbLd, clip, ldGraph, productLd } from '../../utils/seo';
+import { breadcrumbLd, clip, ldGraph, productDescription, productLd } from '../../utils/seo';
 import { categoryName, isUrdu, listText, localText, productName, t, tServer, unitName } from '../../i18n';
 
 export default function ProductDetail() {
@@ -37,7 +37,7 @@ export default function ProductDetail() {
       ? {
           // The farmer's own SEO title, description and keywords win on the English page (set in the product form)
           title: (!isUrdu() && p.metaTitle) || t('{name}, Rs {price} per {unit} from {stallName}', { name: productName(p), price: p.price, unit: unitName(p.unit), stallName: p.farmer?.stallName }),
-          description: clip((!isUrdu() && (p.metaDescription || p.description)) || t('{name} ({name2}) from {stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.', { name: productName(p), name2: categoryName(p.category), stallName: p.farmer?.stallName })),
+          description: (!isUrdu() && productDescription(p)) || clip(t('{name} ({name2}) from {stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.', { name: productName(p), name2: categoryName(p.category), stallName: p.farmer?.stallName })),
           keywords: [...(p.keywords || []), p.name, p.nameUr, p.category?.name, categoryName(p.category), p.farmer?.stallName],
           image: p.image,
           type: 'product',

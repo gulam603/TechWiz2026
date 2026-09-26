@@ -86,6 +86,18 @@ export const clip = (s, n = 160) => {
   return t.length > n ? `${t.slice(0, n - 1).replace(/\s+\S*$/, '')}…` : t;
 };
 
+/**
+ * English meta description of a product page (same rule as the server): the farmer's own SEO description,
+ * else the product description; a short one gets the seller, price and how to buy added.
+ */
+export function productDescription(p) {
+  if (p.metaDescription) return clip(p.metaDescription);
+  const text = String(p.description || '').replace(/\s+/g, ' ').trim();
+  if (!text) return '';
+  if (text.length >= 70) return clip(text);
+  return clip(`${/[.!?]$/.test(text) ? text : `${text}.`} ${p.name} from ${p.farmer?.stallName}, Rs ${p.price} per ${p.unit}. Pre-order on MarketLink and pay at the stall when you pick it up.`);
+}
+
 /** Answer text for structured data: paragraphs joined, list lines kept on their own line. */
 const plain = (s) => String(s || '').replace(/\n{2,}/g, '\n').trim();
 

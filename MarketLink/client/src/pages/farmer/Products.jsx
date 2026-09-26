@@ -33,6 +33,9 @@ const clipText = (text, n) => {
  * the MarketLink search. "Write with AI" fills them (and the product schema below) from the product.
  */
 function SeoFields({ form, setForm, onAi, aiBusy }) {
+  // Open at the start when something is filled in; afterwards only the farmer opens or closes it
+  // (it must not snap shut while the last field is being cleared)
+  const [open, setOpen] = useState(() => Boolean(form.metaTitle || form.metaDescription || form.keywords));
   const change = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   const words = form.keywords
     .split(',')
@@ -40,7 +43,7 @@ function SeoFields({ form, setForm, onAi, aiBusy }) {
     .filter(Boolean);
 
   return (
-    <details className="seo-fields" open={Boolean(form.metaTitle || form.metaDescription || form.keywords)}>
+    <details className="seo-fields" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
       <summary>
         <i className="bi bi-google" aria-hidden="true" /> {t('Search engines (SEO)')} <span className="text-muted-2 fw-normal">{t('· optional, helps people find this product on Google')}</span>
       </summary>
@@ -88,9 +91,10 @@ function SeoFields({ form, setForm, onAi, aiBusy }) {
  * product is saved; the farmer can correct any of it.
  */
 function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
+  const [open, setOpen] = useState(() => Boolean(form.schemaSummary));
   const preview = {
     '@context': 'https://schema.org',
-    '@type': t('Product'),
+    '@type': 'Product',
     name: form.name || t('Product name'),
     alternateName: form.nameUr || undefined,
     disambiguatingDescription: form.schemaSummary || undefined,
@@ -105,7 +109,7 @@ function SchemaFields({ form, onChange, source, onAi, aiBusy, categoryName }) {
     offers: { '@type': 'Offer', price: Number(form.price) || undefined, priceCurrency: 'PKR', availableDeliveryMethod: 'Pickup at the market' },
   };
   return (
-    <details className="seo-fields schema-fields" open={Boolean(form.schemaSummary)}>
+    <details className="seo-fields schema-fields" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
       <summary>
         <i className="bi bi-diagram-3" aria-hidden="true" /> {t('Product schema')} <span className="text-muted-2 fw-normal">{t('· structured data for Google and AI assistants')}</span>
       </summary>

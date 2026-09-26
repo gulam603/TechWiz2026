@@ -48,6 +48,20 @@ const clip = (s, n = 160) => {
   return t.length > n ? `${t.slice(0, n - 1).replace(/\s+\S*$/, '')}…` : t;
 };
 
+/**
+ * Meta description of a product page: the farmer's own SEO description, else the product description.
+ * A short description alone ("Cleaned rajma beans.") makes a thin search result, so the seller, price and
+ * how to buy are added to it.
+ */
+export function productDescription(p) {
+  if (p.metaDescription) return clip(p.metaDescription);
+  const howToBuy = 'Pre-order on MarketLink and pay at the stall when you pick it up.';
+  const text = String(p.description || '').replace(/\s+/g, ' ').trim();
+  if (!text) return clip(`${p.name} (${p.category?.name}) from ${p.farmer?.stallName}. ${howToBuy}`);
+  if (text.length >= 70) return clip(text);
+  return clip(`${/[.!?]$/.test(text) ? text : `${text}.`} ${p.name} from ${p.farmer?.stallName}, Rs ${p.price} per ${p.unit}. ${howToBuy}`);
+}
+
 /** The site's own address, e.g. https://marketlink.onrender.com (APP_URL, or the address of this request). */
 export function siteOrigin(req) {
   if (process.env.APP_URL) return env.appUrl;
@@ -102,7 +116,7 @@ async function productMeta(slug, origin) {
   return {
     // The farmer's own SEO title, description and keywords win; otherwise they are built from the product
     title: product.metaTitle || `${product.name}, Rs ${product.price} per ${product.unit} from ${product.farmer?.stallName}`,
-    description: clip(product.metaDescription || product.description || `${product.name} (${product.category?.name}) from ${product.farmer?.stallName}. Pre-order on MarketLink and pay at the stall when you pick it up.`),
+    description: productDescription(product),
     keywords: [...(product.keywords || []), product.name, product.category?.name, product.farmer?.stallName, product.farmer?.city && `${product.category?.name} in ${product.farmer.city}`],
     image: images[0] || absolute(origin),
     imageAlt: product.name,

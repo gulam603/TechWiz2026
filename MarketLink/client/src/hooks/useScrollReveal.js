@@ -40,6 +40,8 @@ export default function useScrollReveal(rootId, key) {
       root.querySelectorAll(SELECTOR).forEach((el) => {
         if (seen.has(el)) return;
         seen.add(el);
+        // cards in a row that swipes sideways (phones) are shown as they are, not faded in one by one
+        if (el.closest('.product-rail, .cat-cards')) return;
         // stagger cards that sit side by side in the same row
         const item = el.parentElement?.className.includes('col') ? el.parentElement : el;
         const index = item.parentElement ? Array.prototype.indexOf.call(item.parentElement.children, item) : 0;

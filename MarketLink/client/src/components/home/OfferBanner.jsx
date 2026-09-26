@@ -27,7 +27,7 @@ export default function OfferBanner({ banner, loading = false, preview = false }
           </>
         ) : (
           <>
-            <span className="offer-tag">
+            <span className="offer-banner-tag">
               <i className="bi bi-lightning-charge-fill" aria-hidden="true" /> {bannerText(banner, 'tag')}
             </span>
             <h2 id={preview ? undefined : 'deal-title'} className="offer-title text-balance">

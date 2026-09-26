@@ -43,6 +43,7 @@ const UR = {
  "Accepted": "منظور",
  "Account": "اکاؤنٹ",
  "Account & privacy": "اکاؤنٹ اور رازداری",
+ "Account created": "اکاؤنٹ بن گیا",
  "Account menu": "اکاؤنٹ مینو",
  "Account re-activated": "اکاؤنٹ دوبارہ فعال",
  "Actions": "اقدامات",

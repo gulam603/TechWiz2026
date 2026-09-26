@@ -115,7 +115,7 @@ export default function Navbar() {
               <Link to="/login" className="btn btn-white d-none d-sm-inline-flex">
                 {t('Log in')}
               </Link>
-              <Link to="/register/farmer" className="btn btn-lime d-none d-md-inline-flex">
+              <Link to="/register/farmer" className="btn btn-lime d-none d-md-inline-flex nav-sell">
                 <i className="bi bi-shop" /> {t('Sell with us')}
               </Link>
             </>

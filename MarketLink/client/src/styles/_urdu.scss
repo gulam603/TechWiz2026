@@ -261,3 +261,12 @@ html[lang='ur'] {
   }
 }
 /* rtl:end:ignore */
+
+// Tablets and small laptops: the Urdu "Sell with us" (ہمارے ساتھ فروخت کریں) is much longer than the
+// English label, so it gets a little less padding there and the top bar fits (768 px)
+@include media-breakpoint-between(md, xl) {
+  [dir='rtl'] .ml-navbar .nav-sell {
+    padding-inline: 0.65rem;
+    font-size: 0.86rem;
+  }
+}

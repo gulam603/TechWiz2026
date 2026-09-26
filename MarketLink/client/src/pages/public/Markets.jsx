@@ -69,7 +69,7 @@ export default function Markets() {
                 {control}
               </div>
             ))}
-            <div className="col-12 col-xl-3 d-flex gap-2 justify-content-end">
+            <div className="col-12 col-xl-3 d-flex flex-wrap gap-2 justify-content-end">
               <button type="button" className="btn btn-white filter-open-btn d-lg-none flex-shrink-0 me-auto" onClick={() => setShowFilters(true)}>
                 <i className="bi bi-sliders" aria-hidden="true" /> {t('Filters')}
                 {activeCount > 0 && <span className="filter-count">{activeCount}</span>}

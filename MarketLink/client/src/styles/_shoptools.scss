@@ -238,7 +238,9 @@
   }
 }
 
-@include media-breakpoint-up(lg) {
+// From 1200 px: on smaller laptops (992-1199 px) the links would push the account menu off the screen,
+// and the same links are in the sidebar there
+@include media-breakpoint-up(xl) {
   .app-site-nav {
     display: flex;
     + .app-top-actions {

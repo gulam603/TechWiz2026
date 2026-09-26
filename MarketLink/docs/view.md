@@ -13,7 +13,8 @@ sends guests to the right login page and blocks other roles.
 | Loading skeletons | `components/common/Skeletons.jsx`, `client/index.html` | grey page shapes while the app, a page or its data loads (slow connections): a first skeleton inside `index.html`, a home-page and a general page skeleton while a page's code downloads, and placeholders inside each home section |
 | Mobile drawer | `components/layout/MobileMenu.jsx` | phones/tablets: slide-in menu with its own scroll, backdrop, Escape to close, closes after navigation |
 | Bottom tab bar | `components/layout/MobileTabBar.jsx` | phones/tablets: 5 role-aware tabs (guest/customer: Home, Shop, Map, Basket, Account; farmer: Stall, Orders, Stock, Pickup, Profile; admin: Dashboard, Farmers, Orders, Markets, Reports) |
-| Basket sidebar | `components/cart/CartDrawer.jsx` | basket on the right: lines per farmer, quantities, total, Checkout and View full basket; opens from the basket icon and after adding from a product page or quick view |
+| Basket sidebar | `components/cart/CartDrawer.jsx` | basket on the right (on the left in Urdu), sliding in at a calm speed: lines per farmer, quantities, total, Checkout and View full basket; opens from the basket icon and after adding from a product page or quick view |
+| Language switch | `i18n/LanguageProvider.jsx` (`LanguageSwitch`) | English / اردو button in the navbar, phone menu, customer and farmer dashboards and footer; Urdu turns the page right to left and is remembered |
 | Dropdown with search | `components/common/SearchSelect.jsx` | replaces long `<select>` lists (cities, markets, categories, farmers, customers, all filter bars): search box, arrow keys, Enter, Escape |
 | AI assistant | `components/chat/ChatWidget.jsx` | floating chat "Basket" with memory, saved history and Clear chat (not in the admin area) |
 | Footer | `components/layout/Footer.jsx` | Shop, For farmers and Help & legal links (Terms & Conditions, Privacy), newsletter sign-up (not on the home page, which has its own), team contact (Aptech Learning Centre, F.B. Area, Karachi), "Built by Team Omniverse", credits |
@@ -105,3 +106,7 @@ Every admin table is a DataTables grid (search, sort, paging, CSV / Excel / Prin
   sidebar becomes a slide-in drawer and DataTables rows fold extra columns into an expandable row.
   On phones KPI labels wrap to two lines and tab pills scroll sideways instead of wrapping.
 - Checked with no horizontal scrolling at 360, 390, 768 and 1024 px on every page.
+- **Urdu (right to left):** every layout above is mirrored: sidebars and drawers come from the right, the
+  basket sidebar from the left, arrows point the other way, table columns read from the right. Maps and charts
+  keep their left to right drawing; map popups and chart labels are in Urdu. Checked at 1280 and 390 px on every
+  public, customer and farmer page.

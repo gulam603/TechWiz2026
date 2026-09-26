@@ -48,6 +48,9 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Newsletter: subscribe (home page and footer), welcome e-mail, one-click unsubscribe page
 - [x] Terms & Conditions page linked from the footer (sign-up forms still open it in a dialog)
 - [x] "Table" or "Cards" view for My orders (DataTables)
+- [x] Basket sidebar slides in at a calm, normal speed (round 8)
+- [x] Customer reviews on the home page: rating summary card and a sliding wall of review cards with product photos
+- [x] Whole site in Urdu (language switch; right to left; Urdu products, FAQs, terms, messages and assistant)
 
 ## 2. Farmer features
 
@@ -71,6 +74,9 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] "Generate with AI" for the "About the farm" text
 - [x] Search engine (SEO) title, description and keywords for each product, with "Fill in for me" and a Google preview
 - [x] DataTables for weekly stock (edit stock, template and status in the table), pre-orders (Table / Cards) and reviews (Table / Cards, reply and report from the table)
+- [x] AI product schema written automatically for every product (summary, season, storage, uses, Urdu name and Urdu tips), editable with a JSON-LD preview
+- [x] Urdu product description and Urdu farm bio fields
+- [x] Farmer dashboard, stock, inventory, orders, sales and reviews in Urdu
 - [x] Same sidebar layout as the admin area (collapsible, mobile drawer)
 
 ## 3. Admin features
@@ -115,6 +121,8 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [x] Meta keywords on every page (site, category, product, farmer and market keywords)
 - [x] No em dashes in the interface text
 - [x] Responsive check of every page at 18 screen widths from 320 to 1920 px
+- [x] Round 8 SEO: dynamic meta title, description, keywords, canonical and preview tags on every page change; Product JSON-LD with the AI schema (additionalProperty, alternateName, countryOfOrigin); semantic layout for AI extraction (article, titled sections, dl fact lists); static public/sitemap.xml, robots.txt and llms.txt (`npm run seo-files`); unknown addresses answer 404
+- [x] Urdu (اردو): language switch on every page, right to left layout mirrored exactly (English layout unchanged), Urdu fonts, Urdu punctuation, no missing translations, server messages in Urdu, Urdu assistant, Urdu SEO (lang / dir, hreflang, og:locale, sitemap in both languages); admin forms have Urdu fields, the admin area stays English
 
 ## 5. Quality checks (last full run)
 
@@ -151,4 +159,3 @@ Status of the work against the SRS (TechWiz 2026, End-to-End Web Solutions, them
 - [ ] Real-time order updates with WebSockets
 - [ ] Farmer bulk import of weekly stock from a spreadsheet
 - [ ] Customer SMS reminders on pickup day
-- [ ] Urdu language option

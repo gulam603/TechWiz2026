@@ -166,9 +166,11 @@ Validators and indexes for every collection are in `database/marketlink-schema.m
 | `notify.js` + `mailer.js` | in-app notifications and e-mails (console, Ethereal test inbox or real SMTP such as Gmail); branded HTML with the logo and an action button, SMTP check at start-up with clear error hints, `npm run mail:test` |
 | `describe.js` | "Write with AI" product descriptions and "Generate with AI" farm descriptions: Claude (when `ANTHROPIC_API_KEY` is set) or a built-in writer with a produce knowledge base |
 | `migrations.js` | small start-up data fixes (readable URLs for older products, `verified` on older reviews) and `syncValidators()`: extends the allowed values (enums) and relaxes required fields of MongoDB validators created by an older schema script, so new values never fail with “Document failed validation” |
-| `seo.js` | per-page `<title>`, description, canonical, Open Graph / X tags and JSON-LD written into index.html by the server (404 for unknown products, farmers, markets); `/sitemap.xml` and `/robots.txt` |
+| `seo.js` | per-page `<title>`, description, canonical, Open Graph / X tags and JSON-LD written into index.html by the server (404 for unknown addresses, products, farmers, markets); Urdu pages (`lang="ur" dir="rtl"`, Urdu title / description, hreflang, og:locale); `/sitemap.xml` (both languages) and `/robots.txt` |
+| `productSchema.js` | the AI product schema: answer-first summary, season, storage tip, uses, Urdu name and Urdu tips, written by Claude (with a key) or a built-in writer when a product is added or changed; used in the Product JSON-LD and the Quick facts |
+| `urdu.js` | the page language (`?lang=`, cookie `ml_lang`, admin always English) and the Urdu titles and descriptions of every page for the server |
 | `reports.js` | platform-wide admin reports saved to the `reports` collection (printable, CSV / Excel export in the UI); the newer reports return columns + rows + an optional chart so the UI renders them generically |
-| `assistant.js` | rule-based AI assistant with conversation memory (see below) |
+| `assistant.js` + `assistantUrdu.js` | rule-based AI assistant with conversation memory, in English and Urdu (see below) |
 | `scheduler.js` | runs hourly; at the start of a new week re-applies the stock template for farmers with auto-apply |
 | `ratings.js` | recalculates product and farmer ratings after reviews change |
 
@@ -211,7 +213,11 @@ stateDiagram-v2
 
 ## 8. AI assistant
 
-- `POST /api/assistant { message, memory? }` → `{ reply, cards, suggestions, memory }`.
+- `POST /api/assistant { message, memory?, lang? }` → `{ reply, cards, suggestions, memory }`.
+- **Urdu** (`lang: 'ur'`): an Urdu question is turned into the English keywords the rules know
+  (`assistantUrdu.js`; products are recognised by their Urdu names), and the answer is written in Urdu
+  (Urdu day, unit, status, city and category names). The language of each request is kept in
+  AsyncLocalStorage, so the rules pick the Urdu sentence with `L(english, urdu)`.
 - Intent rules detect timings, pickup windows, farmer availability, product search/details,
   payment/delivery/cancellation FAQs and "my orders"; entities (markets, farmers, categories,
   days, cities) are matched against live data.
@@ -222,7 +228,27 @@ stateDiagram-v2
   (`GET/DELETE /api/assistant/history`); guests keep them in `localStorage`. The chat header has
   a Clear chat button that deletes both.
 
-## 9. Maps
+## 9. Languages (English and Urdu)
+
+- **Texts:** `client/src/i18n/index.js` has `t(text, vars)`: the English text is the key and
+  `ur.js` holds the Urdu. `rich()` keeps `<b>` parts bold, `tServer()` shows server messages
+  (notifications, errors) in Urdu by matching the templates in `i18n/server.js`, and helpers such as
+  `productName()`, `categoryName()`, `unitName()` and `localText(doc, 'bio')` pick the Urdu field of a
+  document when there is one.
+- **Switch:** `LanguageProvider` + `LanguageSwitch` (navbar, phone menu, dashboards, footer). The choice
+  is kept in localStorage and the `ml_lang` cookie; `?lang=ur` in an address also switches. The admin
+  area is always English.
+- **Right to left:** `<html lang="ur" dir="rtl">`. postcss-rtlcss mirrors our SCSS and the DataTables CSS
+  at build time into `:where(html[dir="rtl"])` rules (see `vite.config.js`); `styles/_urdu.scss` adds the
+  Urdu fonts and the few things a mirror cannot know (icons that point, maps and charts that stay left to right).
+- **Content:** Urdu fields next to the English ones: `Product.nameUr / descriptionUr / aiSchema.*Ur`,
+  `Category.nameUr`, `Faq.questionUr / answerUr`, `Announcement.titleUr / messageUr`, `Farmer.bioUr`,
+  `Market.descriptionUr`, `Order.items.nameUr`. The seed fills them; `migrations.js` fills them in older
+  databases when the English text is still the demo text.
+- **Server:** pages are sent in the right language from the first paint (`Vary: Cookie`); the sitemap lists
+  both languages with `hreflang` links.
+
+## 10. Maps
 
 - Leaflet + React-Leaflet with OpenStreetMap tiles; after repeated tile errors the map switches to
   CARTO tiles automatically (`components/map/BaseTiles.jsx`).
@@ -230,7 +256,7 @@ stateDiagram-v2
   OpenStreetMap direction links. Farmers drop a pin (lat/lng) on a map when registering.
 - Contact page embeds Google Maps for Aptech Learning Centre, F.B. Area, Karachi.
 
-## 10. Configuration and deployment
+## 11. Configuration and deployment
 
 - `server/.env`: `PORT`, `NODE_ENV`, `CLIENT_URL`, `MONGO_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`,
   `CURRENCY`, `TZ` (market time zone, default Asia/Karachi), `SMTP_HOST`/`SMTP_PORT`/`SMTP_SECURE`/

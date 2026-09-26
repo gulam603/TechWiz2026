@@ -23,6 +23,10 @@ const OG_IMAGE = '/brand/og-image.jpg'; // 1200 x 630 share picture for pages wi
 
 // Pages that are only useful after logging in (or are personal) are kept out of search results
 const PRIVATE = /^\/(account|farmer(\/|$)|admin|checkout|cart|reset-password|forgot-password|unsubscribe)/;
+// Every address the React app has (client/src/App.jsx). Anything else is answered with a 404 page,
+// so search engines do not index made-up addresses as copies of the home page. The signed-in areas
+// show their own "page not found" inside.
+const APP_PAGES = /^\/($|about$|terms$|faq$|contact$|map$|cart$|login$|register(\/farmer)?$|forgot-password$|reset-password\/[^/]+$|unsubscribe$|checkout(\/success)?$|products$|markets$|farmers$|account(\/|$)|farmer(\/|$)|admin(\/|$))/;
 
 const STATIC_PAGES = {
   '/': { title: null, description: DEFAULT_DESCRIPTION },
@@ -281,22 +285,25 @@ async function staticExtras(pathname, req, origin, meta) {
   }
 }
 
-/** Title, description, image, structured data and page text for a URL. `notFound` for unknown products, farmers or markets. */
+/** Title, description, image, structured data and page text for a URL. `notFound` for unknown addresses, products, farmers or markets. */
 export async function pageMeta(req) {
   const origin = siteOrigin(req);
   const lang = pageLang(req);
   const pathname = decodeURIComponent(req.path).replace(/\/+$/, '') || '/';
+  const notFound = () => ({ origin, pathname, lang, notFound: true, title: lang === 'ur' ? 'صفحہ نہیں ملا' : 'Page not found', description: lang === 'ur' ? DEFAULT_DESCRIPTION_UR : DEFAULT_DESCRIPTION, noindex: true });
   const detail = pathname.match(/^\/(products|farmers|markets)\/([^/]+)$/);
   let meta = null;
   if (detail) {
     const [, kind, slug] = detail;
     meta = await (kind === 'products' ? productMeta : kind === 'farmers' ? farmerMeta : marketMeta)(slug, origin).catch(() => null);
-    if (!meta) return { origin, pathname, lang, notFound: true, title: lang === 'ur' ? 'صفحہ نہیں ملا' : 'Page not found', description: lang === 'ur' ? DEFAULT_DESCRIPTION_UR : DEFAULT_DESCRIPTION, noindex: true };
+    if (!meta) return notFound();
   } else if (STATIC_PAGES[pathname]) {
     meta = { ...STATIC_PAGES[pathname] };
     Object.assign(meta, await staticExtras(pathname, req, origin, meta).catch(() => ({})));
-  } else {
+  } else if (APP_PAGES.test(pathname)) {
     meta = { title: null, description: DEFAULT_DESCRIPTION, noindex: PRIVATE.test(pathname) };
+  } else {
+    return notFound();
   }
   if (PRIVATE.test(pathname)) meta.noindex = true;
   // Urdu: the page's own Urdu title and description (the structured data and page text stay English)

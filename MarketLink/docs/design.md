@@ -46,6 +46,10 @@ Each product category has its own pastel tile colour (stored on the category).
 - **Numbers:** `font-variant-numeric: tabular-nums` for stats and prices.
 - Uppercase "eyebrow" labels (0.72 rem, wide letter spacing) introduce sections.
 - Fonts are bundled with `@fontsource-variable`, so no external font request is needed.
+- **Urdu:** Noto Nastaliq Urdu (the usual Urdu style) for headings and reading text, Noto Naskh Arabic for
+  buttons, menus, tables and forms (clearer at small sizes), with a taller line height (1.75 to 1.95).
+  No letter spacing (it breaks joined letters), no italics and no capitals; eyebrow labels keep their size.
+  Numbers stay 0-9; names, e-mails, phone and order numbers stay left to right inside Urdu text.
 
 ## 3. Layout
 

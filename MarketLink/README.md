@@ -14,6 +14,7 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 | Maps | OpenStreetMap tiles (automatic CARTO fallback) with Leaflet / React-Leaflet, OSRM driving routes, Google Maps links & embed |
 | Backend | Node.js 20+, Express 5 REST API, JWT auth in an httpOnly cookie, Multer uploads, Nodemailer |
 | Database | MongoDB (Mongoose ODM) — local MongoDB or MongoDB Atlas |
+| Languages | English and **Urdu (اردو)**, right to left, with a language switch on every page |
 
 ---
 
@@ -29,8 +30,9 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Map of markets and farmer stalls (Leaflet + OpenStreetMap) with markers, in-app driving route and Google Maps / OSM directions
 - **Home page**: banner carousel with real photos (welcome, what is in season now, pickup, farmers; changes every
   **3 seconds**, pauses under the mouse), search with a **category drop-down**,
-  next market day and live numbers, a **30-second video tour**, market photos, **customer reviews** with an average,
-  star bars and the share of verified purchases, **FAQs** and a **newsletter** sign-up (also in the footer, with an unsubscribe page)
+  next market day and live numbers, a **30-second video tour**, market photos, **customer reviews** (a rating summary
+  card with the average, star bars and the share of verified purchases, and a two-row sliding wall of review cards with
+  product photos and a pause button), **FAQs** and a **newsletter** sign-up (also in the footer, with an unsubscribe page)
 - **FAQ page** (`/faq`): 17 questions in 4 topics with search and topic filters; the admin edits them
 - **Loading skeletons**: on a slow connection the shape of the page appears straight away instead of a blank screen
 - Shop with search and filters: location (city), category, market, market day, price range, rating, farming practice, in stock; sorting
@@ -41,8 +43,8 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - **Quick view** on every product card: details, photos and “add to basket” in a dialog without leaving the shop.
   The card's **Add** button opens the same dialog so the shopper **chooses how many** before adding
 - The product page photo **fits on the screen** (and stays in view while the details scroll on laptops)
-- **Basket sidebar**: the basket opens on the right (change quantities, remove, total) with *Checkout*, *View full basket*
-  and **Empty basket** (asks once before removing everything)
+- **Basket sidebar**: the basket slides in from the side at a calm, natural speed (change quantities, remove, total)
+  with *Checkout*, *View full basket* and **Empty basket** (asks once before removing everything)
 - **Checkout without an account**: first name, last name, e-mail, number and address — an account is created,
   a generated password is e-mailed and the pre-order continues straight away
 - **Dropdowns with search** for cities, markets, categories, farmers, customers and every table filter
@@ -82,7 +84,12 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - **Closed dates** (“not at the market this week”): customers cannot book pickups on those days and the farmer is warned about existing pre-orders on them
 - Insights: total orders, pending orders, revenue summary (7 / 30 days / all time), best-selling products, charts
 - Read and reply to customer reviews (Table or Cards view; reply and report from the table)
-- **Search engine (SEO) details per product**: title, description and keywords, “Fill in for me” and a Google preview
+- **Search engine (SEO) details per product**: title, description and keywords, “Fill in with AI” and a Google preview
+- **AI product schema**: when a product is added or changed, AI writes its facts for search engines and AI answers
+  (a short answer-first summary, season in Pakistan, storage tip, best uses, the Urdu name, and the storage tip and uses
+  in Urdu). Claude writes it when an API key is set, a built-in writer otherwise; the farmer can edit it and see the
+  JSON-LD it produces
+- **Urdu fields**: the product description and the farm bio can also be written in Urdu (shown on the Urdu site)
 - Weekly stock and pre-orders in **DataTables** (change stock, weekly template and status right in the table)
 
 **Admin** (same login page as everyone at `/login` — the role decides where you land; own back-office layout without the shop navbar)
@@ -105,13 +112,35 @@ Built by **Team Omniverse** (Aptech Learning Centre, F.B. Area, Karachi) for
 - Markets, categories, announcements and **newsletter subscribers** in DataTables (CSV / Excel / Print)
 - Contact-us inbox
 - **FAQs**: add, edit, order, hide or delete questions and choose which appear on the home page
+- **Urdu text** next to the English in the admin forms: FAQs, categories, announcements and market descriptions
+  (typed right to left). The admin area itself stays in English
 
 **SEO:** every public page has its own title, description, **keywords**, canonical link, Open Graph / X preview tags
 (1200 × 630 share picture) and schema.org structured data: Product (price, stock, pickup, reviews, rating), LocalBusiness
 for farmers, Place with opening hours for markets, **BreadcrumbList** on every page, **ItemList** on the shop, category,
 market and farmer lists, **FAQPage**, **HowTo** and **VideoObject** on the home page, Organization (contact point, cities
-served) + site search. The server writes these into the HTML before any JavaScript runs, answers 404 for unknown
-products, and serves `/sitemap.xml` (every page with its **photos**), `/robots.txt` and a web app manifest.
+served) + site search. Products also carry the **AI product schema** (alternate Urdu name, season, storage, uses as
+`additionalProperty`, country of origin, category path) and a **Quick facts** list on the page. The server writes these
+into the HTML before any JavaScript runs; in the browser the **title, description, keywords, canonical and preview
+tags change with every page** (no reload needed) for products, farmers, markets and lists. Pages are laid out
+semantically (one `h1`, `main`, `article`, titled `section`s, `dl` fact lists, `nav` breadcrumbs) so search engines and
+AI tools can pick out the facts. Unknown addresses get a real **404** page that is not indexed.
+`/sitemap.xml` (every page in English and Urdu, with its **photos**), `/robots.txt` and a web app manifest are served
+live; `npm run seo-files` also writes them (plus `llms.txt`) as static files into `client/public`.
+
+**Urdu (اردو):** a language switch (navbar, phone menu, dashboards and footer) turns the public site and the customer
+and farmer areas into Urdu:
+- every button, label, message, table, chart and e-mail-style notification in correct Urdu, with Urdu punctuation
+  (، ۔ ؟), Nastaliq headings and Naskh for the interface; prices in روپے, Urdu day and month names
+- a **right to left** layout mirrored exactly from the English one (menus, cards, tables, basket sidebar, maps'
+  popups); the English layout is unchanged (checked element by element on every page)
+- Urdu content: product names and descriptions, categories, FAQs, announcements, farm bios, market descriptions,
+  AI product tips and the Terms & Conditions; messages from the server (order and stock notifications, errors) are shown
+  in Urdu too; names, phone numbers, e-mails and order numbers stay as written
+- the **AI assistant** understands Urdu questions (“آم کہاں ملیں گے؟”) and answers in Urdu, and remembers your name
+- **SEO in both languages**: Urdu pages at `?lang=ur` with `<html lang="ur" dir="rtl">`, Urdu title and description,
+  `hreflang` links (en-PK, ur-PK, x-default), `og:locale` ur_PK, both languages in the sitemap. The choice is saved in a
+  cookie, so the server sends the Urdu page right to left from the first paint
 
 **AEO (answer engines such as ChatGPT, Claude, Perplexity and Google AI answers):** every public page also carries its
 main facts as plain, answer-first text with links in the HTML (for crawlers that do not run JavaScript),
@@ -131,11 +160,13 @@ counting-up statistics; all animations switch off when the device asks for reduc
 ```
 MarketLink/
 ├── client/                 React front-end (Vite)
-│   ├── public/             favicon, brand/ (logo, icons, share image), images/hero (banner photos), media/ (video), manifest
+│   ├── public/             favicon, brand/ (logo, icons, share image), images/hero (banner photos), media/ (video), manifest,
+│   │                       sitemap.xml, robots.txt, llms.txt (written by npm run seo-files)
 │   └── src/
 │       ├── api/            fetch wrapper for the REST API
 │       ├── components/     layout, cards, maps, charts, chat widget, order widgets
 │       ├── context/        Auth, Cart and Toast providers
+│       ├── i18n/           English / Urdu: t() helper, ur.js (Urdu texts), server.js (server messages)
 │       ├── pages/          public, auth, customer, farmer and admin pages
 │       ├── styles/         Bootstrap SCSS theme + custom styles
 │       └── utils/          formatting helpers
@@ -196,6 +227,12 @@ Open **http://localhost:5173**.
 
 **Code quality:** `npm run lint` runs ESLint on the server and the client.
 
+**Urdu:** open any page with `?lang=ur` (for example http://localhost:5173/?lang=ur) or press **اردو** in the navbar.
+
+**Static SEO files:** `npm run seo-files` writes `client/public/sitemap.xml`, `robots.txt`, `llms.txt`
+and `llms-full.txt` from the database, with the public address from `SITE_URL` (else `APP_URL`), for example
+`SITE_URL=https://marketlink.onrender.com npm run seo-files`. The running server always answers the live versions.
+
 **Production build** (one server on port 5000 serves both the API and the React app):
 
 ```bash
@@ -214,7 +251,7 @@ npm start          # then open http://localhost:5000
 | `CURRENCY` | currency symbol used in e-mails / assistant (default `Rs`) |
 | `TZ` | time zone of the markets, used for pickup slots and cut-off times (default `Asia/Karachi`) |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` (or `SMTP_FROM`), `APP_URL` | e-mail settings (Nodemailer). All empty → e-mails are printed to the server console; `SMTP_USER` + `SMTP_PASS` with an empty `SMTP_HOST` → the server is picked from the address (Gmail → `smtp.gmail.com`); `SMTP_HOST=ethereal` → free Ethereal test inbox; `smtp.gmail.com` + port 587 + a Gmail **app password** → real e-mails (see section 6). `APP_URL` is used for the buttons in e-mails |
-| `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | optional: “Write with AI” product descriptions by Claude (without a key a built-in writer is used) |
+| `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL` | optional: “Write with AI” product descriptions and the AI product schema by Claude (without a key a built-in writer is used) |
 
 The front-end currency symbol can be changed with `VITE_CURRENCY` in `client/.env` (default `Rs`).
 
@@ -272,7 +309,9 @@ MongoDB collections: `users`, `farmers`, `markets`, `cities`, `categories`, `pro
   database data. No external AI service or key is required. It remembers the conversation
   (market, farmer, product, day, your name and city) so follow-up questions work; signed-in users'
   history is saved in the `assistantchats` collection, guests' history stays in the browser, and
-  the chat's Clear chat button deletes both.
+  the chat's Clear chat button deletes both. On the Urdu site it understands Urdu questions
+  (`server/src/services/assistantUrdu.js` turns them into keywords; products are found by their Urdu names)
+  and answers in Urdu.
 - **E-mail:** Nodemailer — order confirmation, status updates (“ready for pickup” with directions),
   farmer approval, invites for admin-created accounts and password-reset e-mails, in a branded HTML
   layout with the MarketLink logo and an action button. By default they are printed in the server

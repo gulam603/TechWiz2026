@@ -33,6 +33,11 @@ the code so the same problems are not solved twice.
 | One login page for every role | the team asked for a single portal; the role decides where the user lands |
 | Checkout without an account e-mails a generated password | the team asked for it; the customer is told to change it in Profile |
 | Server-side SEO tags on top of a React app | crawlers and link previews read the first HTML; the client hook keeps tags right while browsing |
+| Urdu with our own small `t()` (`client/src/i18n`), English text as the key | no i18n library to learn; a missing Urdu text simply shows the English, and the English code reads as before |
+| Urdu content stored next to the English (`nameUr`, `descriptionUr`, `bioUr`, `questionUr` …) | admins and farmers write both; the Urdu site falls back to English when a field is empty |
+| Right to left by postcss-rtlcss at build time, not a second stylesheet | one set of SCSS; the Urdu layout is always the mirror of the English one |
+| Admin area stays English | it is a back-office tool; its forms have Urdu fields for the content the public sees |
+| Urdu page choice in a cookie (`ml_lang`) as well as localStorage | the server can send the Urdu page (lang, dir, title) from the first paint and search engines get `?lang=ur` pages |
 
 ## Conventions
 
@@ -124,6 +129,28 @@ the code so the same problems are not solved twice.
   `/llms-full.txt`. The CSP forbids inline scripts, so the crawler text is hidden with CSS, not JS.
 - The footer has a second form (newsletter), so browser tests select `form:not(.nl-form)` and
   `main input[type=email]` for the login form.
+- **Urdu texts** are in `client/src/i18n/ur.js` (English text → Urdu). Wrap every visible string in `t('…')`
+  (or `rich()` when it has `<b>` parts); placeholders `{name}` stay the same in both languages. Server messages
+  (notifications, errors) stay English in the database and are matched by the templates in
+  `client/src/i18n/server.js` (`tServer`), so keep those in step with the server texts. In development,
+  `window.__mlMissing` lists texts that have no Urdu yet.
+- Urdu writing rules used everywhere: Urdu punctuation (، ۔ ؟ ؛), curly quotes “ ”, Urdu letters (ی ک ہ, never the
+  Arabic ي ك ة), numbers stay 0-9, names / e-mails / phone and order numbers stay as written (wrapped in `<bdi>`
+  when they sit inside Urdu text). Glossary: basket ٹوکری, pre-order پیشگی آرڈر, pickup وصولی, farmer کسان,
+  stall اسٹال, products اشیاء, favourites پسندیدہ, category زمرہ.
+- **RTL build:** postcss-rtlcss runs in *combined* mode with `:where(html[dir="rtl"])` /
+  `:where(html:not([dir="rtl"]))` prefixes (vite.config.js). *Override* mode was tried first: its extra
+  `[dir=rtl]` rules outweighed single-class rules (breadcrumbs and lists got an extra 2 rem) and its "reset to 0"
+  broke classes that change one side only (`.form-select-sm` lost the room for its arrow). `:where()` adds no
+  weight, so the cascade is the same in both directions. DataTables' CSS is mirrored the same way; Leaflet and
+  Recharts stay left to right.
+- rtlcss does **not** mirror the `translate` property, 4-value `inset` shorthands or inline `style={{ right: 12 }}`:
+  use longhands (`top / bottom / left`), logical properties (`insetInlineEnd`) or a `[dir='rtl']` rule in
+  `styles/_urdu.scss` (which is wrapped in `rtl:begin:ignore`).
+- Two checks keep the layouts honest: the English layout snapshot (every element's box on every page, compared
+  before / after a change) and the mirror check (the same page laid out LTR and RTL must be exact mirror images).
+- Urdu fonts: Noto Nastaliq Urdu for headings and reading text, Noto Naskh Arabic for the interface; never
+  `letter-spacing` (breaks joined letters), no italics or capitals.
 
 ## Useful commands
 
@@ -135,6 +162,7 @@ npm run build && npm start # production build served by Express on :5000
 npm run export-data        # database/sample-data/*.json from the current database
 npm run lint               # ESLint for server and client
 npm run mail:test -- you@example.com   # send a test e-mail with the SMTP settings
+npm run seo-files          # static sitemap.xml, robots.txt, llms.txt and llms-full.txt in client/public
 ```
 
 Demo logins for every role are in `README.md` (section 4). E-mails are printed in the server
